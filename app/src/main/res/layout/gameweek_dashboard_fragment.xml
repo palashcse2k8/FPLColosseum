@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/select_game_week"
+        android:textSize="20sp"
+        app:fontFamily="@font/aclonica">
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/table_border">
+
+        <Spinner
+            android:layout_marginVertical="10dp"
+            android:id="@+id/gameWeekSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:entries="@array/gameWeeks"/>
+
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/table_border">
+
+            <TextView
+                android:id="@+id/tvTeamName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Team Name\n"
+                style="@style/table_header"/>
+
+            <TextView
+                android:id="@+id/tvManagerName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Manager Name\n"
+                style="@style/table_header"/>
+
+            <TextView
+                android:id="@+id/tvGameWeekPoints"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="GW\nPoints"
+                android:textAlignment="center"
+                style="@style/table_header"/>
+
+
+            <TextView
+                android:id="@+id/tvTotalPoints"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Total \nPoints"
+                android:textAlignment="center"
+                style="@style/table_header"/>
+        </TableRow>
+
+    </TableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

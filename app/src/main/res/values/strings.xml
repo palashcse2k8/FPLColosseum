@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">FPLColosseum</string>
+    <string name="select_game_week">Select Game Week</string>
+    <string-array name="gameWeeks">
+        <item>Game Week 01</item>
+        <item>Game Week 02</item>
+        <item>Game Week 03</item>
+        <item>Game Week 04</item>
+        <item>Game Week 05</item>
+        <item>Game Week 06</item>
+        <item>Game Week 07</item>
+        <item>Game Week 08</item>
+
+    </string-array>
+</resources>

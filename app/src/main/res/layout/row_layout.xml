@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/table_border">
+
+            <TextView
+                android:id="@+id/tvTeamName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Team \nName"
+                style="@style/table_row_item"/>
+
+            <TextView
+                android:id="@+id/tvManagerName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Manager \nName"
+                style="@style/table_row_item"/>
+
+            <TextView
+                android:id="@+id/tvGameWeekPoints"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Points\n"
+                android:textAlignment="center"
+                style="@style/table_row_item"/>
+
+
+            <TextView
+                android:id="@+id/tvTotalPoints"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Total \nPoints"
+                android:textAlignment="center"
+                style="@style/table_row_item"/>
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>
