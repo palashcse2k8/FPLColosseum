@@ -12,18 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetroClass {
 
 
-    // PROD
-//    public static final String BASE_URL = "https://sblwallet.com.bd:8787/";
-    // UAT
-     static public final String BASE_URL = "https://sblwallet.com.bd:9797/";
-    //SIT
-//   static public final String BASE_URL = "http://10.10.2.42:9797/";
-
-    //razia
-//    private static final String BASE_URL = "http://10.10.2.26:8080/";
-//    public static OkHttpClient okHttpClient = new OkHttpClient().newBuilder().connectTimeout(180, TimeUnit.SECONDS) .readTimeout(180, TimeUnit.SECONDS)
-//            .writeTimeout(180, TimeUnit.SECONDS) .build();
-
+    private static Retrofit retrofit = null;
+    private static final String BASE_URL = "https://fontendfunctionsnortheuropenew.azurewebsites.net/";
     public static OkHttpClient okHttpClient = new OkHttpClient()
             .newBuilder()
             .connectTimeout(180, TimeUnit.SECONDS)
@@ -46,6 +36,9 @@ public class RetroClass {
     }
 
     public static com.infotech.fplcolosseum.remote.APIServices getAPIService() {
-        return getRetrofitInstance().create(com.infotech.fplcolosseum.remote.APIServices.class);
+        if (retrofit == null) {
+            retrofit = getRetrofitInstance();
+        }
+        return retrofit.create(com.infotech.fplcolosseum.remote.APIServices.class);
     }
 }

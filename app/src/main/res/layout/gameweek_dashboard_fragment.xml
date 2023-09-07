@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="10dp">
 
     <TextView
@@ -13,8 +13,7 @@
         android:layout_marginStart="10dp"
         android:text="@string/select_game_week"
         android:textSize="20sp"
-        app:fontFamily="@font/aclonica">
-    </TextView>
+        app:fontFamily="@font/aclonica" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,12 +21,39 @@
         android:background="@drawable/table_border">
 
         <Spinner
-            android:layout_marginVertical="10dp"
             android:id="@+id/gameWeekSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:spinnerMode="dropdown"
-            android:entries="@array/gameWeeks"/>
+            android:layout_marginVertical="10dp"
+            android:entries="@array/gameWeeks"
+            android:spinnerMode="dropdown" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:background="@drawable/table_border"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="League Name : "
+            android:textStyle="bold"
+            android:fontFamily="@font/aclonica"/>
+
+        <TextView
+            android:id="@+id/leagueName"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:text=" Md. Mosiur Rahman"
+            android:textStyle="bold"
+            android:fontFamily="@font/aclonica"/>
 
     </LinearLayout>
 
@@ -44,38 +70,38 @@
 
             <TextView
                 android:id="@+id/tvTeamName"
+                style="@style/table_header"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Team Name\n"
-                style="@style/table_header"/>
+                android:text="Team Name\n" />
 
             <TextView
                 android:id="@+id/tvManagerName"
+                style="@style/table_header"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Manager Name\n"
-                style="@style/table_header"/>
+                android:text="Manager Name\n" />
 
             <TextView
                 android:id="@+id/tvGameWeekPoints"
+                style="@style/table_header"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="GW\nPoints"
-                android:textAlignment="center"
-                style="@style/table_header"/>
+                android:textAlignment="center" />
 
 
             <TextView
                 android:id="@+id/tvTotalPoints"
+                style="@style/table_header"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Total \nPoints"
-                android:textAlignment="center"
-                style="@style/table_header"/>
+                android:textAlignment="center" />
         </TableRow>
 
     </TableLayout>
