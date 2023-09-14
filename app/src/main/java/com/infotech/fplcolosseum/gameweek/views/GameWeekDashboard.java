@@ -11,15 +11,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.infotech.fplcolosseum.databinding.GameweekDashboardFragmentBinding;
+import com.infotech.fplcolosseum.gameweek.adapter.TeamAdapter;
 import com.infotech.fplcolosseum.gameweek.models.LeagueGameWeekDataModel;
 import com.infotech.fplcolosseum.gameweek.models.TeamDataModel;
-import com.infotech.fplcolosseum.gameweek.viewmodels.TeamAdapter;
+import com.infotech.fplcolosseum.gameweek.viewmodels.GameWeekViewModel;
 import com.infotech.fplcolosseum.remote.APIServices;
 import com.infotech.fplcolosseum.remote.RetroClass;
 
@@ -44,6 +47,9 @@ public class GameWeekDashboard extends Fragment {
     private ProgressDialog progressDialog;
 
     private LeagueGameWeekDataModel leagueGameWeekDataModel;
+
+    private GameWeekViewModel viewModel;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +63,25 @@ public class GameWeekDashboard extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = GameweekDashboardFragmentBinding.inflate(inflater, container, false);
-        makeApiCall("671887", "116074","1", "1");
+
+        viewModel = new ViewModelProvider(requireActivity()).get(GameWeekViewModel.class);
+        binding.setGameWeekViewModel(viewModel);
+//        makeApiCall("671887", "116074","1", "1");
+        try {
+            viewModel.gameWeekDataFromAPI("671887", "116074", "1", "1");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), new Observer<LeagueGameWeekDataModel>() {
+            @Override
+            public void onChanged(@Nullable LeagueGameWeekDataModel data) {
+
+                leagueGameWeekDataModel = data;
+                updateUI();
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -80,7 +104,6 @@ public class GameWeekDashboard extends Fragment {
         adapter = new TeamAdapter(teams);
         recyclerView.setAdapter(adapter);
     }
-
 
 
     private void makeApiCall(String leagueID, String entryID, String currentGameweek, String currentPage) {

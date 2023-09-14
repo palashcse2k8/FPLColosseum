@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.gameweek.viewmodels;
+package com.infotech.fplcolosseum.gameweek.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.gameweek.models.LiveData;
-import com.infotech.fplcolosseum.gameweek.models.Team;
+import com.infotech.fplcolosseum.gameweek.models.GameWeekLiveData;
 import com.infotech.fplcolosseum.gameweek.models.TeamDataModel;
 
 import java.util.List;
@@ -32,11 +31,11 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
     @Override
     public void onBindViewHolder(@NonNull TeamViewHolder holder, int position) {
         TeamDataModel team = teams.get(position);
-        LiveData liveData = team.getLiveData();
+        GameWeekLiveData gameWeekLiveData = team.getLiveData();
         holder.teamNameTextView.setText(team.getName());
         holder.managerNameTextView.setText(team.getPlayerName());
-        holder.gameWeekPointsTextView.setText(String.valueOf(liveData.getPhaseTotalPoints()));
-        holder.totalPointsTextView.setText(String.valueOf( liveData.getSeasonTotalPoints()));
+        holder.gameWeekPointsTextView.setText(String.valueOf(gameWeekLiveData.getPhaseTotalPoints()));
+        holder.totalPointsTextView.setText(String.valueOf( gameWeekLiveData.getSeasonTotalPoints()));
     }
 
     @Override

@@ -1,14 +1,34 @@
 package com.infotech.fplcolosseum.gameweek.models;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.room.Relation;
+import androidx.room.TypeConverters;
+
+import com.infotech.fplcolosseum.database.DataConverter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName = "GAMEWEEKDATA")
+@TypeConverters(DataConverter.class)
 public class LeagueGameWeekDataModel {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id; // You can add a primary key field for Room
     private float Gameweek;
     private float CurrentGameweek;
     private String LeagueId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private float LeagueType;
     private float EntryId;
     private float FeatureLevel;
@@ -26,18 +46,53 @@ public class LeagueGameWeekDataModel {
     private float FilterTo;
     private float LastLiveFeedEventTimeStamp;
     private String LeagueOverallLivedata = null;
-    private ArrayList < TeamDataModel > TeamDatas;
+    @Ignore // Mark this field as transient
+    @Relation(parentColumn = "id", entityColumn = "id")
+    private ArrayList<TeamDataModel> TeamDatas;
+
+    public List<Object> getFixtureDatas() {
+        return FixtureDatas;
+    }
+
+    public void setFixtureDatas(ArrayList<Object> fixtureDatas) {
+        FixtureDatas = fixtureDatas;
+    }
+
+    public List<Object> getFavoriteEntryIds() {
+        return FavoriteEntryIds;
+    }
+
+    public void setFavoriteEntryIds(ArrayList<Object> favoriteEntryIds) {
+        FavoriteEntryIds = favoriteEntryIds;
+    }
+
+    public List<Object> getAllPlayerDataStats() {
+        return AllPlayerDataStats;
+    }
+
+    public void setAllPlayerDataStats(ArrayList<Object> allPlayerDataStats) {
+        AllPlayerDataStats = allPlayerDataStats;
+    }
+
+    public ArrayList<Object> getGameWeeks() {
+        return GameWeeks;
+    }
+
+    public void setGameWeeks(ArrayList<Object> gameWeeks) {
+        GameWeeks = gameWeeks;
+    }
+
     private String LeagueCountryInfos = null;
-    ArrayList < Object > FixtureDatas = new ArrayList < Object > ();
-    ArrayList < Object > FavoriteEntryIds = new ArrayList < Object > ();
-    ArrayList< Object > AllPlayerDataStats = new ArrayList < Object > ();
+    List<Object> FixtureDatas = new ArrayList<Object>();
+    List<Object> FavoriteEntryIds = new ArrayList<Object>();
+    List<Object> AllPlayerDataStats = new ArrayList<Object>();
     private String AllPlayerDataStatsStatsViewExtra = null;
     private String LeagueAvgStatsEntry = null;
     private String LeagueAvgStatsExtra = null;
     private float CurrentImpact;
     private float CurrentPlayersProgressVsLeague;
     private String SeasonHistoryGameweeks = null;
-    ArrayList < Object > GameWeeks = new ArrayList < Object > ();
+    ArrayList<Object> GameWeeks = new ArrayList<Object>();
     private String LogText;
     private String InfoTextAboveLeague;
     private boolean HideAds;

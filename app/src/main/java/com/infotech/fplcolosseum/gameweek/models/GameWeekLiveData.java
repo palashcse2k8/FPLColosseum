@@ -2,7 +2,7 @@ package com.infotech.fplcolosseum.gameweek.models;
 
 import java.util.ArrayList;
 
-public class LiveData {
+public class GameWeekLiveData {
     private float TransferCost;
     private float PastSeasonOverallRank;
     private float PastSeasonOverallPoints;

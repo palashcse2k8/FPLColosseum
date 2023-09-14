@@ -1,9 +1,19 @@
 package com.infotech.fplcolosseum.gameweek.models;
 
-import java.util.ArrayList;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
+import com.infotech.fplcolosseum.database.DataConverter;
+
+import java.util.ArrayList;
+@Entity(tableName = "team_data")
+@TypeConverters(DataConverter.class)
 public class TeamDataModel {
-    LiveData LiveData;
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    GameWeekLiveData GameWeekLiveData;
     private float EntryId;
     private String Name;
     private String PlayerName;
@@ -33,8 +43,16 @@ public class TeamDataModel {
 
     // Getter Methods
 
-    public LiveData getLiveData() {
-        return LiveData;
+    public ArrayList<Object> getUsedChips() {
+        return UsedChips;
+    }
+
+    public void setUsedChips(ArrayList<Object> usedChips) {
+        UsedChips = usedChips;
+    }
+
+    public GameWeekLiveData getLiveData() {
+        return GameWeekLiveData;
     }
 
     public float getEntryId() {
@@ -135,8 +153,8 @@ public class TeamDataModel {
 
     // Setter Methods
 
-    public void setLiveData(LiveData LiveDataObject) {
-        this.LiveData = LiveDataObject;
+    public void setLiveData(GameWeekLiveData gameWeekLiveDataObject) {
+        this.GameWeekLiveData = gameWeekLiveDataObject;
     }
 
     public void setEntryId(float EntryId) {
@@ -234,4 +252,13 @@ public class TeamDataModel {
     public void setLastGameweekLeagueRank(float LastGameweekLeagueRank) {
         this.LastGameweekLeagueRank = LastGameweekLeagueRank;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }
