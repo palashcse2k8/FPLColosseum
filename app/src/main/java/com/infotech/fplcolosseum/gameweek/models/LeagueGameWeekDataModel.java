@@ -1,7 +1,10 @@
 package com.infotech.fplcolosseum.gameweek.models;
 
+import androidx.room.Entity;
+
 import java.util.ArrayList;
 
+@Entity(tableName = "GAMEWEEKDATA")
 public class LeagueGameWeekDataModel {
     private float Gameweek;
     private float CurrentGameweek;
