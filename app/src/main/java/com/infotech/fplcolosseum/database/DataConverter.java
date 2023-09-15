@@ -21,12 +21,12 @@ public class DataConverter {
     }
 
     @TypeConverter
-    public static List<?> toList(String json) {
+    public static List<Object> toList(String json) {
         if (json == null) {
             return new ArrayList<>();
         }
         Gson gson = new Gson();
-        Type type = new TypeToken<List<?>>() {}.getType();
+        Type type = new TypeToken<List<Object>>() {}.getType();
         return gson.fromJson(json, type);
     }
 

@@ -1,11 +1,13 @@
 package com.infotech.fplcolosseum.gameweek.views;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -66,21 +68,8 @@ public class GameWeekDashboard extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(GameWeekViewModel.class);
         binding.setGameWeekViewModel(viewModel);
-//        makeApiCall("671887", "116074","1", "1");
-        try {
-            viewModel.gameWeekDataFromAPI("671887", "116074", "1", "1");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
-        viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), new Observer<LeagueGameWeekDataModel>() {
-            @Override
-            public void onChanged(@Nullable LeagueGameWeekDataModel data) {
-
-                leagueGameWeekDataModel = data;
-                updateUI();
-            }
-        });
+        makeApiCall("671887", "116074","1", "1");
 
         return binding.getRoot();
     }
@@ -88,7 +77,22 @@ public class GameWeekDashboard extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setupRecyclerView();
+        binding.gameWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("selected=> ", "item selected" + i);
+                makeApiCall("671887", "116074", String.valueOf(i+1), "1");
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    public void setupRecyclerView(){
         RecyclerView recyclerView = binding.recyclerView1;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -104,9 +108,23 @@ public class GameWeekDashboard extends Fragment {
         adapter = new TeamAdapter(teams);
         recyclerView.setAdapter(adapter);
     }
-
-
     private void makeApiCall(String leagueID, String entryID, String currentGameweek, String currentPage) {
+        try {
+            progressDialog.show();
+            viewModel.gameWeekDataFromAPI(leagueID, entryID, currentGameweek, currentPage);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), data -> {
+            progressDialog.dismiss();
+            leagueGameWeekDataModel = data;
+            updateUI();
+        });
+    }
+
+
+    private void makeApiCallTemp(String leagueID, String entryID, String currentGameweek, String currentPage) {
         progressDialog.show();
 
         // Create a Map to hold the query parameters
@@ -128,9 +146,7 @@ public class GameWeekDashboard extends Fragment {
 
                     progressDialog.dismiss();
                     if (response.isSuccessful()) {
-                        try {
-                            ResponseBody responseBody = response.body();
-
+                        try (ResponseBody responseBody = response.body()){
                             if (responseBody != null) {
                                 try {
                                     String json = responseBody.string();
@@ -172,6 +188,7 @@ public class GameWeekDashboard extends Fragment {
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     public void updateUI() {
         if (leagueGameWeekDataModel != null) {
             // Update your RecyclerView and other UI components here using the data

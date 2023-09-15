@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.infotech.fplcolosseum.remote.APIServices;
 import com.infotech.fplcolosseum.remote.RetroClass;
 
@@ -26,7 +28,7 @@ public class GameWeekRepository {
         apiServices = RetroClass.getAPIService(); // set API
     }
 
-    public LiveData<ResponseBody> gameWeekDataFromAPI(String leagueID, String entryID, String currentGameweek, String currentPage) {
+    public <T> LiveData<T> gameWeekDataFromAPI(String leagueID, String entryID, String currentGameweek, String currentPage, Class<T> responseTypeClass) {
 
         // Create a Map to hold the query parameters
         Map<String, String> queryParams = new HashMap<>();
@@ -36,13 +38,13 @@ public class GameWeekRepository {
         queryParams.put("currentPage", currentPage);
         Call<ResponseBody> callAPI = apiServices.getLeagueData(queryParams);
 
-        return callAPI(callAPI);
+        return callAPI(callAPI, responseTypeClass);
     }
 
 
-    public LiveData<ResponseBody> callAPI (Call<ResponseBody> callingAPI) {
+    public <T> LiveData<T> callAPI(Call<ResponseBody> callingAPI, Class<T> classofT) {
 
-        final MutableLiveData<ResponseBody> data = new MutableLiveData<>();
+        final MutableLiveData<T> apiData = new MutableLiveData<>();
 
         try {
             callingAPI.enqueue(new Callback<ResponseBody>() {
@@ -50,35 +52,43 @@ public class GameWeekRepository {
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
 
                     if (response.isSuccessful()) {
-                        ResponseBody responseBody = response.body();
 
-                        if (responseBody != null) {
-                            try {
-                                String json = responseBody.string();
-                                Log.d("apiresponse=>", json);
-                                data.setValue(responseBody);
-                            } catch (JsonSyntaxException | IOException e) {
-                                e.printStackTrace();
+                        try (ResponseBody responseBody = response.body()) {
+                            if (responseBody != null) {
+                                apiData.setValue(convertResponse(responseBody, classofT));
+                            } else {
+                                apiData.setValue(null);
                             }
-                        } else {
-                            data.setValue(null);
-                            Log.d("apiresponse=>", "null");
+
+                        } catch (JsonSyntaxException | IOException e) {
+                            apiData.setValue(null);
+                            e.printStackTrace();
                         }
 
                     } else {
-                        data.setValue(null);
+                        apiData.setValue(null);
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
 //                    UIUtils.toast("API Calling fail", WARNING);
-                    data.setValue(null);
+                    apiData.setValue(null);
                 }
             });
         } catch (Exception e) {
-            data.setValue(null);
+            apiData.setValue(null);
         }
-        return data;
+        return apiData;
     }
+
+    public <T> T convertResponse(ResponseBody responseBody, Class<T> classofT) throws IOException {
+
+        Gson gson = new Gson();
+        String json = responseBody.string();
+        Log.d("apiResponse=>>", json);
+        return gson.fromJson(json, classofT);
+    }
+
+
 }

@@ -54,7 +54,7 @@ public class LeagueGameWeekDataModel {
         return FixtureDatas;
     }
 
-    public void setFixtureDatas(ArrayList<Object> fixtureDatas) {
+    public void setFixtureDatas(List<Object> fixtureDatas) {
         FixtureDatas = fixtureDatas;
     }
 
@@ -62,7 +62,7 @@ public class LeagueGameWeekDataModel {
         return FavoriteEntryIds;
     }
 
-    public void setFavoriteEntryIds(ArrayList<Object> favoriteEntryIds) {
+    public void setFavoriteEntryIds(List<Object> favoriteEntryIds) {
         FavoriteEntryIds = favoriteEntryIds;
     }
 
@@ -70,29 +70,29 @@ public class LeagueGameWeekDataModel {
         return AllPlayerDataStats;
     }
 
-    public void setAllPlayerDataStats(ArrayList<Object> allPlayerDataStats) {
+    public void setAllPlayerDataStats(List<Object> allPlayerDataStats) {
         AllPlayerDataStats = allPlayerDataStats;
     }
 
-    public ArrayList<Object> getGameWeeks() {
+    public List<Object> getGameWeeks() {
         return GameWeeks;
     }
 
-    public void setGameWeeks(ArrayList<Object> gameWeeks) {
+    public void setGameWeeks(List<Object> gameWeeks) {
         GameWeeks = gameWeeks;
     }
 
     private String LeagueCountryInfos = null;
-    List<Object> FixtureDatas = new ArrayList<Object>();
-    List<Object> FavoriteEntryIds = new ArrayList<Object>();
-    List<Object> AllPlayerDataStats = new ArrayList<Object>();
+    List<Object> FixtureDatas;
+    List<Object> FavoriteEntryIds;
+    List<Object> AllPlayerDataStats ;
     private String AllPlayerDataStatsStatsViewExtra = null;
     private String LeagueAvgStatsEntry = null;
     private String LeagueAvgStatsExtra = null;
     private float CurrentImpact;
     private float CurrentPlayersProgressVsLeague;
     private String SeasonHistoryGameweeks = null;
-    ArrayList<Object> GameWeeks = new ArrayList<Object>();
+    List<Object> GameWeeks ;
     private String LogText;
     private String InfoTextAboveLeague;
     private boolean HideAds;

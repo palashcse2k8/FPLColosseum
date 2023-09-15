@@ -18,15 +18,13 @@ import okhttp3.ResponseBody;
 public class GameWeekViewModel extends ViewModel {
     private GameWeekRepository _gameWeekRepository;
 
-    private MutableLiveData<ResponseBody> _data;
-    private MutableLiveData<LeagueGameWeekDataModel> _leagueGameWeekDataModel;
+    public MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(Boolean.FALSE);
+
+    private LiveData<ResponseBody> _data;
+    private LiveData<LeagueGameWeekDataModel> _leagueGameWeekDataModel;
 
     public LiveData<LeagueGameWeekDataModel> leagueGameWeekDataModel() {
         return _leagueGameWeekDataModel;
-    }
-
-    public LiveData<ResponseBody> data() {
-        return _data;
     }
 
     public GameWeekViewModel() throws IOException {
@@ -36,18 +34,12 @@ public class GameWeekViewModel extends ViewModel {
     }
 
     public void gameWeekDataFromAPI (String leagueID, String entryID, String currentGameweek, String currentPage) throws IOException {
-        _data.setValue( _gameWeekRepository.gameWeekDataFromAPI("671887", "116074", "1", "1").getValue());
-        LeagueGameWeekDataModel leagueGameWeekData = convertResponse(_data.getValue(), LeagueGameWeekDataModel.class);
-        this._leagueGameWeekDataModel.setValue(leagueGameWeekData);
+        dataLoading.setValue(true);
+        _leagueGameWeekDataModel = _gameWeekRepository.gameWeekDataFromAPI(leagueID, entryID, currentGameweek, currentPage, LeagueGameWeekDataModel.class);
+        dataLoading.setValue(false);
     }
 
-    public <T> T convertResponse(ResponseBody responseBody, Class T) throws IOException {
-
-        String json = responseBody.string();
-        Log.d("apiresponse=>", json);
-        T convertedResponse = new Gson().fromJson(json, new TypeToken<T>() {
-        }.getType());
-
-        return convertedResponse;
+    public interface APIResponseListener {
+        public ResponseBody onApiResponse(ResponseBody responseBody) throws IOException;
     }
 }

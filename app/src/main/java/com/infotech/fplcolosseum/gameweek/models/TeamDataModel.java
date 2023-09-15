@@ -4,15 +4,19 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import com.google.gson.annotations.SerializedName;
 import com.infotech.fplcolosseum.database.DataConverter;
 
 import java.util.ArrayList;
+import java.util.List;
+
 @Entity(tableName = "team_data")
 @TypeConverters(DataConverter.class)
 public class TeamDataModel {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+    @SerializedName("LiveData")
     GameWeekLiveData GameWeekLiveData;
     private float EntryId;
     private String Name;
@@ -22,7 +26,7 @@ public class TeamDataModel {
     private boolean NotInLeague;
     private String OverAllRankInfo = null;
     private String TeamH2HData = null;
-    ArrayList < Object > UsedChips = new ArrayList < Object > ();
+    List< Object > UsedChips ;
     private float TeamValue;
     private float BankValue;
     private boolean IsCupOpponent;
@@ -43,11 +47,11 @@ public class TeamDataModel {
 
     // Getter Methods
 
-    public ArrayList<Object> getUsedChips() {
+    public List<Object> getUsedChips() {
         return UsedChips;
     }
 
-    public void setUsedChips(ArrayList<Object> usedChips) {
+    public void setUsedChips(List<Object> usedChips) {
         UsedChips = usedChips;
     }
 

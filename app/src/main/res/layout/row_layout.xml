@@ -29,6 +29,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="Manager Name"
+                android:ellipsize="end"
+                android:maxLines="1"
                 style="@style/table_row_item"/>
 
             <TextView
