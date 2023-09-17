@@ -1,11 +1,34 @@
-package com.infotech.fplcolosseum.gameweek.models;
+package com.infotech.fplcolosseum.gameweek.models.web;
+
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.room.Relation;
+import androidx.room.TypeConverters;
+
+import com.infotech.fplcolosseum.database.DataConverter;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class GameWeekDataModel {
+@Entity(tableName = "GAMEWEEKDATA")
+@TypeConverters(DataConverter.class)
+public class LeagueGameWeekDataModel {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id; // You can add a primary key field for Room
     private float Gameweek;
     private float CurrentGameweek;
     private String LeagueId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private float LeagueType;
     private float EntryId;
     private float FeatureLevel;
@@ -23,18 +46,53 @@ public class GameWeekDataModel {
     private float FilterTo;
     private float LastLiveFeedEventTimeStamp;
     private String LeagueOverallLivedata = null;
-    ArrayList< Object > TeamDatas = new ArrayList < Object > ();
+    @Ignore // Mark this field as transient
+    @Relation(parentColumn = "id", entityColumn = "id")
+    private ArrayList<TeamDataModel> TeamDatas;
+
+    public List<Object> getFixtureDatas() {
+        return FixtureDatas;
+    }
+
+    public void setFixtureDatas(List<Object> fixtureDatas) {
+        FixtureDatas = fixtureDatas;
+    }
+
+    public List<Object> getFavoriteEntryIds() {
+        return FavoriteEntryIds;
+    }
+
+    public void setFavoriteEntryIds(List<Object> favoriteEntryIds) {
+        FavoriteEntryIds = favoriteEntryIds;
+    }
+
+    public List<Object> getAllPlayerDataStats() {
+        return AllPlayerDataStats;
+    }
+
+    public void setAllPlayerDataStats(List<Object> allPlayerDataStats) {
+        AllPlayerDataStats = allPlayerDataStats;
+    }
+
+    public List<Object> getGameWeeks() {
+        return GameWeeks;
+    }
+
+    public void setGameWeeks(List<Object> gameWeeks) {
+        GameWeeks = gameWeeks;
+    }
+
     private String LeagueCountryInfos = null;
-    ArrayList < Object > FixtureDatas = new ArrayList < Object > ();
-    ArrayList < Object > FavoriteEntryIds = new ArrayList < Object > ();
-    ArrayList < Object > AllPlayerDataStats = new ArrayList < Object > ();
+    List<Object> FixtureDatas;
+    List<Object> FavoriteEntryIds;
+    List<Object> AllPlayerDataStats ;
     private String AllPlayerDataStatsStatsViewExtra = null;
     private String LeagueAvgStatsEntry = null;
     private String LeagueAvgStatsExtra = null;
     private float CurrentImpact;
     private float CurrentPlayersProgressVsLeague;
     private String SeasonHistoryGameweeks = null;
-    ArrayList < Object > GameWeeks = new ArrayList < Object > ();
+    List<Object> GameWeeks ;
     private String LogText;
     private String InfoTextAboveLeague;
     private boolean HideAds;
@@ -222,6 +280,9 @@ public class GameWeekDataModel {
         return Succeeded;
     }
 
+    public ArrayList<TeamDataModel> getTeamDatas() {
+        return TeamDatas;
+    }
     // Setter Methods
 
     public void setGameweek(float Gameweek) {
@@ -390,5 +451,9 @@ public class GameWeekDataModel {
 
     public void setSucceeded(boolean Succeeded) {
         this.Succeeded = Succeeded;
+    }
+
+    public void setTeamDatas(ArrayList<TeamDataModel> teamDatas) {
+        this.TeamDatas = teamDatas;
     }
 }

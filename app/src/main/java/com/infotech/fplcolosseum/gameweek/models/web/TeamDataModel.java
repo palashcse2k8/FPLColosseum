@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.gameweek.models;
+package com.infotech.fplcolosseum.gameweek.models.web;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -7,7 +7,6 @@ import androidx.room.TypeConverters;
 import com.google.gson.annotations.SerializedName;
 import com.infotech.fplcolosseum.database.DataConverter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "team_data")

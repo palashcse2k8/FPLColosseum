@@ -8,15 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.gameweek.models.GameWeekLiveData;
-import com.infotech.fplcolosseum.gameweek.models.TeamDataModel;
+import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
+import com.infotech.fplcolosseum.gameweek.models.web.GameWeekLiveData;
+import com.infotech.fplcolosseum.gameweek.models.web.TeamDataModel;
 
 import java.util.List;
 
 public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder> {
-    private List<TeamDataModel> teams;
+    private List<ManagerModel> teams;
 
-    public TeamAdapter(List<TeamDataModel> teams) {
+    public TeamAdapter(List<ManagerModel> teams) {
         this.teams = teams;
     }
 
@@ -30,12 +31,11 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TeamViewHolder holder, int position) {
-        TeamDataModel team = teams.get(position);
-        GameWeekLiveData gameWeekLiveData = team.getLiveData();
-        holder.teamNameTextView.setText(team.getName());
-        holder.managerNameTextView.setText(team.getPlayerName());
-        holder.gameWeekPointsTextView.setText(String.valueOf(gameWeekLiveData.getPhaseTotalPoints()));
-        holder.totalPointsTextView.setText(String.valueOf( gameWeekLiveData.getSeasonTotalPoints()));
+        ManagerModel team = teams.get(position);
+        holder.teamNameTextView.setText(team.getTeamName());
+        holder.managerNameTextView.setText(team.getManagerName());
+        holder.gameWeekPointsTextView.setText(String.valueOf(team.getGameWeekPoints()));
+        holder.totalPointsTextView.setText(String.valueOf( team.getSeasonTotalPoints()));
     }
 
     @Override

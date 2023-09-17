@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,8 +21,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.infotech.fplcolosseum.databinding.GameweekDashboardFragmentBinding;
 import com.infotech.fplcolosseum.gameweek.adapter.TeamAdapter;
-import com.infotech.fplcolosseum.gameweek.models.LeagueGameWeekDataModel;
-import com.infotech.fplcolosseum.gameweek.models.TeamDataModel;
+import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
+import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
+import com.infotech.fplcolosseum.gameweek.models.web.LeagueGameWeekDataModel;
+import com.infotech.fplcolosseum.gameweek.models.web.TeamDataModel;
 import com.infotech.fplcolosseum.gameweek.viewmodels.GameWeekViewModel;
 import com.infotech.fplcolosseum.remote.APIServices;
 import com.infotech.fplcolosseum.remote.RetroClass;
@@ -45,10 +46,10 @@ public class GameWeekDashboard extends Fragment {
     GameweekDashboardFragmentBinding binding;
     private RecyclerView recyclerView;
     private TeamAdapter adapter;
-    private List<TeamDataModel> teams;
-    private ProgressDialog progressDialog;
 
-    private LeagueGameWeekDataModel leagueGameWeekDataModel;
+    private CustomGameWeekDataModel weekDataModel;
+    private List<ManagerModel> teams;
+    private ProgressDialog progressDialog;
 
     private GameWeekViewModel viewModel;
 
@@ -59,17 +60,18 @@ public class GameWeekDashboard extends Fragment {
         progressDialog.setTitle("Loading...");
         progressDialog.setMessage("Please wait.");
         progressDialog.setCancelable(false);
+
+        // Initialize ViewModel and other components here
+        viewModel = new ViewModelProvider(requireActivity()).get(GameWeekViewModel.class);
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = GameweekDashboardFragmentBinding.inflate(inflater, container, false);
-
-        viewModel = new ViewModelProvider(requireActivity()).get(GameWeekViewModel.class);
+//        viewModel = new ViewModelProvider(requireActivity()).get(GameWeekViewModel.class);
         binding.setGameWeekViewModel(viewModel);
-
-        makeApiCall("671887", "116074","1", "1");
 
         return binding.getRoot();
     }
@@ -78,11 +80,13 @@ public class GameWeekDashboard extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupRecyclerView();
+
+        makeApiCall("671887", "116074", "1", "1");
         binding.gameWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d("selected=> ", "item selected" + i);
-                makeApiCall("671887", "116074", String.valueOf(i+1), "1");
+                makeApiCall("671887", "116074", String.valueOf(i + 1), "1");
             }
 
             @Override
@@ -90,14 +94,16 @@ public class GameWeekDashboard extends Fragment {
 
             }
         });
+
+
     }
 
-    public void setupRecyclerView(){
+    public void setupRecyclerView() {
         RecyclerView recyclerView = binding.recyclerView1;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         // Initialize your data (replace with your actual data)
-        teams = new ArrayList<>();
+        teams = weekDataModel.getTeams();
 
         // Sort the data based on your predefined rules
 //        Collections.sort(teams, (team1, team2) -> {
@@ -108,6 +114,7 @@ public class GameWeekDashboard extends Fragment {
         adapter = new TeamAdapter(teams);
         recyclerView.setAdapter(adapter);
     }
+
     private void makeApiCall(String leagueID, String entryID, String currentGameweek, String currentPage) {
         try {
             progressDialog.show();
@@ -116,86 +123,99 @@ public class GameWeekDashboard extends Fragment {
             throw new RuntimeException(e);
         }
 
+        // Set up LiveData observer
+        liveDataObserver();
+    }
+
+    private void liveDataObserver() {
         viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), data -> {
-            progressDialog.dismiss();
-            leagueGameWeekDataModel = data;
-            updateUI();
+//            progressDialog.dismiss();
+//            Log.d("oberver=>", "triggers" + data.toString());
+            if (data != null) {
+                weekDataModel = data;
+                updateUI();
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
+            } else {
+                // Handle API call errors here
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
+            }
         });
     }
 
-
-    private void makeApiCallTemp(String leagueID, String entryID, String currentGameweek, String currentPage) {
-        progressDialog.show();
-
-        // Create a Map to hold the query parameters
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("leagueId", leagueID);
-        queryParams.put("entry", entryID);
-        queryParams.put("currentweek", currentGameweek);
-        queryParams.put("currentPage", currentPage);
-        // Add more parameters as needed
-
-        try {
-
-            APIServices apiServices = RetroClass.getAPIService(); // set API
-            Call<ResponseBody> callAPI = apiServices.getLeagueData(queryParams);
-
-            callAPI.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-
-                    progressDialog.dismiss();
-                    if (response.isSuccessful()) {
-                        try (ResponseBody responseBody = response.body()){
-                            if (responseBody != null) {
-                                try {
-                                    String json = responseBody.string();
-                                    Log.d("apiresponse=>", json);
-                                    leagueGameWeekDataModel = new Gson().fromJson(json, LeagueGameWeekDataModel.class);
-                                    updateUI();
-                                    // Handle the deserialized data
-                                } catch (JsonSyntaxException e) {
-                                    // Handle JSON syntax exception
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    // Handle IOException
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                // Handle null response body
-                            }
-
-                        } catch (Exception e) {
-
-                            e.printStackTrace();
-                        }
-                    } else {
-                        // Handle an error response
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                    progressDialog.dismiss();
-//                    UIUtils.toast("API Calling fail", WARNING);
-                }
-            });
-        } catch (
-                Exception exception) {
-            exception.printStackTrace();
-//            UIUtils.toast("API Calling fail", WARNING);
-        }
-    }
+//    private void makeApiCallTemp(String leagueID, String entryID, String currentGameweek, String currentPage) {
+//        progressDialog.show();
+//
+//        // Create a Map to hold the query parameters
+//        Map<String, String> queryParams = new HashMap<>();
+//        queryParams.put("leagueId", leagueID);
+//        queryParams.put("entry", entryID);
+//        queryParams.put("currentweek", currentGameweek);
+//        queryParams.put("currentPage", currentPage);
+//        // Add more parameters as needed
+//
+//        try {
+//
+//            APIServices apiServices = RetroClass.getAPIService(); // set API
+//            Call<ResponseBody> callAPI = apiServices.getLeagueData(queryParams);
+//
+//            callAPI.enqueue(new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+//
+//                    progressDialog.dismiss();
+//                    if (response.isSuccessful()) {
+//                        try (ResponseBody responseBody = response.body()) {
+//                            if (responseBody != null) {
+//                                try {
+//                                    String json = responseBody.string();
+//                                    Log.d("apiresponse=>", json);
+//                                    leagueGameWeekDataModel = new Gson().fromJson(json, LeagueGameWeekDataModel.class);
+//                                    updateUI();
+//                                    // Handle the deserialized data
+//                                } catch (JsonSyntaxException e) {
+//                                    // Handle JSON syntax exception
+//                                    e.printStackTrace();
+//                                } catch (IOException e) {
+//                                    // Handle IOException
+//                                    e.printStackTrace();
+//                                }
+//                            } else {
+//                                // Handle null response body
+//                            }
+//
+//                        } catch (Exception e) {
+//
+//                            e.printStackTrace();
+//                        }
+//                    } else {
+//                        // Handle an error response
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+//                    progressDialog.dismiss();
+////                    UIUtils.toast("API Calling fail", WARNING);
+//                }
+//            });
+//        } catch (
+//                Exception exception) {
+//            exception.printStackTrace();
+////            UIUtils.toast("API Calling fail", WARNING);
+//        }
+//    }
 
 
     @SuppressLint("NotifyDataSetChanged")
     public void updateUI() {
-        if (leagueGameWeekDataModel != null) {
+        if (weekDataModel != null) {
             // Update your RecyclerView and other UI components here using the data
             TextView leagueName = binding.leagueName;
-            leagueName.setText(leagueGameWeekDataModel.getLeagueName());
+            leagueName.setText(weekDataModel.getLeagueName());
             teams.clear(); // Clear the existing data
-            teams.addAll(leagueGameWeekDataModel.getTeamDatas());
+            teams.addAll(weekDataModel.getTeams());
             adapter.notifyDataSetChanged();
         } else {
             // Handle the case where gameWeekDataModel is null or the data is not as expected

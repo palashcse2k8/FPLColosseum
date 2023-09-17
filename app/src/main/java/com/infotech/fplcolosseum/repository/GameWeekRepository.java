@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
+import com.infotech.fplcolosseum.gameweek.models.web.LeagueGameWeekDataModel;
 import com.infotech.fplcolosseum.remote.APIServices;
 import com.infotech.fplcolosseum.remote.RetroClass;
 
@@ -28,7 +30,7 @@ public class GameWeekRepository {
         apiServices = RetroClass.getAPIService(); // set API
     }
 
-    public <T> LiveData<T> gameWeekDataFromAPI(String leagueID, String entryID, String currentGameweek, String currentPage, Class<T> responseTypeClass) {
+    public LiveData<CustomGameWeekDataModel> gameWeekDataFromAPI(String leagueID, String entryID, String currentGameweek, String currentPage) {
 
         // Create a Map to hold the query parameters
         Map<String, String> queryParams = new HashMap<>();
@@ -38,9 +40,19 @@ public class GameWeekRepository {
         queryParams.put("currentPage", currentPage);
         Call<ResponseBody> callAPI = apiServices.getLeagueData(queryParams);
 
-        return callAPI(callAPI, responseTypeClass);
+        LiveData<LeagueGameWeekDataModel> leagueGameWeekDataModel = callAPI(callAPI, LeagueGameWeekDataModel.class);
+
+        return convertToCustomModel(leagueGameWeekDataModel.getValue());
     }
 
+    public LiveData<CustomGameWeekDataModel> convertToCustomModel( LeagueGameWeekDataModel leagueGameWeekDataModel) {
+        final MutableLiveData<CustomGameWeekDataModel> customModel = new MutableLiveData<>();
+        CustomGameWeekDataModel customGameWeekDataModel = new CustomGameWeekDataModel();
+        customGameWeekDataModel.setLeagueId(leagueGameWeekDataModel.getLeagueId());
+
+        customModel.setValue(customGameWeekDataModel);
+        return customModel;
+    }
 
     public <T> LiveData<T> callAPI(Call<ResponseBody> callingAPI, Class<T> classofT) {
 
@@ -89,6 +101,4 @@ public class GameWeekRepository {
         Log.d("apiResponse=>>", json);
         return gson.fromJson(json, classofT);
     }
-
-
 }

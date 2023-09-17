@@ -7,8 +7,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.infotech.fplcolosseum.gameweek.models.LeagueGameWeekDataModel;
-import com.infotech.fplcolosseum.gameweek.models.TeamDataModel;
+import com.infotech.fplcolosseum.gameweek.models.web.LeagueGameWeekDataModel;
+import com.infotech.fplcolosseum.gameweek.models.web.TeamDataModel;
 
 @Database(entities = {LeagueGameWeekDataModel.class, TeamDataModel.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {

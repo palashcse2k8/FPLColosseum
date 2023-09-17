@@ -3,7 +3,7 @@ package com.infotech.fplcolosseum.database;
 import androidx.room.TypeConverter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.infotech.fplcolosseum.gameweek.models.GameWeekLiveData;
+import com.infotech.fplcolosseum.gameweek.models.web.GameWeekLiveData;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

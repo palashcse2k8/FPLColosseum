@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.gameweek.models;
+package com.infotech.fplcolosseum.gameweek.models.web;
 
 import java.util.ArrayList;
 
