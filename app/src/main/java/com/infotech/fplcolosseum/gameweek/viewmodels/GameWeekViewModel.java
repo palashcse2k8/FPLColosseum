@@ -4,11 +4,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+
 import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
-import com.infotech.fplcolosseum.gameweek.models.web.LeagueGameWeekDataModel;
+import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
 import com.infotech.fplcolosseum.repository.GameWeekRepository;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 
@@ -21,9 +23,16 @@ public class GameWeekViewModel extends ViewModel {
         return _customGameWeekDataModelLiveData;
     }
 
+    private LiveData<List<ManagerModel>> _managerList;
+
+    public LiveData<List<ManagerModel>> getManagerList() {
+        return _managerList;
+    }
+
     public GameWeekViewModel() throws IOException {
         _gameWeekRepository = new GameWeekRepository();
         _data = new MutableLiveData<>();
+        _managerList = new MutableLiveData<>();
     }
 
     public void gameWeekDataFromAPI (String leagueID, String entryID, String currentGameweek, String currentPage) throws IOException {
@@ -31,6 +40,14 @@ public class GameWeekViewModel extends ViewModel {
         _customGameWeekDataModelLiveData = _gameWeekRepository.gameWeekDataFromAPI(leagueID, entryID, currentGameweek, currentPage);
         dataLoading.setValue(false);
     }
+
+    public void gameMangerListFromAPI(String leagueID) throws IOException {
+        dataLoading.setValue(true);
+        _managerList = _gameWeekRepository.getManagerList(leagueID);
+        dataLoading.setValue(false);
+    }
+
+
 
     public interface APIResponseListener {
         public ResponseBody onApiResponse(ResponseBody responseBody) throws IOException;

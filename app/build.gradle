@@ -52,4 +52,9 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
+    //resolve bloody 1000 class duplicates error, thanks good for this heck!
+    implementation (platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.6.2"
+
 }

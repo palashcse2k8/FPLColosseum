@@ -28,13 +28,11 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/contentFrame"
-        android:name="com.infotech.fplcolosseum.gameweek.views.GameWeekDashboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/appbarLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:tag="my_tag"
-        tools:layout="@layout/gameweek_dashboard_fragment" />
+        android:tag="my_tag" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
