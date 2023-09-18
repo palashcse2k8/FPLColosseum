@@ -8,7 +8,9 @@ import androidx.lifecycle.Transformations;
 
 import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
 import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
+import com.infotech.fplcolosseum.gameweek.models.custom.PlayerDataModel;
 import com.infotech.fplcolosseum.gameweek.models.web.LeagueGameWeekDataModel;
+import com.infotech.fplcolosseum.gameweek.models.web.PlayerModel;
 import com.infotech.fplcolosseum.gameweek.models.web.TeamDataModel;
 import com.infotech.fplcolosseum.remote.APIServices;
 import com.infotech.fplcolosseum.remote.RetroClass;
@@ -51,8 +53,6 @@ public class GameWeekRepository {
     public List<ManagerModel> filterMangers(LeagueGameWeekDataModel leagueGameWeekDataModel) {
         List<ManagerModel> managerModels = new ArrayList<>();
 
-        List<TeamDataModel> teamDataModels = leagueGameWeekDataModel.getTeamDatas();
-
         for (TeamDataModel teamDataModel : leagueGameWeekDataModel.getTeamDatas()) {
             ManagerModel managerModel = new ManagerModel();
             managerModel.setId(teamDataModel.getEntryId());
@@ -62,6 +62,42 @@ public class GameWeekRepository {
         }
         return managerModels;
     }
+
+    public LiveData<List<PlayerDataModel>> getManagerData(String managerId, String currentGameweek) {
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("leagueId", "entry_" + managerId);
+        queryParams.put("currentweek", currentGameweek);
+        Call<ResponseBody> callAPI = apiServices.getManagerData(queryParams);
+
+        LiveData<LeagueGameWeekDataModel> leagueGameWeekDataModel = callAPI(callAPI, LeagueGameWeekDataModel.class);
+
+
+        return Transformations.map(leagueGameWeekDataModel, complexData -> {
+            if (complexData != null) {
+                return filterPlayers(complexData);
+            }
+            return null; // Handle the case where complexData is null
+        });
+    }
+
+    public List<PlayerDataModel> filterPlayers(LeagueGameWeekDataModel leagueGameWeekDataModel) {
+        List<PlayerDataModel> players = new ArrayList<>();
+
+        for (PlayerModel playerModel : leagueGameWeekDataModel.getTeamDatas().get(0).getLiveData().getPlayers()) {
+
+            PlayerDataModel playerDataModel = new PlayerDataModel();
+            playerDataModel.setPlayerName(playerModel.getPlayerWebName());
+            playerDataModel.setPlayerID(playerModel.getId());
+            playerDataModel.setTeamName(playerModel.getTeamName());
+            playerDataModel.setPoints(playerModel.getTotalPoints());
+            playerDataModel.setCaptain(playerModel.getIsCaptain());
+            playerDataModel.setViceCaptain(playerModel.getIsViceCaptain());
+
+            players.add(playerDataModel);
+        }
+        return players;
+    }
+
 
     public LiveData<CustomGameWeekDataModel> gameWeekDataFromAPI(String leagueID, String entryID, String currentGameweek, String currentPage) {
 

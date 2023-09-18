@@ -30,5 +30,5 @@ public interface APIServices {
             "Content-Type: application/json",
             "Functionkey: " + StaticConstants.FUNCTION_KEY  // Use the constant here
     })
-    Call<ResponseBody> getLeagueManagerData(@QueryMap Map<String, String> queryParams);
+    Call<ResponseBody> getManagerData(@QueryMap Map<String, String> queryParams);
 }

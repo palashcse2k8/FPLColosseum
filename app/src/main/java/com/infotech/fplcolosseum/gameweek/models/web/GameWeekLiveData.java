@@ -7,7 +7,17 @@ public class GameWeekLiveData {
     private float PastSeasonOverallRank;
     private float PastSeasonOverallPoints;
     private float Transfers;
-    ArrayList<Object> Players = new ArrayList<Object>();
+//    ArrayList<Object> Players = new ArrayList<Object>();
+    ArrayList<PlayerModel> Players;
+
+    public ArrayList<PlayerModel> getPlayers() {
+        return Players;
+    }
+
+    public void setPlayers(ArrayList<PlayerModel> players) {
+        Players = players;
+    }
+
     private String ActiveChip;
     private float Gameweek;
     private String CaptainWebName;

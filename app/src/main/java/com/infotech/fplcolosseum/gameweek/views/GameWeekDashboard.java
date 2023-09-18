@@ -66,9 +66,8 @@ public class GameWeekDashboard extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupRecyclerView();
-
-        getMangerList();
         managerListObserver();
+        getMangerList();
         binding.gameWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -84,15 +83,12 @@ public class GameWeekDashboard extends Fragment {
     }
 
     public void getMangerList(){
-//        makeApiCall("671887", "116074", "1", "1");
         try {
             progressDialog.show();
             viewModel.gameMangerListFromAPI("671887","1", "1");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        managerListObserver();
     }
 
     public void setupRecyclerView() {
@@ -143,8 +139,6 @@ public class GameWeekDashboard extends Fragment {
 
     public void managerListObserver() {
         viewModel.getManagerList().observe(getViewLifecycleOwner(), data -> {
-//            progressDialog.dismiss();
-//            Log.d("oberver=>", "triggers" + data.toString());
             if (data != null) {
                 StaticConstants.managerList = data;
                 updateUI();
