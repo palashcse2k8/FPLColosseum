@@ -3,6 +3,7 @@ package com.infotech.fplcolosseum.repository;
 import static com.infotech.fplcolosseum.remote.APIHandler.callAPI;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -27,11 +29,13 @@ public class GameWeekRepository {
         apiServices = RetroClass.getAPIService(); // set API
     }
 
-    public LiveData<List<ManagerModel>> getManagerList(String leagueID) {
+    public LiveData<List<ManagerModel>> getManagerList(String leagueID, String currentGameweek, String currentPage) {
 
         // Create a Map to hold the query parameters
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("leagueId", leagueID);
+        queryParams.put("currentweek", currentGameweek);
+        queryParams.put("currentPage", currentPage);
         Call<ResponseBody> callAPI = apiServices.getLeagueData(queryParams);
 
         LiveData<LeagueGameWeekDataModel> leagueGameWeekDataModel = callAPI(callAPI, LeagueGameWeekDataModel.class);

@@ -32,6 +32,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
     @Override
     public void onBindViewHolder(@NonNull TeamViewHolder holder, int position) {
         ManagerModel team = teams.get(position);
+        holder.serialNumber.setText(String.valueOf(position+1));
         holder.teamNameTextView.setText(team.getTeamName());
         holder.managerNameTextView.setText(team.getManagerName());
         holder.gameWeekPointsTextView.setText(String.valueOf(team.getGameWeekPoints()));
@@ -49,6 +50,8 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
         TextView gameWeekPointsTextView;
         TextView totalPointsTextView;
 
+        TextView serialNumber;
+
 
         public TeamViewHolder(View itemView) {
             super(itemView);
@@ -56,6 +59,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
             managerNameTextView = itemView.findViewById(R.id.tvManagerName);
             gameWeekPointsTextView = itemView.findViewById(R.id.tvGameWeekPoints);
             totalPointsTextView = itemView.findViewById(R.id.tvTotalPoints);
+            serialNumber = itemView.findViewById(R.id.tvSN);
         }
     }
 }

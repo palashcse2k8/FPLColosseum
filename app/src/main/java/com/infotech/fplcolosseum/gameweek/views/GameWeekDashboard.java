@@ -72,8 +72,8 @@ public class GameWeekDashboard extends Fragment {
         binding.gameWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("selected=> ", "item selected" + i);
-                makeApiCall("671887", "116074", String.valueOf(i + 1), "1");
+//                Log.d("selected=> ", "item selected" + i);
+//                makeApiCall("671887", "116074", String.valueOf(i + 1), "1");
             }
 
             @Override
@@ -87,10 +87,12 @@ public class GameWeekDashboard extends Fragment {
 //        makeApiCall("671887", "116074", "1", "1");
         try {
             progressDialog.show();
-            viewModel.gameMangerListFromAPI("671887");
+            viewModel.gameMangerListFromAPI("671887","1", "1");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        managerListObserver();
     }
 
     public void setupRecyclerView() {
@@ -111,15 +113,15 @@ public class GameWeekDashboard extends Fragment {
     }
 
     private void makeApiCall(String leagueID, String entryID, String currentGameweek, String currentPage) {
-        try {
-            progressDialog.show();
-            viewModel.gameWeekDataFromAPI(leagueID, entryID, currentGameweek, currentPage);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Set up LiveData observer
-        liveDataObserver();
+//        try {
+//            progressDialog.show();
+//            viewModel.gameWeekDataFromAPI(leagueID, entryID, currentGameweek, currentPage);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        // Set up LiveData observer
+//        liveDataObserver();
     }
 
     private void liveDataObserver() {

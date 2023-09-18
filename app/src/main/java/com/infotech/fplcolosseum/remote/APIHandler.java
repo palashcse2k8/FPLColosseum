@@ -28,11 +28,13 @@ public class APIHandler {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
 
+                    Log.d("request url => ", call.request().url().uri().toString());
                     if (response.isSuccessful()) {
 
                         try (ResponseBody responseBody = response.body()) {
                             if (responseBody != null) {
-                                apiData.setValue(convertResponse(responseBody, apiResponseType));
+                                T convertedResponse = convertResponse(responseBody, apiResponseType);
+                                apiData.setValue(convertedResponse);
                             } else {
                                 apiData.setValue(null);
                             }
@@ -64,6 +66,11 @@ public class APIHandler {
         Gson gson = new Gson();
         String json = responseBody.string();
         Log.d("apiResponse=>>", json);
-        return gson.fromJson(json, classofT);
+        try {
+            return gson.fromJson(json, classofT);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

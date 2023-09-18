@@ -41,9 +41,9 @@ public class GameWeekViewModel extends ViewModel {
         dataLoading.setValue(false);
     }
 
-    public void gameMangerListFromAPI(String leagueID) throws IOException {
+    public void gameMangerListFromAPI(String leagueID, String currentGameweek, String currentPage) throws IOException {
         dataLoading.setValue(true);
-        _managerList = _gameWeekRepository.getManagerList(leagueID);
+        _managerList = _gameWeekRepository.getManagerList(leagueID, currentGameweek, currentPage);
         dataLoading.setValue(false);
     }
 
