@@ -50,37 +50,37 @@ public class GameWeekViewModel extends ViewModel {
         dataLoading.setValue(false);
     }
 
-    public void gameMangerListFromAPI(String leagueID, String currentGameweek, String currentPage) throws IOException {
-        dataLoading.setValue(true);
-
-        // Source 1
-        LiveData<List<ManagerModel>> source1 = _gameWeekRepository.getManagerList(leagueID, currentGameweek, currentPage);
-        _managerList.addSource(source1, managerModels -> {
-            if (managerModels != null) {
-                _managerList.postValue(managerModels);
-
-                // Source 1 is completed, now call Source 2
-                callSource2(leagueID, currentGameweek, currentPage);
-            }
-        });
-
-        dataLoading.setValue(false);
-    }
-
-    private void callSource2(String leagueID, String currentGameweek, String currentPage) {
-        // Source 2
-        LiveData<List<ManagerModel>> source2 = _gameWeekRepository.getManagerList(leagueID, currentGameweek, "2");
-        _managerList.addSource(source2, managerModels -> {
-            if (managerModels != null) {
-                // Append data from Source 2 to _managerList
-                List<ManagerModel> currentData = _managerList.getValue();
-                if (currentData != null) {
-                    currentData.addAll(managerModels);
-                    _managerList.setValue(currentData);
-                }
-            }
-        });
-    }
+//    public void gameMangerListFromAPI(String leagueID, String currentGameweek, String currentPage) throws IOException {
+//        dataLoading.setValue(true);
+//
+//        // Source 1
+//        LiveData<List<ManagerModel>> source1 = _gameWeekRepository.getManagerList(leagueID, currentGameweek, currentPage);
+//        _managerList.addSource(source1, managerModels -> {
+//            if (managerModels != null) {
+//                _managerList.postValue(managerModels);
+//
+//                // Source 1 is completed, now call Source 2
+//                callSource2(leagueID, currentGameweek, currentPage);
+//            }
+//        });
+//
+//        dataLoading.setValue(false);
+//    }
+//
+//    private void callSource2(String leagueID, String currentGameweek, String currentPage) {
+//        // Source 2
+//        LiveData<List<ManagerModel>> source2 = _gameWeekRepository.getManagerList(leagueID, currentGameweek, "2");
+//        _managerList.addSource(source2, managerModels -> {
+//            if (managerModels != null) {
+//                // Append data from Source 2 to _managerList
+//                List<ManagerModel> currentData = _managerList.getValue();
+//                if (currentData != null) {
+//                    currentData.addAll(managerModels);
+//                    _managerList.setValue(currentData);
+//                }
+//            }
+//        });
+//    }
 
     public interface APIResponseListener {
         public ResponseBody onApiResponse(ResponseBody responseBody) throws IOException;

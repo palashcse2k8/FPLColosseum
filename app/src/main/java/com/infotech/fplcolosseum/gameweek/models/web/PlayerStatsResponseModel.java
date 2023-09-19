@@ -14,7 +14,7 @@ public class PlayerStatsResponseModel {
     private String ManualSubData = null;
     private String ManualSubNotes;
     @SerializedName("PlayerPointsDatas")
-    ArrayList< PlayerPointsDatas > PlayerPointsDatas;
+    ArrayList<PlayerPointsDatas > PlayerPointsDatas;
 
     public ArrayList<PlayerPointsDatas> getPlayerPointsDatas() {
         return PlayerPointsDatas;

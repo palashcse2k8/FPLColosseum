@@ -66,7 +66,7 @@ public class GameWeekDashboard extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupRecyclerView();
-        managerListObserver();
+        setUpLiveDataObserver();
         getMangerList();
         binding.gameWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -84,6 +84,7 @@ public class GameWeekDashboard extends Fragment {
 
     public void getMangerList(){
         try {
+            Log.d(StaticConstants.LOG_TAG, "Gettings ManagerList");
             progressDialog.show();
             viewModel.gameWeekDataFromAPI("671887","1","1", "1");
         } catch (IOException e) {
@@ -137,8 +138,10 @@ public class GameWeekDashboard extends Fragment {
         });
     }
 
-    public void managerListObserver() {
+    public void setUpLiveDataObserver() {
+
         viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), data -> {
+            Log.d(StaticConstants.LOG_TAG, "leagueGameWeekDataModel changed");
             if (data != null) {
                 StaticConstants.managerList = data.getTeams();
                 updateUI();
@@ -154,6 +157,7 @@ public class GameWeekDashboard extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     public void updateUI() {
+        Log.d(StaticConstants.LOG_TAG, "Updating UI");
         if (StaticConstants.managerList != null) {
             // Update your RecyclerView and other UI components here using the data
             TextView leagueName = binding.leagueName;
