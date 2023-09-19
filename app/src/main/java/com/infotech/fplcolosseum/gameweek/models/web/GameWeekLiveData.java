@@ -1,5 +1,7 @@
 package com.infotech.fplcolosseum.gameweek.models.web;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class GameWeekLiveData {
@@ -8,13 +10,14 @@ public class GameWeekLiveData {
     private float PastSeasonOverallPoints;
     private float Transfers;
 //    ArrayList<Object> Players = new ArrayList<Object>();
-    ArrayList<PlayerModel> Players;
+    @SerializedName("Players")
+    ArrayList<PlayerResponseModel> Players;
 
-    public ArrayList<PlayerModel> getPlayers() {
+    public ArrayList<PlayerResponseModel> getPlayers() {
         return Players;
     }
 
-    public void setPlayers(ArrayList<PlayerModel> players) {
+    public void setPlayers(ArrayList<PlayerResponseModel> players) {
         Players = players;
     }
 

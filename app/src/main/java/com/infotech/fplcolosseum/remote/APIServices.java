@@ -15,9 +15,6 @@ import retrofit2.http.QueryMap;
 
 public interface APIServices {
 
-    @POST("RequestHandler/v1/submitFormC")
-    Call<ResponseBody> submitFormC(@Header("deviceId") String deviceId, @Body String payload);
-
     @GET("api/LeagueFunction")
     @Headers({
             "Content-Type: application/json",
@@ -31,4 +28,11 @@ public interface APIServices {
             "Functionkey: " + StaticConstants.FUNCTION_KEY  // Use the constant here
     })
     Call<ResponseBody> getManagerData(@QueryMap Map<String, String> queryParams);
+
+    @GET("api/PlayerStatsFunction")
+    @Headers({
+            "Content-Type: application/json",
+            "Functionkey: " + StaticConstants.FUNCTION_KEY  // Use the constant here
+    })
+    Call<ResponseBody> getPlayerData(@QueryMap Map<String, String> queryParams);
 }

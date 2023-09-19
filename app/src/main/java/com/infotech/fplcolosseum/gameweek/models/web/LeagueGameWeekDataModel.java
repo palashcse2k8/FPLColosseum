@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.Relation;
 import androidx.room.TypeConverters;
 
+import com.google.gson.annotations.SerializedName;
 import com.infotech.fplcolosseum.database.DataConverter;
 
 import java.util.ArrayList;
@@ -48,7 +49,8 @@ public class LeagueGameWeekDataModel {
     private String LeagueOverallLivedata = null;
     @Ignore // Mark this field as transient
     @Relation(parentColumn = "id", entityColumn = "id")
-    private ArrayList<TeamDataModel> TeamDatas;
+    @SerializedName("TeamDatas")
+    private ArrayList<TeamDataResponseModel> TeamDatas;
 
     public List<Object> getFixtureDatas() {
         return FixtureDatas;
@@ -280,7 +282,7 @@ public class LeagueGameWeekDataModel {
         return Succeeded;
     }
 
-    public ArrayList<TeamDataModel> getTeamDatas() {
+    public ArrayList<TeamDataResponseModel> getTeamDatas() {
         return TeamDatas;
     }
     // Setter Methods
@@ -453,7 +455,7 @@ public class LeagueGameWeekDataModel {
         this.Succeeded = Succeeded;
     }
 
-    public void setTeamDatas(ArrayList<TeamDataModel> teamDatas) {
+    public void setTeamDatas(ArrayList<TeamDataResponseModel> teamDatas) {
         this.TeamDatas = teamDatas;
     }
 }

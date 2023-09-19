@@ -20,60 +20,35 @@ public class GameWeekViewModel extends ViewModel {
     private GameWeekRepository _gameWeekRepository;
     public MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(Boolean.FALSE);
     private LiveData<ResponseBody> _data;
-    private LiveData<CustomGameWeekDataModel> _customGameWeekDataModelLiveData;
+
+    private MediatorLiveData<List<ManagerModel>> _managerList;
+    private MediatorLiveData<CustomGameWeekDataModel> _customGameWeekDataModelLiveData;
     public LiveData<CustomGameWeekDataModel> leagueGameWeekDataModel() {
         return _customGameWeekDataModelLiveData;
     }
 
-    private MediatorLiveData<List<ManagerModel>> _managerList;
 
-    public LiveData<List<ManagerModel>> getManagerList() {
-        return _managerList;
-    }
+//    public LiveData<List<ManagerModel>> getManagerList() {
+//        return _managerList;
+//    }
 
     public GameWeekViewModel() throws IOException {
         _gameWeekRepository = new GameWeekRepository();
         _data = new MutableLiveData<>();
+        _customGameWeekDataModelLiveData = new MediatorLiveData<>();
         _managerList = new MediatorLiveData<>();
+
     }
 
     public void gameWeekDataFromAPI (String leagueID, String entryID, String currentGameweek, String currentPage) throws IOException {
         dataLoading.setValue(true);
-        _customGameWeekDataModelLiveData = _gameWeekRepository.gameWeekDataFromAPI(leagueID, entryID, currentGameweek, currentPage);
+        _customGameWeekDataModelLiveData.addSource(_gameWeekRepository.gameMangerListFromAPI(leagueID, currentGameweek, currentPage), managerModels -> {
+            CustomGameWeekDataModel customGameWeekDataModel = new CustomGameWeekDataModel();
+            customGameWeekDataModel.setTeams(managerModels);
+            _customGameWeekDataModelLiveData.postValue(customGameWeekDataModel);
+        });
         dataLoading.setValue(false);
     }
-
-//    public void gameMangerListFromAPI(String leagueID, String currentGameweek, String currentPage) throws IOException {
-//        dataLoading.setValue(true);
-//
-//        // Source 1
-//        LiveData<List<ManagerModel>> source1 = _gameWeekRepository.getManagerList(leagueID, currentGameweek, currentPage);
-//        _managerList.addSource(source1, managerModels -> {
-//            if (managerModels != null) {
-//                List<ManagerModel> currentData = _managerList.getValue();
-//                if (currentData == null) {
-//                    currentData = new ArrayList<>();
-//                }
-//                currentData.addAll(managerModels);
-//                _managerList.setValue(currentData);
-//            }
-//        });
-//
-//        // Source 2
-//        LiveData<List<ManagerModel>> source2 = _gameWeekRepository.getManagerList(leagueID, currentGameweek, "2");
-//        _managerList.addSource(source2, managerModels -> {
-//            if (managerModels != null) {
-//                List<ManagerModel> currentData = _managerList.getValue();
-//                if (currentData == null) {
-//                    currentData = new ArrayList<>();
-//                }
-//                currentData.addAll(managerModels);
-//                _managerList.setValue(currentData);
-//            }
-//        });
-//
-//        dataLoading.setValue(false);
-//    }
 
     public void gameMangerListFromAPI(String leagueID, String currentGameweek, String currentPage) throws IOException {
         dataLoading.setValue(true);

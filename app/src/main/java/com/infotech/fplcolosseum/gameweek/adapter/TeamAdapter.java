@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
-import com.infotech.fplcolosseum.gameweek.models.web.GameWeekLiveData;
-import com.infotech.fplcolosseum.gameweek.models.web.TeamDataModel;
 
 import java.util.List;
 
@@ -37,6 +35,10 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
         holder.managerNameTextView.setText(team.getManagerName());
         holder.gameWeekPointsTextView.setText(String.valueOf(team.getGameWeekPoints()));
         holder.totalPointsTextView.setText(String.valueOf( team.getSeasonTotalPoints()));
+        if(!team.getPlayersAll().isEmpty()) {
+            String data = team.getPlayersAll().get(0).getPlayerName() + " -> " + team.getPlayersAll().get(0).getPoints() ;
+            holder.totalPointsTextView.setText(data);
+        }
     }
 
     @Override

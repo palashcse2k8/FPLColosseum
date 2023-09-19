@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity(tableName = "team_data")
 @TypeConverters(DataConverter.class)
-public class TeamDataModel {
+public class TeamDataResponseModel {
 
     @PrimaryKey(autoGenerate = true)
     private int id;

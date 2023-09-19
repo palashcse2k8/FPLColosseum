@@ -85,7 +85,7 @@ public class GameWeekDashboard extends Fragment {
     public void getMangerList(){
         try {
             progressDialog.show();
-            viewModel.gameMangerListFromAPI("671887","1", "1");
+            viewModel.gameWeekDataFromAPI("671887","1","1", "1");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -138,9 +138,9 @@ public class GameWeekDashboard extends Fragment {
     }
 
     public void managerListObserver() {
-        viewModel.getManagerList().observe(getViewLifecycleOwner(), data -> {
+        viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), data -> {
             if (data != null) {
-                StaticConstants.managerList = data;
+                StaticConstants.managerList = data.getTeams();
                 updateUI();
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();

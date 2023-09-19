@@ -2,7 +2,7 @@ package com.infotech.fplcolosseum.gameweek.models.web;
 
 import java.util.ArrayList;
 
-public class PlayerModel {
+public class PlayerResponseModel {
     private boolean ForcedInTeamNotEnoughReqPlayers;
     private boolean IsCaptain;
     private boolean IsViceCaptain;

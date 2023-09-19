@@ -8,9 +8,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.infotech.fplcolosseum.gameweek.models.web.LeagueGameWeekDataModel;
-import com.infotech.fplcolosseum.gameweek.models.web.TeamDataModel;
+import com.infotech.fplcolosseum.gameweek.models.web.TeamDataResponseModel;
 
-@Database(entities = {LeagueGameWeekDataModel.class, TeamDataModel.class}, version = 1, exportSchema = false)
+@Database(entities = {LeagueGameWeekDataModel.class, TeamDataResponseModel.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();

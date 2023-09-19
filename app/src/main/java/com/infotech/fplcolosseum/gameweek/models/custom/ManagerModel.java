@@ -1,14 +1,15 @@
 package com.infotech.fplcolosseum.gameweek.models.custom;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ManagerModel {
     private float Id;
     private String ManagerName;
     private String TeamName;
     private float GameWeek;
-    ArrayList<PlayerDataModel> PlayersXI = new ArrayList<>();
-    ArrayList<PlayerDataModel> PlayersBench = new ArrayList<>();
+    List<PlayerDataModel> PlayersXI = new ArrayList<>();
+    List<PlayerDataModel> PlayersAll = new ArrayList<>();
     private String CaptainName;
     private float CaptainGameWeekPoints;
     private String ViceCaptainName;
@@ -54,7 +55,7 @@ public class ManagerModel {
         GameWeek = gameWeek;
     }
 
-    public ArrayList<PlayerDataModel> getPlayersXI() {
+    public List<PlayerDataModel> getPlayersXI() {
         return PlayersXI;
     }
 
@@ -62,12 +63,12 @@ public class ManagerModel {
         PlayersXI = playersXI;
     }
 
-    public ArrayList<PlayerDataModel> getPlayersBench() {
-        return PlayersBench;
+    public List<PlayerDataModel> getPlayersAll() {
+        return PlayersAll;
     }
 
-    public void setPlayersBench(ArrayList<PlayerDataModel> playersBench) {
-        PlayersBench = playersBench;
+    public void setPlayersAll(List<PlayerDataModel> playersAll) {
+        PlayersAll = playersAll;
     }
 
     public String getCaptainName() {
