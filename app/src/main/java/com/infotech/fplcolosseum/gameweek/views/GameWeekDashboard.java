@@ -56,9 +56,7 @@ public class GameWeekDashboard extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = GameweekDashboardFragmentBinding.inflate(inflater, container, false);
-//        viewModel = new ViewModelProvider(requireActivity()).get(GameWeekViewModel.class);
         binding.setGameWeekViewModel(viewModel);
-
         return binding.getRoot();
     }
 
