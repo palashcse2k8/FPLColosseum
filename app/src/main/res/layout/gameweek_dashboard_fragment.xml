@@ -22,6 +22,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/teal_700"
         android:orientation="vertical"
         android:padding="10dp">
 
@@ -29,7 +30,7 @@
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="2dp"
             android:text="@string/select_game_week"
             android:textSize="20sp"
             app:fontFamily="@font/aclonica" />
@@ -53,15 +54,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/table_border"
+            android:background="@drawable/rectangle_corner_shape"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/aclonica"
                 android:text="League Name : "
+                android:textColor="@color/white"
                 android:textStyle="bold" />
 
             <TextView
@@ -73,67 +75,26 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:fontFamily="@font/aclonica"
-                android:text=" Md. Mosiur Rahman"
+                android:textColor="@color/white"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:background="@drawable/rectangle_corner_shape"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
             android:orientation="horizontal">
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/table_border">
-
-                <TextView
-                    android:id="@+id/tvSN"
-                    style="@style/table_header"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:text="SL\n"/>
-
-                <TextView
-                    android:id="@+id/tvTeamName"
-                    style="@style/table_header"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:text="Team Name\n" />
-
-                <TextView
-                    android:id="@+id/tvManagerName"
-                    style="@style/table_header"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Manager Name\n" />
-
-                <TextView
-                    android:id="@+id/tvGameWeekPoints"
-                    style="@style/table_header"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="GW\nPoints"
-                    android:textAlignment="center" />
-
-
-                <TextView
-                    android:id="@+id/tvTotalPoints"
-                    style="@style/table_header"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Total \nPoints"
-                    android:textAlignment="center" />
-            </TableRow>
-
-        </TableLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:text="Leader Board"/>
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.R;
+import com.infotech.fplcolosseum.databinding.RowLayoutNewBinding;
 import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
 
 import java.util.List;
@@ -22,23 +23,19 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
     @NonNull
     @Override
     public TeamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_layout, parent, false);
-        return new TeamViewHolder(view);
+        RowLayoutNewBinding binding = RowLayoutNewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+//        View view = LayoutInflater.from(parent.getContext())
+//                .inflate(R.layout.row_layout_new, parent, false);
+        return new TeamViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TeamViewHolder holder, int position) {
         ManagerModel team = teams.get(position);
-        holder.serialNumber.setText(String.valueOf(position+1));
-        holder.teamNameTextView.setText(team.getTeamName());
-        holder.managerNameTextView.setText(team.getManagerName());
-        holder.gameWeekPointsTextView.setText(String.valueOf(team.getGameWeekPoints()));
-        holder.totalPointsTextView.setText(String.valueOf( team.getSeasonTotalPoints()));
-        if(!team.getPlayersAll().isEmpty()) {
-            String data = team.getPlayersAll().get(0).getPlayerName() + " -> " + team.getPlayersAll().get(0).getPoints() ;
-            holder.totalPointsTextView.setText(data);
-        }
+        holder.binding.teamPosition.setText(String.valueOf(position+1));
+        holder.binding.teamName.setText(team.getTeamName());
+        holder.binding.managerName.setText(team.getManagerName());
+        holder.binding.gameWeekPoint.setText(String.valueOf(team.getGameWeekPoints()));
     }
 
     @Override
@@ -46,22 +43,12 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
         return teams.size();
     }
 
+
     public static class TeamViewHolder extends RecyclerView.ViewHolder {
-        TextView teamNameTextView;
-        TextView managerNameTextView;
-        TextView gameWeekPointsTextView;
-        TextView totalPointsTextView;
-
-        TextView serialNumber;
-
-
-        public TeamViewHolder(View itemView) {
-            super(itemView);
-            teamNameTextView = itemView.findViewById(R.id.tvTeamName);
-            managerNameTextView = itemView.findViewById(R.id.tvManagerName);
-            gameWeekPointsTextView = itemView.findViewById(R.id.tvGameWeekPoints);
-            totalPointsTextView = itemView.findViewById(R.id.tvTotalPoints);
-            serialNumber = itemView.findViewById(R.id.tvSN);
+        RowLayoutNewBinding binding;
+        public TeamViewHolder(RowLayoutNewBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

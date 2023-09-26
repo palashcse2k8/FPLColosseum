@@ -32,7 +32,7 @@ public class CustomHeaderInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();
 
-//        if (StaticConstants.TEST_ENV) {
+//        if (Constants.TEST_ENV) {
 //
 //            String[] apiUrlSplits = originalRequest.url().uri().toString().split("/");
 //            String fileName = apiUrlSplits[apiUrlSplits.length - 1];

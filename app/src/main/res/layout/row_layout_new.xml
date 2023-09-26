@@ -27,6 +27,7 @@
                 android:src="@drawable/_1543" />
 
             <TextView
+                android:id="@+id/teamPosition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -34,7 +35,7 @@
                 android:layout_marginBottom="8dp"
                 android:gravity="bottom|end"
                 android:background="@drawable/rounded_corner_shape"
-                android:padding="3dp"
+                android:padding="4dp"
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 android:textStyle="bold|italic"
@@ -70,18 +71,24 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/teamName"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:paddingTop="5dp"
                         android:paddingStart="5dp"
                         android:textColor="#FFEB3B"
                         android:textStyle="bold"
+                        android:ellipsize="end"
+                        android:maxLines="1"
                         android:text="FCGOA"/>
 
                     <TextView
+                        android:id="@+id/managerName"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:textColor="@color/white"
+                        android:ellipsize="end"
+                        android:maxLines="1"
                         android:paddingStart="5dp"
                         android:text="Md. Mosiur Rahman"/>
                 </LinearLayout>
@@ -98,9 +105,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#FFEB3B"
+                        android:textSize="12sp"
                         android:text="GW Points"/>
 
                     <TextView
+                        android:id="@+id/gameWeekPoint"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
@@ -129,9 +138,9 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FFEB3B"
                         android:textAlignment="center"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:textStyle="bold"
-                        android:text="Captain\nPoints"/>
+                        android:text="Cap\nPoints"/>
 
                     <TextView
                         android:layout_gravity="center"
@@ -158,7 +167,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FFEB3B"
                         android:textAlignment="center"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:textStyle="bold"
                         android:text="VC\nPoints"/>
 
@@ -186,7 +195,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FFEB3B"
                         android:textAlignment="center"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:textStyle="bold"
                         android:text="Bonus\nPoints"/>
 
@@ -214,7 +223,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FFEB3B"
                         android:textAlignment="center"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:textStyle="bold"
                         android:text="Bench\nPoints"/>
 
@@ -242,9 +251,9 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FFEB3B"
                         android:textAlignment="center"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:textStyle="bold"
-                        android:text="Goals\nScored"/>
+                        android:text="Goals\nScore"/>
 
                     <TextView
                         android:layout_gravity="center"
@@ -270,9 +279,9 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FFEB3B"
                         android:textAlignment="center"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:textStyle="bold"
-                        android:text="Goals\nConced"/>
+                        android:text="Goals\nCede"/>
 
                     <TextView
                         android:layout_gravity="center"
@@ -298,7 +307,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FFEB3B"
                         android:textAlignment="center"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:textStyle="bold"
                         android:text="BPS\nPoints"/>
 

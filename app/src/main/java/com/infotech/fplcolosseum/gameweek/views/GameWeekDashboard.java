@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +21,7 @@ import com.infotech.fplcolosseum.gameweek.adapter.TeamAdapter;
 import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
 import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
 import com.infotech.fplcolosseum.gameweek.viewmodels.GameWeekViewModel;
-import com.infotech.fplcolosseum.utilities.StaticConstants;
+import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,12 +64,12 @@ public class GameWeekDashboard extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupRecyclerView();
         setUpLiveDataObserver();
-        getMangerList();
+
         binding.gameWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                Log.d("selected=> ", "item selected" + i);
-//                makeApiCall("671887", "116074", String.valueOf(i + 1), "1");
+                Log.d("selected=> ", "item selected" + i);
+                getGameWeekData(Constants.leagues[1], String.valueOf(i+1));
             }
 
             @Override
@@ -80,11 +79,11 @@ public class GameWeekDashboard extends Fragment {
         });
     }
 
-    public void getMangerList(){
+    public void getGameWeekData(String leagueID, String gameWeek){
         try {
-            Log.d(StaticConstants.LOG_TAG, "Gettings ManagerList");
+            Log.d(Constants.LOG_TAG, "Getting Game Week Data for leagueID->" + leagueID + ", gameWeek->" + gameWeek );
             progressDialog.show();
-            viewModel.gameWeekDataFromAPI("671887","1","1", "1");
+            viewModel.gameWeekDataFromAPI(leagueID, gameWeek);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -95,7 +94,7 @@ public class GameWeekDashboard extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         // Initialize your data (replace with your actual data)
-        teams = StaticConstants.managerList;
+        teams = Constants.managerList;
 
         // Sort the data based on your predefined rules
 //        Collections.sort(teams, (team1, team2) -> {
@@ -107,42 +106,13 @@ public class GameWeekDashboard extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    private void makeApiCall(String leagueID, String entryID, String currentGameweek, String currentPage) {
-//        try {
-//            progressDialog.show();
-//            viewModel.gameWeekDataFromAPI(leagueID, entryID, currentGameweek, currentPage);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        // Set up LiveData observer
-//        liveDataObserver();
-    }
-
-    private void liveDataObserver() {
-        viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), data -> {
-//            progressDialog.dismiss();
-//            Log.d("oberver=>", "triggers" + data.toString());
-            if (data != null) {
-                weekDataModel = data;
-                updateUI();
-                if (progressDialog.isShowing())
-                    progressDialog.dismiss();
-            } else {
-                // Handle API call errors here
-                if (progressDialog.isShowing())
-                    progressDialog.dismiss();
-            }
-        });
-    }
-
     public void setUpLiveDataObserver() {
 
-        viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), data -> {
-            Log.d(StaticConstants.LOG_TAG, "leagueGameWeekDataModel changed");
-            if (data != null) {
-                StaticConstants.managerList = data.getTeams();
-                updateUI();
+        viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), customGameWeekDataModel -> {
+            Log.d(Constants.LOG_TAG, "leagueGameWeekDataModel changed");
+            if (customGameWeekDataModel != null) {
+                customGameWeekDataModel.getTeams();
+                updateUI(customGameWeekDataModel );
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
             } else {
@@ -154,16 +124,16 @@ public class GameWeekDashboard extends Fragment {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void updateUI() {
-        Log.d(StaticConstants.LOG_TAG, "Updating UI");
-        if (StaticConstants.managerList != null) {
+    public void updateUI( CustomGameWeekDataModel weekDataModel) {
+        Log.d(Constants.LOG_TAG, "Updating UI");
+        if (weekDataModel != null && !weekDataModel.getTeams().isEmpty()) {
             // Update your RecyclerView and other UI components here using the data
-            TextView leagueName = binding.leagueName;
-//            leagueName.setText(weekDataModel.getLeagueName());
+            binding.leagueName.setText(weekDataModel.getLeagueName());
             teams.clear(); // Clear the existing data
-            teams.addAll(StaticConstants.managerList);
+            teams.addAll(weekDataModel.getTeams());
             adapter.notifyDataSetChanged();
         } else {
+            Log.d(Constants.LOG_TAG, "GameWeek Model is Empty");
             // Handle the case where gameWeekDataModel is null or the data is not as expected
         }
     }

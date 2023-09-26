@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.infotech.fplcolosseum.utilities.StaticConstants;
+import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ public class APIHandler {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
 
-                    Log.d(StaticConstants.LOG_TAG,"request url => " + call.request().url().uri().toString());
+//                    Log.d(Constants.LOG_TAG,"request url => " + call.request().url().uri().toString());
                     if (response.isSuccessful()) {
 
                         try (ResponseBody responseBody = response.body()) {
@@ -39,7 +39,6 @@ public class APIHandler {
                             } else {
                                 apiData.setValue(null);
                             }
-
                         } catch (JsonSyntaxException | IOException e) {
                             apiData.setValue(null);
                             e.printStackTrace();
@@ -66,7 +65,7 @@ public class APIHandler {
 
         Gson gson = new Gson();
         String json = responseBody.string();
-        Log.d(StaticConstants.LOG_TAG, "apiResponse=>> "+json);
+//        Log.d(Constants.LOG_TAG, "apiResponse=>> "+json);
         try {
             return gson.fromJson(json, classofT);
         } catch (Exception e){
