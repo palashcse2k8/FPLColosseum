@@ -26,11 +26,6 @@ public class GameWeekViewModel extends ViewModel {
         return _customGameWeekDataModelLiveData;
     }
 
-
-//    public LiveData<List<ManagerModel>> getManagerList() {
-//        return _managerList;
-//    }
-
     public GameWeekViewModel() throws IOException {
         _gameWeekRepository = new GameWeekRepository();
         _data = new MutableLiveData<>();
@@ -40,14 +35,8 @@ public class GameWeekViewModel extends ViewModel {
     }
 
     public void gameWeekDataFromAPI (String leagueID, String currentGameweek) throws IOException {
-//        dataLoading.setValue(true);
         _customGameWeekDataModelLiveData.addSource(_gameWeekRepository.getGameWeekDataFromAPI(leagueID, currentGameweek), customGameWeekDataModel -> {
-//            dataLoading.setValue(false);
             _customGameWeekDataModelLiveData.setValue(customGameWeekDataModel);
         });
-    }
-
-    public interface APIResponseListener {
-        public ResponseBody onApiResponse(ResponseBody responseBody) throws IOException;
     }
 }

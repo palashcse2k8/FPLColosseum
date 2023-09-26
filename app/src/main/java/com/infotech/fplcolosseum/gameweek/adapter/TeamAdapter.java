@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.RowLayoutNewBinding;
 import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
+import com.infotech.fplcolosseum.gameweek.models.custom.PlayerDataModel;
 
 import java.util.List;
 
@@ -35,7 +36,11 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
         holder.binding.teamPosition.setText(String.valueOf(position+1));
         holder.binding.teamName.setText(team.getTeamName());
         holder.binding.managerName.setText(team.getManagerName());
-        holder.binding.gameWeekPoint.setText(String.valueOf(team.getGameWeekPoints()));
+        holder.binding.gameWeekPoint.setText(String.valueOf((int)team.getGameWeekPoints()));
+        holder.binding.captainPoint.setText(String.valueOf((int)team.getCaptainGameWeekPoints()));
+        holder.binding.vcPoints.setText(String.valueOf((int)team.getViceCaptainGameWeekPoints()));
+        holder.binding.bonusPoints.setText(String.valueOf((int)team.getGameWeekBonusPointsXI()));
+        holder.binding.benchPoint.setText(String.valueOf((int)team.getGameWeekBenchPoints()));
     }
 
     @Override

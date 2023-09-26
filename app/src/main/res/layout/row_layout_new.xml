@@ -143,6 +143,7 @@
                         android:text="Cap\nPoints"/>
 
                     <TextView
+                        android:id="@+id/captainPoint"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -172,6 +173,7 @@
                         android:text="VC\nPoints"/>
 
                     <TextView
+                        android:id="@+id/vcPoints"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -200,6 +202,7 @@
                         android:text="Bonus\nPoints"/>
 
                     <TextView
+                        android:id="@+id/bonusPoints"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -228,6 +231,7 @@
                         android:text="Bench\nPoints"/>
 
                     <TextView
+                        android:id="@+id/benchPoint"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -256,6 +260,7 @@
                         android:text="Goals\nScore"/>
 
                     <TextView
+                        android:id="@+id/goalScored"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -284,6 +289,7 @@
                         android:text="Goals\nCede"/>
 
                     <TextView
+                        android:id="@+id/goalConceds"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -312,6 +318,7 @@
                         android:text="BPS\nPoints"/>
 
                     <TextView
+                        android:id="@+id/bpsPoints"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

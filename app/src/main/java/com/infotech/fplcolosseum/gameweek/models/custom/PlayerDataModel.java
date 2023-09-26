@@ -2,7 +2,6 @@ package com.infotech.fplcolosseum.gameweek.models.custom;
 
 public class PlayerDataModel {
     private float GameWeek;
-
     private boolean IsCaptain;
     private boolean IsViceCaptain;
     private float PlayerID;
@@ -13,6 +12,44 @@ public class PlayerDataModel {
     private float GoalConceded;
     private float BonusPoints;
     private float BPSPoints;
+
+    private float Multiplier;
+
+    private boolean IsSub;
+    private boolean IsSubIn;
+    private boolean IsSubOut;
+
+    public float getMultiplier() {
+        return Multiplier;
+    }
+
+    public void setMultiplier(float multiplier) {
+        Multiplier = multiplier;
+    }
+
+    public boolean isSub() {
+        return IsSub;
+    }
+
+    public void setSub(boolean sub) {
+        IsSub = sub;
+    }
+
+    public boolean isSubIn() {
+        return IsSubIn;
+    }
+
+    public void setSubIn(boolean subIn) {
+        IsSubIn = subIn;
+    }
+
+    public boolean isSubOut() {
+        return IsSubOut;
+    }
+
+    public void setSubOut(boolean subOut) {
+        IsSubOut = subOut;
+    }
 
     public boolean isCaptain() {
         return IsCaptain;

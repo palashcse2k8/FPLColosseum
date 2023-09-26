@@ -2,8 +2,6 @@ package com.infotech.fplcolosseum.repository;
 
 import static com.infotech.fplcolosseum.remote.APIHandler.callAPI;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -19,7 +17,6 @@ import com.infotech.fplcolosseum.gameweek.models.web.PlayerStatsResponseModel;
 import com.infotech.fplcolosseum.gameweek.models.web.TeamDataResponseModel;
 import com.infotech.fplcolosseum.remote.APIServices;
 import com.infotech.fplcolosseum.remote.RetroClass;
-import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +30,7 @@ import retrofit2.Call;
 
 public class GameWeekRepository {
     APIServices apiServices;
-    private MediatorLiveData<List<ManagerModel>> _managerList;
+//    private MediatorLiveData<List<ManagerModel>> _managerList;
 
     private LiveData<List<PlayerDataModel>> playersLiveData;
 
@@ -42,7 +39,7 @@ public class GameWeekRepository {
 
     public GameWeekRepository() {
         apiServices = RetroClass.getAPIService(); // set API
-        _managerList = new MediatorLiveData<>();
+//        _managerList = new MediatorLiveData<>();
         playersLiveData = new MutableLiveData<>();
         gameWeekPlayerList = new ArrayList<>();
         gameWeekPlayerListWithData = new ArrayList<>();
@@ -93,6 +90,30 @@ public class GameWeekRepository {
             managerModelsLiveData.addSource(playerListLiveData, result -> {
                 if (result != null) {
                     managerModel.setPlayersAll(result);
+
+                    float bonusPoints = 0;
+                    float benchPoints = 0;
+                    //update captain and vice captain points
+                    for (PlayerDataModel model : result) {
+                        if (model.isCaptain()) {
+                            managerModel.setCaptainGameWeekPoints(model.getPoints());
+                            managerModel.setCaptainName(model.getPlayerName());
+                        }
+
+                        if (model.isViceCaptain()) {
+                            managerModel.setViceCaptainGameWeekPoints(model.getPoints());
+                            managerModel.setViceCaptainName(model.getPlayerName());
+                        }
+
+                        if (!model.isSub()) {
+                            bonusPoints += model.getBonusPoints();
+                        } else {
+                            benchPoints += model.getPoints();
+                        }
+                    }
+                    managerModel.setGameWeekBonusPointsXI(bonusPoints);
+                    managerModel.setGameWeekBenchPoints(benchPoints);
+
                     managerModels.add(managerModel);
                     apiCallCount.getAndDecrement();
 
@@ -115,7 +136,7 @@ public class GameWeekRepository {
         queryParams.put("currentweek", currentGameweek);
         Call<ResponseBody> callAPI = apiServices.getManagerData(queryParams);
 
-        Log.d(Constants.LOG_TAG, "Getting Player List");
+//        Log.d(Constants.LOG_TAG, "Getting Player List");
         LiveData<LeagueGameWeekDataModel> leagueGameWeekDataModel = callAPI(callAPI, LeagueGameWeekDataModel.class);
 
         return Transformations.switchMap(leagueGameWeekDataModel, complexData -> {
@@ -147,6 +168,10 @@ public class GameWeekRepository {
                 playerDataModel.setPoints(playerResponseModel.getTotalPoints());
                 playerDataModel.setCaptain(playerResponseModel.getIsCaptain());
                 playerDataModel.setViceCaptain(playerResponseModel.getIsViceCaptain());
+                playerDataModel.setSub(playerResponseModel.getIsSub());
+                playerDataModel.setSubIn(playerResponseModel.getIsSubIn());
+                playerDataModel.setSubOut(playerResponseModel.getIsSubOut());
+                playerDataModel.setMultiplier(playerResponseModel.getMultiplier());
 
                 gameWeekPlayerList.add(playerDataModel);
 //                Log.d(Constants.LOG_TAG, "Getting Player Data for " + playerDataModel.getPlayerName());
@@ -191,7 +216,7 @@ public class GameWeekRepository {
         if (playerList.size() != 0) {
             for (PlayerDataModel model : playerList) {
                 if (model.getPlayerID() == playerDataModel.getId()) {
-                    Log.d(Constants.LOG_TAG, "Player Found " + playerDataModel.getPlayerWebName());
+//                    Log.d(Constants.LOG_TAG, "Player Found " + playerDataModel.getPlayerWebName());
                     return true;
                 }
             }
@@ -210,6 +235,7 @@ public class GameWeekRepository {
 
     public LiveData<List<ManagerModel>> getMangersData(String leagueID, String currentGameweek) throws IOException {
 
+        MediatorLiveData<List<ManagerModel>> _managerList = new MediatorLiveData<>();
         // Source 1
         LiveData<List<ManagerModel>> source1 = getManagerList(leagueID, currentGameweek, "1");
         _managerList.addSource(source1, managerModels -> {
@@ -217,28 +243,28 @@ public class GameWeekRepository {
                 _managerList.postValue(managerModels);
 
                 // Source 1 is completed, now call Source 2
-                if (leagueID.equalsIgnoreCase("671887"))
-                    callSource2(leagueID, currentGameweek, "2");
+//                if (leagueID.equalsIgnoreCase("671887"))
+//                    callSource2(leagueID, currentGameweek, "2");
             }
         });
 
         return _managerList;
     }
 
-    private void callSource2(String leagueID, String currentGameweek, String currentPage) {
-        // Source 2
-        LiveData<List<ManagerModel>> source2 = getManagerList(leagueID, currentGameweek, currentPage);
-        _managerList.addSource(source2, managerModels -> {
-            if (managerModels != null) {
-                // Append data from Source 2 to _managerList
-                List<ManagerModel> currentData = _managerList.getValue();
-                if (currentData != null) {
-                    currentData.addAll(managerModels);
-                    _managerList.postValue(currentData);
-                }
-            }
-        });
-    }
+//    private void callSource2(String leagueID, String currentGameweek, String currentPage) {
+//        // Source 2
+//        LiveData<List<ManagerModel>> source2 = getManagerList(leagueID, currentGameweek, currentPage);
+//        _managerList.addSource(source2, managerModels -> {
+//            if (managerModels != null) {
+//                // Append data from Source 2 to _managerList
+//                List<ManagerModel> currentData = _managerList.getValue();
+//                if (currentData != null) {
+//                    currentData.addAll(managerModels);
+//                    _managerList.postValue(currentData);
+//                }
+//            }
+//        });
+//    }
 
     public LiveData<CustomGameWeekDataModel> getGameWeekDataFromAPI(String leagueID, String currentGameweek) throws IOException {
 
@@ -266,10 +292,10 @@ public class GameWeekRepository {
 
         gameWeekDataModelMediatorLiveData.addSource(listManagersLiveData, modelList -> {
             customGameWeekDataModel.setTeams(modelList);
-            Log.d(Constants.LOG_TAG, "Unique Players are " + gameWeekPlayerList.size());
-            for (PlayerDataModel model : gameWeekPlayerList) {
-                Log.d(Constants.LOG_TAG, model.getPlayerName());
-            }
+//            Log.d(Constants.LOG_TAG, "Unique Players are " + gameWeekPlayerList.size());
+//            for (PlayerDataModel model : gameWeekPlayerList) {
+//                Log.d(Constants.LOG_TAG, model.getPlayerName());
+//            }
             gameWeekDataModelMediatorLiveData.postValue(customGameWeekDataModel);
         });
 
