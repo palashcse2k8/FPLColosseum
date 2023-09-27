@@ -2,6 +2,8 @@ package com.infotech.fplcolosseum.repository;
 
 import static com.infotech.fplcolosseum.remote.APIHandler.callAPI;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,6 +12,7 @@ import androidx.lifecycle.Transformations;
 import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
 import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
 import com.infotech.fplcolosseum.gameweek.models.custom.PlayerDataModel;
+import com.infotech.fplcolosseum.gameweek.models.web.FixtureDatas;
 import com.infotech.fplcolosseum.gameweek.models.web.LeagueGameWeekDataModel;
 import com.infotech.fplcolosseum.gameweek.models.web.PlayerPointsDatas;
 import com.infotech.fplcolosseum.gameweek.models.web.PlayerResponseModel;
@@ -17,6 +20,7 @@ import com.infotech.fplcolosseum.gameweek.models.web.PlayerStatsResponseModel;
 import com.infotech.fplcolosseum.gameweek.models.web.TeamDataResponseModel;
 import com.infotech.fplcolosseum.remote.APIServices;
 import com.infotech.fplcolosseum.remote.RetroClass;
+import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,6 +81,9 @@ public class GameWeekRepository {
             managerModel.setGameWeekPoints(teamDataResponseModel.getLiveData().getLivePointsTotal());
             managerModel.setGameWeekPointsWithoutTransferCost(teamDataResponseModel.getLiveData().getLivePointsTotalIncTransferCost());
             managerModel.setSeasonTotalPoints(teamDataResponseModel.getLiveData().getSeasonTotalPoints());
+            managerModel.setGameWeek(leagueGameWeekDataModel.getGameweek());
+            managerModel.setCaptainName(teamDataResponseModel.getLiveData().getCaptainWebName());
+            managerModel.setViceCaptainName(teamDataResponseModel.getLiveData().getViceCaptainWebName());
 
             // Set the manager's player list to an empty list initially
             managerModel.setPlayersAll(new ArrayList<>());
@@ -91,29 +98,63 @@ public class GameWeekRepository {
                 if (result != null) {
                     managerModel.setPlayersAll(result);
 
+                    Log.d(Constants.LOG_TAG, "Manager Info -> " + managerModel.getManagerName() + ", gameweek : " + managerModel.getGameWeek());
+
                     float bonusPoints = 0;
                     float benchPoints = 0;
+                    float goalScored = 0;
+                    float goalConceded = 0;
+                    float bpsPoints = 0;
+                    PlayerDataModel model;
+
                     //update captain and vice captain points
-                    for (PlayerDataModel model : result) {
-                        if (model.isCaptain()) {
+                    for (int i=0; i<result.size(); i++) {
+                        model = result.get(i);
+                        Log.d(Constants.LOG_TAG, "Player Info-> " + model.toString());
+
+                        //set first rules
+                        if (model.getPlayerName().equalsIgnoreCase(managerModel.getCaptainName())) {
                             managerModel.setCaptainGameWeekPoints(model.getPoints());
-                            managerModel.setCaptainName(model.getPlayerName());
+//                            managerModel.setCaptainName(model.getPlayerName());
                         }
 
-                        if (model.isViceCaptain()) {
+                        //set 2nd rules
+                        if (model.getPlayerName().equalsIgnoreCase(managerModel.getViceCaptainName())) {
                             managerModel.setViceCaptainGameWeekPoints(model.getPoints());
-                            managerModel.setViceCaptainName(model.getPlayerName());
+//                            managerModel.setViceCaptainName(model.getPlayerName());
                         }
 
-                        if (!model.isSub()) {
+                        //set bench point and bonus point
+                        if (i<11) {
                             bonusPoints += model.getBonusPoints();
+                            goalScored += model.getGoalScored();
+                            bpsPoints += model.getBPSPoints();
+
+                            //get goal conceded information
+                            for (FixtureDatas fixtureDatas: leagueGameWeekDataModel.getFixtureDatas()) {
+                                if(fixtureDatas.getFixtureId() == model.getFixtureID()){
+                                    if(fixtureDatas.getAwayTeamName().equalsIgnoreCase(model.getTeamName()))
+                                        goalConceded += fixtureDatas.getTeamHScore();
+                                    else if(fixtureDatas.getHomeTeamName().equalsIgnoreCase(model.getTeamName()))
+                                        goalConceded += fixtureDatas.getTeamAScore();
+                                    else Log.d(Constants.LOG_TAG, "No team found");
+                                }
+                            }
+
                         } else {
+                            Log.d(Constants.LOG_TAG, "adding bench point");
                             benchPoints += model.getPoints();
                         }
                     }
+
+                    //setting data for the manager
                     managerModel.setGameWeekBonusPointsXI(bonusPoints);
                     managerModel.setGameWeekBenchPoints(benchPoints);
+                    managerModel.setGoalScored(goalScored);
+                    managerModel.setGoalConceded(goalConceded);
+                    managerModel.setGameWeekBPSPointsXI(bpsPoints);
 
+//                    Log.d(Constants.LOG_TAG, "Manager Info -> bonusPoints : " + bonusPoints + ", benchepoint : " + benchPoints);
                     managerModels.add(managerModel);
                     apiCallCount.getAndDecrement();
 
@@ -172,6 +213,7 @@ public class GameWeekRepository {
                 playerDataModel.setSubIn(playerResponseModel.getIsSubIn());
                 playerDataModel.setSubOut(playerResponseModel.getIsSubOut());
                 playerDataModel.setMultiplier(playerResponseModel.getMultiplier());
+                playerDataModel.setTeamName(playerResponseModel.getTeamName());
 
                 gameWeekPlayerList.add(playerDataModel);
 //                Log.d(Constants.LOG_TAG, "Getting Player Data for " + playerDataModel.getPlayerName());
@@ -180,10 +222,16 @@ public class GameWeekRepository {
 
                 playerListMediatorLiveData.addSource(playerStatsResponseModelLiveData, result -> {
                     if (result != null) {
+                        playerDataModel.setPlayerPositionName(result.getPlayerPositionName());
                         List<PlayerPointsDatas> list = result.getPlayerPointsDatas();
                         for (PlayerPointsDatas playerPointsDatas : list) {
+                            playerDataModel.setFixtureID(playerPointsDatas.getFixtureId());
                             if (playerPointsDatas.getKey().equalsIgnoreCase("bonus")) {
                                 playerDataModel.setBonusPoints(playerPointsDatas.getPoints());
+                                playerDataModel.setBPSPoints(playerPointsDatas.getAmount());
+                            }
+                            if (playerPointsDatas.getKey().equalsIgnoreCase("goals_scored")) {
+                                playerDataModel.setGoalScored(playerPointsDatas.getAmount());
                             }
                         }
                         gameWeekPlayerListWithData.add(playerDataModel);

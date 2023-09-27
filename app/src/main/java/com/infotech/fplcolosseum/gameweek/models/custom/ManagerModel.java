@@ -1,5 +1,7 @@
 package com.infotech.fplcolosseum.gameweek.models.custom;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 

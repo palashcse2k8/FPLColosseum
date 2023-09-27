@@ -18,12 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.databinding.GameweekDashboardFragmentBinding;
 import com.infotech.fplcolosseum.gameweek.adapter.TeamAdapter;
+import com.infotech.fplcolosseum.gameweek.adapter.TeamDataComparator;
 import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
 import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
 import com.infotech.fplcolosseum.gameweek.viewmodels.GameWeekViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -111,7 +113,6 @@ public class GameWeekDashboard extends Fragment {
         viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), customGameWeekDataModel -> {
             Log.d(Constants.LOG_TAG, "leagueGameWeekDataModel changed");
             if (customGameWeekDataModel != null) {
-                customGameWeekDataModel.getTeams();
                 updateUI(customGameWeekDataModel );
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
@@ -130,6 +131,7 @@ public class GameWeekDashboard extends Fragment {
             // Update your RecyclerView and other UI components here using the data
             binding.leagueName.setText(weekDataModel.getLeagueName());
             teams.clear(); // Clear the existing data
+            weekDataModel.getTeams().sort(new TeamDataComparator());
             teams.addAll(weekDataModel.getTeams());
             adapter.notifyDataSetChanged();
         } else {
@@ -137,4 +139,5 @@ public class GameWeekDashboard extends Fragment {
             // Handle the case where gameWeekDataModel is null or the data is not as expected
         }
     }
+
 }

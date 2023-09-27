@@ -52,12 +52,8 @@ public class LeagueGameWeekDataModel {
     @SerializedName("TeamDatas")
     private ArrayList<TeamDataResponseModel> TeamDatas;
 
-    public List<Object> getFixtureDatas() {
+    public List<FixtureDatas> getFixtureDatas() {
         return FixtureDatas;
-    }
-
-    public void setFixtureDatas(List<Object> fixtureDatas) {
-        FixtureDatas = fixtureDatas;
     }
 
     public List<Object> getFavoriteEntryIds() {
@@ -85,7 +81,13 @@ public class LeagueGameWeekDataModel {
     }
 
     private String LeagueCountryInfos = null;
-    List<Object> FixtureDatas;
+    @Ignore
+    List<FixtureDatas> FixtureDatas;
+
+    public void setFixtureDatas(List<FixtureDatas> fixtureDatas) {
+        FixtureDatas = fixtureDatas;
+    }
+
     List<Object> FavoriteEntryIds;
     List<Object> AllPlayerDataStats ;
     private String AllPlayerDataStatsStatsViewExtra = null;

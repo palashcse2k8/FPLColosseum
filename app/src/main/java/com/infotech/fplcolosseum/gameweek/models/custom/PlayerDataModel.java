@@ -1,12 +1,34 @@
 package com.infotech.fplcolosseum.gameweek.models.custom;
 
+import androidx.annotation.NonNull;
+
 public class PlayerDataModel {
     private float GameWeek;
     private boolean IsCaptain;
     private boolean IsViceCaptain;
     private float PlayerID;
+    private float FixtureID;
+
+    public float getFixtureID() {
+        return FixtureID;
+    }
+
+    public void setFixtureID(float fixtureID) {
+        FixtureID = fixtureID;
+    }
+
     private String PlayerName;
     private String TeamName;
+    private String PlayerPositionName;
+
+    public String getPlayerPositionName() {
+        return PlayerPositionName;
+    }
+
+    public void setPlayerPositionName(String playerPositionName) {
+        PlayerPositionName = playerPositionName;
+    }
+
     private float Points;
     private float GoalScored;
     private float GoalConceded;
@@ -137,5 +159,29 @@ public class PlayerDataModel {
 
     public void setBPSPoints(float BPSPoints) {
         this.BPSPoints = BPSPoints;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "PlayerDataModel{" +
+                "GameWeek=" + GameWeek +
+                ", IsCaptain=" + IsCaptain +
+                ", IsViceCaptain=" + IsViceCaptain +
+                ", PlayerID=" + PlayerID +
+                ", PlayerName='" + PlayerName + '\'' +
+                ", TeamName='" + TeamName + '\'' +
+                ", Points=" + Points +
+                ", GoalScored=" + GoalScored +
+                ", GoalConceded=" + GoalConceded +
+                ", BonusPoints=" + BonusPoints +
+                ", BPSPoints=" + BPSPoints +
+                ", GoalScored=" + GoalScored +
+                ", GoalConceded=" + GoalConceded +
+                ", Multiplier=" + Multiplier +
+                ", IsSub=" + IsSub +
+                ", IsSubIn=" + IsSubIn +
+                ", IsSubOut=" + IsSubOut +
+                '}';
     }
 }

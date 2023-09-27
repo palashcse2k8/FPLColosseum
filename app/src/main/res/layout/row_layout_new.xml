@@ -17,6 +17,7 @@
             android:layout_height="100dp">
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageID"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:padding="5dp"
@@ -33,10 +34,10 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
-                android:gravity="bottom|end"
                 android:background="@drawable/rounded_corner_shape"
-                android:padding="4dp"
+                android:padding="5dp"
                 android:textSize="16sp"
+                android:gravity="center"
                 android:textColor="@color/white"
                 android:textStyle="bold|italic"
                 android:text="01"/>
@@ -122,7 +123,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:paddingLeft="2dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -325,7 +325,7 @@
                         android:textColor="@color/white"
                         android:padding="2dp"
                         android:textAlignment="center"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:textStyle="bold"
                         android:text="10"/>
                 </LinearLayout>
