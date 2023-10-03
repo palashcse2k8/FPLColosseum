@@ -1,5 +1,8 @@
 package com.infotech.fplcolosseum.gameweek.viewmodels;
 
+import android.app.Application;
+
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -15,7 +18,7 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 
-public class GameWeekViewModel extends ViewModel {
+public class GameWeekViewModel extends AndroidViewModel {
     private GameWeekRepository _gameWeekRepository;
     public MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(Boolean.FALSE);
     private LiveData<ResponseBody> _data;
@@ -26,8 +29,9 @@ public class GameWeekViewModel extends ViewModel {
         return _customGameWeekDataModelLiveData;
     }
 
-    public GameWeekViewModel() throws IOException {
-        _gameWeekRepository = new GameWeekRepository();
+    public GameWeekViewModel(Application application) {
+        super(application);
+        _gameWeekRepository = new GameWeekRepository(application);
         _data = new MutableLiveData<>();
         _customGameWeekDataModelLiveData = new MediatorLiveData<>();
         _managerList = new MediatorLiveData<>();
@@ -35,7 +39,7 @@ public class GameWeekViewModel extends ViewModel {
     }
 
     public void gameWeekDataFromAPI (String leagueID, String currentGameweek) throws IOException {
-        _customGameWeekDataModelLiveData.addSource(_gameWeekRepository.getGameWeekDataFromAPI(leagueID, currentGameweek), customGameWeekDataModel -> {
+        _customGameWeekDataModelLiveData.addSource(_gameWeekRepository.getGameWeekData(leagueID, currentGameweek), customGameWeekDataModel -> {
             _customGameWeekDataModelLiveData.setValue(customGameWeekDataModel);
         });
     }

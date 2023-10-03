@@ -5,12 +5,12 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
-import com.infotech.fplcolosseum.database.DataConverter;
+import com.infotech.fplcolosseum.database.dataconverter.ManagerModelConverter;
 
 import java.util.List;
 
 @Entity(tableName = "team_data")
-@TypeConverters(DataConverter.class)
+@TypeConverters(ManagerModelConverter.class)
 public class TeamDataResponseModel {
 
     @PrimaryKey(autoGenerate = true)

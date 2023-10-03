@@ -48,7 +48,7 @@ public class GameWeekDashboard extends Fragment {
         super.onCreate(savedInstanceState);
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Fetching Game Week data...");
-        progressDialog.setMessage("Please wait.");
+        progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
 
         // Initialize ViewModel and other components here
@@ -89,7 +89,7 @@ public class GameWeekDashboard extends Fragment {
         try {
 //            Log.d(Constants.LOG_TAG, "Getting Game Week Data for leagueID->" + leagueID + ", gameWeek->" + gameWeek );
             Logger.d("Getting Game Week Data for leagueID-> " + leagueID + ", gameWeek-> " + gameWeek);
-            progressDialog.setTitle("Fetching Game Week " + gameWeek + " data");
+            progressDialog.setTitle("Fetching GameWeek " + gameWeek + " Data");
             progressDialog.show();
             viewModel.gameWeekDataFromAPI(leagueID, gameWeek);
         } catch (IOException e) {
@@ -122,11 +122,12 @@ public class GameWeekDashboard extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     public void updateUI( CustomGameWeekDataModel weekDataModel) {
-//        Log.d(Constants.LOG_TAG, "Updating UI");
+
         Logger.d("Updating UI");
         if (weekDataModel != null && !weekDataModel.getTeams().isEmpty()) {
             // Update your RecyclerView and other UI components here using the data
-            binding.textviewGameWeek.setText("( Game Week " + (int) weekDataModel.getCurrentGameweek() + " )");
+            String gameWeek =  "(GW " + (int) weekDataModel.getGameWeek() + ")";
+            binding.textviewGameWeek.setText(gameWeek);
             binding.leagueName.setText(weekDataModel.getLeagueName());
             teams.clear(); // Clear the existing data
             weekDataModel.getTeams().sort(new TeamDataComparator());
@@ -134,7 +135,6 @@ public class GameWeekDashboard extends Fragment {
             adapter.notifyDataSetChanged();
         } else {
             Logger.d("GameWeek Model is Empty");
-//            Log.d(Constants.LOG_TAG, "GameWeek Model is Empty");
         }
     }
 }

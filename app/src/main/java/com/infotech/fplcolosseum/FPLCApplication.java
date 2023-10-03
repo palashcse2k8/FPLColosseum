@@ -1,7 +1,6 @@
 package com.infotech.fplcolosseum;
 
 import android.app.Application;
-
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.BuildConfig;
 import com.orhanobut.logger.FormatStrategy;
@@ -23,8 +22,9 @@ public class FPLCApplication extends Application {
         super.onCreate();
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
             @Override public boolean isLoggable(int priority, String tag) {
-                return true; // set to true to show debug log
+                return false; // set to true to show debug log
             }
         });
+
     }
 }

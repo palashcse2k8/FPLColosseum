@@ -1,22 +1,12 @@
 package com.infotech.fplcolosseum.gameweek.models.web;
 
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-import androidx.room.Relation;
-import androidx.room.TypeConverters;
-
 import com.google.gson.annotations.SerializedName;
-import com.infotech.fplcolosseum.database.DataConverter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(tableName = "GAMEWEEKDATA")
-@TypeConverters(DataConverter.class)
-public class LeagueGameWeekDataModel {
 
-    @PrimaryKey(autoGenerate = true)
+public class LeagueGameWeekDataModel {
     private int id; // You can add a primary key field for Room
     private float Gameweek;
     private float CurrentGameweek;
@@ -47,8 +37,7 @@ public class LeagueGameWeekDataModel {
     private float FilterTo;
     private float LastLiveFeedEventTimeStamp;
     private String LeagueOverallLivedata = null;
-    @Ignore // Mark this field as transient
-    @Relation(parentColumn = "id", entityColumn = "id")
+
     @SerializedName("TeamDatas")
     private ArrayList<TeamDataResponseModel> TeamDatas;
 
@@ -81,7 +70,7 @@ public class LeagueGameWeekDataModel {
     }
 
     private String LeagueCountryInfos = null;
-    @Ignore
+
     List<FixtureDatas> FixtureDatas;
 
     public void setFixtureDatas(List<FixtureDatas> fixtureDatas) {
@@ -89,14 +78,14 @@ public class LeagueGameWeekDataModel {
     }
 
     List<Object> FavoriteEntryIds;
-    List<Object> AllPlayerDataStats ;
+    List<Object> AllPlayerDataStats;
     private String AllPlayerDataStatsStatsViewExtra = null;
     private String LeagueAvgStatsEntry = null;
     private String LeagueAvgStatsExtra = null;
     private float CurrentImpact;
     private float CurrentPlayersProgressVsLeague;
     private String SeasonHistoryGameweeks = null;
-    List<Object> GameWeeks ;
+    List<Object> GameWeeks;
     private String LogText;
     private String InfoTextAboveLeague;
     private boolean HideAds;
