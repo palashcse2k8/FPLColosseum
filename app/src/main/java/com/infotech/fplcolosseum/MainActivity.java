@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
         }
+        assert actionBar != null;
         actionBar.setTitle("Game Week Standings");
     }
 }

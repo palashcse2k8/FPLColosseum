@@ -93,7 +93,17 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@color/white"
-                android:text="Leader Board"/>
+                android:text="Leader Board "/>
+
+            <TextView
+                android:id="@+id/textview_game_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/white">
+
+            </TextView>
         </LinearLayout>
 
         <RelativeLayout
@@ -103,6 +113,7 @@
                 android:id="@+id/recyclerView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                tools:listitem="@layout/row_layout_new"
                 android:paddingBottom="50dp">
 
             </androidx.recyclerview.widget.RecyclerView>

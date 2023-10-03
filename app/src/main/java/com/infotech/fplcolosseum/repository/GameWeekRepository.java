@@ -21,6 +21,7 @@ import com.infotech.fplcolosseum.gameweek.models.web.TeamDataResponseModel;
 import com.infotech.fplcolosseum.remote.APIServices;
 import com.infotech.fplcolosseum.remote.RetroClass;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -98,7 +99,7 @@ public class GameWeekRepository {
                 if (result != null) {
                     managerModel.setPlayersAll(result);
 
-                    Log.d(Constants.LOG_TAG, "Manager Info -> " + managerModel.getManagerName() + ", gameweek : " + managerModel.getGameWeek());
+//                    Log.d(Constants.LOG_TAG, "Manager Info -> " + managerModel.getManagerName() + ", gameweek : " + managerModel.getGameWeek());
 
                     float bonusPoints = 0;
                     float benchPoints = 0;
@@ -110,7 +111,7 @@ public class GameWeekRepository {
                     //update captain and vice captain points
                     for (int i=0; i<result.size(); i++) {
                         model = result.get(i);
-                        Log.d(Constants.LOG_TAG, "Player Info-> " + model.toString());
+//                        Log.d(Constants.LOG_TAG, "Player Info-> " + model.toString());
 
                         //set first rules
                         if (model.getPlayerName().equalsIgnoreCase(managerModel.getCaptainName())) {
@@ -137,12 +138,12 @@ public class GameWeekRepository {
                                         goalConceded += fixtureDatas.getTeamHScore();
                                     else if(fixtureDatas.getHomeTeamName().equalsIgnoreCase(model.getTeamName()))
                                         goalConceded += fixtureDatas.getTeamAScore();
-                                    else Log.d(Constants.LOG_TAG, "No team found");
+//                                    else Log.d(Constants.LOG_TAG, "No team found");
                                 }
                             }
 
                         } else {
-                            Log.d(Constants.LOG_TAG, "adding bench point");
+//                            Log.d(Constants.LOG_TAG, "adding bench point");
                             benchPoints += model.getPoints();
                         }
                     }
@@ -264,7 +265,7 @@ public class GameWeekRepository {
         if (playerList.size() != 0) {
             for (PlayerDataModel model : playerList) {
                 if (model.getPlayerID() == playerDataModel.getId()) {
-//                    Log.d(Constants.LOG_TAG, "Player Found " + playerDataModel.getPlayerWebName());
+                    Logger.d("Player Found " + playerDataModel.getPlayerWebName());
                     return true;
                 }
             }
