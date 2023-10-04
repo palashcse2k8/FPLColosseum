@@ -7,6 +7,7 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -20,11 +21,11 @@ public class AppExecutors {
     // For Singleton instantiation
     private static final Object LOCK = new Object();
     private static AppExecutors sInstance;
-    private final Executor diskIO;
+    private final ExecutorService diskIO;
     private final Executor mainThread;
     private final Executor networkIO;
 
-    public AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
+    public AppExecutors(ExecutorService diskIO, Executor networkIO, Executor mainThread) {
         this.diskIO = diskIO;
         this.networkIO = networkIO;
         this.mainThread = mainThread;
@@ -41,7 +42,7 @@ public class AppExecutors {
         return sInstance;
     }
 
-    public Executor diskIO() {
+    public ExecutorService diskIO() {
         return diskIO;
     }
 

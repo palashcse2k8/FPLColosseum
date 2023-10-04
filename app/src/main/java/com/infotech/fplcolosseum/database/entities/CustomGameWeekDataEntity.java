@@ -5,14 +5,12 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.infotech.fplcolosseum.database.dataconverter.ManagerModelConverter;
-import com.infotech.fplcolosseum.database.dataconverter.PlayerModelConverter;
 import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
 import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
 
 import java.util.List;
 
 @Entity(tableName = "GAMEWEEKDATA")
-@TypeConverters({ManagerModelConverter.class, PlayerModelConverter.class})
 public class CustomGameWeekDataEntity {
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -21,12 +19,13 @@ public class CustomGameWeekDataEntity {
     private float gameWeek;
     private float currentGameweek;
     private float numberOfTeams;
-//    @Ignore // Mark this field as transient
+    //    @Ignore // Mark this field as transient
 //    @Relation(parentColumn = "id", entityColumn = "id")
-    List<ManagerModel> teams ;
+    @TypeConverters(ManagerModelConverter.class)
+    List<ManagerModel> teams;
 
     //Default Constructor
-    public CustomGameWeekDataEntity () {
+    public CustomGameWeekDataEntity() {
 
     }
 

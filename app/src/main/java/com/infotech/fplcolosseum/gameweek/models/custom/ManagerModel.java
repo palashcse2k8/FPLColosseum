@@ -1,6 +1,6 @@
 package com.infotech.fplcolosseum.gameweek.models.custom;
 
-import androidx.annotation.NonNull;
+import androidx.room.TypeConverters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ public class ManagerModel {
     private String TeamName;
     private float GameWeek;
     List<PlayerDataModel> PlayersXI = new ArrayList<>();
+    @TypeConverters(PlayerDataModel.class)
     List<PlayerDataModel> PlayersAll = new ArrayList<>();
     private String CaptainName;
     private float CaptainGameWeekPoints;

@@ -7,7 +7,6 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.infotech.fplcolosseum.database.AppDatabase;
@@ -46,18 +45,15 @@ public class GameWeekRepository {
     AppExecutors appExecutors;
 //    private MediatorLiveData<List<ManagerModel>> _managerList;
 
-    private LiveData<List<PlayerDataModel>> playersLiveData;
-
     private List<PlayerDataModel> gameWeekPlayerList;
     private List<PlayerDataModel> gameWeekPlayerListWithData;
 
     public GameWeekRepository(Application application) {
         apiServices = RetroClass.getAPIService(); // set API
 //        _managerList = new MediatorLiveData<>();
-        playersLiveData = new MutableLiveData<>();
         gameWeekPlayerList = new ArrayList<>();
         gameWeekPlayerListWithData = new ArrayList<>();
-        gameWeekDBDao =  AppDatabase.getInstance(application).dbDao();
+        gameWeekDBDao = AppDatabase.getInstance(application).dbDao();
         appExecutors = AppExecutors.getInstance();
     }
 
@@ -120,7 +116,7 @@ public class GameWeekRepository {
                     PlayerDataModel model;
 
                     //update captain and vice captain points
-                    for (int i=0; i<result.size(); i++) {
+                    for (int i = 0; i < result.size(); i++) {
                         model = result.get(i);
 //                        Log.d(Constants.LOG_TAG, "Player Info-> " + model.toString());
 
@@ -137,17 +133,17 @@ public class GameWeekRepository {
                         }
 
                         //set bench point and bonus point
-                        if (i<11) {
+                        if (i < 11) {
                             bonusPoints += model.getBonusPoints();
                             goalScored += model.getGoalScored();
                             bpsPoints += model.getBPSPoints();
 
                             //get goal conceded information
-                            for (FixtureDatas fixtureDatas: leagueGameWeekDataModel.getFixtureDatas()) {
-                                if(fixtureDatas.getFixtureId() == model.getFixtureID()){
-                                    if(fixtureDatas.getAwayTeamName().equalsIgnoreCase(model.getTeamName()))
+                            for (FixtureDatas fixtureDatas : leagueGameWeekDataModel.getFixtureDatas()) {
+                                if (fixtureDatas.getFixtureId() == model.getFixtureID()) {
+                                    if (fixtureDatas.getAwayTeamName().equalsIgnoreCase(model.getTeamName()))
                                         goalConceded += fixtureDatas.getTeamHScore();
-                                    else if(fixtureDatas.getHomeTeamName().equalsIgnoreCase(model.getTeamName()))
+                                    else if (fixtureDatas.getHomeTeamName().equalsIgnoreCase(model.getTeamName()))
                                         goalConceded += fixtureDatas.getTeamAScore();
 //                                    else Log.d(Constants.LOG_TAG, "No team found");
                                 }
@@ -293,7 +289,7 @@ public class GameWeekRepository {
         return callAPI(callAPI, PlayerStatsResponseModel.class);
     }
 
-    public LiveData<List<ManagerModel>> getMangersData(String leagueID, String currentGameweek) throws IOException {
+    public LiveData<List<ManagerModel>> getMangersData(String leagueID, String currentGameweek) {
 
         MediatorLiveData<List<ManagerModel>> _managerList = new MediatorLiveData<>();
         // Source 1
@@ -340,7 +336,7 @@ public class GameWeekRepository {
                 // Convert the entity to the custom model
                 CustomGameWeekDataModel customGameWeekDataModel = new CustomGameWeekDataModel(customGameWeekDataEntity);
                 Log.d(Constants.LOG_TAG, "Getting Data From ROOM DB");
-                gameWeekDataModelMediatorLiveData.setValue(customGameWeekDataModel);
+                gameWeekDataModelMediatorLiveData.postValue(customGameWeekDataModel);
             } else {
                 // Data not available in the database, fetch it from the API
                 try {
@@ -357,7 +353,6 @@ public class GameWeekRepository {
 
     public void getGameWeekDataFromAPI(String leagueID, String currentGameweek, MediatorLiveData<CustomGameWeekDataModel> gameWeekDataModelMediatorLiveData) throws IOException {
 
-
         gameWeekPlayerList = new ArrayList<>();
         gameWeekPlayerListWithData = new ArrayList<>();
 //        MediatorLiveData<CustomGameWeekDataModel> gameWeekDataModelMediatorLiveData = new MediatorLiveData<>();
@@ -371,7 +366,7 @@ public class GameWeekRepository {
 
         LiveData<LeagueGameWeekDataModel> leagueGameWeekDataModel = callAPI(callAPI, LeagueGameWeekDataModel.class);
 
-        //set league informations
+        //set league information
         gameWeekDataModelMediatorLiveData.addSource(leagueGameWeekDataModel, leagueGameWeekDataModel1 -> {
             customGameWeekDataModel.setLeagueId(leagueGameWeekDataModel1.getLeagueId());
             customGameWeekDataModel.setLeagueName(leagueGameWeekDataModel1.getLeagueName());
@@ -394,9 +389,7 @@ public class GameWeekRepository {
     }
 
     public void insertGameWeekDataToDB(CustomGameWeekDataEntity gameWeekDataEntity) {
-        appExecutors.diskIO().execute(() -> {
-            gameWeekDBDao.insertGameWeekData(gameWeekDataEntity);
-        });
-    }
 
+        appExecutors.diskIO().submit(() -> gameWeekDBDao.insertGameWeekData(gameWeekDataEntity));
+    }
 }
