@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 
@@ -29,7 +30,7 @@ public class APIHandler {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
 
-//                    Log.d(Constants.LOG_TAG,"request url => " + call.request().url().uri().toString());
+                    Logger.d("Request URL => " + call.request().url().uri());
                     if (response.isSuccessful()) {
 
                         try (ResponseBody responseBody = response.body()) {
@@ -65,7 +66,7 @@ public class APIHandler {
 
         Gson gson = new Gson();
         String json = responseBody.string();
-//        Log.d(Constants.LOG_TAG, "apiResponse=>> "+json);
+//        Logger.d("apiResponse=>> " + json);
         try {
             return gson.fromJson(json, classofT);
         } catch (Exception e){

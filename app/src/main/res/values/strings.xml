@@ -2,6 +2,7 @@
     <string name="app_name">FPLColosseum</string>
     <string name="select_game_week">Select Game Week</string>
     <string-array name="gameWeeks">
+        <item>Select GameWeek</item>
         <item>Game Week 01</item>
         <item>Game Week 02</item>
         <item>Game Week 03</item>
@@ -10,6 +11,36 @@
         <item>Game Week 06</item>
         <item>Game Week 07</item>
         <item>Game Week 08</item>
+        <item>Game Week 09</item>
+        <item>Game Week 10</item>
+        <item>Game Week 11</item>
+        <item>Game Week 12</item>
+        <item>Game Week 13</item>
+        <item>Game Week 14</item>
+        <item>Game Week 15</item>
+        <item>Game Week 16</item>
+        <item>Game Week 17</item>
+        <item>Game Week 18</item>
+        <item>Game Week 19</item>
+        <item>Game Week 20</item>
+        <item>Game Week 21</item>
+        <item>Game Week 22</item>
+        <item>Game Week 23</item>
+        <item>Game Week 24</item>
+        <item>Game Week 25</item>
+        <item>Game Week 26</item>
+        <item>Game Week 27</item>
+        <item>Game Week 28</item>
+        <item>Game Week 29</item>
+        <item>Game Week 30</item>
+        <item>Game Week 31</item>
+        <item>Game Week 32</item>
+        <item>Game Week 33</item>
+        <item>Game Week 34</item>
+        <item>Game Week 35</item>
+        <item>Game Week 36</item>
+        <item>Game Week 37</item>
+        <item>Game Week 38</item>
 
     </string-array>
 </resources>

@@ -73,9 +73,12 @@ public class GameWeekDashboard extends Fragment {
         binding.gameWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                Log.d("selected=> ", "item selected" + i);
                 Logger.d("item selected %s", i);
-                getGameWeekData(Constants.leagues[1], String.valueOf(i+1));
+                if(i > 0)
+                    getGameWeekData(Constants.leagues[0], String.valueOf(i));
+                else {
+                    Logger.d("Game Week Not Selected");
+                }
             }
 
             @Override
@@ -87,7 +90,6 @@ public class GameWeekDashboard extends Fragment {
 
     public void getGameWeekData(String leagueID, String gameWeek){
         try {
-//            Log.d(Constants.LOG_TAG, "Getting Game Week Data for leagueID->" + leagueID + ", gameWeek->" + gameWeek );
             Logger.d("Getting Game Week Data for leagueID-> " + leagueID + ", gameWeek-> " + gameWeek);
             progressDialog.setTitle("Fetching GameWeek " + gameWeek + " Data");
             progressDialog.show();
