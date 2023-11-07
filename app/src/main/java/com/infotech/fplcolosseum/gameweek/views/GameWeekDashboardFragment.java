@@ -3,7 +3,6 @@ package com.infotech.fplcolosseum.gameweek.views;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +27,10 @@ import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
-public class GameWeekDashboard extends Fragment {
+public class GameWeekDashboardFragment extends Fragment {
 
     GameweekDashboardFragmentBinding binding;
     private TeamAdapter adapter;
@@ -128,9 +126,10 @@ public class GameWeekDashboard extends Fragment {
         Logger.d("Updating UI");
         if (weekDataModel != null && !weekDataModel.getTeams().isEmpty()) {
             // Update your RecyclerView and other UI components here using the data
-            String gameWeek =  "(GW " + (int) weekDataModel.getGameWeek() + ")";
+            String gameWeek =  " (GW " + (int) weekDataModel.getGameWeek() + ")";
             binding.textviewGameWeek.setText(gameWeek);
-            binding.leagueName.setText(weekDataModel.getLeagueName());
+            String leagueName  = " "+ weekDataModel.getLeagueName();
+            binding.leagueName.setText(leagueName);
             teams.clear(); // Clear the existing data
             weekDataModel.getTeams().sort(new TeamDataComparator());
             teams.addAll(weekDataModel.getTeams());

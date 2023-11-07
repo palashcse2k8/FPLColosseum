@@ -23,7 +23,7 @@
                 android:padding="5dp"
                 app:strokeWidth="3dp"
                 android:background="@drawable/rounded_corner_shape"
-                app:strokeColor="@android:color/darker_gray"
+                app:strokeColor="#B71C1C"
                 app:shapeAppearanceOverlay="@style/circleImageView"
                 android:src="@drawable/_1543" />
 
@@ -35,6 +35,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/rounded_corner_shape"
+                android:backgroundTint="#33691E"
                 android:padding="5dp"
                 android:textSize="16sp"
                 android:gravity="center"

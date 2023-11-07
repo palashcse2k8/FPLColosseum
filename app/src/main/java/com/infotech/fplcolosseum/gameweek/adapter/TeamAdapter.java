@@ -14,6 +14,8 @@ import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.RowLayoutNewBinding;
 import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
 import com.infotech.fplcolosseum.gameweek.models.custom.PlayerDataModel;
+import com.infotech.fplcolosseum.utilities.Constants;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Random;
@@ -59,6 +61,12 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
 //                .skipMemoryCache(true) //2
 //                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
 //                .into(holder.binding.imageID);
+
+        String imageURL = "https://awnless-arrangement.000webhostapp.com/images/"+ (int)team.getId()+ ".jpg";
+        Picasso.get()
+                .load(imageURL)
+                .error(R.mipmap.no_image)
+                .into(holder.binding.imageID);
     }
 
     @Override

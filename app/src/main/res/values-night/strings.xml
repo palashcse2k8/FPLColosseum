@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="league_name">League Name : </string>
+    <string name="leader_board">Leader Board </string>
+</resources>

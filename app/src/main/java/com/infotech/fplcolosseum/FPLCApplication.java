@@ -25,6 +25,5 @@ public class FPLCApplication extends Application {
                 return false; // set to true to show debug log
             }
         });
-
     }
 }

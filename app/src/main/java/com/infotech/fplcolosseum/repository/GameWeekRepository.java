@@ -81,9 +81,12 @@ public class GameWeekRepository {
         MediatorLiveData<List<ManagerModel>> managerModelsLiveData = new MediatorLiveData<>();
         List<ManagerModel> managerModels = new ArrayList<>();
 
-        List<TeamDataResponseModel> customModelList = leagueGameWeekDataModel.getTeamDatas().subList(0,5);
+        List<TeamDataResponseModel> customModelList = leagueGameWeekDataModel.getTeamDatas();
 
-//        AtomicInteger apiCallCount = new AtomicInteger(leagueGameWeekDataModel.getTeamDatas().size());
+        if(leagueGameWeekDataModel.getTeamDatas().size() > 15) {
+            customModelList = leagueGameWeekDataModel.getTeamDatas().subList(0,15);
+        }
+
         AtomicInteger apiCallCount = new AtomicInteger(customModelList.size());
 //        for (TeamDataResponseModel teamDataResponseModel : leagueGameWeekDataModel.getTeamDatas()) {
         for (TeamDataResponseModel teamDataResponseModel : customModelList) {
@@ -390,9 +393,11 @@ public class GameWeekRepository {
 //            for (PlayerDataModel model : gameWeekPlayerList) {
 //                Log.d(Constants.LOG_TAG, model.getPlayerName());
 //            }
+
+            gameWeekDataModelMediatorLiveData.postValue(customGameWeekDataModel);
             CustomGameWeekDataEntity gameWeekDataEntity = new CustomGameWeekDataEntity(customGameWeekDataModel);
             insertGameWeekDataToDB(gameWeekDataEntity);
-            gameWeekDataModelMediatorLiveData.postValue(customGameWeekDataModel);
+//            gameWeekDataModelMediatorLiveData.postValue(customGameWeekDataModel);
         });
     }
 
