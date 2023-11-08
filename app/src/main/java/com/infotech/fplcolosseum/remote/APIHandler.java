@@ -21,9 +21,13 @@ import retrofit2.Response;
 public class APIHandler {
     APIHandler(){}
 
+    public static int apiCallCount = 0;
+    public static int apiResponseCount = 0;
+
     public static <T> LiveData<T> callAPI(Call<ResponseBody> callingAPI, Class<T> apiResponseType) {
 
         final MutableLiveData<T> apiData = new MutableLiveData<>();
+        Log.d("api call => ", "Call request" + (++apiCallCount));
 
         try {
             callingAPI.enqueue(new Callback<ResponseBody>() {
@@ -31,6 +35,7 @@ public class APIHandler {
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
 
                     Logger.d("Request URL => " + call.request().url().uri());
+                    Log.d("api response => ", "Response received" + (++apiResponseCount));
                     if (response.isSuccessful()) {
 
                         try (ResponseBody responseBody = response.body()) {
@@ -41,6 +46,7 @@ public class APIHandler {
                                 apiData.setValue(null);
                             }
                         } catch (JsonSyntaxException | IOException e) {
+                            Log.d("response", "exception occured");
                             apiData.setValue(null);
                             e.printStackTrace();
                         }
@@ -53,6 +59,7 @@ public class APIHandler {
                 @Override
                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
 //                    UIUtils.toast("API Calling fail", WARNING);
+                    Log.d("response", "data receive failure");
                     apiData.setValue(null);
                 }
             });

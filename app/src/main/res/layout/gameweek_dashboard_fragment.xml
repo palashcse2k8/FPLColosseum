@@ -32,6 +32,7 @@
             android:layout_marginStart="2dp"
             android:text="@string/select_game_week"
             android:textColor="@color/white"
+            android:textStyle="bold"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -79,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/league_name"
-                android:textColor="@color/white"
+                android:textColor="#FFEB3B"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -91,7 +92,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAlignment="textStart"
-                android:textColor="@color/white"
+                android:textColor="#FFEB3B"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
