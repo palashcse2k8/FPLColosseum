@@ -19,6 +19,8 @@ public class Constants {
             "118990" // srbd premier league
     };
 
+    public static int counter;
+
     //image link
 
 }

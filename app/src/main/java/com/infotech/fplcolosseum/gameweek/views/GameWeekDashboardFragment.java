@@ -88,7 +88,7 @@ public class GameWeekDashboardFragment extends Fragment {
 
     public void getGameWeekData(String leagueID, String gameWeek){
         try {
-            Logger.d("Getting Game Week Data for leagueID-> " + leagueID + ", gameWeek-> " + gameWeek);
+//            Logger.d("Getting Game Week Data for leagueID-> " + leagueID + ", gameWeek-> " + gameWeek);
             progressDialog.setTitle("Fetching GameWeek " + gameWeek + " Data");
             progressDialog.show();
             viewModel.gameWeekDataFromAPI(leagueID, gameWeek);
@@ -109,7 +109,7 @@ public class GameWeekDashboardFragment extends Fragment {
     public void setUpLiveDataObserver() {
 
         viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), customGameWeekDataModel -> {
-            Logger.d("leagueGameWeekDataModel changed");
+//            Logger.d("leagueGameWeekDataModel changed");
             if (customGameWeekDataModel != null) {
                 updateUI(customGameWeekDataModel );
             } else {
@@ -123,7 +123,7 @@ public class GameWeekDashboardFragment extends Fragment {
     @SuppressLint("NotifyDataSetChanged")
     public void updateUI( CustomGameWeekDataModel weekDataModel) {
 
-        Logger.d("Updating UI");
+//        Logger.d("Updating UI");
         if (weekDataModel != null && !weekDataModel.getTeams().isEmpty()) {
             // Update your RecyclerView and other UI components here using the data
             String gameWeek =  " (GW " + (int) weekDataModel.getGameWeek() + ")";
