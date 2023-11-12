@@ -415,7 +415,7 @@ public class GameWeekRepository {
 
     public void insertGameWeekDataToDB(CustomGameWeekDataEntity gameWeekDataEntity) {
 
-        Logger.d("Inserting data to room db");
+//        Logger.d("Inserting data to room db");
         appExecutors.diskIO().submit(() -> gameWeekDBDao.insertGameWeekData(gameWeekDataEntity));
     }
 }

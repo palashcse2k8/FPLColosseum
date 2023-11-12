@@ -12,6 +12,7 @@ import com.infotech.fplcolosseum.database.dao.GameWeekDBDao;
 import com.infotech.fplcolosseum.database.dataconverter.ManagerModelConverter;
 import com.infotech.fplcolosseum.database.dataconverter.PlayerModelConverter;
 import com.infotech.fplcolosseum.database.entities.CustomGameWeekDataEntity;
+import com.orhanobut.logger.Logger;
 
 @Database(entities = {CustomGameWeekDataEntity.class}, version = 1, exportSchema = false)
 @TypeConverters({ManagerModelConverter.class, PlayerModelConverter.class})
@@ -24,13 +25,13 @@ public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase getInstance(Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
-                Log.d(LOG_TAG, "Creating new database instance");
+//                Logger.d(LOG_TAG, "Creating new database instance");
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                                 AppDatabase.class, AppDatabase.DATABASE_NAME)
                         .build();
             }
         }
-        Log.d(LOG_TAG, "Getting the database instance");
+//        Logger.d(LOG_TAG, "Getting the database instance");
         return sInstance;
     }
 
