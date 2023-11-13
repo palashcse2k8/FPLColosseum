@@ -51,7 +51,7 @@ public class GameWeekDashboardFragment extends Fragment {
 
         // Initialize ViewModel and other components here
         viewModel = new ViewModelProvider(requireActivity()).get(GameWeekViewModel.class);
-
+        viewModel.deleteAllGameWeekData();
     }
 
     @Nullable

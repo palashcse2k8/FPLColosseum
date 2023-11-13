@@ -38,6 +38,18 @@ public class GameWeekViewModel extends AndroidViewModel {
 
     }
 
+    public void deleteDatabase(String leagueID, String currentGameweek) {
+
+        //delete all data from table
+        _gameWeekRepository.deleteGameWeekData(leagueID, currentGameweek);
+    }
+
+    public void deleteAllGameWeekData() {
+
+        //delete all row data from table
+        _gameWeekRepository.deleteAllGameWeekData();
+    }
+
     public void gameWeekDataFromAPI (String leagueID, String currentGameweek) throws IOException {
         _customGameWeekDataModelLiveData.addSource(_gameWeekRepository.getGameWeekData(leagueID, currentGameweek), customGameWeekDataModel -> {
             _customGameWeekDataModelLiveData.setValue(customGameWeekDataModel);

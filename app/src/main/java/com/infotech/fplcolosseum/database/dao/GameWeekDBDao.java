@@ -30,4 +30,9 @@ public interface GameWeekDBDao {
 
     @Query("SELECT * FROM GAMEWEEKDATA WHERE leagueId = :leagueId AND Gameweek = :id")
     LiveData<CustomGameWeekDataEntity> loadGameWeekDataById(String leagueId, String id);
+
+    @Query("DELETE FROM GAMEWEEKDATA WHERE leagueId = :leagueId AND Gameweek = :id")
+    public void deleteGameWeekDataById(String leagueId, String id);
+    @Query("DELETE FROM GAMEWEEKDATA")
+    public void deleteAllGameData();
 }

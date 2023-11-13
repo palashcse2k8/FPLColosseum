@@ -3,6 +3,7 @@ package com.infotech.fplcolosseum.repository;
 import static com.infotech.fplcolosseum.remote.APIHandler.callAPI;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -23,6 +24,7 @@ import com.infotech.fplcolosseum.gameweek.models.web.PlayerStatsResponseModel;
 import com.infotech.fplcolosseum.gameweek.models.web.TeamDataResponseModel;
 import com.infotech.fplcolosseum.remote.APIServices;
 import com.infotech.fplcolosseum.remote.RetroClass;
+import com.infotech.fplcolosseum.utilities.Constants;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
@@ -80,7 +82,7 @@ public class GameWeekRepository {
         List<TeamDataResponseModel> customModelList = leagueGameWeekDataModel.getTeamDatas();
 
         if (leagueGameWeekDataModel.getTeamDatas().size() > 5) {
-            customModelList = leagueGameWeekDataModel.getTeamDatas().subList(0, 10);
+            customModelList = leagueGameWeekDataModel.getTeamDatas().subList(0, 5);
         }
 
         AtomicInteger managerApiCallCount = new AtomicInteger(customModelList.size());
@@ -123,7 +125,7 @@ public class GameWeekRepository {
                     //update captain and vice captain points
                     for (int i = 0; i < result.size(); i++) {
                         model = result.get(i);
-//                        Log.d(Constants.LOG_TAG, "Player Info-> " + model.toString());
+                        Log.d(Constants.LOG_TAG, "Player Info-> " + model.toString());
 
                         //set first rules
                         if (model.getPlayerName().equalsIgnoreCase(managerModel.getCaptainName())) {
@@ -347,6 +349,7 @@ public class GameWeekRepository {
 
 
     public LiveData<CustomGameWeekDataModel> getGameWeekData(String leagueID, String currentGameweek) {
+
         // Create LiveData for the custom model
         LiveData<CustomGameWeekDataEntity> customGameWeekDataEntityLiveData = gameWeekDBDao.loadGameWeekDataById(leagueID, currentGameweek);
 
@@ -418,4 +421,16 @@ public class GameWeekRepository {
 //        Logger.d("Inserting data to room db");
         appExecutors.diskIO().submit(() -> gameWeekDBDao.insertGameWeekData(gameWeekDataEntity));
     }
+
+    public void deleteGameWeekData(String leagueID, String currentGameweek) {
+
+        //delete row data from table
+        appExecutors.diskIO().submit(() -> gameWeekDBDao.deleteGameWeekDataById(leagueID, currentGameweek));
+    }
+    public void deleteAllGameWeekData() {
+
+        //delete all row data from table
+        appExecutors.diskIO().submit(() -> gameWeekDBDao.deleteAllGameData());
+    }
+
 }
