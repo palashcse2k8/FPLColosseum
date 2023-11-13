@@ -45,6 +45,7 @@ public class GameWeekRepository {
 
     private List<PlayerDataModel> gameWeekPlayerList;
     private List<PlayerDataModel> gameWeekPlayerListWithData;
+    private int totalPlayerAPICount;
 
     public GameWeekRepository(Application application) {
         apiServices = RetroClass.getAPIService(application); // set API
@@ -86,6 +87,7 @@ public class GameWeekRepository {
         }
 
         AtomicInteger managerApiCallCount = new AtomicInteger(customModelList.size());
+        totalPlayerAPICount = 0;
 //        for (TeamDataResponseModel teamDataResponseModel : leagueGameWeekDataModel.getTeamDatas()) {
         for (TeamDataResponseModel teamDataResponseModel : customModelList) {
 
@@ -233,39 +235,48 @@ public class GameWeekRepository {
             gameWeekPlayerList.add(playerDataModel);
 //            Logger.d("Getting Player Data for player " + playerDataModel.getPlayerName());
 
+            totalPlayerAPICount++;
+
             LiveData<PlayerStatsResponseModel> playerStatsResponseModelLiveData = getPlayerData(String.valueOf((int) playerDataModel.getPlayerID()), String.valueOf((int) leagueGameWeekDataModel.getGameweek()));
 
             playerListMediatorLiveData.addSource(playerStatsResponseModelLiveData, result -> {
                 if (result != null) {
-                    playerDataModel.setPlayerPositionName(result.getPlayerPositionName());
-                    List<PlayerPointsDatas> list = result.getPlayerPointsDatas();
-                    for (PlayerPointsDatas playerPointsDatas : list) {
-                        playerDataModel.setFixtureID(playerPointsDatas.getFixtureId());
-                        if (playerPointsDatas.getKey().equalsIgnoreCase("bonus")) {
-                            playerDataModel.setBonusPoints(playerPointsDatas.getPoints());
-                            playerDataModel.setBPSPoints(playerPointsDatas.getAmount());
-                        }
-                        if (playerPointsDatas.getKey().equalsIgnoreCase("goals_scored")) {
-                            playerDataModel.setGoalScored(playerPointsDatas.getAmount());
-                        }
-                    }
+                    totalPlayerAPICount--;
 
-                    gameWeekPlayerListWithData.add(playerDataModel);
+                    if (!checkPlayerAdded(gameWeekPlayerListWithData, result)) {
+                        playerDataModel.setPlayerPositionName(result.getPlayerPositionName());
+                        List<PlayerPointsDatas> list = result.getPlayerPointsDatas();
+                        for (PlayerPointsDatas playerPointsDatas : list) {
+                            playerDataModel.setFixtureID(playerPointsDatas.getFixtureId());
+                            if (playerPointsDatas.getKey().equalsIgnoreCase("bonus")) {
+                                playerDataModel.setBonusPoints(playerPointsDatas.getPoints());
+                                playerDataModel.setBPSPoints(playerPointsDatas.getAmount());
+                            }
+                            if (playerPointsDatas.getKey().equalsIgnoreCase("goals_scored")) {
+                                playerDataModel.setGoalScored(playerPointsDatas.getAmount());
+                            }
+                        }
+
+                        gameWeekPlayerListWithData.add(playerDataModel);
+                    }
 
                     // Check if all API calls have completed
                     playerApiCallCount.decrementAndGet();
 
-                    if (playerApiCallCount.get() == 0) {
+                    if (totalPlayerAPICount == 0) {
 
-                        List<PlayerDataModel> currentPlayerListWithData = new ArrayList<>();
+                        List<PlayerDataModel> currentPlayerListWithData = preparePlayersList(currentManagerPlayerList);
+//                        List<PlayerDataModel> currentPlayerListWithData = new ArrayList<>();
 
-                        for (float id : currentManagerPlayerList) {
-                            for (PlayerDataModel model : gameWeekPlayerListWithData) {
-                                if (id == model.getPlayerID()) {
-                                    currentPlayerListWithData.add(model);
-                                }
-                            }
-                        }
+//                        for (float id : currentManagerPlayerList) {
+//                            for (PlayerDataModel model : gameWeekPlayerListWithData) {
+//                                if (id == model.getPlayerID()) {
+//                                    currentPlayerListWithData.add(model);
+//                                    break;
+//                                }
+//                            }
+//                        }
+
                         // All API calls have completed, combine results and set value
 //                        Logger.d("Returning player list for manager " + leagueGameWeekDataModel.getLeagueName());
                         playerListMediatorLiveData.postValue(currentPlayerListWithData);
@@ -284,8 +295,12 @@ public class GameWeekRepository {
             for (PlayerDataModel model : gameWeekPlayerListWithData) {
                 if (id == model.getPlayerID()) {
                     currentPlayerListWithData.add(model);
+                    break;
                 }
             }
+        }
+        if(currentPlayerListWithData.size() != 15) {
+            Logger.d("Player count is mismatched!");
         }
         return currentPlayerListWithData;
     }
@@ -302,6 +317,16 @@ public class GameWeekRepository {
         return false;
     }
 
+    public static boolean checkPlayerAdded(List<PlayerDataModel> playerList, PlayerStatsResponseModel playerDataModel) {
+
+        for (PlayerDataModel model : playerList) {
+            if (model.getPlayerName().equalsIgnoreCase(playerDataModel.getPlayerWebName())) {
+                    Logger.d("Player Found " + playerDataModel.getPlayerWebName());
+                return true;
+            }
+        }
+        return false;
+    }
     public LiveData<PlayerStatsResponseModel> getPlayerData(String playerId, String currentGameweek) {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("playerId", playerId);
