@@ -1,6 +1,8 @@
 package com.infotech.fplcolosseum;
 
 import android.app.Application;
+import android.content.Context;
+
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.BuildConfig;
 import com.orhanobut.logger.FormatStrategy;
@@ -25,5 +27,10 @@ public class FPLCApplication extends Application {
                 return false; // set to true to show debug log
             }
         });
+    }
+
+    @Override
+    public Context getApplicationContext() {
+        return super.getApplicationContext();
     }
 }

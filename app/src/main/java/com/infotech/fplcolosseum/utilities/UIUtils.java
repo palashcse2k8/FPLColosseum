@@ -12,88 +12,50 @@
 // * limitations under the License.
 // */
 //
-//package com.infotech.fplcolosseum.utilities;
-//
-//import android.content.Context;
-//import android.content.res.Resources;
-//import android.graphics.Rect;
-//import android.widget.ProgressBar;
-//import android.widget.Toast;
-//
-//import androidx.annotation.StringRes;
-//
-//import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
-//
-//import bd.com.sonalibank.sw.core.Core;
-//import bd.com.sonalibank.sw.R;
-//import es.dmoral.toasty.Toasty;
-//
-//
-//public class UIUtils {
-//
-//    private UIUtils() {}
-//
-//    public static void toast(String msg) {
-//        toast(msg, ToastLevel.INFO);
-//    }
-//
-//    public static void toast(@StringRes int msg) {
-//        toast(Core.getApp().getString(msg), ToastLevel.INFO);
-//    }
-//
-//    public static void toast(String msg, ToastLevel level) {
-//        switch (level) {
-//
-//            case SUCCESS:
-//                Toasty.success(Core.getApp(), msg, Toast.LENGTH_LONG).show();
-//                break;
-//            case WARNING:
-//                Toasty.warning(Core.getApp(), msg, Toast.LENGTH_LONG).show();
-//                break;
-//            case INFO:
-//                Toasty.info(Core.getApp(), msg, Toast.LENGTH_LONG).show();
-//                break;
-//            case ERROR:
-//                Toasty.error(Core.getApp(), msg, Toast.LENGTH_LONG).show();
-//                break;
-//        }
-//    }
-//
-//    public static void toast(@StringRes int msg, ToastLevel level) {
-//        toast(Core.getApp().getString(msg), level);
-//    }
-//
-//    public static int getScreenWidth() {
-//        return Resources.getSystem().getDisplayMetrics().widthPixels;
-//    }
-//
-//    public static int getScreenHeight() {
-//        return Resources.getSystem().getDisplayMetrics().heightPixels;
-//    }
-//
-//    public static void setupProgressbar(ProgressBar pbLoading, Context context) {
-//
-////        sprogressbar.setImage(R.mipmap.logo_round_tp);
-////        sprogressbar.drawCenterline(true);
-////        sprogressbar.drawStartline(true);
-////        sprogressbar.setProgress(50.0);
-////        sprogressbar.setIndeterminate(true);
-//        /**Dynamically*/
-//        Rect bounds = pbLoading.getIndeterminateDrawable().getBounds();
-//        pbLoading.setIndeterminateDrawable(new ChromeFloatingCirclesDrawable.Builder(context)
-//                .colors(getProgressDrawableColors())
-//                .build());
-//        pbLoading.getIndeterminateDrawable().setBounds(bounds);
-//
-//    }
-//
-//    private static int[] getProgressDrawableColors() {
-//        int[] colors = new int[4];
-//        colors[0] = Core.getApp().getResources().getColor(R.color.sonali_beguni);
-//        colors[1] = Core.getApp().getResources().getColor(R.color.yellow);
-//        colors[2] = Core.getApp().getResources().getColor(R.color.golden);
-//        colors[3] = Core.getApp().getResources().getColor(R.color.dark_blue);
-//        return colors;
-//    }
-//
-//}
+package com.infotech.fplcolosseum.utilities;
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Rect;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import androidx.annotation.StringRes;
+
+import com.infotech.fplcolosseum.FPLCApplication;
+
+import es.dmoral.toasty.Toasty;
+
+public class UIUtils {
+
+    private UIUtils() {}
+    public static void toast(Context context, String msg, ToastLevel level) {
+        switch (level) {
+
+            case SUCCESS:
+                Toasty.success(context, msg, Toast.LENGTH_LONG).show();
+                break;
+            case WARNING:
+                Toasty.warning(context, msg, Toast.LENGTH_LONG).show();
+                break;
+            case INFO:
+                Toasty.info(context, msg, Toast.LENGTH_LONG).show();
+                break;
+            case ERROR:
+                Toasty.error(context, msg, Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
+
+    public static void toast(@StringRes int msg, ToastLevel level) {
+        toast(msg, level);
+    }
+
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+}

@@ -2,7 +2,12 @@ package com.infotech.fplcolosseum.gameweek.views;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +28,9 @@ import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
 import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
 import com.infotech.fplcolosseum.gameweek.viewmodels.GameWeekViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.FileUtility;
+import com.infotech.fplcolosseum.utilities.ToastLevel;
+import com.infotech.fplcolosseum.utilities.UIUtils;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
@@ -68,6 +76,15 @@ public class GameWeekDashboardFragment extends Fragment {
         setupRecyclerView();
         setUpLiveDataObserver();
 
+        binding.tvRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UIUtils.toast(requireContext(), "Creating pdf file", ToastLevel.INFO);
+                requestPermissions();
+
+            }
+        });
+
         binding.gameWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -84,6 +101,33 @@ public class GameWeekDashboardFragment extends Fragment {
 
             }
         });
+    }
+
+    private void requestPermissions() {
+        // For Android 10 and above, use MediaStore API
+        FileUtility fileUtility = new FileUtility(requireContext());
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+        if (true){
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Downloads.DISPLAY_NAME, "test.pdf");
+            values.put(MediaStore.Downloads.MIME_TYPE, "application/pdf");
+//            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+            values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+
+            Uri currentUri = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                currentUri = requireContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+            } else {
+
+            }
+
+            if (currentUri != null) {
+                fileUtility.alterDocument(currentUri);
+                UIUtils.toast(requireContext(), "Successfully created PDF", ToastLevel.SUCCESS);
+            } else {
+                UIUtils.toast(requireContext(), "Failed to create PDF", ToastLevel.ERROR);
+            }
+        }
     }
 
     public void getGameWeekData(String leagueID, String gameWeek){

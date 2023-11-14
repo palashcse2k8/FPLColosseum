@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">FPLColosseum</string>
     <string name="select_game_week">Select Game Week</string>
+    <string name="refresh">Refresh</string>
     <string name="league_name">League Name : </string>
     <string name="leader_board">Leader Board </string>
 

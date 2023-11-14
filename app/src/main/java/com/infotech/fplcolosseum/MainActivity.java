@@ -1,5 +1,6 @@
 package com.infotech.fplcolosseum;
 
+import android.content.ComponentCallbacks;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -30,4 +31,5 @@ public class MainActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setTitle("Game Week Standings");
     }
+
 }
