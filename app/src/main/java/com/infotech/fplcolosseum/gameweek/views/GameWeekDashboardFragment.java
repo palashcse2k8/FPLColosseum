@@ -80,7 +80,7 @@ public class GameWeekDashboardFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 UIUtils.toast(requireContext(), "Creating pdf file", ToastLevel.INFO);
-                requestPermissions();
+//                requestPermissions();
 
             }
         });

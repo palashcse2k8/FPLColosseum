@@ -8,7 +8,7 @@ public class TeamDataComparator implements Comparator<ManagerModel> {
     @Override
     public int compare(ManagerModel team1, ManagerModel team2) {
         // Compare by total points (descending order)
-        int pointsComparison = Float.compare(team2.getGameWeekPoints(), team1.getGameWeekPoints());
+        int pointsComparison = Float.compare(team2.getGameWeekPointsWithoutTransferCost(), team1.getGameWeekPointsWithoutTransferCost());
 
         if (pointsComparison != 0) {
             return pointsComparison; // If not tied, return the result
