@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -33,11 +32,13 @@ import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 import com.orhanobut.logger.Logger;
 
+import org.androidannotations.annotations.EFragment;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@EFragment(resName = "gameweek_dashboard_fragment")
 public class GameWeekDashboardFragment extends Fragment {
 
     GameweekDashboardFragmentBinding binding;
@@ -89,7 +90,7 @@ public class GameWeekDashboardFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Logger.d("item selected %s", i);
-                if(i > 0)
+                if (i > 0)
                     getGameWeekData(Constants.leagues[0], String.valueOf(i));
                 else {
                     Logger.d("Game Week Not Selected");
@@ -107,7 +108,7 @@ public class GameWeekDashboardFragment extends Fragment {
         // For Android 10 and above, use MediaStore API
         FileUtility fileUtility = new FileUtility(requireContext());
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-        if (true){
+        if (true) {
             ContentValues values = new ContentValues();
             values.put(MediaStore.Downloads.DISPLAY_NAME, "test.pdf");
             values.put(MediaStore.Downloads.MIME_TYPE, "application/pdf");
@@ -130,7 +131,7 @@ public class GameWeekDashboardFragment extends Fragment {
         }
     }
 
-    public void getGameWeekData(String leagueID, String gameWeek){
+    public void getGameWeekData(String leagueID, String gameWeek) {
         try {
 //            Logger.d("Getting Game Week Data for leagueID-> " + leagueID + ", gameWeek-> " + gameWeek);
             progressDialog.setTitle("Fetching GameWeek " + gameWeek + " Data");
@@ -155,7 +156,7 @@ public class GameWeekDashboardFragment extends Fragment {
         viewModel.leagueGameWeekDataModel().observe(getViewLifecycleOwner(), customGameWeekDataModel -> {
 //            Logger.d("leagueGameWeekDataModel changed");
             if (customGameWeekDataModel != null) {
-                updateUI(customGameWeekDataModel );
+                updateUI(customGameWeekDataModel);
             } else {
                 Toast.makeText(getContext(), "Failed to get data!", Toast.LENGTH_SHORT).show();
             }
@@ -165,14 +166,14 @@ public class GameWeekDashboardFragment extends Fragment {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void updateUI( CustomGameWeekDataModel weekDataModel) {
+    public void updateUI(CustomGameWeekDataModel weekDataModel) {
 
 //        Logger.d("Updating UI");
         if (weekDataModel != null && !weekDataModel.getTeams().isEmpty()) {
             // Update your RecyclerView and other UI components here using the data
-            String gameWeek =  " (GW " + (int) weekDataModel.getGameWeek() + ")";
+            String gameWeek = " (GW " + (int) weekDataModel.getGameWeek() + ")";
             binding.textviewGameWeek.setText(gameWeek);
-            String leagueName  = " "+ weekDataModel.getLeagueName();
+            String leagueName = " " + weekDataModel.getLeagueName();
             binding.leagueName.setText(leagueName);
             teams.clear(); // Clear the existing data
             weekDataModel.getTeams().sort(new TeamDataComparator());

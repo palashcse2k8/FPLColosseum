@@ -62,4 +62,11 @@ dependencies {
 
     //to use toasty
     implementation 'com.github.GrenderG:Toasty:1.5.2'
+
+    //android utility
+    implementation 'com.blankj:utilcodex:1.31.1'
+
+    // Android annotation
+    annotationProcessor "org.androidannotations:androidannotations:4.8.0"
+    implementation "org.androidannotations:androidannotations-api:4.8.0"
 }

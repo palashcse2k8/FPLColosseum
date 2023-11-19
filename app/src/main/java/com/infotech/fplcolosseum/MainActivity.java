@@ -1,13 +1,12 @@
 package com.infotech.fplcolosseum;
 
-import android.content.ComponentCallbacks;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.infotech.fplcolosseum.gameweek.views.GameWeekDashboardFragment;
+import com.infotech.fplcolosseum.login.views.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,7 +16,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
         setupActionBar();
-        Fragment fragment = new GameWeekDashboardFragment();
+//        Fragment fragment = new GameWeekDashboardFragment();
+        Fragment fragment = new LoginFragment();
         String tag = fragment.getClass().getSimpleName();
         getSupportFragmentManager().beginTransaction().setReorderingAllowed(true).add(R.id.contentFrame, fragment, tag).commit();
 
