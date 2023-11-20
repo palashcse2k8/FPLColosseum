@@ -21,6 +21,8 @@ public class Constants {
 
     public static int counter;
 
+    public static String cookies;
+
     //image link
 
 }

@@ -4,6 +4,12 @@
     <string name="refresh">Refresh</string>
     <string name="league_name">League Name : </string>
     <string name="leader_board">Leader Board </string>
+    <string name="username_or_email">Username or Email</string>
+    <string name="enter_username_or_email">Enter Username or Email</string>
+    <string name="password">Password</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign up</string>
 
     <string-array name="gameWeeks">
         <item>Select GameWeek</item>
