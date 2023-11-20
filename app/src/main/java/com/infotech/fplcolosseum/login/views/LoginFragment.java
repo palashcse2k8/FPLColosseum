@@ -42,14 +42,9 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 //        binding.setGameWeekViewModel(viewModel);
-        return binding.getRoot();
-    }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setOnFocusChangeListener();
+//        CookieManager.getInstance().setAcceptCookie(true);
+//        CookieManager.getInstance().setAcceptThirdPartyCookies(binding.webViewLogin, true);
 
         binding.webViewLogin.getSettings().setJavaScriptEnabled(true);
         binding.webViewLogin.getSettings().setDomStorageEnabled(true);
@@ -57,7 +52,6 @@ public class LoginFragment extends Fragment {
 //            @Override
 //            public boolean shouldOverrideUrlLoading(WebView wb, WebResourceRequest request) {
 //                wb.loadUrl(url);
-//
 //                return true;
 //            }
 
@@ -113,7 +107,7 @@ public class LoginFragment extends Fragment {
 //                    }
 //                });
 
-                web.loadUrl(javascriptCode);
+//                web.loadUrl(javascriptCode);
 
 //                document.getElementById(\"loginLoginWrap\").value='"
 //                                + pass
@@ -125,17 +119,28 @@ public class LoginFragment extends Fragment {
 //                                "';document.getElementsByTagName(\"form\")[0].submit();
                 //web.loadUrl(javascriptCode);
                 //web.loadUrl(javascriptCode);
-
-                if (isLoginSuccessful(cookies)) {
-                    // Login was successful, proceed with further actions
-                    UIUtils.toast(requireContext(),"Login Successful", ToastLevel.SUCCESS);
-                } else {
-                    // Login failed, display an error message
-                    UIUtils.toast(requireContext(),"Login Failed. Please check your credentials.", ToastLevel.ERROR);
-                }
+//
+//                if (isLoginSuccessful(cookies)) {
+//                    // Login was successful, proceed with further actions
+//                    UIUtils.toast(getContext(),"Login Successful", ToastLevel.SUCCESS);
+//                } else {
+//                    // Login failed, display an error message
+//                    UIUtils.toast(getContext(),"Login Failed. Please check your credentials.", ToastLevel.ERROR);
+//                }
 
             }
         });
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setOnFocusChangeListener();
+
+
+
 
         binding.buttonLogin.setOnClickListener(v -> {
 //            goToStanding();

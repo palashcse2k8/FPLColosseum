@@ -69,4 +69,8 @@ dependencies {
     // Android annotation
     annotationProcessor "org.androidannotations:androidannotations:4.8.0"
     implementation "org.androidannotations:androidannotations-api:4.8.0"
+
+    //chuck for http request intercept
+//    implementation 'com.readystatesoftware.chuck:library:1.1.0'
+//    implementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
 }
