@@ -7,8 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -57,6 +60,7 @@ public class TestFragment extends Fragment {
             @Override
             public void onPageFinished(WebView web, String url) {
                 super.onPageFinished(web, url);
+
                 // Accept all cookies after the page has finished loading
                 CookieManager.getInstance().acceptCookie();
 
@@ -64,14 +68,14 @@ public class TestFragment extends Fragment {
                 Log.d(Constants.LOG_TAG, "All the cookies in a string:" + cookies);
                 // Check if the login was successful based on the cookies or other indicators
 
-//                web.setWebChromeClient(new WebChromeClient() {
-//                    @Override
-//                    public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-////                        UIUtils.toast(requireContext(), consoleMessage.message(), ToastLevel.SUCCESS);
-//                        Log.d(Constants.LOG_TAG, "console msg"+  consoleMessage.message());
-//                        return true;
-//                    }
-//                });
+                web.setWebChromeClient(new WebChromeClient() {
+                    @Override
+                    public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+//                        UIUtils.toast(requireContext(), consoleMessage.message(), ToastLevel.SUCCESS);
+                        Log.d(Constants.LOG_TAG, "console msg" + consoleMessage.message());
+                        return true;
+                    }
+                });
 
                 web.evaluateJavascript("javascript:console.log('Executing JavaScript');", new ValueCallback<String>() {
                     @Override
@@ -83,44 +87,6 @@ public class TestFragment extends Fragment {
                 String uname = "palashcse2k8@gmail.com";
                 String pass = "Fantasy@2023";
                 String app = "plusers";
-//                $("#loginUsername").val("");
-//                $("#loginLoginWrap").val("");
-//                $("form").submit();
-//
-//                String javascriptCode = "javascript:var x = document.getElementById(\"loginUsername\").value='"
-//                        + uname
-//                        + "';";
-
-
-//                String javascriptCode = "javasriptc:(function(){document.getElementsByName('login').value='"
-//                        + uname
-//                        + "';document.getElementsByName('password').value='"
-//                        + pass
-//                        + "';document.getElementsByName('redirect_uri').value='"
-//                        + redirect_url
-//                        + "';document.getElementsByName('app').value='"
-//                        + app
-//                        +
-//                        "';document.getElementsByTagName('form')[0].submit();})()";
-//                web.evaluateJavascript(javascriptCode, new ValueCallback<String>() {
-//                    @Override
-//                    public void onReceiveValue(String value) {
-//                        Log.d(Constants.LOG_TAG, "javascript" + value);
-//                    }
-//                });
-
-//                web.loadUrl(javascriptCode);
-
-//                document.getElementById(\"loginLoginWrap\").value='"
-//                                + pass
-////                        + "';document.getElementsByName('redirect_uri').value='"
-////                        + redirect_url
-////                        + "';document.getElementsByName('app').value='"
-////                        + app
-//                                +
-//                                "';document.getElementsByTagName(\"form\")[0].submit();
-                //web.loadUrl(javascriptCode);
-                //web.loadUrl(javascriptCode);
 
 //                if (isLoginSuccessful(cookies)) {
 //                    // Login was successful, proceed with further actions
@@ -130,39 +96,49 @@ public class TestFragment extends Fragment {
 //                    UIUtils.toast(requireContext(),"Login Failed. Please check your credentials.", ToastLevel.ERROR);
 //                }
 
-                // Inject JavaScript to click on the "Accept" button
-                String javascript = "javascript:(function() {" +
-//                        "    var acceptButton = document.getElementById('onetrust-accept-btn-handler');" +
-//                        "    if (acceptButton) {" +
-//                        "        acceptButton.click();" +
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Inject JavaScript to click on the "Accept" button
+                        String javascript1 = "javascript:(function() {" +
+                                "var clicked = false;" +
+                                "setInterval(function() {" +
+                                "if (document.querySelectorAll('#onetrust-accept-btn-handler').length == 1 && !clicked) {" +
+                                "document.getElementById('onetrust-accept-btn-handler').click();" +
+                                "clicked = true;" +
+                                "setTimeout(function(){" +
+                                "" +
+                                "document.querySelectorAll('#loginUsername')[0].value='" + uname + "';" +
+                                "document.querySelectorAll('#loginLoginWrap')[0].value='" + pass + "';" +
+                                "document.getElementsByTagName('form')[0].submit();" +
+                                "},1000);" +
+                                "}" +
+                                "}, 100);" +
+                                "})()";
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Inject JavaScript to click on the "Accept" button
-                                String javascript = "javascript:(function() {" +
-                                        "    var clicked = false;" +
-                                        "    setInterval(function() {" +
-                                        "        if (document.querySelectorAll('#onetrust-accept-btn-handler').length == 1 && !clicked) {" +
-                                        "            document.getElementById('onetrust-accept-btn-handler').click();" +
-                                        "            clicked = true;" +
-                                        "setTimeout(function(){" +
-                                        "" +
-                                        "document.querySelectorAll('#loginUsername')[0].value='"+uname+"';" +
-                                        "document.querySelectorAll('#loginLoginWrap')[0].value='"+pass+"';" +
-                                        "document.getElementsByTagName('form')[0].submit();" +
-                                        "},1000);" +
-                                        "        }" +
-                                        "    }, 100);" +
-                                        "})()";
+                        String javascript = "javascript:(function() {" +
+                                "var clicked = false;" +
+                                "setInterval(function() {" +
+                                "if (document.querySelectorAll('#onetrust-accept-btn-handler').length == 1 && !clicked) {" +
+                                "document.getElementById('onetrust-accept-btn-handler').click();" +
+                                "clicked = true;" +
+                                "setTimeout(function(){" +
+                                "" +
+                                "document.querySelectorAll('#loginUsername')[0].value='" + uname + "';" +
+                                "document.querySelectorAll('#loginLoginWrap')[0].value='" + pass + "';" +
+                                "document.getElementsByTagName('form')[0].submit();" +
+                                "},1000);" +
+                                "}" +
+                                "}, 100);" +
+                                "})()";
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                    web.evaluateJavascript(javascript, null);
-                                } else {
-                                    web.loadUrl(javascript);
-                                }
-                            }
-                        }, 0); // Adjust the delay time as needed
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            web.evaluateJavascript(javascript, null);
+                        } else {
+                            web.loadUrl(javascript);
+                        }
+                    }
+                }, 0); // Adjust the delay time as needed
             }
         });
         binding.webViewLogin.loadUrl(url);
@@ -199,6 +175,33 @@ public class TestFragment extends Fragment {
         if (cookies != null) {
             // Example: Log the cookies
             System.out.println("Cookies: " + cookies);
+        }
+    }
+
+    private void captureCookies(String url) {
+        // Get the CookieManager instance
+        CookieManager cookieManager = CookieManager.getInstance();
+
+        // For Android API level 21 and above, use the following code
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.flush();
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        } else {
+            // For versions below 21, use CookieSyncManager
+            CookieSyncManager.createInstance(getContext());
+            CookieManager.getInstance().removeAllCookie();
+            CookieSyncManager.getInstance().sync();
+        }
+
+        // Get cookies for the current URL
+        String cookies = cookieManager.getCookie(url);
+
+        // Do something with the captured cookies
+        if (cookies != null) {
+            // Print or process the cookies as needed
+            System.out.println("Cookies: " + cookies);
+            Constants.cookies = cookies;
         }
     }
 
