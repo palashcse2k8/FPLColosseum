@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.infotech.fplcolosseum.login.views.LoginFragment;
+import com.infotech.fplcolosseum.login.views.TestFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         setupActionBar();
 //        Fragment fragment = new GameWeekDashboardFragment();
-        Fragment fragment = new LoginFragment();
+        Fragment fragment = new TestFragment();
         String tag = fragment.getClass().getSimpleName();
         getSupportFragmentManager().beginTransaction().setReorderingAllowed(true).add(R.id.contentFrame, fragment, tag).commit();
 
