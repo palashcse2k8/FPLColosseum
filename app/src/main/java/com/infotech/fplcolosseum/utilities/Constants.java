@@ -19,6 +19,10 @@ public class Constants {
             "118990" // srbd premier league
     };
 
+    public static final String LOGIN_URL = "https://users.premierleague.com/accounts/login/";
+    public static final String LOGIN_REDIRECT_URL = "https://fantasy.premierleague.com/";
+    public static final String APP_NAME = "plfpl-web";
+
     public static int counter;
 
     public static String cookies;

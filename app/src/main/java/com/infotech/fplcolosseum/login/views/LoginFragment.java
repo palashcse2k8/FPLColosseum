@@ -22,12 +22,15 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
 import com.infotech.fplcolosseum.gameweek.models.web.PlayerStatsResponseModel;
+import com.infotech.fplcolosseum.gameweek.viewmodels.GameWeekViewModel;
 import com.infotech.fplcolosseum.gameweek.views.GameWeekDashboardFragment_;
+import com.infotech.fplcolosseum.login.viewmodel.LoginViewModel;
 import com.infotech.fplcolosseum.remote.APIServices;
 import com.infotech.fplcolosseum.remote.RetroClass;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -45,15 +48,16 @@ import retrofit2.Call;
 @EFragment(resName = "fragment_login")
 public class LoginFragment extends Fragment {
     FragmentLoginBinding binding;
+    private LoginViewModel loginViewModel;
 
-    private String url = "https://users.premierleague.com/accounts/login/";
-    private String redirect_url = "https://users.premierleague.com/";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
-//        binding.setGameWeekViewModel(viewModel);
-
+        loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
+        binding.setLoginViewModel(loginViewModel);
+        binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
 
@@ -62,10 +66,12 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setOnFocusChangeListener();
 
-        binding.buttonLogin.setOnClickListener(v -> {
-//            goToStanding();
+//        binding.buttonLogin.setOnClickListener(v -> {
+//            performLogin();
+//        });
 
-            performLogin();
+        binding.buttonGuestLogin.setOnClickListener(view1 -> {
+            goToStanding();
         });
     }
     private boolean isLoginSuccessful(String cookies) {
@@ -79,24 +85,24 @@ public class LoginFragment extends Fragment {
     private void performLogin() {
         // Load the login URL in the WebView
 
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("password", "Fantasy@2023");
-        queryParams.put("login", "palashcse2k8@gmail.com");
-        queryParams.put("app", "plfpl-web");
-        queryParams.put("redirect_uri", "https://fantasy.premierleague.com/");
-
-        APIServices apiServices = RetroClass.getAPIService(requireContext());
-        Call<ResponseBody> callAPI = apiServices.getUserSession(queryParams);
-        callAPI(callAPI, PlayerStatsResponseModel.class);
-
-        goToStanding();
+//        Map<String, String> queryParams = new HashMap<>();
+//        queryParams.put("password", "Fantasy@2023");
+//        queryParams.put("login", "palashcse2k8@gmail.com");
+//        queryParams.put("app", "plfpl-web");
+//        queryParams.put("redirect_uri", "https://fantasy.premierleague.com/");
+//
+//        APIServices apiServices = RetroClass.getAPIService(requireContext());
+//        Call<ResponseBody> callAPI = apiServices.getUserSession(queryParams);
+//        callAPI(callAPI, PlayerStatsResponseModel.class);
+//
+//        goToStanding();
     }
 
     // Example method to extract cookies from the WebView
     private void extractCookies() {
         // Get cookies from the WebView's CookieManager
         CookieManager cookieManager = CookieManager.getInstance();
-        String cookies = cookieManager.getCookie(url); // Replace with the actual URL
+        String cookies = cookieManager.getCookie(Constants.LOGIN_URL); // Replace with the actual URL
 
         // Do something with the cookies (e.g., store or process them)
         if (cookies != null) {

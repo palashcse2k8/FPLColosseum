@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Patterns;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
@@ -109,4 +110,15 @@ public class CustomUtil {
 //
 //        return apiResponse;
 //    }
+
+    /**
+     * Validate the email address using the Patterns class.
+     *
+     * @param email The email address to be validated.
+     * @return True if the email address is valid, false otherwise.
+     */
+    public static boolean isValidEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
 }

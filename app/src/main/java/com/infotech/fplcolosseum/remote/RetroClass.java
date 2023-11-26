@@ -7,10 +7,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -30,14 +36,28 @@ public class RetroClass {
             .writeTimeout(60, TimeUnit.SECONDS)
      */
 
+    public static HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+
+    CookieHandler cookieHandler = new CookieManager();
+
     private static Retrofit getRetrofitInstance(Context context) {
         cache = new Cache(new File(context.getCacheDir(), "httpCache"), cacheSize);
+        // init cookie manager
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
         okHttpClient =  new OkHttpClient()
                 .newBuilder()
                 .connectTimeout(180, TimeUnit.SECONDS)
                 .readTimeout(180, TimeUnit.SECONDS)
                 .writeTimeout(180, TimeUnit.SECONDS)
                 .addInterceptor(new CustomHeaderInterceptor("", "", ""))
+                .addInterceptor(new ReceivedCookiesInterceptor(context))
+                .addInterceptor(new AddCookiesInterceptor(context))
+                .cookieJar(new JavaNetCookieJar(cookieManager))
+                .addNetworkInterceptor(httpLoggingInterceptor)
+                .followRedirects(true)
+                .followSslRedirects(true)
                 .cache(cache)
                 .build();
 
@@ -48,6 +68,9 @@ public class RetroClass {
     }
 
     public static com.infotech.fplcolosseum.remote.APIServices getAPIService(Context context) {
+
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 
         if (retrofit == null) {
             retrofit = getRetrofitInstance(context);

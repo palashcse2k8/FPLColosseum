@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         setupActionBar();
 //        Fragment fragment = new GameWeekDashboardFragment();
-        Fragment fragment = new TestFragment();
+        Fragment fragment = new LoginFragment();
         String tag = fragment.getClass().getSimpleName();
         getSupportFragmentManager().beginTransaction().setReorderingAllowed(true).add(R.id.contentFrame, fragment, tag).commit();
 
