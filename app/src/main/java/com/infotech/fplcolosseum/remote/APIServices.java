@@ -32,4 +32,13 @@ public interface APIServices {
             "Functionkey: " + Constants.FUNCTION_KEY  // Use the constant here
     })
     Call<ResponseBody> getPlayerData(@QueryMap Map<String, String> queryParams);
+
+
+    //login api
+    @GET("https://users.premierleague.com/accounts/login/")
+    @Headers({
+            "Content-Type: application/json",
+            "User-Agent: Mozilla/5.0"
+    })
+    Call<ResponseBody> getUserSession(@QueryMap Map<String, String> queryParams);
 }

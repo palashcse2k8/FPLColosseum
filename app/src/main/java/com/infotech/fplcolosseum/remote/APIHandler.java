@@ -55,7 +55,6 @@ public class APIHandler {
                 @Override
                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
 //                    UIUtils.toast("API Calling fail", WARNING);
-//                    Logger.d("response", "data receive failure");
                     apiData.setValue(null);
                 }
             });

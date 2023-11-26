@@ -1,5 +1,7 @@
 package com.infotech.fplcolosseum.login.views;
 
+import static com.infotech.fplcolosseum.remote.APIHandler.callAPI;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,12 +26,21 @@ import androidx.fragment.app.Fragment;
 import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
+import com.infotech.fplcolosseum.gameweek.models.web.PlayerStatsResponseModel;
 import com.infotech.fplcolosseum.gameweek.views.GameWeekDashboardFragment_;
+import com.infotech.fplcolosseum.remote.APIServices;
+import com.infotech.fplcolosseum.remote.RetroClass;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 
 import org.androidannotations.annotations.EFragment;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 @EFragment(resName = "fragment_login")
 public class LoginFragment extends Fragment {
@@ -43,94 +54,6 @@ public class LoginFragment extends Fragment {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 //        binding.setGameWeekViewModel(viewModel);
 
-//        CookieManager.getInstance().setAcceptCookie(true);
-//        CookieManager.getInstance().setAcceptThirdPartyCookies(binding.webViewLogin, true);
-
-        binding.webViewLogin.getSettings().setJavaScriptEnabled(true);
-        binding.webViewLogin.getSettings().setDomStorageEnabled(true);
-        binding.webViewLogin.setWebViewClient(new WebViewClient(){
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView wb, WebResourceRequest request) {
-//                wb.loadUrl(url);
-//                return true;
-//            }
-
-            @Override
-            public void onPageFinished(WebView web, String url) {
-
-                String cookies = CookieManager.getInstance().getCookie(url);
-                Log.d(Constants.LOG_TAG, "All the cookies in a string:" + cookies);
-                // Check if the login was successful based on the cookies or other indicators
-
-                web.setWebChromeClient(new WebChromeClient() {
-                    @Override
-                    public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-//                        UIUtils.toast(requireContext(), consoleMessage.message(), ToastLevel.SUCCESS);
-                        Log.d(Constants.LOG_TAG, "console msg"+  consoleMessage.message());
-                        return true;
-                    }
-                });
-
-                web.evaluateJavascript("javascript:console.log('Executing JavaScript');", new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        Log.d(Constants.LOG_TAG, "javascript" + value);
-                    }
-                });
-
-                String uname = "palashcse2k8@gmail.com";
-                String pass = "Fantasy@2023";
-                String app = "plusers";
-//                $("#loginUsername").val("");
-//                $("#loginLoginWrap").val("");
-//                $("form").submit();
-
-                String javascriptCode = "javascript:var x = document.getElementById(\"loginUsername\").value='"
-                        + uname
-                        + "';";
-
-
-//                String javascriptCode = "javasriptc:(function(){document.getElementsByName('login').value='"
-//                        + uname
-//                        + "';document.getElementsByName('password').value='"
-//                        + pass
-//                        + "';document.getElementsByName('redirect_uri').value='"
-//                        + redirect_url
-//                        + "';document.getElementsByName('app').value='"
-//                        + app
-//                        +
-//                        "';document.getElementsByTagName('form')[0].submit();})()";
-//                web.evaluateJavascript(javascriptCode, new ValueCallback<String>() {
-//                    @Override
-//                    public void onReceiveValue(String value) {
-//                        Log.d(Constants.LOG_TAG, "javascript" + value);
-//                    }
-//                });
-
-//                web.loadUrl(javascriptCode);
-
-//                document.getElementById(\"loginLoginWrap\").value='"
-//                                + pass
-////                        + "';document.getElementsByName('redirect_uri').value='"
-////                        + redirect_url
-////                        + "';document.getElementsByName('app').value='"
-////                        + app
-//                                +
-//                                "';document.getElementsByTagName(\"form\")[0].submit();
-                //web.loadUrl(javascriptCode);
-                //web.loadUrl(javascriptCode);
-//
-//                if (isLoginSuccessful(cookies)) {
-//                    // Login was successful, proceed with further actions
-//                    UIUtils.toast(getContext(),"Login Successful", ToastLevel.SUCCESS);
-//                } else {
-//                    // Login failed, display an error message
-//                    UIUtils.toast(getContext(),"Login Failed. Please check your credentials.", ToastLevel.ERROR);
-//                }
-
-            }
-        });
-
         return binding.getRoot();
     }
 
@@ -138,9 +61,6 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setOnFocusChangeListener();
-
-
-
 
         binding.buttonLogin.setOnClickListener(v -> {
 //            goToStanding();
@@ -158,7 +78,18 @@ public class LoginFragment extends Fragment {
     // Example method to perform login using WebView
     private void performLogin() {
         // Load the login URL in the WebView
-        binding.webViewLogin.loadUrl(url);
+
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("password", "Fantasy@2023");
+        queryParams.put("login", "palashcse2k8@gmail.com");
+        queryParams.put("app", "plfpl-web");
+        queryParams.put("redirect_uri", "https://fantasy.premierleague.com/");
+
+        APIServices apiServices = RetroClass.getAPIService(requireContext());
+        Call<ResponseBody> callAPI = apiServices.getUserSession(queryParams);
+        callAPI(callAPI, PlayerStatsResponseModel.class);
+
+        goToStanding();
     }
 
     // Example method to extract cookies from the WebView
