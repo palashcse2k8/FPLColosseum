@@ -1,6 +1,7 @@
 package com.infotech.fplcolosseum.login.models;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -23,17 +24,22 @@ public class SessionManager {
     private SharedPreferences.Editor editor;
     private Context context;
 
-    public SessionManager(Context context) {
+    public SessionManager(Application context) {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 
-    public void createSession(String username, String token, String manager_id) {
+    public UserModel createSession(String username, String token, String manager_id) {
         editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_TOKEN, token);
         editor.putString(KEY_MANAGER_ID, manager_id);
         editor.apply();
+
+//        UserModel currentUser = new UserModel(username,);
+
+        return null;
+
     }
 
     public boolean isLoggedIn() {

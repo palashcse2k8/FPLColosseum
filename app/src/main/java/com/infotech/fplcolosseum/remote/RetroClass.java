@@ -36,12 +36,16 @@ public class RetroClass {
             .writeTimeout(60, TimeUnit.SECONDS)
      */
 
-    public static HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-
     CookieHandler cookieHandler = new CookieManager();
 
     private static Retrofit getRetrofitInstance(Context context) {
         cache = new Cache(new File(context.getCacheDir(), "httpCache"), cacheSize);
+
+        // Add logging interceptor for debugging (optional)
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
         // init cookie manager
         CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -54,7 +58,7 @@ public class RetroClass {
                 .addInterceptor(new CustomHeaderInterceptor("", "", ""))
                 .addInterceptor(new ReceivedCookiesInterceptor(context))
                 .addInterceptor(new AddCookiesInterceptor(context))
-                .cookieJar(new JavaNetCookieJar(cookieManager))
+                .cookieJar(new MyCookieStore())
                 .addNetworkInterceptor(httpLoggingInterceptor)
                 .followRedirects(true)
                 .followSslRedirects(true)

@@ -2,6 +2,8 @@ package com.infotech.fplcolosseum.login.viewmodel;
 
 import android.app.Application;
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 
 import androidx.annotation.NonNull;
@@ -31,8 +33,10 @@ public class LoginViewModel extends AndroidViewModel {
     public Application application;
 
     public MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(false);
+    public MutableLiveData<Boolean> isLoggedIn = new MutableLiveData<>(false);
     private MutableLiveData<String> userName = new MutableLiveData<>("palashcse2k8@gmail.com");
     private MutableLiveData<String> password = new MutableLiveData<>("Fantasy@2023");
+
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
@@ -69,18 +73,28 @@ public class LoginViewModel extends AndroidViewModel {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     dataLoading.setValue(false);
 
-                    List<String> Cookielist = response.headers().values("Set-Cookie");
-                    UIUtils.toast( application, "Login Successful", ToastLevel.SUCCESS);
+                    if(response.code() != 200) {
+                        UIUtils.toast( application, "Login Unsuccessful! Please check your credential.", ToastLevel.WARNING);
+                        return;
+                    }
+
+                    SharedPreferences sharedPreferences = application.getSharedPreferences(Constants.COOKIES, Context.MODE_PRIVATE);
+
+                    if(response.code() == 200 && sharedPreferences.getString(Constants.PL_PROFILE, null) != null) {
+                        isLoggedIn.setValue(true);
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     dataLoading.setValue(false);
+                    UIUtils.toast( application, "Something went wrong!", ToastLevel.WARNING);
                 }
             });
 
         } catch (Exception e) {
             dataLoading.setValue(false);
+            UIUtils.toast( application, "Something went wrong, exception occurred!", ToastLevel.WARNING);
             e.printStackTrace();
         }
     }
