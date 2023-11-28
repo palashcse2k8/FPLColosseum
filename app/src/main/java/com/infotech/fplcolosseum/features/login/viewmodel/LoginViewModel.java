@@ -83,7 +83,6 @@ public class LoginViewModel extends AndroidViewModel {
                         break;
                 }
             }
-            apiResultLiveData.setValue(apiResponse);
         });
     }
 

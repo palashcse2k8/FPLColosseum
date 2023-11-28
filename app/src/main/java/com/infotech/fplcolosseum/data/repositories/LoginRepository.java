@@ -30,10 +30,6 @@ public class LoginRepository {
         sessionManager = new SessionManager(application);
     }
 
-    public <T> LiveData<ApiResponse<T>> makeApiCall() {
-        return null;
-    }
-
     public <T> LiveData<ApiResponse<T>> userLogIn(String userName, String passWord, Class<T> responseClass) {
 
         MutableLiveData<ApiResponse<T>> resultLiveData = new MutableLiveData<>();
@@ -53,7 +49,7 @@ public class LoginRepository {
                     return;
                 }
 
-                resultLiveData.setValue(ApiResponse.success("Login Successful"));
+                resultLiveData.setValue(ApiResponse.success(null));
             }
 
             @Override
