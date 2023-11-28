@@ -57,8 +57,8 @@ public class SessionManager {
         return sharedPreferences.getString(KEY_USERNAME, "");
     }
 
-    public String getToken() {
-        return sharedPreferences.getString(KEY_TOKEN, "");
+    public String getSessionID() {
+        return sharedPreferences.getString(KEY_TOKEN, null);
     }
 
     public void logout() {

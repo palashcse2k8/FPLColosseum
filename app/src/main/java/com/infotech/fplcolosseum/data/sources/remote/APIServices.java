@@ -51,4 +51,12 @@ public interface APIServices {
             @Field("app") String app,
             @Field("redirect_uri") String redirectUri
     );
+
+
+    @GET("https://fantasy.premierleague.com/api/me")
+    @Headers({
+            "User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:103.0) Gecko/20100101 Firefox/103.0",
+            "Accept-Language: en-GB,en;q=0.5"
+    })
+    Call<ResponseBody> getManagerProfileData();
 }

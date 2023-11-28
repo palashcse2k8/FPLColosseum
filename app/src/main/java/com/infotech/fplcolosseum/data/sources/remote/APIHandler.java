@@ -1,15 +1,11 @@
 package com.infotech.fplcolosseum.data.sources.remote;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.infotech.fplcolosseum.utilities.Constants;
-import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 
@@ -19,7 +15,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class APIHandler {
-    APIHandler(){}
+    APIHandler() {
+    }
 
     public static <T> LiveData<T> callAPI(Call<ResponseBody> callingAPI, Class<T> apiResponseType) {
 
@@ -71,38 +68,39 @@ public class APIHandler {
 //        Logger.d("apiResponse=>> " + json);
         try {
             return gson.fromJson(json, classofT);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
     //special case for login api
-    public static <T> ApiResponse<T>  callLoginAPI(Call<ResponseBody> callingAPI, ApiResponseCallback callback) {
 
-        try {
+    public static <T> LiveData<ApiResponse<T>> makeApiCall(Call<ResponseBody> callingAPI, Class<T> apiResponseType) {
+        MutableLiveData<ApiResponse<T>> resultLiveData = new MutableLiveData<>();
+        // Enqueue the call and handle the response
+        callingAPI.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-            callingAPI.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                    if (response.code() != 200) {
-                        callback.onFailure("Login Unsuccessful! Please check your credential.");
-                        return;
-                    }
-                    callback.onSuccess(response);
+                // API call successful
+                ResponseBody responseBody = response.body();
+                assert responseBody != null;
+                try {
+                    T convertedResponse = convertResponse(responseBody, apiResponseType);
+                    resultLiveData.setValue(ApiResponse.success(convertedResponse));
+                } catch (IOException e) {
+                    resultLiveData.setValue(ApiResponse.error("API call failed", null));
+                    throw new RuntimeException(e);
                 }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // API call failed
+                resultLiveData.setValue(ApiResponse.error("API call failed", null));
+            }
+        });
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    callback.onFailure("Something went wrong!");
-                }
-            });
-
-        } catch (Exception e) {
-            callback.onFailure("Something went wrong, exception occurred!");
-            e.printStackTrace();
-        }
+        return resultLiveData;
     }
-
 }

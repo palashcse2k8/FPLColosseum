@@ -1,12 +1,12 @@
 package com.infotech.fplcolosseum.data.repositories;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 
-import com.infotech.fplcolosseum.data.sources.remote.APIHandler;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.infotech.fplcolosseum.data.sources.remote.APIServices;
-import com.infotech.fplcolosseum.data.sources.remote.ApiResponseCallback;
+import com.infotech.fplcolosseum.data.sources.remote.ApiResponse;
 import com.infotech.fplcolosseum.data.sources.remote.RetroClass;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -30,48 +30,38 @@ public class LoginRepository {
         sessionManager = new SessionManager(application);
     }
 
-    public void userLogIn(String userName, String passWord) {
+    public <T> LiveData<ApiResponse<T>> makeApiCall() {
+        return null;
+    }
+
+    public <T> LiveData<ApiResponse<T>> userLogIn(String userName, String passWord, Class<T> responseClass) {
+
+        MutableLiveData<ApiResponse<T>> resultLiveData = new MutableLiveData<>();
 
         Call<ResponseBody> callAPI = apiServices.userLogin(userName, passWord, Constants.APP_NAME, Constants.LOGIN_REDIRECT_URL);
-        APIHandler.callLoginAPI(callAPI, new ApiResponseCallback() {
+
+        callAPI.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onSuccess(Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() != 200) {
+                    resultLiveData.setValue(ApiResponse.error("API call failed", null));
+                    return;
+                }
 
-                SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.COOKIES, Context.MODE_PRIVATE);
+                if (sessionManager.getSessionID() == null) {
+                    resultLiveData.setValue(ApiResponse.error("API call failed", null));
+                    return;
+                }
 
+                resultLiveData.setValue(ApiResponse.success("Login Successful"));
             }
 
             @Override
-            public void onFailure(String message) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });
-
-        try {
-
-
-
-            callAPI.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                    if (response.code() != 200) {
-                        callback.onFailure("Login Unsuccessful! Please check your credential.");
-                        return;
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    callback.onFailure("Something went wrong!");
-                }
-            });
-
-        } catch (Exception e) {
-            callback.onFailure("Something went wrong, exception occurred!");
-            e.printStackTrace();
-        }
+        return resultLiveData;
     }
 }
 
