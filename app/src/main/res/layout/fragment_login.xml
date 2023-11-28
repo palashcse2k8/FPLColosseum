@@ -7,7 +7,7 @@
 
         <variable
             name="LoginViewModel"
-            type="com.infotech.fplcolosseum.login.viewmodel.LoginViewModel" />
+            type="com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:background="@color/teal_700"
         android:padding="8dp"
-        tools:context=".login.views.LoginFragment">
+        tools:context=".features.login.views.LoginFragment">
 
         <TextView
             android:id="@+id/textView_username"
@@ -49,6 +49,8 @@
                 android:id="@+id/text_input_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_username"
+                android:drawablePadding="8dp"
                 android:imeOptions="actionNext"
                 android:maxLines="1"
                 android:text="@{LoginViewModel.userName}" />
@@ -87,6 +89,8 @@
                 android:id="@+id/text_input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_password"
+                android:drawablePadding="8dp"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:maxLines="1"

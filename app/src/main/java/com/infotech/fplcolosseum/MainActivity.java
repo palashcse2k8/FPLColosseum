@@ -6,8 +6,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.infotech.fplcolosseum.login.views.LoginFragment;
-import com.infotech.fplcolosseum.login.views.TestFragment;
+import com.infotech.fplcolosseum.features.login.views.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,7 +1,7 @@
 package com.infotech.fplcolosseum.utilities;
 
-import com.infotech.fplcolosseum.gameweek.models.custom.CustomGameWeekDataModel;
-import com.infotech.fplcolosseum.gameweek.models.custom.ManagerModel;
+import com.infotech.fplcolosseum.features.gameweek.models.custom.CustomGameWeekDataModel;
+import com.infotech.fplcolosseum.features.gameweek.models.custom.ManagerModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
