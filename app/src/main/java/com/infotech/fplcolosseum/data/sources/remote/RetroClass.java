@@ -1,5 +1,6 @@
 package com.infotech.fplcolosseum.data.sources.remote;
 
+import android.app.Application;
 import android.content.Context;
 
 import com.google.gson.Gson;
@@ -35,7 +36,7 @@ public class RetroClass {
 
     CookieHandler cookieHandler = new CookieManager();
 
-    private static Retrofit getRetrofitInstance(Context context) {
+    private static Retrofit getRetrofitInstance(Application context) {
         cache = new Cache(new File(context.getCacheDir(), "httpCache"), cacheSize);
 
         // Add logging interceptor for debugging (optional)
@@ -55,7 +56,7 @@ public class RetroClass {
                 .addInterceptor(new CustomHeaderInterceptor("", "", ""))
                 .addInterceptor(new ReceivedCookiesInterceptor(context))
                 .addInterceptor(new AddCookiesInterceptor(context))
-                .cookieJar(new MyCookieStore())
+                .cookieJar(new MyCookieStore(context))
                 .addNetworkInterceptor(httpLoggingInterceptor)
                 .followRedirects(true)
                 .followSslRedirects(true)
@@ -68,7 +69,7 @@ public class RetroClass {
                 .baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create(gson)).build();
     }
 
-    public static APIServices getAPIService(Context context) {
+    public static APIServices getAPIService(Application context) {
 
         CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);

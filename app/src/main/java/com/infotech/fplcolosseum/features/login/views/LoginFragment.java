@@ -16,8 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
-import com.infotech.fplcolosseum.gameweek.views.GameWeekDashboardFragment_;
+import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
 import com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel;
+
 
 import org.androidannotations.annotations.EFragment;
 
@@ -42,10 +43,28 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setOnFocusChangeListener();
 
-        loginViewModel.isLoggedIn.observe(getViewLifecycleOwner(), aBoolean -> {
+        loginViewModel.getApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+            // Update the LiveData with the result from the repository
+            if (apiResponse != null) {
+                loginViewModel.dataLoading.setValue(false);
+                switch (apiResponse.getStatus()) {
+                    case SUCCESS:
+                        // Handle success
+                        goToStanding();
+                        // ...
+                        break;
+                    case ERROR:
+                        // Handle error
 
-            if (aBoolean) {
-                goToStanding();
+                        String errorMessage = apiResponse.getMessage();
+                        // ...
+                        break;
+                    case LOADING:
+                        // Handle loading
+                        // ...
+                        String errorMessag = apiResponse.getMessage();
+                        break;
+                }
             }
         });
 

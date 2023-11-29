@@ -25,14 +25,6 @@ public class Constants {
 
     public static int counter;
 
-    public static final String COOKIES = "cookies";
-
-    public static final String ALL_COOKIES = "all_cookies";
-
-    public static final String PL_PROFILE = "pl_profile";
-    public static final String SESSION_ID = "sessionid";
-
-
     //image link
 
 }

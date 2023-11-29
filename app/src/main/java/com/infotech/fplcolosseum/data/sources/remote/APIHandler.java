@@ -75,8 +75,8 @@ public class APIHandler {
     }
 
     //special case for login api
-
     public static <T> LiveData<ApiResponse<T>> makeApiCall(Call<ResponseBody> callingAPI, Class<T> apiResponseType) {
+
         MutableLiveData<ApiResponse<T>> resultLiveData = new MutableLiveData<>();
         // Enqueue the call and handle the response
         callingAPI.enqueue(new Callback<ResponseBody>() {
@@ -88,16 +88,16 @@ public class APIHandler {
                 assert responseBody != null;
                 try {
                     T convertedResponse = convertResponse(responseBody, apiResponseType);
-                    resultLiveData.setValue(ApiResponse.success(convertedResponse));
+                    resultLiveData.postValue(ApiResponse.success(convertedResponse));
                 } catch (IOException e) {
-                    resultLiveData.setValue(ApiResponse.error("API call failed", null));
+                    resultLiveData.postValue(ApiResponse.error("API call failed", null));
                     throw new RuntimeException(e);
                 }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // API call failed
-                resultLiveData.setValue(ApiResponse.error("API call failed", null));
+                resultLiveData.postValue(ApiResponse.error("API call failed", null));
             }
         });
 

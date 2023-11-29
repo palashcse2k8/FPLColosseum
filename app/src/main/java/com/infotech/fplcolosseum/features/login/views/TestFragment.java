@@ -22,7 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentTestBinding;
-import com.infotech.fplcolosseum.gameweek.views.GameWeekDashboardFragment_;
+import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import org.androidannotations.annotations.EFragment;
@@ -198,11 +198,6 @@ public class TestFragment extends Fragment {
         String cookies = cookieManager.getCookie(url);
 
         // Do something with the captured cookies
-        if (cookies != null) {
-            // Print or process the cookies as needed
-            System.out.println("Cookies: " + cookies);
-            Constants.cookies = cookies;
-        }
     }
 
     public void goToStanding() {

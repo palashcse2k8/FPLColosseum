@@ -9,14 +9,16 @@ import androidx.fragment.app.FragmentManager;
 
 import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.gameweek.views.GameWeekDashboardFragment_;
 
 public class SessionManager {
 
-    private static final String PREF_NAME = "user_session";
-    private static final String KEY_USERNAME = "username";
-    private static final String KEY_TOKEN = "pl_profile";
-    private static final String KEY_MANAGER_ID = "manager_id";
+    public static final String COOKIES = "cookies";
+
+    public static final String ALL_COOKIES = "all_cookies";
+
+    public static final String PL_PROFILE = "pl_profile";
+    public static final String SESSION_ID = "sessionid";
+    private static final String KEY_USERNAME = "user_name";
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -24,14 +26,13 @@ public class SessionManager {
 
     public SessionManager(Application context) {
         this.context = context;
-        sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(COOKIES, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 
-    public UserModel createSession(String username, String token, String manager_id) {
-        editor.putString(KEY_USERNAME, username);
-        editor.putString(KEY_TOKEN, token);
-        editor.putString(KEY_MANAGER_ID, manager_id);
+    public UserResponseModel createSession(String username, String token, String manager_id) {
+
+        editor.putString(PL_PROFILE, token);
         editor.apply();
 
 //        UserModel currentUser = new UserModel(username,);
@@ -41,7 +42,7 @@ public class SessionManager {
     }
 
     public boolean isLoggedIn() {
-        return sharedPreferences.getString(KEY_TOKEN, null) != null;
+        return sharedPreferences.getString(PL_PROFILE, null) != null;
     }
 
     public void checkLogin() {
@@ -58,9 +59,37 @@ public class SessionManager {
     }
 
     public String getSessionID() {
-        return sharedPreferences.getString(KEY_TOKEN, null);
+        return sharedPreferences.getString(SESSION_ID, null);
     }
 
+    public void setSessionID(String sessionID) {
+        editor.putString(SESSION_ID, sessionID);
+    }
+
+    public String getUserName() {
+        return sharedPreferences.getString(KEY_USERNAME, null);
+    }
+
+    public void setUsername(String username) {
+        editor.putString(KEY_USERNAME, username);
+    }
+
+    public String getAllCookies() {
+        return sharedPreferences.getString(ALL_COOKIES, null);
+    }
+
+    public void setAllCookies(String allCookies) {
+        editor.putString(ALL_COOKIES, allCookies);
+    }
+
+
+    public String getPlProfile() {
+        return sharedPreferences.getString(PL_PROFILE, null);
+    }
+
+    public void setPlProfile(String plProfile) {
+        editor.putString(PL_PROFILE, plProfile);
+    }
     public void logout() {
         editor.clear();
         editor.apply();
@@ -78,15 +107,15 @@ public class SessionManager {
         fragmentActivity.getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         //Go to login fragment
-        FragmentUtils.replace(
-                fragmentActivity.getSupportFragmentManager(),
-                GameWeekDashboardFragment_.builder().build(),
-                R.id.contentFrame,
-                true,
-                R.anim.enter_from_right, // enter
-                R.anim.exit_to_left,      // exit
-                R.anim.enter_from_right,   // popEnter
-                R.anim.exit_to_left      // popExit
-        );
+//        FragmentUtils.replace(
+//                fragmentActivity.getSupportFragmentManager(),
+//                GameWeekDashboardFragment_.builder().build(),
+//                R.id.contentFrame,
+//                true,
+//                R.anim.enter_from_right, // enter
+//                R.anim.exit_to_left,      // exit
+//                R.anim.enter_from_right,   // popEnter
+//                R.anim.exit_to_left      // popExit
+//        );
     }
 }

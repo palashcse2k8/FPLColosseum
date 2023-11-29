@@ -2,7 +2,6 @@ package com.infotech.fplcolosseum.features.login.viewmodel;
 
 import android.app.Application;
 
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -10,11 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.infotech.fplcolosseum.data.repositories.LoginRepository;
 import com.infotech.fplcolosseum.data.sources.remote.ApiResponse;
-import com.infotech.fplcolosseum.data.sources.remote.ApiResponseCallback;
+import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
-import com.infotech.fplcolosseum.utilities.ToastLevel;
-import com.infotech.fplcolosseum.utilities.UIUtils;
-import com.infotech.fplcolosseum.utilities.Utility;
 
 public class LoginViewModel extends AndroidViewModel {
     public Application application;
@@ -24,7 +20,7 @@ public class LoginViewModel extends AndroidViewModel {
     public MutableLiveData<String> userName = new MutableLiveData<>("palashcse2k8@gmail.com");
     public MutableLiveData<String> password = new MutableLiveData<>("Fantasy@2023");
 
-    private MutableLiveData<ApiResponse<Object>> apiResultLiveData = new MutableLiveData<ApiResponse<Object>>();
+    private MutableLiveData<ApiResponse<?>> apiResultLiveData = new MutableLiveData<>();
 
     LoginRepository loginRepository;
 
@@ -43,7 +39,7 @@ public class LoginViewModel extends AndroidViewModel {
         return password;
     }
 
-    public LiveData<ApiResponse<Object>> getApiResultLiveData() {
+    public LiveData<ApiResponse<?>> getApiResultLiveData() {
         return apiResultLiveData;
     }
 
@@ -51,39 +47,16 @@ public class LoginViewModel extends AndroidViewModel {
         return dataLoading;
     }
 
-    public void onLoginClick(){
+    public void onLoginClick() {
 
         //return if not validate
-        if(!isValidate())
+        if (!isValidate())
             return;
 
         dataLoading.setValue(true);
         // Make API call through the repository
-        loginRepository.userLogIn(userName.getValue(), password.getValue(), String.class).observeForever(apiResponse -> {
-            // Update the LiveData with the result from the repository
-            if (apiResponse != null) {
-                switch (apiResponse.getStatus()) {
-                    case SUCCESS:
-                        // Handle success
-                        dataLoading.setValue(false);
-                        isLoggedIn.setValue(true);
-                        // ...
-                        break;
-                    case ERROR:
-                        // Handle error
-                        isLoggedIn.setValue(false);
-                        String errorMessage = apiResponse.getMessage();
-                        dataLoading.setValue(false);
-                        // ...
-                        break;
-                    case LOADING:
-                        // Handle loading
-                        dataLoading.setValue(true);
-                        // ...
-                        break;
-                }
-            }
-        });
+        apiResultLiveData.setValue(loginRepository.userLogIn(userName.getValue(), password.getValue(), UserResponseModel.class).getValue());
+
     }
 
     public boolean isValidate() {
