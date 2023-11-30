@@ -1,12 +1,12 @@
 package com.infotech.fplcolosseum.data.sources.remote;
+
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
-import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,7 +33,23 @@ public class MyCookieStore implements CookieJar {
     @Override
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
 
-        this.cookies = cookies;
+        if (this.cookies != null) {
+            // Create a new ArrayList and add existing cookies
+            List<Cookie> newCookies = new ArrayList<>(this.cookies);
+            // Add the new cookies
+            for (Cookie cookie: cookies) {
+                if(!newCookies.contains(cookie)){
+                    Log.d("Cookies", "New Cookie found!");
+                    newCookies.add(cookie);
+                }
+            }
+
+            newCookies.addAll(cookies);
+            // Update the reference to the modifiable list
+            this.cookies = newCookies;
+        } else {
+            this.cookies = cookies;
+        }
 
         Set<String> cookieStrings = new HashSet<>();
 
@@ -43,13 +59,13 @@ public class MyCookieStore implements CookieJar {
 
         sessionManager.setAllCookies(cookieStrings.toString());
 
-        for (Cookie cookie: cookies) {
+        for (Cookie cookie : cookies) {
 
-            if (cookie.name().equalsIgnoreCase(SessionManager.PL_PROFILE)){
+            if (cookie.name().equalsIgnoreCase(SessionManager.PL_PROFILE)) {
                 sessionManager.setPlProfile(cookie.value());
             }
 
-            if (cookie.name().equalsIgnoreCase(SessionManager.SESSION_ID)){
+            if (cookie.name().equalsIgnoreCase(SessionManager.SESSION_ID)) {
                 sessionManager.setSessionID(cookie.value());
             }
         }
@@ -58,6 +74,9 @@ public class MyCookieStore implements CookieJar {
     @NonNull
     @Override
     public List<Cookie> loadForRequest(@NonNull HttpUrl url) {
+//        if(url.toString().contains("login")){
+//            return cookies != null ? cookies : new ArrayList<>(); // set to default
+//        }
         return cookies != null ? cookies : new ArrayList<>(); // set to default
     }
 }

@@ -17,7 +17,10 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
 import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
+import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 import com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel;
+import com.infotech.fplcolosseum.utilities.ToastLevel;
+import com.infotech.fplcolosseum.utilities.UIUtils;
 
 
 import org.androidannotations.annotations.EFragment;
@@ -50,7 +53,19 @@ public class LoginFragment extends Fragment {
                 switch (apiResponse.getStatus()) {
                     case SUCCESS:
                         // Handle success
-                        goToStanding();
+                        if (apiResponse.getData() instanceof UserResponseModel) {
+                            UserResponseModel data = (UserResponseModel) apiResponse.getData();
+                            if(data.getPlayer().getEntry() != 0){
+                                UIUtils.toast(requireContext(), "Login Failed, Please Check Your Credential.", ToastLevel.WARNING);
+                            }
+                            // Handle success for YourModel
+                        } else if (apiResponse.getData() instanceof String) {
+                            UIUtils.toast(requireContext(), (String) apiResponse.getData(), ToastLevel.WARNING);
+                            // Handle success for AnotherModel
+                        } else {
+                            goToStanding();
+                        }
+
                         // ...
                         break;
                     case ERROR:

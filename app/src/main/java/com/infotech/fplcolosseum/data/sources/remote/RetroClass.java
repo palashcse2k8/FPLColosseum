@@ -20,7 +20,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetroClass {
 
-
     private static Retrofit retrofit = null;
     private static final String BASE_URL = "https://fontendfunctionsnortheuropenew.azurewebsites.net/";
 
@@ -54,8 +53,8 @@ public class RetroClass {
                 .readTimeout(180, TimeUnit.SECONDS)
                 .writeTimeout(180, TimeUnit.SECONDS)
                 .addInterceptor(new CustomHeaderInterceptor("", "", ""))
-                .addInterceptor(new ReceivedCookiesInterceptor(context))
-                .addInterceptor(new AddCookiesInterceptor(context))
+//                .addInterceptor(new ReceivedCookiesInterceptor(context))
+//                .addInterceptor(new AddCookiesInterceptor(context))
                 .cookieJar(new MyCookieStore(context))
                 .addNetworkInterceptor(httpLoggingInterceptor)
                 .followRedirects(true)

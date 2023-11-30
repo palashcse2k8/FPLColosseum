@@ -24,7 +24,7 @@ public class FPLCApplication extends Application {
         super.onCreate();
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
             @Override public boolean isLoggable(int priority, String tag) {
-                return false; // set to true to show debug log
+                return true; // set to true to show debug log
             }
         });
     }

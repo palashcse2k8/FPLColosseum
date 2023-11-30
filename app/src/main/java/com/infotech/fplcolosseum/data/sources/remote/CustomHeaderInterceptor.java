@@ -89,6 +89,16 @@ public class CustomHeaderInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
+        //ignoring caching for login api
+        if(isApiToExcludeFromCaching(request)){
+            request = request.newBuilder()
+                    .header("User-Agent","Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:103.0) Gecko/20100101 Firefox/103.0")
+                    .header("Accept-Language","en-GB,en;q=0.5")
+                    .method(request.method(), request.body())
+                    .build();
+            return chain.proceed(request);
+        }
+
         // Set the cache duration for 1 day
         CacheControl cacheControl = new CacheControl.Builder()
                 .maxAge(1, TimeUnit.DAYS)
@@ -96,6 +106,9 @@ public class CustomHeaderInterceptor implements Interceptor {
 
         request = request.newBuilder()
                 .cacheControl(cacheControl)
+                .header("User-Agent","Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:103.0) Gecko/20100101 Firefox/103.0")
+                .header("Accept-Language","en-GB,en;q=0.5")
+                .method(request.method(), request.body())
                 .build();
 
         Response response = chain.proceed(request);
@@ -113,4 +126,21 @@ public class CustomHeaderInterceptor implements Interceptor {
                 .header("Cache-Control", cacheControl.toString())
                 .build();
     }
+    private boolean isApiToExcludeFromCaching(Request request) {
+        // Add conditions to identify APIs that should be excluded from caching
+        // For example, check the URL, method, or headers
+        // Return true if the API should be excluded, false otherwise
+        String url = request.url().toString();
+
+
+        // Example: Exclude caching for login API
+        if (url.contains("/login")) {
+            return true;
+        }
+
+        // Add more conditions as needed
+
+        return false;
+    }
+
 }

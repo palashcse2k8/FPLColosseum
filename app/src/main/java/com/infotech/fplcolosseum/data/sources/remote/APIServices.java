@@ -40,10 +40,10 @@ public interface APIServices {
 
     //login api
     @POST(Constants.LOGIN_URL)
-    @Headers({
-            "User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:103.0) Gecko/20100101 Firefox/103.0",
-            "Accept-Language: en-GB,en;q=0.5"
-    })
+//    @Headers({
+//            "User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:103.0) Gecko/20100101 Firefox/103.0",
+//            "Accept-Language: en-GB,en;q=0.5"
+//    })
     @FormUrlEncoded
     Call<ResponseBody> userLogin(
             @Field("login") String login,
