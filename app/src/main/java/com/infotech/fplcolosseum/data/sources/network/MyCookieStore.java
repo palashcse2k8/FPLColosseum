@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.data.sources.remote;
+package com.infotech.fplcolosseum.data.sources.network;
 
 import android.app.Application;
 import android.content.Context;

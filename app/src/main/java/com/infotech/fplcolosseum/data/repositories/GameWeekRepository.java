@@ -1,6 +1,6 @@
 package com.infotech.fplcolosseum.data.repositories;
 
-import static com.infotech.fplcolosseum.data.sources.remote.APIHandler.callAPI;
+import static com.infotech.fplcolosseum.data.sources.network.APIHandler.callAPI;
 
 import android.app.Application;
 import android.util.Log;
@@ -22,8 +22,8 @@ import com.infotech.fplcolosseum.features.gameweek.models.web.PlayerPointsDatas;
 import com.infotech.fplcolosseum.features.gameweek.models.web.PlayerResponseModel;
 import com.infotech.fplcolosseum.features.gameweek.models.web.PlayerStatsResponseModel;
 import com.infotech.fplcolosseum.features.gameweek.models.web.TeamDataResponseModel;
-import com.infotech.fplcolosseum.data.sources.remote.APIServices;
-import com.infotech.fplcolosseum.data.sources.remote.RetroClass;
+import com.infotech.fplcolosseum.data.sources.network.APIServices;
+import com.infotech.fplcolosseum.data.sources.network.RetroClass;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.orhanobut.logger.Logger;
 

@@ -1,25 +1,14 @@
-package com.infotech.fplcolosseum.data.sources.remote;
-
-import static android.os.Environment.getExternalStoragePublicDirectory;
-
-import android.os.Environment;
-import android.util.Log;
+package com.infotech.fplcolosseum.data.sources.network;
 
 import androidx.annotation.NonNull;
 
-import com.orhanobut.logger.Logger;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
-import okhttp3.MediaType;
-import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class CustomHeaderInterceptor implements Interceptor {
     private final String deviceId;

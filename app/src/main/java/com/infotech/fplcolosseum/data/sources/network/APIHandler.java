@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.data.sources.remote;
+package com.infotech.fplcolosseum.data.sources.network;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 

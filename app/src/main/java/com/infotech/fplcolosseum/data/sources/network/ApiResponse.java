@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.data.sources.remote;
+package com.infotech.fplcolosseum.data.sources.network;
 
 //public class ApiResponse<T> {
 //    private T data;

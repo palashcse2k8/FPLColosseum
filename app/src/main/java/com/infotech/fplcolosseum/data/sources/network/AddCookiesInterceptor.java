@@ -1,13 +1,11 @@
-package com.infotech.fplcolosseum.data.sources.remote;
+package com.infotech.fplcolosseum.data.sources.network;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.webkit.CookieManager;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.prefs.Preferences;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;

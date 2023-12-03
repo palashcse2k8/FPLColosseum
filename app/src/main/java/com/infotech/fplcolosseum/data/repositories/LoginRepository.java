@@ -6,13 +6,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 
-import com.infotech.fplcolosseum.data.sources.remote.APIHandler;
-import com.infotech.fplcolosseum.data.sources.remote.APIServices;
-import com.infotech.fplcolosseum.data.sources.remote.ApiResponse;
-import com.infotech.fplcolosseum.data.sources.remote.RetroClass;
-import com.infotech.fplcolosseum.features.gameweek.models.web.LeagueGameWeekDataModel;
+import com.infotech.fplcolosseum.data.sources.network.APIHandler;
+import com.infotech.fplcolosseum.data.sources.network.APIServices;
+import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
+import com.infotech.fplcolosseum.data.sources.network.RetroClass;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.utilities.Constants;
 

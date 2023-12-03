@@ -9,7 +9,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.infotech.fplcolosseum.data.repositories.LoginRepository;
-import com.infotech.fplcolosseum.data.sources.remote.ApiResponse;
+import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 
