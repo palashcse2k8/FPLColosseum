@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.blankj.utilcode.util.FragmentUtils;
-import com.infotech.fplcolosseum.R;
-
 public class SessionManager {
 
     public static final String COOKIES = "cookies";
@@ -63,7 +60,7 @@ public class SessionManager {
     }
 
     public void setSessionID(String sessionID) {
-        editor.putString(SESSION_ID, sessionID);
+        editor.putString(SESSION_ID, sessionID).apply();
     }
 
     public String getUserName() {
@@ -71,7 +68,7 @@ public class SessionManager {
     }
 
     public void setUsername(String username) {
-        editor.putString(KEY_USERNAME, username);
+        editor.putString(KEY_USERNAME, username).apply();
     }
 
     public String getAllCookies() {
@@ -79,7 +76,7 @@ public class SessionManager {
     }
 
     public void setAllCookies(String allCookies) {
-        editor.putString(ALL_COOKIES, allCookies);
+        editor.putString(ALL_COOKIES, allCookies).apply();
     }
 
 
@@ -88,8 +85,9 @@ public class SessionManager {
     }
 
     public void setPlProfile(String plProfile) {
-        editor.putString(PL_PROFILE, plProfile);
+        editor.putString(PL_PROFILE, plProfile).apply();
     }
+
     public void logout() {
         editor.clear();
         editor.apply();
@@ -100,7 +98,7 @@ public class SessionManager {
         // context.startActivity(intent);
     }
 
-    public void redirectToLoginPage(){
+    public void redirectToLoginPage() {
 
         FragmentActivity fragmentActivity = (FragmentActivity) context;
         // Clear the entire back stack

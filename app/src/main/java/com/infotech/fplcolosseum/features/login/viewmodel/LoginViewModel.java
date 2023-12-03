@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.infotech.fplcolosseum.data.repositories.LoginRepository;
@@ -17,10 +18,10 @@ public class LoginViewModel extends AndroidViewModel {
 
     public MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(false);
     public MutableLiveData<Boolean> isLoggedIn = new MutableLiveData<>(false);
-    public MutableLiveData<String> userName = new MutableLiveData<>("palashcse2k8@gmail.com");
-    public MutableLiveData<String> password = new MutableLiveData<>("Fantasy@2023");
+    public MutableLiveData<String> userName = new MutableLiveData<>("fantasy.palash@gmail.com");
+    public MutableLiveData<String> password = new MutableLiveData<>("Fantasy@2024");
 
-    private MutableLiveData<ApiResponse<?>> apiResultLiveData = new MutableLiveData<>();
+    private final MediatorLiveData<ApiResponse<?>> apiResultLiveData;
 
     LoginRepository loginRepository;
 
@@ -29,6 +30,7 @@ public class LoginViewModel extends AndroidViewModel {
         super(application);
         this.application = application;
         this.loginRepository = new LoginRepository(application);
+        apiResultLiveData = new MediatorLiveData<>();
     }
 
     public MutableLiveData<String> getUserName() {
@@ -55,8 +57,10 @@ public class LoginViewModel extends AndroidViewModel {
 
         dataLoading.setValue(true);
         // Make API call through the repository
-        apiResultLiveData.setValue(loginRepository.userLogIn(userName.getValue(), password.getValue(), UserResponseModel.class).getValue());
-
+        apiResultLiveData.addSource(loginRepository.userLogIn(userName.getValue(), password.getValue(), UserResponseModel.class), userResponseModelApiResponse -> {
+            dataLoading.setValue(false);
+            apiResultLiveData.setValue(userResponseModelApiResponse);
+        });
     }
 
     public boolean isValidate() {

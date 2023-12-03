@@ -66,7 +66,7 @@ public class APIHandler {
 
         Gson gson = new Gson();
         String json = responseBody.string();
-        Logger.d("apiResponse=>> " + json);
+//        Logger.d("apiResponse=>> " + json);
         try {
             return gson.fromJson(json, classofT);
         } catch (Exception e) {

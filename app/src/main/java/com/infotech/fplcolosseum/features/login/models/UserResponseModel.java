@@ -46,9 +46,12 @@ package com.infotech.fplcolosseum.features.login.models;
 //    }
 //}
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class UserResponseModel {
+    @SerializedName("player")
     Player PlayerObject;
     ArrayList< Object > watched = new ArrayList < Object > ();
 

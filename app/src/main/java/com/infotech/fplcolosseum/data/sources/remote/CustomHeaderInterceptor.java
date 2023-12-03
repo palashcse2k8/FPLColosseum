@@ -134,7 +134,7 @@ public class CustomHeaderInterceptor implements Interceptor {
 
 
         // Example: Exclude caching for login API
-        if (url.contains("/login")) {
+        if (url.contains("login") || url.contains("logout")) {
             return true;
         }
 

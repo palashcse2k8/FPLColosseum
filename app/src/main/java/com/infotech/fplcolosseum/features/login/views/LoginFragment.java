@@ -19,6 +19,7 @@ import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
 import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 import com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel;
+import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 
@@ -56,28 +57,32 @@ public class LoginFragment extends Fragment {
                         if (apiResponse.getData() instanceof UserResponseModel) {
                             UserResponseModel data = (UserResponseModel) apiResponse.getData();
                             if(data.getPlayer().getEntry() != 0){
-                                UIUtils.toast(requireContext(), "Login Failed, Please Check Your Credential.", ToastLevel.WARNING);
+                                UIUtils.toast(requireContext(), "Successfully logged in, Welcome Mr. " + data.getPlayer().getFirst_name() + " " + data.getPlayer().getLast_name(), ToastLevel.SUCCESS);
                             }
+
+                            Constants.LoggedInUser = data;
+
+                            goToStanding();
                             // Handle success for YourModel
                         } else if (apiResponse.getData() instanceof String) {
-                            UIUtils.toast(requireContext(), (String) apiResponse.getData(), ToastLevel.WARNING);
+                            UIUtils.toast(requireContext(), apiResponse.getMessage(), ToastLevel.WARNING);
                             // Handle success for AnotherModel
                         } else {
-                            goToStanding();
+                            UIUtils.toast(requireContext(), "Login Failed!, Check your credential.", ToastLevel.WARNING);
                         }
 
                         // ...
                         break;
                     case ERROR:
                         // Handle error
-
-                        String errorMessage = apiResponse.getMessage();
+                        UIUtils.toast(requireContext(), apiResponse.getMessage(), ToastLevel.WARNING);
                         // ...
                         break;
                     case LOADING:
                         // Handle loading
                         // ...
                         String errorMessag = apiResponse.getMessage();
+                        UIUtils.toast(requireContext(), apiResponse.getMessage(), ToastLevel.WARNING);
                         break;
                 }
             }

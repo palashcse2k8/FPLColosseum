@@ -2,6 +2,7 @@ package com.infotech.fplcolosseum.utilities;
 
 import com.infotech.fplcolosseum.features.gameweek.models.custom.CustomGameWeekDataModel;
 import com.infotech.fplcolosseum.features.gameweek.models.custom.ManagerModel;
+import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,10 +21,11 @@ public class Constants {
     };
 
     public static final String LOGIN_URL = "https://users.premierleague.com/accounts/login/";
+    public static final String LOGOUT_URL = "https://users.premierleague.com/accounts/logout/";
     public static final String LOGIN_REDIRECT_URL = "https://fantasy.premierleague.com/";
     public static final String APP_NAME = "plfpl-web";
 
-    public static int counter;
+    public static UserResponseModel LoggedInUser;
 
     //image link
 

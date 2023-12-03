@@ -39,12 +39,11 @@ public class MyCookieStore implements CookieJar {
             // Add the new cookies
             for (Cookie cookie: cookies) {
                 if(!newCookies.contains(cookie)){
-                    Log.d("Cookies", "New Cookie found!");
+                    Log.d("Cookies", "New Cookie found!" + cookie.name()+ " " + cookie.value());
                     newCookies.add(cookie);
                 }
             }
 
-            newCookies.addAll(cookies);
             // Update the reference to the modifiable list
             this.cookies = newCookies;
         } else {

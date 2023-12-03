@@ -58,4 +58,7 @@ public interface APIServices {
             "Accept-Language: en-GB,en;q=0.5"
     })
     Call<ResponseBody> getManagerProfileData();
+
+    @GET(Constants.LOGOUT_URL) // https://users.premierleague.com/accounts/logout/?app=plfpl-web&redirect_uri=https://fantasy.premierleague.com/
+    Call<ResponseBody> userLogout(@QueryMap Map<String, String> queryParams);
 }
