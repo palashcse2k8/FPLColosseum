@@ -35,7 +35,7 @@ public class HomePageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupViewPager(binding.topViewPager, binding.topTabLayout);
-        setupViewPager(binding.bottomViewPager, binding.bottomTabLayout);
+//        setupViewPager(binding.bottomViewPager, binding.bottomTabLayout);
     }
 
     private void setupViewPager(ViewPager2 viewPager, TabLayout tabLayout) {

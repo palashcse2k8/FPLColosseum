@@ -12,6 +12,8 @@
     <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign up</string>
     <string name="guest_login">Guest Login</string>
     <string name="todo">TODO</string>
+    <string name="player_name">Player Name</string>
+    <string name="team_name">Team Name</string>
 
     <string-array name="gameWeeks">
         <item>Select GameWeek</item>
