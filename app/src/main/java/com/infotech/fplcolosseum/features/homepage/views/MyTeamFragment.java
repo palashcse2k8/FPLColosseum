@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.gameweek.models.custom.PlayerDataModel;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerAdapter;
@@ -22,113 +24,55 @@ import java.util.List;
 public class MyTeamFragment extends Fragment {
 
     FragmentMyteamBinding binding;
+    private FootballFieldLayout footballFieldLayout;
 
-    private String tabTitle;
-    private List<PlayerDataModel> playingElevenGoalKeeper;
-    private List<PlayerDataModel> playingElevenDefenders;
-    private List<PlayerDataModel> playingElevenMidfielders;
-    private List<PlayerDataModel> playingElevenForwards;
-    private List<PlayerDataModel> benchPlayers;
-
-    private PlayerAdapter playingElevenGoalKeeperAdapter;
-    private PlayerAdapter playingElevenDefendersAdapter;
-    private PlayerAdapter playingElevenMidfieldersAdapter;
-    private PlayerAdapter playingElevenForwardsAdapter;
-    private PlayerAdapter benchAdapter;
-    RecyclerView playingElevenRecyclerView;
-    RecyclerView benchRecyclerView;
-
-
-    public MyTeamFragment(String tabTitle) {
-        this.tabTitle = tabTitle;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    public void initializeList() {
-        // Initialize player lists
-        playingElevenGoalKeeper = new ArrayList<>();
-        benchPlayers = new ArrayList<>();
-
-        // Populate player lists (Replace with your actual player data)
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMyteamBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        View rootView = binding.getRoot();
+
+        // Create FootballFieldLayout
+        FootballFieldLayout footballFieldLayout = new FootballFieldLayout(requireContext());
+
+        // Add FootballFieldLayout to the parent layout (assuming you have a parent layout in fragment_myteam.xml)
+        LinearLayout parentLayout = rootView.findViewById(R.id.footballFieldLayout);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        footballFieldLayout.setLayoutParams(layoutParams);
+        parentLayout.addView(footballFieldLayout);
+
+        // Rest of your code...
+
+        return rootView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("MyTeamFragment", "onViewCreated: RecyclerView setup");
 
-//        initializeList();
+        // Find the FootballFieldLayout in your fragment layout
+        footballFieldLayout = view.findViewById(R.id.footballFieldLayout);
 
-        playingElevenGoalKeeper = new ArrayList<>();
-        playingElevenDefenders = new ArrayList<>();
-        playingElevenMidfielders = new ArrayList<>();
-        playingElevenForwards = new ArrayList<>();
+        // Add players to the football field (customize positions as needed)
+        addPlayers();
+    }
 
+    private void addPlayers() {
+        // Adding players for a 4-4-2 formation (adjust positions based on your layout)
+        footballFieldLayout.addPlayer("Player 1", "Team A", R.mipmap.no_image, 1, 1);
+        footballFieldLayout.addPlayer("Player 2", "Team A", R.mipmap.no_image, 1, 2);
+        footballFieldLayout.addPlayer("Player 3", "Team A", R.mipmap.no_image, 1, 3);
+        footballFieldLayout.addPlayer("Player 4", "Team A", R.mipmap.no_image, 1, 4);
+        footballFieldLayout.addPlayer("Player 5", "Team A", R.mipmap.no_image, 1, 5);
 
-        // Populate player lists (Replace with your actual player data)
-
-        PlayerDataModel playerDataModel = new PlayerDataModel();
-        playerDataModel.setPlayerName("Martinez ");
-        playerDataModel.setTeamName("Aston Villa");
-        playingElevenGoalKeeper.add(playerDataModel);
-
-
-        for (int i = 0; i < 5; i++) {
-            playerDataModel = new PlayerDataModel();
-            playerDataModel.setPlayerName("Martinez " + i);
-            playerDataModel.setTeamName("Aston Villa");
-            playingElevenDefenders.add(playerDataModel);
-        }
-
-        for (int i = 0; i < 5; i++) {
-            playerDataModel = new PlayerDataModel();
-            playerDataModel.setPlayerName("Martinez " + i);
-            playerDataModel.setTeamName("Aston Villa");
-            playingElevenMidfielders.add(playerDataModel);
-        }
-        for (int i = 0; i < 5; i++) {
-            playerDataModel = new PlayerDataModel();
-            playerDataModel.setPlayerName("Martinez " + i);
-            playerDataModel.setTeamName("Aston Villa");
-            playingElevenForwards.add(playerDataModel);
-        }
-
-        playingElevenGoalKeeperAdapter = new PlayerAdapter(playingElevenGoalKeeper);
-        playingElevenDefendersAdapter = new PlayerAdapter(playingElevenDefenders);
-        playingElevenMidfieldersAdapter= new PlayerAdapter(playingElevenMidfielders);
-        playingElevenForwardsAdapter = new PlayerAdapter(playingElevenForwards);
-
-        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 5);
-        binding.playingElevenGoalKeepRecyclerView.setLayoutManager(layoutManager);
-        binding.playingElevenGoalKeepRecyclerView.setAdapter(playingElevenGoalKeeperAdapter);
-        binding.playingElevenDefenderRecyclerView.setAdapter(playingElevenDefendersAdapter);
-        binding.playingElevenMidfielderRecyclerView.setAdapter(playingElevenMidfieldersAdapter);
-        binding.playingElevenForwardRecyclerView.setAdapter(playingElevenForwardsAdapter);
-
-        // Add data to adapters after setting up RecyclerView
-//        playingElevenAdapter.setData(playingElevenPlayers);
-//        benchAdapter.setData(benchPlayers);
-
-//        // Enable drag-and-drop for the bench players
-//        ItemTouchHelper.Callback callback = new PlayerItemTouchHelperCallback(benchAdapter);
-//        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-//        touchHelper.attachToRecyclerView(binding.playingElevenGoalKeepRecyclerView);
-//
-//        Log.d("MyTeamFragment", "Playing Eleven Size: " + playingElevenPlayers.size());
-//        Log.d("MyTeamFragment", "Bench Size: " + benchPlayers.size());
+        footballFieldLayout.addPlayer("Player 6", "Team A", R.mipmap.no_image, 2, 1);
+        footballFieldLayout.addPlayer("Player 7", "Team A", R.mipmap.no_image, 2, 2);
+        footballFieldLayout.addPlayer("Player 8", "Team A", R.mipmap.no_image, 2, 3);
+        footballFieldLayout.addPlayer("Player 9", "Team A", R.mipmap.no_image, 2, 4);
+        footballFieldLayout.addPlayer("Player 10", "Team A", R.mipmap.no_image, 2, 5);
     }
 }

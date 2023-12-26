@@ -1,72 +1,15 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/team_background_single_with_bench"
-    android:orientation="vertical"
-    android:weightSum="10">
+    android:orientation="vertical">
 
-
-    <!-- Playing Eleven -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/playingElevenGoalKeepRecyclerView"
+    <com.infotech.fplcolosseum.features.homepage.views.FootballFieldLayout
+        android:id="@+id/footballFieldLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:spanCount="5"
-        tools:listitem="@layout/player_template" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/playingElevenDefenderRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:spanCount="5"
-        tools:listitem="@layout/player_template" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/playingElevenMidfielderRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:spanCount="5"
-        tools:listitem="@layout/player_template" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/playingElevenForwardRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:layout_gravity="center"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:spanCount="5"
-        tools:listitem="@layout/player_template" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/benchPlayerRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:spanCount="5"
-        tools:listitem="@layout/player_template" />
-
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal" />
+</RelativeLayout>

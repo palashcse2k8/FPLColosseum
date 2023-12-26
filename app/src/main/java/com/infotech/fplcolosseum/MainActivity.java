@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 //        Fragment fragment = new GameWeekDashboardFragment();
 //        Fragment fragment = new LoginFragment();
 //        Fragment fragment = new HomePageFragment();
-        Fragment fragment = new MyTeamFragment("MyTeam");
+        Fragment fragment = new MyTeamFragment();
         String tag = fragment.getClass().getSimpleName();
         getSupportFragmentManager().beginTransaction().setReorderingAllowed(true).add(R.id.contentFrame, fragment, tag).commit();
 

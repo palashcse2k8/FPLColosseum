@@ -40,9 +40,9 @@ public class HomePageFragment extends Fragment {
 
     private void setupViewPager(ViewPager2 viewPager, TabLayout tabLayout) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(requireActivity());
-        adapter.addFragment(new MyTeamFragment("Tab 1"), "Tab 1");
-        adapter.addFragment(new MyTeamFragment("Tab 2"), "Tab 2");
-        adapter.addFragment(new MyTeamFragment("Tab 3"), "Tab 3");
+//        adapter.addFragment(new MyTeamFragment("Tab 1"), "Tab 1");
+//        adapter.addFragment(new MyTeamFragment("Tab 2"), "Tab 2");
+//        adapter.addFragment(new MyTeamFragment("Tab 3"), "Tab 3");
         viewPager.setAdapter(adapter);
 
         new TabLayoutMediator(tabLayout, viewPager,
