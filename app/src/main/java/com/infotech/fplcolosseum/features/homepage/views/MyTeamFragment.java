@@ -33,14 +33,14 @@ public class MyTeamFragment extends Fragment {
         View rootView = binding.getRoot();
 
         // Create FootballFieldLayout
-        FootballFieldLayout footballFieldLayout = new FootballFieldLayout(requireContext());
+        footballFieldLayout = new FootballFieldLayout(requireContext());
 
         // Add FootballFieldLayout to the parent layout (assuming you have a parent layout in fragment_myteam.xml)
         LinearLayout parentLayout = rootView.findViewById(R.id.footballFieldLayout);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.MATCH_PARENT
         );
         footballFieldLayout.setLayoutParams(layoutParams);
         parentLayout.addView(footballFieldLayout);
@@ -55,7 +55,7 @@ public class MyTeamFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Find the FootballFieldLayout in your fragment layout
-        footballFieldLayout = view.findViewById(R.id.footballFieldLayout);
+//        footballFieldLayout = view.findViewById(R.id.footballFieldLayout);
 
         // Add players to the football field (customize positions as needed)
         addPlayers();
@@ -63,16 +63,16 @@ public class MyTeamFragment extends Fragment {
 
     private void addPlayers() {
         // Adding players for a 4-4-2 formation (adjust positions based on your layout)
-        footballFieldLayout.addPlayer("Player 1", "Team A", R.mipmap.no_image, 1, 1);
-        footballFieldLayout.addPlayer("Player 2", "Team A", R.mipmap.no_image, 1, 2);
-        footballFieldLayout.addPlayer("Player 3", "Team A", R.mipmap.no_image, 1, 3);
-        footballFieldLayout.addPlayer("Player 4", "Team A", R.mipmap.no_image, 1, 4);
-        footballFieldLayout.addPlayer("Player 5", "Team A", R.mipmap.no_image, 1, 5);
+        binding.footballFieldLayout.addPlayer("Player 1", "Team A", R.mipmap.no_image, 1, 1);
+        binding.footballFieldLayout.addPlayer("Player 2", "Team A", R.mipmap.no_image, 1, 2);
+        binding.footballFieldLayout.addPlayer("Player 3", "Team A", R.mipmap.no_image, 1, 3);
+        binding.footballFieldLayout.addPlayer("Player 4", "Team A", R.mipmap.no_image, 1, 4);
+        binding.footballFieldLayout.addPlayer("Player 5", "Team A", R.mipmap.no_image, 1, 5);
 
-        footballFieldLayout.addPlayer("Player 6", "Team A", R.mipmap.no_image, 2, 1);
-        footballFieldLayout.addPlayer("Player 7", "Team A", R.mipmap.no_image, 2, 2);
-        footballFieldLayout.addPlayer("Player 8", "Team A", R.mipmap.no_image, 2, 3);
-        footballFieldLayout.addPlayer("Player 9", "Team A", R.mipmap.no_image, 2, 4);
-        footballFieldLayout.addPlayer("Player 10", "Team A", R.mipmap.no_image, 2, 5);
+//        footballFieldLayout.addPlayer("Player 6", "Team A", R.mipmap.no_image, 2, 1);
+//        footballFieldLayout.addPlayer("Player 7", "Team A", R.mipmap.no_image, 2, 2);
+//        footballFieldLayout.addPlayer("Player 8", "Team A", R.mipmap.no_image, 2, 3);
+//        footballFieldLayout.addPlayer("Player 9", "Team A", R.mipmap.no_image, 2, 4);
+//        footballFieldLayout.addPlayer("Player 10", "Team A", R.mipmap.no_image, 2, 5);
     }
 }

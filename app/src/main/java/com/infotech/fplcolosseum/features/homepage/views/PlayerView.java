@@ -40,6 +40,12 @@ public class PlayerView extends LinearLayout {
         imageView = findViewById(R.id.imageView);
         playerNameTextView = findViewById(R.id.playerNameTextView);
         teamNameTextView = findViewById(R.id.teamNameTV);
+
+        // Set LayoutParams for PlayerView
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        setLayoutParams(layoutParams);
     }
 
     // Add methods to set player details (image, name, team name) if needed

@@ -36,6 +36,13 @@ public class FootballFieldLayout extends LinearLayout {
         playerView.setRow(row);
         playerView.setColumn(column);
 
+        // Set LayoutParams for proper rendering
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        playerView.setLayoutParams(layoutParams);
+
         addView(playerView);
     }
 }
