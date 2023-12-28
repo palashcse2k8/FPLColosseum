@@ -21,7 +21,7 @@
     <TextView
         android:id="@+id/playerNameTextView"
         android:background="@color/black"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_gravity="center"
@@ -36,7 +36,7 @@
 
     <TextView
         android:id="@+id/teamNameTV"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/black"

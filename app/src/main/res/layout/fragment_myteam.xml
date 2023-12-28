@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -6,10 +6,13 @@
     android:background="@drawable/team_background_single_with_bench"
     android:orientation="vertical">
 
-    <com.infotech.fplcolosseum.features.homepage.views.FootballFieldLayout
+    <GridLayout
         android:id="@+id/footballFieldLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:orientation="vertical" />
-</RelativeLayout>
+        android:columnCount="5"
+        android:rowCount="5"
+        >
+    </GridLayout>
+
+</LinearLayout>
