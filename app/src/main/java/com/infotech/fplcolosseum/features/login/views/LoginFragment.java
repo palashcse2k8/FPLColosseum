@@ -17,6 +17,8 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
 import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
+import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment;
+import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment_;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 import com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -62,7 +64,8 @@ public class LoginFragment extends Fragment {
 
                             Constants.LoggedInUser = data;
 
-                            goToStanding();
+//                            goToStanding();
+                            goToHomePage();
                             // Handle success for YourModel
                         } else if (apiResponse.getData() instanceof String) {
                             UIUtils.toast(requireContext(), apiResponse.getMessage(), ToastLevel.WARNING);
@@ -163,6 +166,19 @@ public class LoginFragment extends Fragment {
         FragmentUtils.replace(
                 requireActivity().getSupportFragmentManager(),
                 GameWeekDashboardFragment_.builder().build(),
+                R.id.contentFrame,
+                true,
+                R.anim.enter_from_right, // enter
+                R.anim.exit_to_left,      // exit
+                R.anim.enter_from_right,   // popEnter
+                R.anim.exit_to_left      // popExit
+        );
+    }
+
+    public void goToHomePage() {
+        FragmentUtils.replace(
+                requireActivity().getSupportFragmentManager(),
+                HomePageFragment_.builder().build(),
                 R.id.contentFrame,
                 true,
                 R.anim.enter_from_right, // enter

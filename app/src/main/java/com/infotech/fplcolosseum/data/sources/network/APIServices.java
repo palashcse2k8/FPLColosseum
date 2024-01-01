@@ -78,5 +78,4 @@ public interface APIServices {
     @GET("https://fantasy.premierleague.com/api/my-team/{entry_id}/") //  https://fantasy.premierleague.com/api/my-team/116074/
     Call<ResponseBody> gameWeekMyTeam(@Path("entry_id") float entry_id);
 
-
 }

@@ -1,4 +1,16 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="myTeamViewModel"
+            type="com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel" />
+    </data>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,5 +26,13 @@
         android:rowCount="5"
         >
     </GridLayout>
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true">
 
-</LinearLayout>
+    </ProgressBar>
+
+</RelativeLayout>
+</layout>

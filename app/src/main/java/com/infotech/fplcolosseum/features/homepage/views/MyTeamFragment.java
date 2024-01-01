@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,8 @@ import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.gameweek.models.custom.PlayerDataModel;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerAdapter;
+import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
+import com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,8 @@ public class MyTeamFragment extends Fragment implements View.OnDragListener{
 
     FragmentMyteamBinding binding;
 
+    MyTeamViewModel viewModel;
+
     private static final int NUM_ROWS = 5;
     private static final int NUM_COLUMNS = 5;
     @Nullable
@@ -35,7 +40,16 @@ public class MyTeamFragment extends Fragment implements View.OnDragListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMyteamBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
+        viewModel = new ViewModelProvider(requireActivity()).get(MyTeamViewModel.class);
+        binding.setMyTeamViewModel(viewModel);
+        binding.setLifecycleOwner(this);
         return rootView;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel.
     }
 
     @Override
@@ -47,6 +61,7 @@ public class MyTeamFragment extends Fragment implements View.OnDragListener{
 
         // Add players to the football field (customize positions as needed)
         addPlayers(footballFieldLayout);
+
     }
 
     private void addPlayers(GridLayout footballFieldLayout) {
@@ -65,7 +80,6 @@ public class MyTeamFragment extends Fragment implements View.OnDragListener{
 
         addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 3, 1, footballFieldLayout);
         addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 3, 3, footballFieldLayout);
-
 
         addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 4, 0, footballFieldLayout);
         addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 4, 2, footballFieldLayout);
@@ -110,14 +124,14 @@ public class MyTeamFragment extends Fragment implements View.OnDragListener{
                 View draggedView = (View) event.getLocalState();
                 GridLayout owner = (GridLayout) v.getParent();
 
-                int draggedPosition = owner.indexOfChild(draggedView);
-                int targetPosition = owner.indexOfChild(v);
+//                int draggedPosition = owner.indexOfChild(draggedView);
+//                int targetPosition = owner.indexOfChild(v);
+//
+//                owner.addView(draggedView, targetPosition);
+//                owner.addView(v, draggedPosition);
 
-                owner.addView(draggedView, targetPosition);
-                owner.addView(v, draggedPosition);
                 break;
         }
         return true;
     }
-
 }

@@ -6,7 +6,7 @@
         <import type="android.view.View" />
 
         <variable
-            name="LoginViewModel"
+            name="loginViewModel"
             type="com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel" />
     </data>
 
@@ -53,7 +53,7 @@
                 android:drawablePadding="8dp"
                 android:imeOptions="actionNext"
                 android:maxLines="1"
-                android:text="@{LoginViewModel.userName}" />
+                android:text="@{loginViewModel.userName}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,7 +94,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:text="@{LoginViewModel.password}" />
+                android:text="@{loginViewModel.password}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontal"
             android:layout_marginTop="24dp"
-            android:onClick="@{()->LoginViewModel.onLoginClick()}"
+            android:onClick="@{()->loginViewModel.onLoginClick()}"
             android:padding="8dp"
             android:text="@string/login"
             android:textSize="18sp"
@@ -149,7 +149,7 @@
             android:layout_height="200dp"
             android:indeterminate="true"
             app:indicatorColor="@color/white"
-            android:visibility="@{LoginViewModel.dataLoading ? View.VISIBLE : View.GONE}"
+            android:visibility="@{loginViewModel.dataLoading ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
