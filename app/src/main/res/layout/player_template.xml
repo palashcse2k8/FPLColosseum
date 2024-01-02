@@ -11,10 +11,10 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
+        android:layout_weight="7"
         android:scaleType="fitXY"
         android:layout_gravity="center"
-        android:layout_marginHorizontal="4dp"
+        android:layout_marginHorizontal="8dp"
         android:src="@mipmap/no_image"
         android:contentDescription="@string/todo" />
 
@@ -49,4 +49,52 @@
         android:autoSizeMaxTextSize="50sp"
         android:autoSizeStepGranularity="2sp"
         android:text="@string/team_name" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="3">
+        <TextView
+            android:id="@+id/difficulty1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_purple"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="50sp"
+            android:autoSizeStepGranularity="2sp" />
+        <TextView
+            android:id="@+id/difficulty2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_blue_bright"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="50sp"
+            android:autoSizeStepGranularity="2sp" />
+        <TextView
+            android:id="@+id/difficulty3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_orange_dark"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="50sp"
+            android:autoSizeStepGranularity="2sp" />
+    </LinearLayout>
+
 </LinearLayout>

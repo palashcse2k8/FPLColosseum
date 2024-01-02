@@ -1,33 +1,29 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.R;
+import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
-import com.infotech.fplcolosseum.features.gameweek.models.custom.PlayerDataModel;
-import com.infotech.fplcolosseum.features.homepage.adapter.PlayerAdapter;
+import com.infotech.fplcolosseum.features.homepage.models.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicks;
+import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicksModel;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
-import com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel;
+import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
-public class MyTeamFragment extends Fragment implements View.OnDragListener{
+public class MyTeamFragment extends Fragment{
 
     FragmentMyteamBinding binding;
 
@@ -40,7 +36,6 @@ public class MyTeamFragment extends Fragment implements View.OnDragListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMyteamBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
-        viewModel = new ViewModelProvider(requireActivity()).get(MyTeamViewModel.class);
         binding.setMyTeamViewModel(viewModel);
         binding.setLifecycleOwner(this);
         return rootView;
@@ -49,7 +44,8 @@ public class MyTeamFragment extends Fragment implements View.OnDragListener{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel.
+        viewModel = new ViewModelProvider(requireActivity()).get(MyTeamViewModel.class);
+        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
     }
 
     @Override
@@ -60,31 +56,49 @@ public class MyTeamFragment extends Fragment implements View.OnDragListener{
         GridLayout footballFieldLayout = view.findViewById(R.id.footballFieldLayout);
 
         // Add players to the football field (customize positions as needed)
-        addPlayers(footballFieldLayout);
 
+        viewModel.getApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+            if(apiResponse == null) return;
+            if(apiResponse.getStatus() == ApiResponse.Status.SUCCESS){
+                viewModel.dataLoading.setValue(false);
+
+                GameWeekMyTeamResponseModel myTeam = (GameWeekMyTeamResponseModel) apiResponse.getData();
+                addPlayers(footballFieldLayout, myTeam);
+            }
+        });
     }
 
-    private void addPlayers(GridLayout footballFieldLayout) {
+    private void addPlayers(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel myTeam) {
+
+        ArrayList<GameWeekPicks> teamPlayers = myTeam.getPicks();
+
+        for(GameWeekPicks gameWeekPicks : teamPlayers) {
+            Constants.playerMap.get(gameWeekPicks.getElement());
+        }
+
         // Adding players for a 4-4-2 formation (adjust positions based on your layout)
-        addPlayerNew("Player 1", "Team A", R.mipmap.no_image, 0, 2, footballFieldLayout);
 
-        addPlayerNew("Player 1", "Team A", R.mipmap.no_image, 1, 0, footballFieldLayout);
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 1, 1, footballFieldLayout);
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 1, 3, footballFieldLayout);
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 1, 4, footballFieldLayout);
+        //Adding goal keeper
+        String playerFullName = Objects.requireNonNull(Constants.playerMap.get(myTeam.getPicks().get(0).getElement())).getFirst_name() + Objects.requireNonNull(Constants.playerMap.get(myTeam.getPicks().get(0).getElement())).getSecond_name();
+        addPlayerNew(playerFullName, "Team A", R.mipmap.no_image, 0, 2, footballFieldLayout);
 
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 2, 0, footballFieldLayout);
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 2, 1, footballFieldLayout);
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 2, 3, footballFieldLayout);
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 2, 4, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(1).getElement() + "", "Team A", R.mipmap.no_image, 1, 0, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(2).getElement() + "", "Team A", R.mipmap.no_image, 1, 1, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(3).getElement() + "", "Team A", R.mipmap.no_image, 1, 3, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(4).getElement() + "", "Team A", R.mipmap.no_image, 1, 4, footballFieldLayout);
 
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 3, 1, footballFieldLayout);
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 3, 3, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(5).getElement() + "", "Team A", R.mipmap.no_image, 2, 0, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(0).getElement() + "", "Team A", R.mipmap.no_image, 2, 1, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(0).getElement() + "", "Team A", R.mipmap.no_image, 2, 3, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(0).getElement() + "", "Team A", R.mipmap.no_image, 2, 4, footballFieldLayout);
 
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 4, 0, footballFieldLayout);
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 4, 2, footballFieldLayout);
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 4, 3, footballFieldLayout);
-        addPlayerNew("Player 2", "Team A", R.mipmap.no_image, 4, 4, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(0).getElement() + "", "Team A", R.mipmap.no_image, 3, 1, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(0).getElement() + "", "Team A", R.mipmap.no_image, 3, 3, footballFieldLayout);
+
+        addPlayerNew(teamPlayers.get(0).getElement() + "", "Team A", R.mipmap.no_image, 4, 0, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(0).getElement() + "", "Team A", R.mipmap.no_image, 4, 2, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(0).getElement() + "", "Team A", R.mipmap.no_image, 4, 3, footballFieldLayout);
+        addPlayerNew(teamPlayers.get(0).getElement() + "", "Team A", R.mipmap.no_image, 4, 4, footballFieldLayout);
 //        // Add more players as needed...
     }
 
@@ -112,26 +126,5 @@ public class MyTeamFragment extends Fragment implements View.OnDragListener{
 
         // Add the PlayerView to the GridLayout
         footballFieldLayout.addView(playerView);
-    }
-
-    // Implement the OnDragListener interface
-    @Override
-    public boolean onDrag(View v, DragEvent event) {
-        // Handle the drag event here
-        switch (event.getAction()) {
-            case DragEvent.ACTION_DROP:
-                // Handle the drop event
-                View draggedView = (View) event.getLocalState();
-                GridLayout owner = (GridLayout) v.getParent();
-
-//                int draggedPosition = owner.indexOfChild(draggedView);
-//                int targetPosition = owner.indexOfChild(v);
-//
-//                owner.addView(draggedView, targetPosition);
-//                owner.addView(v, draggedPosition);
-
-                break;
-        }
-        return true;
     }
 }

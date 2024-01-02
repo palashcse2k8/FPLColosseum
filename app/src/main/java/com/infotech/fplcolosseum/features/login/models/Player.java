@@ -5,11 +5,11 @@ public class Player {
     private boolean dirty;
     private String first_name;
     private String gender;
-    private float id;
+    private long id;
     private String last_name;
-    private float region;
+    private long region;
     private String email;
-    private float entry;
+    private long entry;
     private boolean entry_email;
     private String entry_language = null;
 
@@ -32,7 +32,7 @@ public class Player {
         return gender;
     }
 
-    public float getId() {
+    public long getId() {
         return id;
     }
 
@@ -40,7 +40,7 @@ public class Player {
         return last_name;
     }
 
-    public float getRegion() {
+    public long getRegion() {
         return region;
     }
 
@@ -48,7 +48,7 @@ public class Player {
         return email;
     }
 
-    public float getEntry() {
+    public long getEntry() {
         return entry;
     }
 
@@ -78,7 +78,7 @@ public class Player {
         this.gender = gender;
     }
 
-    public void setId(float id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -86,7 +86,7 @@ public class Player {
         this.last_name = last_name;
     }
 
-    public void setRegion(float region) {
+    public void setRegion(long region) {
         this.region = region;
     }
 
@@ -94,8 +94,8 @@ public class Player {
         this.email = email;
     }
 
-    public void setEntry(float entry) {
-        this.entry = entry;
+    public void setEntry(long entry) {
+        this.entry = (long) entry;
     }
 
     public void setEntry_email(boolean entry_email) {

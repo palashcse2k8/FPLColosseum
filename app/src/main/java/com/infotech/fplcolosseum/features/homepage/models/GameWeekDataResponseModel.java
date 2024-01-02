@@ -5,34 +5,34 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class GameWeekDataResponseModel {
-    private float id;
+    private long id;
     private String joined_time;
-    private float started_event;
-    private float favourite_team;
+    private long started_event;
+    private long favourite_team;
     private String player_first_name;
     private String player_last_name;
-    private float player_region_id;
+    private long player_region_id;
     private String player_region_name;
     private String player_region_iso_code_short;
     private String player_region_iso_code_long;
-    private float summary_overall_points;
-    private float summary_overall_rank;
-    private float summary_event_points;
-    private float summary_event_rank;
-    private float current_event;
+    private long summary_overall_points;
+    private long summary_overall_rank;
+    private long summary_event_points;
+    private long summary_event_rank;
+    private long current_event;
     @SerializedName("leagues")
     Leagues LeaguesObject;
     private String name;
     private boolean name_change_blocked;
     private String kit = null;
-    private float last_deadline_bank;
-    private float last_deadline_value;
-    private float last_deadline_total_transfers;
+    private long last_deadline_bank;
+    private long last_deadline_value;
+    private long last_deadline_total_transfers;
 
 
     // Getter Methods
 
-    public float getId() {
+    public long getId() {
         return id;
     }
 
@@ -40,11 +40,11 @@ public class GameWeekDataResponseModel {
         return joined_time;
     }
 
-    public float getStarted_event() {
+    public long getStarted_event() {
         return started_event;
     }
 
-    public float getFavourite_team() {
+    public long getFavourite_team() {
         return favourite_team;
     }
 
@@ -56,7 +56,7 @@ public class GameWeekDataResponseModel {
         return player_last_name;
     }
 
-    public float getPlayer_region_id() {
+    public long getPlayer_region_id() {
         return player_region_id;
     }
 
@@ -72,23 +72,23 @@ public class GameWeekDataResponseModel {
         return player_region_iso_code_long;
     }
 
-    public float getSummary_overall_points() {
+    public long getSummary_overall_points() {
         return summary_overall_points;
     }
 
-    public float getSummary_overall_rank() {
+    public long getSummary_overall_rank() {
         return summary_overall_rank;
     }
 
-    public float getSummary_event_points() {
+    public long getSummary_event_points() {
         return summary_event_points;
     }
 
-    public float getSummary_event_rank() {
+    public long getSummary_event_rank() {
         return summary_event_rank;
     }
 
-    public float getCurrent_event() {
+    public long getCurrent_event() {
         return current_event;
     }
 
@@ -108,21 +108,21 @@ public class GameWeekDataResponseModel {
         return kit;
     }
 
-    public float getLast_deadline_bank() {
+    public long getLast_deadline_bank() {
         return last_deadline_bank;
     }
 
-    public float getLast_deadline_value() {
+    public long getLast_deadline_value() {
         return last_deadline_value;
     }
 
-    public float getLast_deadline_total_transfers() {
+    public long getLast_deadline_total_transfers() {
         return last_deadline_total_transfers;
     }
 
     // Setter Methods
 
-    public void setId(float id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -130,11 +130,11 @@ public class GameWeekDataResponseModel {
         this.joined_time = joined_time;
     }
 
-    public void setStarted_event(float started_event) {
+    public void setStarted_event(long started_event) {
         this.started_event = started_event;
     }
 
-    public void setFavourite_team(float favourite_team) {
+    public void setFavourite_team(long favourite_team) {
         this.favourite_team = favourite_team;
     }
 
@@ -146,7 +146,7 @@ public class GameWeekDataResponseModel {
         this.player_last_name = player_last_name;
     }
 
-    public void setPlayer_region_id(float player_region_id) {
+    public void setPlayer_region_id(long player_region_id) {
         this.player_region_id = player_region_id;
     }
 
@@ -162,23 +162,23 @@ public class GameWeekDataResponseModel {
         this.player_region_iso_code_long = player_region_iso_code_long;
     }
 
-    public void setSummary_overall_points(float summary_overall_points) {
+    public void setSummary_overall_points(long summary_overall_points) {
         this.summary_overall_points = summary_overall_points;
     }
 
-    public void setSummary_overall_rank(float summary_overall_rank) {
+    public void setSummary_overall_rank(long summary_overall_rank) {
         this.summary_overall_rank = summary_overall_rank;
     }
 
-    public void setSummary_event_points(float summary_event_points) {
+    public void setSummary_event_points(long summary_event_points) {
         this.summary_event_points = summary_event_points;
     }
 
-    public void setSummary_event_rank(float summary_event_rank) {
+    public void setSummary_event_rank(long summary_event_rank) {
         this.summary_event_rank = summary_event_rank;
     }
 
-    public void setCurrent_event(float current_event) {
+    public void setCurrent_event(long current_event) {
         this.current_event = current_event;
     }
 
@@ -198,15 +198,15 @@ public class GameWeekDataResponseModel {
         this.kit = kit;
     }
 
-    public void setLast_deadline_bank(float last_deadline_bank) {
+    public void setLast_deadline_bank(long last_deadline_bank) {
         this.last_deadline_bank = last_deadline_bank;
     }
 
-    public void setLast_deadline_value(float last_deadline_value) {
+    public void setLast_deadline_value(long last_deadline_value) {
         this.last_deadline_value = last_deadline_value;
     }
 
-    public void setLast_deadline_total_transfers(float last_deadline_total_transfers) {
+    public void setLast_deadline_total_transfers(long last_deadline_total_transfers) {
         this.last_deadline_total_transfers = last_deadline_total_transfers;
     }
 }
@@ -233,7 +233,7 @@ class Leagues {
 }
 
 class LeagueDataModel {
-    private float id;
+    private long id;
     private String name;
     private String short_name = null;
     private String created;
@@ -242,21 +242,21 @@ class LeagueDataModel {
     private String max_entries = null;
     private String league_type;
     private String scoring;
-    private float admin_entry;
-    private float start_event;
+    private long admin_entry;
+    private long start_event;
     private boolean entry_can_leave;
     private boolean entry_can_admin;
     private boolean entry_can_invite;
     private boolean has_cup;
     private String cup_league = null;
     private String cup_qualified = null;
-    private float entry_rank;
-    private float entry_last_rank;
+    private long entry_rank;
+    private long entry_last_rank;
 
 
     // Getter Methods
 
-    public float getId() {
+    public long getId() {
         return id;
     }
 
@@ -292,11 +292,11 @@ class LeagueDataModel {
         return scoring;
     }
 
-    public float getAdmin_entry() {
+    public long getAdmin_entry() {
         return admin_entry;
     }
 
-    public float getStart_event() {
+    public long getStart_event() {
         return start_event;
     }
 
@@ -324,17 +324,17 @@ class LeagueDataModel {
         return cup_qualified;
     }
 
-    public float getEntry_rank() {
+    public long getEntry_rank() {
         return entry_rank;
     }
 
-    public float getEntry_last_rank() {
+    public long getEntry_last_rank() {
         return entry_last_rank;
     }
 
     // Setter Methods
 
-    public void setId(float id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -370,11 +370,11 @@ class LeagueDataModel {
         this.scoring = scoring;
     }
 
-    public void setAdmin_entry(float admin_entry) {
+    public void setAdmin_entry(long admin_entry) {
         this.admin_entry = admin_entry;
     }
 
-    public void setStart_event(float start_event) {
+    public void setStart_event(long start_event) {
         this.start_event = start_event;
     }
 
@@ -402,11 +402,11 @@ class LeagueDataModel {
         this.cup_qualified = cup_qualified;
     }
 
-    public void setEntry_rank(float entry_rank) {
+    public void setEntry_rank(long entry_rank) {
         this.entry_rank = entry_rank;
     }
 
-    public void setEntry_last_rank(float entry_last_rank) {
+    public void setEntry_last_rank(long entry_last_rank) {
         this.entry_last_rank = entry_last_rank;
     }
 }

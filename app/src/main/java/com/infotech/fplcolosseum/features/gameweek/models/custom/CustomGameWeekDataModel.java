@@ -8,13 +8,13 @@ import java.util.List;
 public class CustomGameWeekDataModel {
     private String leagueId;
     private String leagueName;
-    private float gameWeek;
-    private float currentGameweek;
-    private float numberOfTeams;
+    private long gameWeek;
+    private long currentGameweek;
+    private long numberOfTeams;
 
     public CustomGameWeekDataModel() {}
 
-    public CustomGameWeekDataModel(String leagueId, String leagueName, float gameWeek, float currentGameweek, float numberOfTeams, List<ManagerModel> teams) {
+    public CustomGameWeekDataModel(String leagueId, String leagueName, long gameWeek, long currentGameweek, long numberOfTeams, List<ManagerModel> teams) {
         this.leagueId = leagueId;
         this.leagueName = leagueName;
         this.gameWeek = gameWeek;
@@ -34,11 +34,11 @@ public class CustomGameWeekDataModel {
 
     List<ManagerModel> teams = new ArrayList<>();
 
-    public float getGameWeek() {
+    public long getGameWeek() {
         return gameWeek;
     }
 
-    public void setGameWeek(float gameWeek) {
+    public void setGameWeek(long gameWeek) {
         this.gameWeek = gameWeek;
     }
 
@@ -58,19 +58,19 @@ public class CustomGameWeekDataModel {
         this.leagueName = leagueName;
     }
 
-    public float getCurrentGameweek() {
+    public long getCurrentGameweek() {
         return currentGameweek;
     }
 
-    public void setCurrentGameweek(float currentGameweek) {
+    public void setCurrentGameweek(long currentGameweek) {
         this.currentGameweek = currentGameweek;
     }
 
-    public float getNumberOfTeams() {
+    public long getNumberOfTeams() {
         return numberOfTeams;
     }
 
-    public void setNumberOfTeams(float numberOfTeams) {
+    public void setNumberOfTeams(long numberOfTeams) {
         this.numberOfTeams = numberOfTeams;
     }
 

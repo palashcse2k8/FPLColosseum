@@ -19,6 +19,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetroClass {
 
+    Application application;
+
     private static Retrofit retrofit = null;
     private static final String BASE_URL = "https://fontendfunctionsnortheuropenew.azurewebsites.net/";
 
@@ -34,7 +36,7 @@ public class RetroClass {
 
     CookieHandler cookieHandler = new CookieManager();
 
-    private static Retrofit getRetrofitInstance(Application context) {
+    private static synchronized Retrofit getRetrofitInstance(Application context) {
         cache = new Cache(new File(context.getCacheDir(), "httpCache"), cacheSize);
 
         // Add logging interceptor for debugging (optional)

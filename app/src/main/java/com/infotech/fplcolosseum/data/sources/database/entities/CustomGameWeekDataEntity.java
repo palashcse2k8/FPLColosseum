@@ -16,9 +16,9 @@ public class CustomGameWeekDataEntity {
     private int id;
     private String leagueId;
     private String leagueName;
-    private float gameWeek;
-    private float currentGameweek;
-    private float numberOfTeams;
+    private long gameWeek;
+    private long currentGameweek;
+    private long numberOfTeams;
     //    @Ignore // Mark this field as transient
 //    @Relation(parentColumn = "id", entityColumn = "id")
     @TypeConverters(ManagerModelConverter.class)
@@ -38,11 +38,11 @@ public class CustomGameWeekDataEntity {
         this.teams = gameWeekDataModel.getTeams();
     }
 
-    public float getGameWeek() {
+    public long getGameWeek() {
         return gameWeek;
     }
 
-    public void setGameWeek(float gameWeek) {
+    public void setGameWeek(long gameWeek) {
         this.gameWeek = gameWeek;
     }
 
@@ -62,19 +62,19 @@ public class CustomGameWeekDataEntity {
         this.leagueName = leagueName;
     }
 
-    public float getCurrentGameweek() {
+    public long getCurrentGameweek() {
         return currentGameweek;
     }
 
-    public void setCurrentGameweek(float currentGameweek) {
+    public void setCurrentGameweek(long currentGameweek) {
         this.currentGameweek = currentGameweek;
     }
 
-    public float getNumberOfTeams() {
+    public long getNumberOfTeams() {
         return numberOfTeams;
     }
 
-    public void setNumberOfTeams(float numberOfTeams) {
+    public void setNumberOfTeams(long numberOfTeams) {
         this.numberOfTeams = numberOfTeams;
     }
 

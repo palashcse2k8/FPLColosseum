@@ -48,10 +48,10 @@ public class GameWeekRepository {
     private List<PlayerDataModel> gameWeekPlayerList;
     private List<PlayerDataModel> gameWeekPlayerListWithData;
 
-    private Map<Float, List<Float>> managerWithPlayerList;
+    private Map<Long, List<Long>> managerWithPlayerList;
 
     // Map to associate manager IDs with their LiveData
-    private Map<Float, MediatorLiveData<List<PlayerDataModel>>> managerLiveDataMap;
+    private Map<Long, MediatorLiveData<List<PlayerDataModel>>> managerLiveDataMap;
 
     private int totalPlayerAPICount;
 
@@ -139,11 +139,11 @@ public class GameWeekRepository {
 
 //                    Log.d(Constants.LOG_TAG, "Manager Info -> " + managerModel.getManagerName() + ", gameweek : " + managerModel.getGameWeek());
 
-                    float bonusPoints = 0;
-                    float benchPoints = 0;
-                    float goalScored = 0;
-                    float goalConceded = 0;
-                    float bpsPoints = 0;
+                    long bonusPoints = 0;
+                    long benchPoints = 0;
+                    long goalScored = 0;
+                    long goalConceded = 0;
+                    long bpsPoints = 0;
                     PlayerDataModel model;
 
                     //update captain and vice captain points
@@ -230,7 +230,7 @@ public class GameWeekRepository {
     public LiveData<List<PlayerDataModel>> filterPlayers(LeagueGameWeekDataModel leagueGameWeekDataModel) {
 
         // Retrieve or create LiveData for the manager
-        Map<Float, String> currentManagerPlayerList = new LinkedHashMap<>();
+        Map<Long, String> currentManagerPlayerList = new LinkedHashMap<>();
 
         MediatorLiveData<List<PlayerDataModel>> playerListMediatorLiveData = new MediatorLiveData<>();
         managerLiveDataMap.put(leagueGameWeekDataModel.getCompareEntryId(), playerListMediatorLiveData);
@@ -285,7 +285,7 @@ public class GameWeekRepository {
                         if (totalPlayerAPICount == 0) {
 //                            Log.d(Constants.LOG_TAG, "Unique PlayerCount " + "gameWeekPlayerList.size() : " + gameWeekPlayerList.size() + " totalPlayerAPICount : " + totalPlayerAPICount + "gameWeekPlayerListWithData.size() " + gameWeekPlayerListWithData.size());
                             MediatorLiveData<List<PlayerDataModel>> currentManagerPlayerListLiveData;
-                            for (Float managerID : managerWithPlayerList.keySet()) {
+                            for (long managerID : managerWithPlayerList.keySet()) {
                                 currentManagerPlayerListLiveData = managerLiveDataMap.get(managerID);
                                 List<PlayerDataModel> currentManagerPlayerListWithData = preparePlayersList(Objects.requireNonNull(managerWithPlayerList.get(managerID)));
                                 if (currentManagerPlayerListWithData != null && currentManagerPlayerListWithData.size() == 15) {
@@ -345,7 +345,7 @@ public class GameWeekRepository {
         }
     }
 
-    public List<PlayerDataModel> preparePlayersList(List<Float> currentManagerPlayerList) {
+    public List<PlayerDataModel> preparePlayersList(List<Long> currentManagerPlayerList) {
 
         if (currentManagerPlayerList.size() != 15) {
             return null;
@@ -353,7 +353,7 @@ public class GameWeekRepository {
 
         List<PlayerDataModel> currentPlayerListWithData = new ArrayList<>();
 
-        for (float id : currentManagerPlayerList) {
+        for (long id : currentManagerPlayerList) {
             for (PlayerDataModel model : gameWeekPlayerListWithData) {
                 if (id == model.getPlayerID()) {
                     currentPlayerListWithData.add(model);

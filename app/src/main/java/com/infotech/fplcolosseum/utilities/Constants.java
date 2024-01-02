@@ -2,6 +2,11 @@ package com.infotech.fplcolosseum.utilities;
 
 import com.infotech.fplcolosseum.features.gameweek.models.custom.CustomGameWeekDataModel;
 import com.infotech.fplcolosseum.features.gameweek.models.custom.ManagerModel;
+import com.infotech.fplcolosseum.features.homepage.models.GameWeekEvent;
+import com.infotech.fplcolosseum.features.homepage.models.GameWeekStaticDataModel;
+import com.infotech.fplcolosseum.features.homepage.models.Player_Type;
+import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.TeamData;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 
 import java.util.ArrayList;
@@ -26,6 +31,14 @@ public class Constants {
     public static final String APP_NAME = "plfpl-web";
 
     public static UserResponseModel LoggedInUser;
+    public static GameWeekStaticDataModel GameWeekStaticData;
+
+    public static Map <Long, PlayersData> playerMap = new HashMap<>();
+    public static Map<Long, Player_Type> playerTypeMap = new HashMap<>();
+    public static Map <Long, TeamData> teamMap = new HashMap<>();
+    public static Map<Long, GameWeekEvent> gameWeekMap = new HashMap<>();
+
+
 
     //image link
 

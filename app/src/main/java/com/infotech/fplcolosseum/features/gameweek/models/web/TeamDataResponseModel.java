@@ -17,7 +17,7 @@ public class TeamDataResponseModel {
     private int id;
     @SerializedName("LiveData")
     GameWeekLiveData GameWeekLiveData;
-    private float EntryId;
+    private long EntryId;
     private String Name;
     private String PlayerName;
     private String OfficialName = null;
@@ -26,22 +26,22 @@ public class TeamDataResponseModel {
     private String OverAllRankInfo = null;
     private String TeamH2HData = null;
     List< Object > UsedChips ;
-    private float TeamValue;
-    private float BankValue;
+    private long TeamValue;
+    private long BankValue;
     private boolean IsCupOpponent;
     private String CupLeague = null;
     private boolean IsExcludedFromStats;
-    private float CupOpponentGameweek;
-    private float RealTotalPosition;
-    private float TotalTransfersSeason;
-    private float DisplayRank;
-    private float DisplayRankTotal;
-    private float AvgRankLast3;
-    private float SeasonsPlayed;
-    private float BestRank;
-    private float FavouriteTeam;
+    private long CupOpponentGameweek;
+    private long RealTotalPosition;
+    private long TotalTransfersSeason;
+    private long DisplayRank;
+    private long DisplayRankTotal;
+    private long AvgRankLast3;
+    private long SeasonsPlayed;
+    private long BestRank;
+    private long FavouriteTeam;
     private String CountryIso;
-    private float LastGameweekLeagueRank;
+    private long LastGameweekLeagueRank;
 
 
     // Getter Methods
@@ -58,7 +58,7 @@ public class TeamDataResponseModel {
         return GameWeekLiveData;
     }
 
-    public float getEntryId() {
+    public long getEntryId() {
         return EntryId;
     }
 
@@ -90,11 +90,11 @@ public class TeamDataResponseModel {
         return TeamH2HData;
     }
 
-    public float getTeamValue() {
+    public long getTeamValue() {
         return TeamValue;
     }
 
-    public float getBankValue() {
+    public long getBankValue() {
         return BankValue;
     }
 
@@ -110,39 +110,39 @@ public class TeamDataResponseModel {
         return IsExcludedFromStats;
     }
 
-    public float getCupOpponentGameweek() {
+    public long getCupOpponentGameweek() {
         return CupOpponentGameweek;
     }
 
-    public float getRealTotalPosition() {
+    public long getRealTotalPosition() {
         return RealTotalPosition;
     }
 
-    public float getTotalTransfersSeason() {
+    public long getTotalTransfersSeason() {
         return TotalTransfersSeason;
     }
 
-    public float getDisplayRank() {
+    public long getDisplayRank() {
         return DisplayRank;
     }
 
-    public float getDisplayRankTotal() {
+    public long getDisplayRankTotal() {
         return DisplayRankTotal;
     }
 
-    public float getAvgRankLast3() {
+    public long getAvgRankLast3() {
         return AvgRankLast3;
     }
 
-    public float getSeasonsPlayed() {
+    public long getSeasonsPlayed() {
         return SeasonsPlayed;
     }
 
-    public float getBestRank() {
+    public long getBestRank() {
         return BestRank;
     }
 
-    public float getFavouriteTeam() {
+    public long getFavouriteTeam() {
         return FavouriteTeam;
     }
 
@@ -150,7 +150,7 @@ public class TeamDataResponseModel {
         return CountryIso;
     }
 
-    public float getLastGameweekLeagueRank() {
+    public long getLastGameweekLeagueRank() {
         return LastGameweekLeagueRank;
     }
 
@@ -160,7 +160,7 @@ public class TeamDataResponseModel {
         this.GameWeekLiveData = gameWeekLiveDataObject;
     }
 
-    public void setEntryId(float EntryId) {
+    public void setEntryId(long EntryId) {
         this.EntryId = EntryId;
     }
 
@@ -192,11 +192,11 @@ public class TeamDataResponseModel {
         this.TeamH2HData = TeamH2HData;
     }
 
-    public void setTeamValue(float TeamValue) {
+    public void setTeamValue(long TeamValue) {
         this.TeamValue = TeamValue;
     }
 
-    public void setBankValue(float BankValue) {
+    public void setBankValue(long BankValue) {
         this.BankValue = BankValue;
     }
 
@@ -212,39 +212,39 @@ public class TeamDataResponseModel {
         this.IsExcludedFromStats = IsExcludedFromStats;
     }
 
-    public void setCupOpponentGameweek(float CupOpponentGameweek) {
+    public void setCupOpponentGameweek(long CupOpponentGameweek) {
         this.CupOpponentGameweek = CupOpponentGameweek;
     }
 
-    public void setRealTotalPosition(float RealTotalPosition) {
+    public void setRealTotalPosition(long RealTotalPosition) {
         this.RealTotalPosition = RealTotalPosition;
     }
 
-    public void setTotalTransfersSeason(float TotalTransfersSeason) {
+    public void setTotalTransfersSeason(long TotalTransfersSeason) {
         this.TotalTransfersSeason = TotalTransfersSeason;
     }
 
-    public void setDisplayRank(float DisplayRank) {
+    public void setDisplayRank(long DisplayRank) {
         this.DisplayRank = DisplayRank;
     }
 
-    public void setDisplayRankTotal(float DisplayRankTotal) {
+    public void setDisplayRankTotal(long DisplayRankTotal) {
         this.DisplayRankTotal = DisplayRankTotal;
     }
 
-    public void setAvgRankLast3(float AvgRankLast3) {
+    public void setAvgRankLast3(long AvgRankLast3) {
         this.AvgRankLast3 = AvgRankLast3;
     }
 
-    public void setSeasonsPlayed(float SeasonsPlayed) {
+    public void setSeasonsPlayed(long SeasonsPlayed) {
         this.SeasonsPlayed = SeasonsPlayed;
     }
 
-    public void setBestRank(float BestRank) {
+    public void setBestRank(long BestRank) {
         this.BestRank = BestRank;
     }
 
-    public void setFavouriteTeam(float FavouriteTeam) {
+    public void setFavouriteTeam(long FavouriteTeam) {
         this.FavouriteTeam = FavouriteTeam;
     }
 
@@ -252,7 +252,7 @@ public class TeamDataResponseModel {
         this.CountryIso = CountryIso;
     }
 
-    public void setLastGameweekLeagueRank(float LastGameweekLeagueRank) {
+    public void setLastGameweekLeagueRank(long LastGameweekLeagueRank) {
         this.LastGameweekLeagueRank = LastGameweekLeagueRank;
     }
 

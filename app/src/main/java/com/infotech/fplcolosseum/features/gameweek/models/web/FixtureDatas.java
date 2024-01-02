@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FixtureDatas {
-    private float FixtureId;
+    private long FixtureId;
     private String HomeTeamName;
     private String AwayTeamName;
     private String HomeTeamFullName;
     private String AwayTeamFullName;
     private String KickOffTime;
-    private float PlayedMinutes;
+    private long PlayedMinutes;
     private boolean Started;
     private boolean Finished;
     private boolean FinishedProvisional;
-    private float TeamHScore;
-    private float TeamAScore;
-    private float TeamA;
-    private float TeamH;
+    private long TeamHScore;
+    private long TeamAScore;
+    private long TeamA;
+    private long TeamH;
     Object AllStatsDataObject;
     private String FixtureStatusText;
 
@@ -30,7 +30,7 @@ public class FixtureDatas {
     }
 // Getter Methods
 
-    public float getFixtureId() {
+    public long getFixtureId() {
         return FixtureId;
     }
 
@@ -54,7 +54,7 @@ public class FixtureDatas {
         return KickOffTime;
     }
 
-    public float getPlayedMinutes() {
+    public long getPlayedMinutes() {
         return PlayedMinutes;
     }
 
@@ -70,19 +70,19 @@ public class FixtureDatas {
         return FinishedProvisional;
     }
 
-    public float getTeamHScore() {
+    public long getTeamHScore() {
         return TeamHScore;
     }
 
-    public float getTeamAScore() {
+    public long getTeamAScore() {
         return TeamAScore;
     }
 
-    public float getTeamA() {
+    public long getTeamA() {
         return TeamA;
     }
 
-    public float getTeamH() {
+    public long getTeamH() {
         return TeamH;
     }
 
@@ -92,7 +92,7 @@ public class FixtureDatas {
 
 // Setter Methods
 
-    public void setFixtureId(float FixtureId) {
+    public void setFixtureId(long FixtureId) {
         this.FixtureId = FixtureId;
     }
 
@@ -116,7 +116,7 @@ public class FixtureDatas {
         this.KickOffTime = KickOffTime;
     }
 
-    public void setPlayedMinutes(float PlayedMinutes) {
+    public void setPlayedMinutes(long PlayedMinutes) {
         this.PlayedMinutes = PlayedMinutes;
     }
 
@@ -132,19 +132,19 @@ public class FixtureDatas {
         this.FinishedProvisional = FinishedProvisional;
     }
 
-    public void setTeamHScore(float TeamHScore) {
+    public void setTeamHScore(long TeamHScore) {
         this.TeamHScore = TeamHScore;
     }
 
-    public void setTeamAScore(float TeamAScore) {
+    public void setTeamAScore(long TeamAScore) {
         this.TeamAScore = TeamAScore;
     }
 
-    public void setTeamA(float TeamA) {
+    public void setTeamA(long TeamA) {
         this.TeamA = TeamA;
     }
 
-    public void setTeamH(float TeamH) {
+    public void setTeamH(long TeamH) {
         this.TeamH = TeamH;
     }
 

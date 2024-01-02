@@ -1,23 +1,50 @@
 package com.infotech.fplcolosseum;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
+import com.infotech.fplcolosseum.features.homepage.models.GameWeekEvent;
+import com.infotech.fplcolosseum.features.homepage.models.GameWeekStaticDataModel;
+import com.infotech.fplcolosseum.features.homepage.models.Player_Type;
+import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.TeamData;
 import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment;
 import com.infotech.fplcolosseum.features.homepage.views.MyTeamFragment;
 import com.infotech.fplcolosseum.features.login.views.LoginFragment;
+import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.SharedViewModel;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SharedViewModel sharedViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
         setupActionBar();
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        sharedViewModel.getApiData().observe(this, apiResponse -> {
+            // Handle API response in the fragment
+            if(apiResponse == null) return;
+            if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
+
+                // Update Static data with the data
+                createMapData(apiResponse.getData());
+
+            } else {
+                Log.d(Constants.LOG_TAG, "Data Loading Error" );
+            }
+        });
 //        Fragment fragment = new GameWeekDashboardFragment();
         Fragment fragment = new LoginFragment();
 //        Fragment fragment = new HomePageFragment();
@@ -34,6 +61,37 @@ public class MainActivity extends AppCompatActivity {
         }
         assert actionBar != null;
         actionBar.setTitle("Game Week Standings");
+    }
+
+    public void createMapData(GameWeekStaticDataModel dataModel){
+
+        //setting player map
+        Map<Long, PlayersData> elementMap = new HashMap<>();
+        for (PlayersData element : dataModel.getElements()) {
+            elementMap.put(element.getId(), element);
+        }
+        Constants.playerMap = elementMap;
+
+        //setting team map
+        Map<Long, TeamData> teamMap = new HashMap<>();
+        for (TeamData data : dataModel.getTeams()) {
+            teamMap.put(data.getId(), data);
+        }
+        Constants.teamMap = teamMap;
+
+        //setting gameWeek map
+        Map<Long, GameWeekEvent> gameWeekMap = new HashMap<>();
+        for (GameWeekEvent weekEvent : dataModel.getEvents()) {
+            gameWeekMap.put(weekEvent.getId(), weekEvent);
+        }
+        Constants.gameWeekMap = gameWeekMap;
+
+        //setting player type map
+        Map<Long, Player_Type> palyerTypeMap = new HashMap<>();
+        for (Player_Type type : dataModel.getPlayer_types()) {
+            palyerTypeMap.put(type.getId(), type);
+        }
+        Constants.playerTypeMap = palyerTypeMap;
     }
 
 }

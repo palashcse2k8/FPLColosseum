@@ -11,6 +11,8 @@ import com.infotech.fplcolosseum.data.sources.network.APIHandler;
 import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.data.sources.network.RetroClass;
+import com.infotech.fplcolosseum.features.homepage.models.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.GameWeekStaticDataModel;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.utilities.Constants;
 
@@ -36,11 +38,11 @@ public class UserGameWeekDataRepository {
         sessionManager = new SessionManager(application);
     }
 
-    public LiveData<ApiResponse<?>> userGameWeekData(int userId, String passWord, Class<?> responseClass) {
+    public LiveData<ApiResponse<?>> userLogIn(String userName, String passWord, Class<?> responseClass) {
 
         MediatorLiveData<ApiResponse<?>> userProfileLiveData = new MediatorLiveData<>();
 
-        Call<ResponseBody> callAPI = apiServices.gameWeekMyTeam(userName, passWord, Constants.APP_NAME, Constants.LOGIN_REDIRECT_URL);
+        Call<ResponseBody> callAPI = apiServices.userLogin(userName, passWord, Constants.APP_NAME, Constants.LOGIN_REDIRECT_URL);
 
         callAPI.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -92,12 +94,6 @@ public class UserGameWeekDataRepository {
                     return;
                 }
 
-                if (sessionManager.getSessionID() != null) {
-//                    userProfileLiveData.postValue(ApiResponse.error("Session ID Not Found!", null));
-//                    return;
-                    Log.d("SessionID ", sessionManager.getSessionID());
-                }
-
                 Call<ResponseBody> callAPI = apiServices.getManagerProfileData();
 
                 userProfileLiveData.addSource(APIHandler.makeApiCall( callAPI, responseClass), tApiResponse -> {
@@ -114,6 +110,18 @@ public class UserGameWeekDataRepository {
         return userProfileLiveData;
     }
 
-    public void getSomeThing(){}
+    public LiveData<ApiResponse<GameWeekMyTeamResponseModel>> getMyTeamData(long entry_id) {
+
+        MediatorLiveData<ApiResponse<GameWeekMyTeamResponseModel>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.gameWeekMyTeam(entry_id);
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekMyTeamResponseModel.class), tApiResponse -> {
+            Log.d("Data ", tApiResponse.getData().toString());
+            apiData.postValue(tApiResponse);
+        });
+
+        return apiData;
+    }
 }
 

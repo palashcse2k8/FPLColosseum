@@ -15,6 +15,18 @@ public class GameWeekMyTeamResponseModel {
 
     // Getter Methods
 
+    public ArrayList<GameWeekPicks> getPicks() {
+        return picks;
+    }
+
+    public ArrayList<GameChips> getChips() {
+        return chips;
+    }
+
+    public Transfers getTransfersObject() {
+        return TransfersObject;
+    }
+
     public Transfers getTransfers() {
         return TransfersObject;
     }
@@ -26,17 +38,17 @@ public class GameWeekMyTeamResponseModel {
     }
 }
 class Transfers {
-    private float cost;
+    private long cost;
     private String status;
-    private float limit;
-    private float made;
-    private float bank;
-    private float value;
+    private long limit;
+    private long made;
+    private long bank;
+    private long value;
 
 
     // Getter Methods
 
-    public float getCost() {
+    public long getCost() {
         return cost;
     }
 
@@ -44,25 +56,25 @@ class Transfers {
         return status;
     }
 
-    public float getLimit() {
+    public long getLimit() {
         return limit;
     }
 
-    public float getMade() {
+    public long getMade() {
         return made;
     }
 
-    public float getBank() {
+    public long getBank() {
         return bank;
     }
 
-    public float getValue() {
+    public long getValue() {
         return value;
     }
 
     // Setter Methods
 
-    public void setCost(float cost) {
+    public void setCost(long cost) {
         this.cost = cost;
     }
 
@@ -70,91 +82,20 @@ class Transfers {
         this.status = status;
     }
 
-    public void setLimit(float limit) {
+    public void setLimit(long limit) {
         this.limit = limit;
     }
 
-    public void setMade(float made) {
+    public void setMade(long made) {
         this.made = made;
     }
 
-    public void setBank(float bank) {
+    public void setBank(long bank) {
         this.bank = bank;
     }
 
-    public void setValue(float value) {
+    public void setValue(long value) {
         this.value = value;
-    }
-}
-
-class GameWeekPicks {
-    private float element;
-    private float position;
-    private float selling_price;
-    private float multiplier;
-    private float purchase_price;
-    private boolean is_captain;
-    private boolean is_vice_captain;
-
-
-    // Getter Methods
-
-    public float getElement() {
-        return element;
-    }
-
-    public float getPosition() {
-        return position;
-    }
-
-    public float getSelling_price() {
-        return selling_price;
-    }
-
-    public float getMultiplier() {
-        return multiplier;
-    }
-
-    public float getPurchase_price() {
-        return purchase_price;
-    }
-
-    public boolean getIs_captain() {
-        return is_captain;
-    }
-
-    public boolean getIs_vice_captain() {
-        return is_vice_captain;
-    }
-
-    // Setter Methods
-
-    public void setElement(float element) {
-        this.element = element;
-    }
-
-    public void setPosition(float position) {
-        this.position = position;
-    }
-
-    public void setSelling_price(float selling_price) {
-        this.selling_price = selling_price;
-    }
-
-    public void setMultiplier(float multiplier) {
-        this.multiplier = multiplier;
-    }
-
-    public void setPurchase_price(float purchase_price) {
-        this.purchase_price = purchase_price;
-    }
-
-    public void setIs_captain(boolean is_captain) {
-        this.is_captain = is_captain;
-    }
-
-    public void setIs_vice_captain(boolean is_vice_captain) {
-        this.is_vice_captain = is_vice_captain;
     }
 }
 
@@ -162,9 +103,9 @@ class GameChips {
     private String status_for_entry;
     ArrayList < Object > played_by_entry = new ArrayList < Object > ();
     private String name;
-    private float number;
-    private float start_event;
-    private float stop_event;
+    private long number;
+    private long start_event;
+    private long stop_event;
     private String chip_type;
 
 
@@ -178,15 +119,15 @@ class GameChips {
         return name;
     }
 
-    public float getNumber() {
+    public long getNumber() {
         return number;
     }
 
-    public float getStart_event() {
+    public long getStart_event() {
         return start_event;
     }
 
-    public float getStop_event() {
+    public long getStop_event() {
         return stop_event;
     }
 
@@ -204,15 +145,15 @@ class GameChips {
         this.name = name;
     }
 
-    public void setNumber(float number) {
+    public void setNumber(long number) {
         this.number = number;
     }
 
-    public void setStart_event(float start_event) {
+    public void setStart_event(long start_event) {
         this.start_event = start_event;
     }
 
-    public void setStop_event(float stop_event) {
+    public void setStop_event(long stop_event) {
         this.stop_event = stop_event;
     }
 

@@ -27,9 +27,9 @@ public class PlayerStatsResponseModel {
     ArrayList < Object > PreviousFixtures = new ArrayList < Object > ();
     ArrayList < Object > UpcommingFixtures = new ArrayList < Object > ();
     ArrayList < Object > Fixtures = new ArrayList < Object > ();
-    private float Points;
-    private float Cost;
-    private float SelectedByPercent;
+    private long Points;
+    private long Cost;
+    private long SelectedByPercent;
 
 
     // Getter Methods
@@ -66,15 +66,15 @@ public class PlayerStatsResponseModel {
         return ManualSubNotes;
     }
 
-    public float getPoints() {
+    public long getPoints() {
         return Points;
     }
 
-    public float getCost() {
+    public long getCost() {
         return Cost;
     }
 
-    public float getSelectedByPercent() {
+    public long getSelectedByPercent() {
         return SelectedByPercent;
     }
 
@@ -112,15 +112,15 @@ public class PlayerStatsResponseModel {
         this.ManualSubNotes = ManualSubNotes;
     }
 
-    public void setPoints(float Points) {
+    public void setPoints(long Points) {
         this.Points = Points;
     }
 
-    public void setCost(float Cost) {
+    public void setCost(long Cost) {
         this.Cost = Cost;
     }
 
-    public void setSelectedByPercent(float SelectedByPercent) {
+    public void setSelectedByPercent(long SelectedByPercent) {
         this.SelectedByPercent = SelectedByPercent;
     }
 }

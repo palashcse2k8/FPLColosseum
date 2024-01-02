@@ -1,18 +1,18 @@
 package com.infotech.fplcolosseum.features.gameweek.models.web;
 
 public class PlayerPointsDatas {
-    private float FixtureId;
+    private long FixtureId;
     private String Key;
-    private float Amount;
-    private float Points;
+    private long Amount;
+    private long Points;
     private boolean IsTemporaryBonusPoints;
-    private float TemporaryBonusPoints;
+    private long TemporaryBonusPoints;
     private String PointsText;
     private boolean ShowAmount;
 
     // Getter Methods
 
-    public float getFixtureId() {
+    public long getFixtureId() {
         return FixtureId;
     }
 
@@ -20,11 +20,11 @@ public class PlayerPointsDatas {
         return Key;
     }
 
-    public float getAmount() {
+    public long getAmount() {
         return Amount;
     }
 
-    public float getPoints() {
+    public long getPoints() {
         return Points;
     }
 
@@ -32,7 +32,7 @@ public class PlayerPointsDatas {
         return IsTemporaryBonusPoints;
     }
 
-    public float getTemporaryBonusPoints() {
+    public long getTemporaryBonusPoints() {
         return TemporaryBonusPoints;
     }
 
@@ -46,7 +46,7 @@ public class PlayerPointsDatas {
 
     // Setter Methods
 
-    public void setFixtureId(float FixtureId) {
+    public void setFixtureId(long FixtureId) {
         this.FixtureId = FixtureId;
     }
 
@@ -54,11 +54,11 @@ public class PlayerPointsDatas {
         this.Key = Key;
     }
 
-    public void setAmount(float Amount) {
+    public void setAmount(long Amount) {
         this.Amount = Amount;
     }
 
-    public void setPoints(float Points) {
+    public void setPoints(long Points) {
         this.Points = Points;
     }
 
@@ -66,7 +66,7 @@ public class PlayerPointsDatas {
         this.IsTemporaryBonusPoints = IsTemporaryBonusPoints;
     }
 
-    public void setTemporaryBonusPoints(float TemporaryBonusPoints) {
+    public void setTemporaryBonusPoints(long TemporaryBonusPoints) {
         this.TemporaryBonusPoints = TemporaryBonusPoints;
     }
 

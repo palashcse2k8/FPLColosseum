@@ -36,131 +36,131 @@ public class GameWeekPicksModel {
 }
 
 class Entry_history {
-    private float event;
-    private float points;
-    private float total_points;
-    private float rank;
-    private float rank_sort;
-    private float overall_rank;
-    private float bank;
-    private float value;
-    private float event_transfers;
-    private float event_transfers_cost;
-    private float points_on_bench;
+    private long event;
+    private long points;
+    private long total_points;
+    private long rank;
+    private long rank_sort;
+    private long overall_rank;
+    private long bank;
+    private long value;
+    private long event_transfers;
+    private long event_transfers_cost;
+    private long points_on_bench;
 
 
     // Getter Methods
 
-    public float getEvent() {
+    public long getEvent() {
         return event;
     }
 
-    public float getPoints() {
+    public long getPoints() {
         return points;
     }
 
-    public float getTotal_points() {
+    public long getTotal_points() {
         return total_points;
     }
 
-    public float getRank() {
+    public long getRank() {
         return rank;
     }
 
-    public float getRank_sort() {
+    public long getRank_sort() {
         return rank_sort;
     }
 
-    public float getOverall_rank() {
+    public long getOverall_rank() {
         return overall_rank;
     }
 
-    public float getBank() {
+    public long getBank() {
         return bank;
     }
 
-    public float getValue() {
+    public long getValue() {
         return value;
     }
 
-    public float getEvent_transfers() {
+    public long getEvent_transfers() {
         return event_transfers;
     }
 
-    public float getEvent_transfers_cost() {
+    public long getEvent_transfers_cost() {
         return event_transfers_cost;
     }
 
-    public float getPoints_on_bench() {
+    public long getPoints_on_bench() {
         return points_on_bench;
     }
 
     // Setter Methods
 
-    public void setEvent(float event) {
+    public void setEvent(long event) {
         this.event = event;
     }
 
-    public void setPoints(float points) {
+    public void setPoints(long points) {
         this.points = points;
     }
 
-    public void setTotal_points(float total_points) {
+    public void setTotal_points(long total_points) {
         this.total_points = total_points;
     }
 
-    public void setRank(float rank) {
+    public void setRank(long rank) {
         this.rank = rank;
     }
 
-    public void setRank_sort(float rank_sort) {
+    public void setRank_sort(long rank_sort) {
         this.rank_sort = rank_sort;
     }
 
-    public void setOverall_rank(float overall_rank) {
+    public void setOverall_rank(long overall_rank) {
         this.overall_rank = overall_rank;
     }
 
-    public void setBank(float bank) {
+    public void setBank(long bank) {
         this.bank = bank;
     }
 
-    public void setValue(float value) {
+    public void setValue(long value) {
         this.value = value;
     }
 
-    public void setEvent_transfers(float event_transfers) {
+    public void setEvent_transfers(long event_transfers) {
         this.event_transfers = event_transfers;
     }
 
-    public void setEvent_transfers_cost(float event_transfers_cost) {
+    public void setEvent_transfers_cost(long event_transfers_cost) {
         this.event_transfers_cost = event_transfers_cost;
     }
 
-    public void setPoints_on_bench(float points_on_bench) {
+    public void setPoints_on_bench(long points_on_bench) {
         this.points_on_bench = points_on_bench;
     }
 }
 
 class Picks {
-    private float element;
-    private float position;
-    private float multiplier;
+    private long element;
+    private long position;
+    private long multiplier;
     private boolean is_captain;
     private boolean is_vice_captain;
 
 
     // Getter Methods
 
-    public float getElement() {
+    public long getElement() {
         return element;
     }
 
-    public float getPosition() {
+    public long getPosition() {
         return position;
     }
 
-    public float getMultiplier() {
+    public long getMultiplier() {
         return multiplier;
     }
 
@@ -174,15 +174,15 @@ class Picks {
 
     // Setter Methods
 
-    public void setElement(float element) {
+    public void setElement(long element) {
         this.element = element;
     }
 
-    public void setPosition(float position) {
+    public void setPosition(long position) {
         this.position = position;
     }
 
-    public void setMultiplier(float multiplier) {
+    public void setMultiplier(long multiplier) {
         this.multiplier = multiplier;
     }
 

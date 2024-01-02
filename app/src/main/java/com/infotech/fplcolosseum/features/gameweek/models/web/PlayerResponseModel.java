@@ -14,10 +14,10 @@ public class PlayerResponseModel {
     private boolean IsEffectiveCaptain;
     private boolean IsEffectiveTrippleCaptain;
     private boolean IsUsingBenchBoost;
-    private float TeamPosition;
-    private float Multiplier;
-    private float TotalPoints;
-    private float BonusPlayerPoints;
+    private long TeamPosition;
+    private long Multiplier;
+    private long TotalPoints;
+    private long BonusPlayerPoints;
     private boolean OnBenchInPlayerTeam;
     private boolean ComeOnFromBenchInPlayerTeam;
     private boolean ShowAsStartPlayerInPlayerTeam;
@@ -25,24 +25,24 @@ public class PlayerResponseModel {
     private String LeagueImportance;
     private boolean CanEffect;
     private boolean CanEffectLeft;
-    private float Id;
-    private float TeamId;
-    private float TeamCode;
-    private float NumFixtures;
+    private long Id;
+    private long TeamId;
+    private long TeamCode;
+    private long NumFixtures;
     private String PlayerWebName;
     private String TeamName;
     private String TeamFullName = null;
     private String News;
     private String ManualSubNotes;
-    private float DisplaySortOrder;
+    private long DisplaySortOrder;
     private String KickOffTime;
-    private float PlayerPosition;
-    private float PlayerMinutes;
+    private long PlayerPosition;
+    private long PlayerMinutes;
     private boolean FixtureStarted;
     private boolean FixtureFinished;
     private boolean FixtureFinishedProvisional;
-    private float AllFixturesTotalMinutesPlayed;
-    private float AllFixturesMinutesLeft;
+    private long AllFixturesTotalMinutesPlayed;
+    private long AllFixturesMinutesLeft;
     private boolean GameWeekIsFinished;
     private boolean PlayerHasNotStarted;
     private boolean PlayerIsPlaying;
@@ -52,17 +52,17 @@ public class PlayerResponseModel {
     private String PlayerPointsStatusText;
     private String OpponentDisplayName;
     private String OpponentShortName;
-    private float FplReportedPoints;
-    private float LiveBonusPoints;
-    private float Difficulty;
-    private float ChanceOfPlaying;
-    private float SelectedByPercent;
-    private float Cost;
-    private float ExpectedPoints;
-    private float FormCalculated;
-    private float FormCalculatedTransfers;
+    private long FplReportedPoints;
+    private long LiveBonusPoints;
+    private long Difficulty;
+    private long ChanceOfPlaying;
+    private long SelectedByPercent;
+    private long Cost;
+    private long ExpectedPoints;
+    private long FormCalculated;
+    private long FormCalculatedTransfers;
     private String PlayerDisplayName;
-    private float Points;
+    private long Points;
     private boolean ReturnPlayerStatsData;
     ArrayList< Object > PlayerStatsData = new ArrayList < Object > ();
 
@@ -113,19 +113,19 @@ public class PlayerResponseModel {
         return IsUsingBenchBoost;
     }
 
-    public float getTeamPosition() {
+    public long getTeamPosition() {
         return TeamPosition;
     }
 
-    public float getMultiplier() {
+    public long getMultiplier() {
         return Multiplier;
     }
 
-    public float getTotalPoints() {
+    public long getTotalPoints() {
         return TotalPoints;
     }
 
-    public float getBonusPlayerPoints() {
+    public long getBonusPlayerPoints() {
         return BonusPlayerPoints;
     }
 
@@ -157,19 +157,19 @@ public class PlayerResponseModel {
         return CanEffectLeft;
     }
 
-    public float getId() {
+    public long getId() {
         return Id;
     }
 
-    public float getTeamId() {
+    public long getTeamId() {
         return TeamId;
     }
 
-    public float getTeamCode() {
+    public long getTeamCode() {
         return TeamCode;
     }
 
-    public float getNumFixtures() {
+    public long getNumFixtures() {
         return NumFixtures;
     }
 
@@ -193,7 +193,7 @@ public class PlayerResponseModel {
         return ManualSubNotes;
     }
 
-    public float getDisplaySortOrder() {
+    public long getDisplaySortOrder() {
         return DisplaySortOrder;
     }
 
@@ -201,11 +201,11 @@ public class PlayerResponseModel {
         return KickOffTime;
     }
 
-    public float getPlayerPosition() {
+    public long getPlayerPosition() {
         return PlayerPosition;
     }
 
-    public float getPlayerMinutes() {
+    public long getPlayerMinutes() {
         return PlayerMinutes;
     }
 
@@ -221,11 +221,11 @@ public class PlayerResponseModel {
         return FixtureFinishedProvisional;
     }
 
-    public float getAllFixturesTotalMinutesPlayed() {
+    public long getAllFixturesTotalMinutesPlayed() {
         return AllFixturesTotalMinutesPlayed;
     }
 
-    public float getAllFixturesMinutesLeft() {
+    public long getAllFixturesMinutesLeft() {
         return AllFixturesMinutesLeft;
     }
 
@@ -265,39 +265,39 @@ public class PlayerResponseModel {
         return OpponentShortName;
     }
 
-    public float getFplReportedPoints() {
+    public long getFplReportedPoints() {
         return FplReportedPoints;
     }
 
-    public float getLiveBonusPoints() {
+    public long getLiveBonusPoints() {
         return LiveBonusPoints;
     }
 
-    public float getDifficulty() {
+    public long getDifficulty() {
         return Difficulty;
     }
 
-    public float getChanceOfPlaying() {
+    public long getChanceOfPlaying() {
         return ChanceOfPlaying;
     }
 
-    public float getSelectedByPercent() {
+    public long getSelectedByPercent() {
         return SelectedByPercent;
     }
 
-    public float getCost() {
+    public long getCost() {
         return Cost;
     }
 
-    public float getExpectedPoints() {
+    public long getExpectedPoints() {
         return ExpectedPoints;
     }
 
-    public float getFormCalculated() {
+    public long getFormCalculated() {
         return FormCalculated;
     }
 
-    public float getFormCalculatedTransfers() {
+    public long getFormCalculatedTransfers() {
         return FormCalculatedTransfers;
     }
 
@@ -305,7 +305,7 @@ public class PlayerResponseModel {
         return PlayerDisplayName;
     }
 
-    public float getPoints() {
+    public long getPoints() {
         return Points;
     }
 
@@ -359,19 +359,19 @@ public class PlayerResponseModel {
         this.IsUsingBenchBoost = IsUsingBenchBoost;
     }
 
-    public void setTeamPosition(float TeamPosition) {
+    public void setTeamPosition(long TeamPosition) {
         this.TeamPosition = TeamPosition;
     }
 
-    public void setMultiplier(float Multiplier) {
+    public void setMultiplier(long Multiplier) {
         this.Multiplier = Multiplier;
     }
 
-    public void setTotalPoints(float TotalPoints) {
+    public void setTotalPoints(long TotalPoints) {
         this.TotalPoints = TotalPoints;
     }
 
-    public void setBonusPlayerPoints(float BonusPlayerPoints) {
+    public void setBonusPlayerPoints(long BonusPlayerPoints) {
         this.BonusPlayerPoints = BonusPlayerPoints;
     }
 
@@ -403,19 +403,19 @@ public class PlayerResponseModel {
         this.CanEffectLeft = CanEffectLeft;
     }
 
-    public void setId(float Id) {
+    public void setId(long Id) {
         this.Id = Id;
     }
 
-    public void setTeamId(float TeamId) {
+    public void setTeamId(long TeamId) {
         this.TeamId = TeamId;
     }
 
-    public void setTeamCode(float TeamCode) {
+    public void setTeamCode(long TeamCode) {
         this.TeamCode = TeamCode;
     }
 
-    public void setNumFixtures(float NumFixtures) {
+    public void setNumFixtures(long NumFixtures) {
         this.NumFixtures = NumFixtures;
     }
 
@@ -439,7 +439,7 @@ public class PlayerResponseModel {
         this.ManualSubNotes = ManualSubNotes;
     }
 
-    public void setDisplaySortOrder(float DisplaySortOrder) {
+    public void setDisplaySortOrder(long DisplaySortOrder) {
         this.DisplaySortOrder = DisplaySortOrder;
     }
 
@@ -447,11 +447,11 @@ public class PlayerResponseModel {
         this.KickOffTime = KickOffTime;
     }
 
-    public void setPlayerPosition(float PlayerPosition) {
+    public void setPlayerPosition(long PlayerPosition) {
         this.PlayerPosition = PlayerPosition;
     }
 
-    public void setPlayerMinutes(float PlayerMinutes) {
+    public void setPlayerMinutes(long PlayerMinutes) {
         this.PlayerMinutes = PlayerMinutes;
     }
 
@@ -467,11 +467,11 @@ public class PlayerResponseModel {
         this.FixtureFinishedProvisional = FixtureFinishedProvisional;
     }
 
-    public void setAllFixturesTotalMinutesPlayed(float AllFixturesTotalMinutesPlayed) {
+    public void setAllFixturesTotalMinutesPlayed(long AllFixturesTotalMinutesPlayed) {
         this.AllFixturesTotalMinutesPlayed = AllFixturesTotalMinutesPlayed;
     }
 
-    public void setAllFixturesMinutesLeft(float AllFixturesMinutesLeft) {
+    public void setAllFixturesMinutesLeft(long AllFixturesMinutesLeft) {
         this.AllFixturesMinutesLeft = AllFixturesMinutesLeft;
     }
 
@@ -511,39 +511,39 @@ public class PlayerResponseModel {
         this.OpponentShortName = OpponentShortName;
     }
 
-    public void setFplReportedPoints(float FplReportedPoints) {
+    public void setFplReportedPoints(long FplReportedPoints) {
         this.FplReportedPoints = FplReportedPoints;
     }
 
-    public void setLiveBonusPoints(float LiveBonusPoints) {
+    public void setLiveBonusPoints(long LiveBonusPoints) {
         this.LiveBonusPoints = LiveBonusPoints;
     }
 
-    public void setDifficulty(float Difficulty) {
+    public void setDifficulty(long Difficulty) {
         this.Difficulty = Difficulty;
     }
 
-    public void setChanceOfPlaying(float ChanceOfPlaying) {
+    public void setChanceOfPlaying(long ChanceOfPlaying) {
         this.ChanceOfPlaying = ChanceOfPlaying;
     }
 
-    public void setSelectedByPercent(float SelectedByPercent) {
+    public void setSelectedByPercent(long SelectedByPercent) {
         this.SelectedByPercent = SelectedByPercent;
     }
 
-    public void setCost(float Cost) {
+    public void setCost(long Cost) {
         this.Cost = Cost;
     }
 
-    public void setExpectedPoints(float ExpectedPoints) {
+    public void setExpectedPoints(long ExpectedPoints) {
         this.ExpectedPoints = ExpectedPoints;
     }
 
-    public void setFormCalculated(float FormCalculated) {
+    public void setFormCalculated(long FormCalculated) {
         this.FormCalculated = FormCalculated;
     }
 
-    public void setFormCalculatedTransfers(float FormCalculatedTransfers) {
+    public void setFormCalculatedTransfers(long FormCalculatedTransfers) {
         this.FormCalculatedTransfers = FormCalculatedTransfers;
     }
 
@@ -551,7 +551,7 @@ public class PlayerResponseModel {
         this.PlayerDisplayName = PlayerDisplayName;
     }
 
-    public void setPoints(float Points) {
+    public void setPoints(long Points) {
         this.Points = Points;
     }
 

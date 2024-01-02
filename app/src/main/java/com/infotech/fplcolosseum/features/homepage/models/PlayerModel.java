@@ -6,9 +6,9 @@ public class PlayerModel {
     String teamName;
     int position;
     String imageUrl;
-    float points;
+    long points;
 
-    public PlayerModel(String playerName, String teamName, int position, String imageUrl, float points) {
+    public PlayerModel(String playerName, String teamName, int position, String imageUrl, long points) {
         this.playerName = playerName;
         this.teamName = teamName;
         this.position = position;
@@ -48,11 +48,11 @@ public class PlayerModel {
         this.imageUrl = imageUrl;
     }
 
-    public float getPoints() {
+    public long getPoints() {
         return points;
     }
 
-    public void setPoints(float points) {
+    public void setPoints(long points) {
         this.points = points;
     }
 }

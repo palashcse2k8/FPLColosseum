@@ -3,25 +3,25 @@ package com.infotech.fplcolosseum.features.gameweek.models.web;
 import java.util.ArrayList;
 
 public class GameWeekDataModel {
-    private float Gameweek;
-    private float CurrentGameweek;
+    private long Gameweek;
+    private long CurrentGameweek;
     private String LeagueId;
-    private float LeagueType;
-    private float EntryId;
-    private float FeatureLevel;
-    private float CompareEntryId;
-    private float SpecialLeagueId;
-    private float OverallRankTopLeague;
+    private long LeagueType;
+    private long EntryId;
+    private long FeatureLevel;
+    private long CompareEntryId;
+    private long SpecialLeagueId;
+    private long OverallRankTopLeague;
     private String LeagueName;
     private boolean HaveMoreThan50Teams;
-    private float StartGameweek;
+    private long StartGameweek;
     private boolean LeagueIsNotCached;
-    private float TeamsToCache;
-    private float PagesFetched;
+    private long TeamsToCache;
+    private long PagesFetched;
     private boolean CanFetchMoreTeams;
     private boolean DoKnowAllRankings;
-    private float FilterTo;
-    private float LastLiveFeedEventTimeStamp;
+    private long FilterTo;
+    private long LastLiveFeedEventTimeStamp;
     private String LeagueOverallLivedata = null;
     ArrayList< Object > TeamDatas = new ArrayList < Object > ();
     private String LeagueCountryInfos = null;
@@ -31,8 +31,8 @@ public class GameWeekDataModel {
     private String AllPlayerDataStatsStatsViewExtra = null;
     private String LeagueAvgStatsEntry = null;
     private String LeagueAvgStatsExtra = null;
-    private float CurrentImpact;
-    private float CurrentPlayersProgressVsLeague;
+    private long CurrentImpact;
+    private long CurrentPlayersProgressVsLeague;
     private String SeasonHistoryGameweeks = null;
     ArrayList < Object > GameWeeks = new ArrayList < Object > ();
     private String LogText;
@@ -45,7 +45,7 @@ public class GameWeekDataModel {
     private boolean IsFutureGameweek;
     private boolean IsCurrentGameweek;
     private boolean IsNextGameweek;
-    private float FailedType;
+    private long FailedType;
     private String ServerStatus;
     private String OverallStatsStatus = null;
     private String ErrorMessage = null;
@@ -54,11 +54,11 @@ public class GameWeekDataModel {
 
     // Getter Methods
 
-    public float getGameweek() {
+    public long getGameweek() {
         return Gameweek;
     }
 
-    public float getCurrentGameweek() {
+    public long getCurrentGameweek() {
         return CurrentGameweek;
     }
 
@@ -66,27 +66,27 @@ public class GameWeekDataModel {
         return LeagueId;
     }
 
-    public float getLeagueType() {
+    public long getLeagueType() {
         return LeagueType;
     }
 
-    public float getEntryId() {
+    public long getEntryId() {
         return EntryId;
     }
 
-    public float getFeatureLevel() {
+    public long getFeatureLevel() {
         return FeatureLevel;
     }
 
-    public float getCompareEntryId() {
+    public long getCompareEntryId() {
         return CompareEntryId;
     }
 
-    public float getSpecialLeagueId() {
+    public long getSpecialLeagueId() {
         return SpecialLeagueId;
     }
 
-    public float getOverallRankTopLeague() {
+    public long getOverallRankTopLeague() {
         return OverallRankTopLeague;
     }
 
@@ -98,7 +98,7 @@ public class GameWeekDataModel {
         return HaveMoreThan50Teams;
     }
 
-    public float getStartGameweek() {
+    public long getStartGameweek() {
         return StartGameweek;
     }
 
@@ -106,11 +106,11 @@ public class GameWeekDataModel {
         return LeagueIsNotCached;
     }
 
-    public float getTeamsToCache() {
+    public long getTeamsToCache() {
         return TeamsToCache;
     }
 
-    public float getPagesFetched() {
+    public long getPagesFetched() {
         return PagesFetched;
     }
 
@@ -122,11 +122,11 @@ public class GameWeekDataModel {
         return DoKnowAllRankings;
     }
 
-    public float getFilterTo() {
+    public long getFilterTo() {
         return FilterTo;
     }
 
-    public float getLastLiveFeedEventTimeStamp() {
+    public long getLastLiveFeedEventTimeStamp() {
         return LastLiveFeedEventTimeStamp;
     }
 
@@ -150,11 +150,11 @@ public class GameWeekDataModel {
         return LeagueAvgStatsExtra;
     }
 
-    public float getCurrentImpact() {
+    public long getCurrentImpact() {
         return CurrentImpact;
     }
 
-    public float getCurrentPlayersProgressVsLeague() {
+    public long getCurrentPlayersProgressVsLeague() {
         return CurrentPlayersProgressVsLeague;
     }
 
@@ -202,7 +202,7 @@ public class GameWeekDataModel {
         return IsNextGameweek;
     }
 
-    public float getFailedType() {
+    public long getFailedType() {
         return FailedType;
     }
 
@@ -224,11 +224,11 @@ public class GameWeekDataModel {
 
     // Setter Methods
 
-    public void setGameweek(float Gameweek) {
+    public void setGameweek(long Gameweek) {
         this.Gameweek = Gameweek;
     }
 
-    public void setCurrentGameweek(float CurrentGameweek) {
+    public void setCurrentGameweek(long CurrentGameweek) {
         this.CurrentGameweek = CurrentGameweek;
     }
 
@@ -236,27 +236,27 @@ public class GameWeekDataModel {
         this.LeagueId = LeagueId;
     }
 
-    public void setLeagueType(float LeagueType) {
+    public void setLeagueType(long LeagueType) {
         this.LeagueType = LeagueType;
     }
 
-    public void setEntryId(float EntryId) {
+    public void setEntryId(long EntryId) {
         this.EntryId = EntryId;
     }
 
-    public void setFeatureLevel(float FeatureLevel) {
+    public void setFeatureLevel(long FeatureLevel) {
         this.FeatureLevel = FeatureLevel;
     }
 
-    public void setCompareEntryId(float CompareEntryId) {
+    public void setCompareEntryId(long CompareEntryId) {
         this.CompareEntryId = CompareEntryId;
     }
 
-    public void setSpecialLeagueId(float SpecialLeagueId) {
+    public void setSpecialLeagueId(long SpecialLeagueId) {
         this.SpecialLeagueId = SpecialLeagueId;
     }
 
-    public void setOverallRankTopLeague(float OverallRankTopLeague) {
+    public void setOverallRankTopLeague(long OverallRankTopLeague) {
         this.OverallRankTopLeague = OverallRankTopLeague;
     }
 
@@ -268,7 +268,7 @@ public class GameWeekDataModel {
         this.HaveMoreThan50Teams = HaveMoreThan50Teams;
     }
 
-    public void setStartGameweek(float StartGameweek) {
+    public void setStartGameweek(long StartGameweek) {
         this.StartGameweek = StartGameweek;
     }
 
@@ -276,11 +276,11 @@ public class GameWeekDataModel {
         this.LeagueIsNotCached = LeagueIsNotCached;
     }
 
-    public void setTeamsToCache(float TeamsToCache) {
+    public void setTeamsToCache(long TeamsToCache) {
         this.TeamsToCache = TeamsToCache;
     }
 
-    public void setPagesFetched(float PagesFetched) {
+    public void setPagesFetched(long PagesFetched) {
         this.PagesFetched = PagesFetched;
     }
 
@@ -292,11 +292,11 @@ public class GameWeekDataModel {
         this.DoKnowAllRankings = DoKnowAllRankings;
     }
 
-    public void setFilterTo(float FilterTo) {
+    public void setFilterTo(long FilterTo) {
         this.FilterTo = FilterTo;
     }
 
-    public void setLastLiveFeedEventTimeStamp(float LastLiveFeedEventTimeStamp) {
+    public void setLastLiveFeedEventTimeStamp(long LastLiveFeedEventTimeStamp) {
         this.LastLiveFeedEventTimeStamp = LastLiveFeedEventTimeStamp;
     }
 
@@ -320,11 +320,11 @@ public class GameWeekDataModel {
         this.LeagueAvgStatsExtra = LeagueAvgStatsExtra;
     }
 
-    public void setCurrentImpact(float CurrentImpact) {
+    public void setCurrentImpact(long CurrentImpact) {
         this.CurrentImpact = CurrentImpact;
     }
 
-    public void setCurrentPlayersProgressVsLeague(float CurrentPlayersProgressVsLeague) {
+    public void setCurrentPlayersProgressVsLeague(long CurrentPlayersProgressVsLeague) {
         this.CurrentPlayersProgressVsLeague = CurrentPlayersProgressVsLeague;
     }
 
@@ -372,7 +372,7 @@ public class GameWeekDataModel {
         this.IsNextGameweek = IsNextGameweek;
     }
 
-    public void setFailedType(float FailedType) {
+    public void setFailedType(long FailedType) {
         this.FailedType = FailedType;
     }
 

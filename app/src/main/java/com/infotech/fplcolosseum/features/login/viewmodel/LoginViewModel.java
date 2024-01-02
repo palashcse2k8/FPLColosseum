@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.infotech.fplcolosseum.data.repositories.LoginRepository;
+import com.infotech.fplcolosseum.data.repositories.UserGameWeekDataRepository;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
@@ -23,13 +23,13 @@ public class LoginViewModel extends AndroidViewModel {
 
     private final MediatorLiveData<ApiResponse<?>> apiResultLiveData;
 
-    LoginRepository loginRepository;
+    UserGameWeekDataRepository userGameWeekDataRepository;
 
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
-        this.loginRepository = new LoginRepository(application);
+        this.userGameWeekDataRepository = new UserGameWeekDataRepository(application);
         apiResultLiveData = new MediatorLiveData<>();
     }
 
@@ -57,7 +57,7 @@ public class LoginViewModel extends AndroidViewModel {
 
         dataLoading.setValue(true);
         // Make API call through the repository
-        apiResultLiveData.addSource(loginRepository.userLogIn(userName.getValue(), password.getValue(), UserResponseModel.class), userResponseModelApiResponse -> {
+        apiResultLiveData.addSource(userGameWeekDataRepository.userLogIn(userName.getValue(), password.getValue(), UserResponseModel.class), userResponseModelApiResponse -> {
             dataLoading.setValue(false);
             apiResultLiveData.setValue(userResponseModelApiResponse);
         });

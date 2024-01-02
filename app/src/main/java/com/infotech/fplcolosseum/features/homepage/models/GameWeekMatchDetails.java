@@ -17,33 +17,33 @@ public class GameWeekMatchDetails {
 }
 
 class MatchDetails {
-    private float code;
-    private float event;
+    private long code;
+    private long event;
     private boolean finished;
     private boolean finished_provisional;
-    private float id;
+    private long id;
     private String kickoff_time;
-    private float minutes;
+    private long minutes;
     private boolean provisional_start_time;
     private boolean started;
-    private float team_a;
-    private float team_a_score;
-    private float team_h;
-    private float team_h_score;
+    private long team_a;
+    private long team_a_score;
+    private long team_h;
+    private long team_h_score;
     @SerializedName("stats")
     ArrayList < MatchStats > stats = new ArrayList < > ();
-    private float team_h_difficulty;
-    private float team_a_difficulty;
-    private float pulse_id;
+    private long team_h_difficulty;
+    private long team_a_difficulty;
+    private long pulse_id;
 
 
     // Getter Methods
 
-    public float getCode() {
+    public long getCode() {
         return code;
     }
 
-    public float getEvent() {
+    public long getEvent() {
         return event;
     }
 
@@ -55,7 +55,7 @@ class MatchDetails {
         return finished_provisional;
     }
 
-    public float getId() {
+    public long getId() {
         return id;
     }
 
@@ -63,7 +63,7 @@ class MatchDetails {
         return kickoff_time;
     }
 
-    public float getMinutes() {
+    public long getMinutes() {
         return minutes;
     }
 
@@ -75,41 +75,41 @@ class MatchDetails {
         return started;
     }
 
-    public float getTeam_a() {
+    public long getTeam_a() {
         return team_a;
     }
 
-    public float getTeam_a_score() {
+    public long getTeam_a_score() {
         return team_a_score;
     }
 
-    public float getTeam_h() {
+    public long getTeam_h() {
         return team_h;
     }
 
-    public float getTeam_h_score() {
+    public long getTeam_h_score() {
         return team_h_score;
     }
 
-    public float getTeam_h_difficulty() {
+    public long getTeam_h_difficulty() {
         return team_h_difficulty;
     }
 
-    public float getTeam_a_difficulty() {
+    public long getTeam_a_difficulty() {
         return team_a_difficulty;
     }
 
-    public float getPulse_id() {
+    public long getPulse_id() {
         return pulse_id;
     }
 
     // Setter Methods
 
-    public void setCode(float code) {
+    public void setCode(long code) {
         this.code = code;
     }
 
-    public void setEvent(float event) {
+    public void setEvent(long event) {
         this.event = event;
     }
 
@@ -121,7 +121,7 @@ class MatchDetails {
         this.finished_provisional = finished_provisional;
     }
 
-    public void setId(float id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -129,7 +129,7 @@ class MatchDetails {
         this.kickoff_time = kickoff_time;
     }
 
-    public void setMinutes(float minutes) {
+    public void setMinutes(long minutes) {
         this.minutes = minutes;
     }
 
@@ -141,31 +141,31 @@ class MatchDetails {
         this.started = started;
     }
 
-    public void setTeam_a(float team_a) {
+    public void setTeam_a(long team_a) {
         this.team_a = team_a;
     }
 
-    public void setTeam_a_score(float team_a_score) {
+    public void setTeam_a_score(long team_a_score) {
         this.team_a_score = team_a_score;
     }
 
-    public void setTeam_h(float team_h) {
+    public void setTeam_h(long team_h) {
         this.team_h = team_h;
     }
 
-    public void setTeam_h_score(float team_h_score) {
+    public void setTeam_h_score(long team_h_score) {
         this.team_h_score = team_h_score;
     }
 
-    public void setTeam_h_difficulty(float team_h_difficulty) {
+    public void setTeam_h_difficulty(long team_h_difficulty) {
         this.team_h_difficulty = team_h_difficulty;
     }
 
-    public void setTeam_a_difficulty(float team_a_difficulty) {
+    public void setTeam_a_difficulty(long team_a_difficulty) {
         this.team_a_difficulty = team_a_difficulty;
     }
 
-    public void setPulse_id(float pulse_id) {
+    public void setPulse_id(long pulse_id) {
         this.pulse_id = pulse_id;
     }
 }
@@ -192,27 +192,27 @@ class MatchStats {
 }
 
 class MatchElement {
-    private float value;
-    private float element;
+    private long value;
+    private long element;
 
 
     // Getter Methods
 
-    public float getValue() {
+    public long getValue() {
         return value;
     }
 
-    public float getElement() {
+    public long getElement() {
         return element;
     }
 
     // Setter Methods
 
-    public void setValue(float value) {
+    public void setValue(long value) {
         this.value = value;
     }
 
-    public void setElement(float element) {
+    public void setElement(long element) {
         this.element = element;
     }
 }

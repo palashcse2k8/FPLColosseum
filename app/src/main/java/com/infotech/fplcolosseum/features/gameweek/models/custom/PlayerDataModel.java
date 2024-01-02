@@ -3,17 +3,17 @@ package com.infotech.fplcolosseum.features.gameweek.models.custom;
 import androidx.annotation.NonNull;
 
 public class PlayerDataModel {
-    private float GameWeek;
+    private long GameWeek;
     private boolean IsCaptain;
     private boolean IsViceCaptain;
-    private float PlayerID;
-    private float FixtureID;
+    private long PlayerID;
+    private long FixtureID;
 
-    public float getFixtureID() {
+    public long getFixtureID() {
         return FixtureID;
     }
 
-    public void setFixtureID(float fixtureID) {
+    public void setFixtureID(long fixtureID) {
         FixtureID = fixtureID;
     }
 
@@ -29,23 +29,23 @@ public class PlayerDataModel {
         PlayerPositionName = playerPositionName;
     }
 
-    private float Points;
-    private float GoalScored;
-    private float GoalConceded;
-    private float BonusPoints;
-    private float BPSPoints;
+    private long Points;
+    private long GoalScored;
+    private long GoalConceded;
+    private long BonusPoints;
+    private long BPSPoints;
 
-    private float Multiplier;
+    private long Multiplier;
 
     private boolean IsSub;
     private boolean IsSubIn;
     private boolean IsSubOut;
 
-    public float getMultiplier() {
+    public long getMultiplier() {
         return Multiplier;
     }
 
-    public void setMultiplier(float multiplier) {
+    public void setMultiplier(long multiplier) {
         Multiplier = multiplier;
     }
 
@@ -89,19 +89,19 @@ public class PlayerDataModel {
         IsViceCaptain = viceCaptain;
     }
 
-    public float getPlayerID() {
+    public long getPlayerID() {
         return PlayerID;
     }
 
-    public void setPlayerID(float playerID) {
+    public void setPlayerID(long playerID) {
         PlayerID = playerID;
     }
 
-    public float getGameWeek() {
+    public long getGameWeek() {
         return GameWeek;
     }
 
-    public void setGameWeek(float gameWeek) {
+    public void setGameWeek(long gameWeek) {
         GameWeek = gameWeek;
     }
 
@@ -121,43 +121,43 @@ public class PlayerDataModel {
         TeamName = teamName;
     }
 
-    public float getPoints() {
+    public long getPoints() {
         return Points;
     }
 
-    public void setPoints(float points) {
+    public void setPoints(long points) {
         Points = points;
     }
 
-    public float getGoalScored() {
+    public long getGoalScored() {
         return GoalScored;
     }
 
-    public void setGoalScored(float goalScored) {
+    public void setGoalScored(long goalScored) {
         GoalScored = goalScored;
     }
 
-    public float getGoalConceded() {
+    public long getGoalConceded() {
         return GoalConceded;
     }
 
-    public void setGoalConceded(float goalConceded) {
+    public void setGoalConceded(long goalConceded) {
         GoalConceded = goalConceded;
     }
 
-    public float getBonusPoints() {
+    public long getBonusPoints() {
         return BonusPoints;
     }
 
-    public void setBonusPoints(float bonusPoints) {
+    public void setBonusPoints(long bonusPoints) {
         BonusPoints = bonusPoints;
     }
 
-    public float getBPSPoints() {
+    public long getBPSPoints() {
         return BPSPoints;
     }
 
-    public void setBPSPoints(float BPSPoints) {
+    public void setBPSPoints(long BPSPoints) {
         this.BPSPoints = BPSPoints;
     }
 

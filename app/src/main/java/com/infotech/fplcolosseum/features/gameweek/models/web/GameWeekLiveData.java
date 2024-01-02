@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class GameWeekLiveData {
-    private float TransferCost;
-    private float PastSeasonOverallRank;
-    private float PastSeasonOverallPoints;
-    private float Transfers;
+    private long TransferCost;
+    private long PastSeasonOverallRank;
+    private long PastSeasonOverallPoints;
+    private long Transfers;
 //    ArrayList<Object> Players = new ArrayList<Object>();
     @SerializedName("Players")
     ArrayList<PlayerResponseModel> Players;
@@ -22,7 +22,7 @@ public class GameWeekLiveData {
     }
 
     private String ActiveChip;
-    private float Gameweek;
+    private long Gameweek;
     private String CaptainWebName;
     private String ViceCaptainWebName;
     private String BonusPlayerWebName;
@@ -37,45 +37,45 @@ public class GameWeekLiveData {
     private boolean BonusIsDonePlaying;
     private boolean BonusIsPlaying;
     private boolean BonusIsLeft;
-    private float LivePointsTotal;
-    private float BonusPlayerPoints;
-    private float LivePointsTotalIncTransferCost;
-    private float TotalFinishedPoints;
-    private float TotalFinishedBonusPlayerPoints;
-    private float TotalPlayers;
-    private float PlayersDonePlaying;
-    private float PlayersIsPlaying;
-    private float PlayersLeft;
-    private float EffectivePlayersLeft;
-    private float EffectivePlayersLeftWithMultiplier;
-    private float SeasonBasePointsUntilGameWeek;
-    private float SeasonBasePointsUntilGameWeekOverall;
-    private float PhaseBasePointsUntilGameWeek;
-    private float SeasonTotalPoints;
-    private float PhaseTotalPoints;
+    private long LivePointsTotal;
+    private long BonusPlayerPoints;
+    private long LivePointsTotalIncTransferCost;
+    private long TotalFinishedPoints;
+    private long TotalFinishedBonusPlayerPoints;
+    private long TotalPlayers;
+    private long PlayersDonePlaying;
+    private long PlayersIsPlaying;
+    private long PlayersLeft;
+    private long EffectivePlayersLeft;
+    private long EffectivePlayersLeftWithMultiplier;
+    private long SeasonBasePointsUntilGameWeek;
+    private long SeasonBasePointsUntilGameWeekOverall;
+    private long PhaseBasePointsUntilGameWeek;
+    private long SeasonTotalPoints;
+    private long PhaseTotalPoints;
     private String GwNetPointsOverallRank = null;
     private String OverallRank = null;
     private String OverallRankDirection = null;
-    private float ImpactSummary;
+    private long ImpactSummary;
     private String OverallRankAfterFinished;
     private String GameweekRankAfterFinished;
 
 
     // Getter Methods
 
-    public float getTransferCost() {
+    public long getTransferCost() {
         return TransferCost;
     }
 
-    public float getPastSeasonOverallRank() {
+    public long getPastSeasonOverallRank() {
         return PastSeasonOverallRank;
     }
 
-    public float getPastSeasonOverallPoints() {
+    public long getPastSeasonOverallPoints() {
         return PastSeasonOverallPoints;
     }
 
-    public float getTransfers() {
+    public long getTransfers() {
         return Transfers;
     }
 
@@ -83,7 +83,7 @@ public class GameWeekLiveData {
         return ActiveChip;
     }
 
-    public float getGameweek() {
+    public long getGameweek() {
         return Gameweek;
     }
 
@@ -143,67 +143,67 @@ public class GameWeekLiveData {
         return BonusIsLeft;
     }
 
-    public float getLivePointsTotal() {
+    public long getLivePointsTotal() {
         return LivePointsTotal;
     }
 
-    public float getBonusPlayerPoints() {
+    public long getBonusPlayerPoints() {
         return BonusPlayerPoints;
     }
 
-    public float getLivePointsTotalIncTransferCost() {
+    public long getLivePointsTotalIncTransferCost() {
         return LivePointsTotalIncTransferCost;
     }
 
-    public float getTotalFinishedPoints() {
+    public long getTotalFinishedPoints() {
         return TotalFinishedPoints;
     }
 
-    public float getTotalFinishedBonusPlayerPoints() {
+    public long getTotalFinishedBonusPlayerPoints() {
         return TotalFinishedBonusPlayerPoints;
     }
 
-    public float getTotalPlayers() {
+    public long getTotalPlayers() {
         return TotalPlayers;
     }
 
-    public float getPlayersDonePlaying() {
+    public long getPlayersDonePlaying() {
         return PlayersDonePlaying;
     }
 
-    public float getPlayersIsPlaying() {
+    public long getPlayersIsPlaying() {
         return PlayersIsPlaying;
     }
 
-    public float getPlayersLeft() {
+    public long getPlayersLeft() {
         return PlayersLeft;
     }
 
-    public float getEffectivePlayersLeft() {
+    public long getEffectivePlayersLeft() {
         return EffectivePlayersLeft;
     }
 
-    public float getEffectivePlayersLeftWithMultiplier() {
+    public long getEffectivePlayersLeftWithMultiplier() {
         return EffectivePlayersLeftWithMultiplier;
     }
 
-    public float getSeasonBasePointsUntilGameWeek() {
+    public long getSeasonBasePointsUntilGameWeek() {
         return SeasonBasePointsUntilGameWeek;
     }
 
-    public float getSeasonBasePointsUntilGameWeekOverall() {
+    public long getSeasonBasePointsUntilGameWeekOverall() {
         return SeasonBasePointsUntilGameWeekOverall;
     }
 
-    public float getPhaseBasePointsUntilGameWeek() {
+    public long getPhaseBasePointsUntilGameWeek() {
         return PhaseBasePointsUntilGameWeek;
     }
 
-    public float getSeasonTotalPoints() {
+    public long getSeasonTotalPoints() {
         return SeasonTotalPoints;
     }
 
-    public float getPhaseTotalPoints() {
+    public long getPhaseTotalPoints() {
         return PhaseTotalPoints;
     }
 
@@ -219,7 +219,7 @@ public class GameWeekLiveData {
         return OverallRankDirection;
     }
 
-    public float getImpactSummary() {
+    public long getImpactSummary() {
         return ImpactSummary;
     }
 
@@ -233,19 +233,19 @@ public class GameWeekLiveData {
 
     // Setter Methods
 
-    public void setTransferCost(float TransferCost) {
+    public void setTransferCost(long TransferCost) {
         this.TransferCost = TransferCost;
     }
 
-    public void setPastSeasonOverallRank(float PastSeasonOverallRank) {
+    public void setPastSeasonOverallRank(long PastSeasonOverallRank) {
         this.PastSeasonOverallRank = PastSeasonOverallRank;
     }
 
-    public void setPastSeasonOverallPoints(float PastSeasonOverallPoints) {
+    public void setPastSeasonOverallPoints(long PastSeasonOverallPoints) {
         this.PastSeasonOverallPoints = PastSeasonOverallPoints;
     }
 
-    public void setTransfers(float Transfers) {
+    public void setTransfers(long Transfers) {
         this.Transfers = Transfers;
     }
 
@@ -253,7 +253,7 @@ public class GameWeekLiveData {
         this.ActiveChip = ActiveChip;
     }
 
-    public void setGameweek(float Gameweek) {
+    public void setGameweek(long Gameweek) {
         this.Gameweek = Gameweek;
     }
 
@@ -313,67 +313,67 @@ public class GameWeekLiveData {
         this.BonusIsLeft = BonusIsLeft;
     }
 
-    public void setLivePointsTotal(float LivePointsTotal) {
+    public void setLivePointsTotal(long LivePointsTotal) {
         this.LivePointsTotal = LivePointsTotal;
     }
 
-    public void setBonusPlayerPoints(float BonusPlayerPoints) {
+    public void setBonusPlayerPoints(long BonusPlayerPoints) {
         this.BonusPlayerPoints = BonusPlayerPoints;
     }
 
-    public void setLivePointsTotalIncTransferCost(float LivePointsTotalIncTransferCost) {
+    public void setLivePointsTotalIncTransferCost(long LivePointsTotalIncTransferCost) {
         this.LivePointsTotalIncTransferCost = LivePointsTotalIncTransferCost;
     }
 
-    public void setTotalFinishedPoints(float TotalFinishedPoints) {
+    public void setTotalFinishedPoints(long TotalFinishedPoints) {
         this.TotalFinishedPoints = TotalFinishedPoints;
     }
 
-    public void setTotalFinishedBonusPlayerPoints(float TotalFinishedBonusPlayerPoints) {
+    public void setTotalFinishedBonusPlayerPoints(long TotalFinishedBonusPlayerPoints) {
         this.TotalFinishedBonusPlayerPoints = TotalFinishedBonusPlayerPoints;
     }
 
-    public void setTotalPlayers(float TotalPlayers) {
+    public void setTotalPlayers(long TotalPlayers) {
         this.TotalPlayers = TotalPlayers;
     }
 
-    public void setPlayersDonePlaying(float PlayersDonePlaying) {
+    public void setPlayersDonePlaying(long PlayersDonePlaying) {
         this.PlayersDonePlaying = PlayersDonePlaying;
     }
 
-    public void setPlayersIsPlaying(float PlayersIsPlaying) {
+    public void setPlayersIsPlaying(long PlayersIsPlaying) {
         this.PlayersIsPlaying = PlayersIsPlaying;
     }
 
-    public void setPlayersLeft(float PlayersLeft) {
+    public void setPlayersLeft(long PlayersLeft) {
         this.PlayersLeft = PlayersLeft;
     }
 
-    public void setEffectivePlayersLeft(float EffectivePlayersLeft) {
+    public void setEffectivePlayersLeft(long EffectivePlayersLeft) {
         this.EffectivePlayersLeft = EffectivePlayersLeft;
     }
 
-    public void setEffectivePlayersLeftWithMultiplier(float EffectivePlayersLeftWithMultiplier) {
+    public void setEffectivePlayersLeftWithMultiplier(long EffectivePlayersLeftWithMultiplier) {
         this.EffectivePlayersLeftWithMultiplier = EffectivePlayersLeftWithMultiplier;
     }
 
-    public void setSeasonBasePointsUntilGameWeek(float SeasonBasePointsUntilGameWeek) {
+    public void setSeasonBasePointsUntilGameWeek(long SeasonBasePointsUntilGameWeek) {
         this.SeasonBasePointsUntilGameWeek = SeasonBasePointsUntilGameWeek;
     }
 
-    public void setSeasonBasePointsUntilGameWeekOverall(float SeasonBasePointsUntilGameWeekOverall) {
+    public void setSeasonBasePointsUntilGameWeekOverall(long SeasonBasePointsUntilGameWeekOverall) {
         this.SeasonBasePointsUntilGameWeekOverall = SeasonBasePointsUntilGameWeekOverall;
     }
 
-    public void setPhaseBasePointsUntilGameWeek(float PhaseBasePointsUntilGameWeek) {
+    public void setPhaseBasePointsUntilGameWeek(long PhaseBasePointsUntilGameWeek) {
         this.PhaseBasePointsUntilGameWeek = PhaseBasePointsUntilGameWeek;
     }
 
-    public void setSeasonTotalPoints(float SeasonTotalPoints) {
+    public void setSeasonTotalPoints(long SeasonTotalPoints) {
         this.SeasonTotalPoints = SeasonTotalPoints;
     }
 
-    public void setPhaseTotalPoints(float PhaseTotalPoints) {
+    public void setPhaseTotalPoints(long PhaseTotalPoints) {
         this.PhaseTotalPoints = PhaseTotalPoints;
     }
 
@@ -389,7 +389,7 @@ public class GameWeekLiveData {
         this.OverallRankDirection = OverallRankDirection;
     }
 
-    public void setImpactSummary(float ImpactSummary) {
+    public void setImpactSummary(long ImpactSummary) {
         this.ImpactSummary = ImpactSummary;
     }
 

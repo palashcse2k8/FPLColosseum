@@ -6,31 +6,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ManagerModel {
-    private float Id;
+    private long Id;
     private String ManagerName;
     private String TeamName;
-    private float GameWeek;
+    private long GameWeek;
     List<PlayerDataModel> PlayersXI = new ArrayList<>();
     @TypeConverters(PlayerDataModel.class)
     List<PlayerDataModel> PlayersAll = new ArrayList<>();
     private String CaptainName;
-    private float CaptainGameWeekPoints;
+    private long CaptainGameWeekPoints;
     private String ViceCaptainName;
-    private float ViceCaptainGameWeekPoints;
-    private float GameWeekPoints;
-    private float GameWeekPointsWithoutTransferCost;
-    private float GameWeekBonusPointsXI;
-    private float GameWeekBenchPoints;
-    private float GameWeekBPSPointsXI;
-    private float SeasonTotalPoints;
-    private float GoalConceded;
-    private float GoalScored;
+    private long ViceCaptainGameWeekPoints;
+    private long GameWeekPoints;
+    private long GameWeekPointsWithoutTransferCost;
+    private long GameWeekBonusPointsXI;
+    private long GameWeekBenchPoints;
+    private long GameWeekBPSPointsXI;
+    private long SeasonTotalPoints;
+    private long GoalConceded;
+    private long GoalScored;
 
-    public float getId() {
+    public long getId() {
         return Id;
     }
 
-    public void setId(float id) {
+    public void setId(long id) {
         Id = id;
     }
 
@@ -50,11 +50,11 @@ public class ManagerModel {
         TeamName = teamName;
     }
 
-    public float getGameWeek() {
+    public long getGameWeek() {
         return GameWeek;
     }
 
-    public void setGameWeek(float gameWeek) {
+    public void setGameWeek(long gameWeek) {
         GameWeek = gameWeek;
     }
 
@@ -82,11 +82,11 @@ public class ManagerModel {
         CaptainName = captainName;
     }
 
-    public float getCaptainGameWeekPoints() {
+    public long getCaptainGameWeekPoints() {
         return CaptainGameWeekPoints;
     }
 
-    public void setCaptainGameWeekPoints(float captainGameWeekPoints) {
+    public void setCaptainGameWeekPoints(long captainGameWeekPoints) {
         CaptainGameWeekPoints = captainGameWeekPoints;
     }
 
@@ -98,75 +98,75 @@ public class ManagerModel {
         ViceCaptainName = viceCaptainName;
     }
 
-    public float getViceCaptainGameWeekPoints() {
+    public long getViceCaptainGameWeekPoints() {
         return ViceCaptainGameWeekPoints;
     }
 
-    public void setViceCaptainGameWeekPoints(float viceCaptainGameWeekPoints) {
+    public void setViceCaptainGameWeekPoints(long viceCaptainGameWeekPoints) {
         ViceCaptainGameWeekPoints = viceCaptainGameWeekPoints;
     }
 
-    public float getGameWeekPoints() {
+    public long getGameWeekPoints() {
         return GameWeekPoints;
     }
 
-    public void setGameWeekPoints(float gameWeekPoints) {
+    public void setGameWeekPoints(long gameWeekPoints) {
         GameWeekPoints = gameWeekPoints;
     }
 
-    public float getGameWeekPointsWithoutTransferCost() {
+    public long getGameWeekPointsWithoutTransferCost() {
         return GameWeekPointsWithoutTransferCost;
     }
 
-    public void setGameWeekPointsWithoutTransferCost(float gameWeekPointsWithoutTransferCost) {
+    public void setGameWeekPointsWithoutTransferCost(long gameWeekPointsWithoutTransferCost) {
         GameWeekPointsWithoutTransferCost = gameWeekPointsWithoutTransferCost;
     }
 
-    public float getGameWeekBonusPointsXI() {
+    public long getGameWeekBonusPointsXI() {
         return GameWeekBonusPointsXI;
     }
 
-    public void setGameWeekBonusPointsXI(float gameWeekBonusPointsXI) {
+    public void setGameWeekBonusPointsXI(long gameWeekBonusPointsXI) {
         GameWeekBonusPointsXI = gameWeekBonusPointsXI;
     }
 
-    public float getGameWeekBenchPoints() {
+    public long getGameWeekBenchPoints() {
         return GameWeekBenchPoints;
     }
 
-    public void setGameWeekBenchPoints(float gameWeekBenchPoints) {
+    public void setGameWeekBenchPoints(long gameWeekBenchPoints) {
         GameWeekBenchPoints = gameWeekBenchPoints;
     }
 
-    public float getGameWeekBPSPointsXI() {
+    public long getGameWeekBPSPointsXI() {
         return GameWeekBPSPointsXI;
     }
 
-    public void setGameWeekBPSPointsXI(float gameWeekBPSPointsXI) {
+    public void setGameWeekBPSPointsXI(long gameWeekBPSPointsXI) {
         GameWeekBPSPointsXI = gameWeekBPSPointsXI;
     }
 
-    public float getSeasonTotalPoints() {
+    public long getSeasonTotalPoints() {
         return SeasonTotalPoints;
     }
 
-    public void setSeasonTotalPoints(float seasonTotalPoints) {
+    public void setSeasonTotalPoints(long seasonTotalPoints) {
         SeasonTotalPoints = seasonTotalPoints;
     }
 
-    public float getGoalConceded() {
+    public long getGoalConceded() {
         return GoalConceded;
     }
 
-    public void setGoalConceded(float goalConceded) {
+    public void setGoalConceded(long goalConceded) {
         GoalConceded = goalConceded;
     }
 
-    public float getGoalScored() {
+    public long getGoalScored() {
         return GoalScored;
     }
 
-    public void setGoalScored(float goalScored) {
+    public void setGoalScored(long goalScored) {
         GoalScored = goalScored;
     }
 }
