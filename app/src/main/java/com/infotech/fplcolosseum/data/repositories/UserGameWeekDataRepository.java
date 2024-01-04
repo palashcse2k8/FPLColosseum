@@ -52,12 +52,6 @@ public class UserGameWeekDataRepository {
                     return;
                 }
 
-                if (sessionManager.getSessionID() != null) {
-//                    userProfileLiveData.postValue(ApiResponse.error("Session ID Not Found!", null));
-//                    return;
-                    Log.d("SessionID ", sessionManager.getSessionID());
-                }
-
                 Call<ResponseBody> callAPI = apiServices.getManagerProfileData();
 
                 userProfileLiveData.addSource(APIHandler.makeApiCall( callAPI, responseClass), tApiResponse -> {

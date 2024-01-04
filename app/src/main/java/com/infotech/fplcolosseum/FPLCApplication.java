@@ -20,14 +20,14 @@ public class FPLCApplication extends Application {
     private Handler handler;
     private Runnable fetchDataRunnable;
     // Define methods for API calls
-    public LiveData<ApiResponse<GameWeekStaticDataModel>> fetchData() {
-        MutableLiveData<ApiResponse<GameWeekStaticDataModel>> data = new MutableLiveData<>();
-        // Make API call using Retrofit or another HTTP client
-        // Update LiveData with the response
-        GameWeekStaticDataRepository repository = new GameWeekStaticDataRepository(this);
-        data.setValue(repository.getGameWeekStaticData().getValue());
-        return data;
-    }
+//    public LiveData<ApiResponse<GameWeekStaticDataModel>> fetchData() {
+//        MutableLiveData<ApiResponse<GameWeekStaticDataModel>> data = new MutableLiveData<>();
+//        // Make API call using Retrofit or another HTTP client
+//        // Update LiveData with the response
+//        GameWeekStaticDataRepository repository = new GameWeekStaticDataRepository(this);
+//        data.setValue(repository.getGameWeekStaticData().getValue());
+//        return data;
+//    }
     FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
             .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
             .methodCount(0)         // (Optional) How many method line to show. Default 2
@@ -46,10 +46,10 @@ public class FPLCApplication extends Application {
         });
 
         //manual calling
-        fetchData();
-
-        // Initialize handler and runnable
-        handler = new Handler();
+//        fetchData();
+//
+//        // Initialize handler and runnable
+//        handler = new Handler();
 //        fetchDataRunnable = new Runnable() {
 //            @Override
 //            public void run() {

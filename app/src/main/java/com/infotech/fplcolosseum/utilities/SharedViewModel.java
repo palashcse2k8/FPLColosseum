@@ -17,7 +17,7 @@ public class SharedViewModel extends AndroidViewModel {
 
     GameWeekStaticDataRepository dataRepository;
     APIServices apiServices;
-    private MutableLiveData<ApiResponse<GameWeekStaticDataModel>> apiData;
+    private MediatorLiveData<ApiResponse<GameWeekStaticDataModel>> apiData;
 
     public SharedViewModel(@NonNull Application application) {
         super(application);
@@ -25,10 +25,13 @@ public class SharedViewModel extends AndroidViewModel {
         this.apiData = new MediatorLiveData<>();
     }
 
-    public LiveData<ApiResponse<GameWeekStaticDataModel>> getApiData() {
+    public void getGameWeekStaticData() {
+        apiData.addSource(dataRepository.getGameWeekStaticData(), gameWeekStaticDataModelApiResponse -> {
+            apiData.setValue(gameWeekStaticDataModelApiResponse);
+        });
+    }
 
-        apiData.setValue(dataRepository.getGameWeekStaticData().getValue());
-
+    public LiveData<ApiResponse<GameWeekStaticDataModel>> getApiData(){
         return apiData;
     }
 }

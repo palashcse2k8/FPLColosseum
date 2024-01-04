@@ -76,6 +76,9 @@ public class MyCookieStore implements CookieJar {
 //        if(url.toString().contains("login")){
 //            return cookies != null ? cookies : new ArrayList<>(); // set to default
 //        }
+
+
         return cookies != null ? cookies : new ArrayList<>(); // set to default
     }
+
 }

@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         setupActionBar();
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+
         sharedViewModel.getApiData().observe(this, apiResponse -> {
             // Handle API response in the fragment
             if(apiResponse == null) return;
@@ -45,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(Constants.LOG_TAG, "Data Loading Error" );
             }
         });
+
+        if(Constants.playerMap.isEmpty()){
+            sharedViewModel.getGameWeekStaticData();
+        }
 //        Fragment fragment = new GameWeekDashboardFragment();
         Fragment fragment = new LoginFragment();
 //        Fragment fragment = new HomePageFragment();

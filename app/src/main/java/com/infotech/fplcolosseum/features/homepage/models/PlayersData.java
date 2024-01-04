@@ -73,22 +73,22 @@ public class PlayersData {
     private String direct_freekicks_text;
     private String penalties_order = null;
     private String penalties_text;
-    private long expected_goals_per_90;
-    private long saves_per_90;
-    private long expected_assists_per_90;
-    private long expected_goal_involvements_per_90;
-    private long expected_goals_conceded_per_90;
-    private long goals_conceded_per_90;
-    private long now_cost_rank;
-    private long now_cost_rank_type;
-    private long form_rank;
-    private long form_rank_type;
-    private long points_per_game_rank;
-    private long points_per_game_rank_type;
-    private long selected_rank;
-    private long selected_rank_type;
-    private long starts_per_90;
-    private long clean_sheets_per_90;
+    private float expected_goals_per_90;
+    private float saves_per_90;
+    private float expected_assists_per_90;
+    private float expected_goal_involvements_per_90;
+    private float expected_goals_conceded_per_90;
+    private float goals_conceded_per_90;
+    private float now_cost_rank;
+    private float now_cost_rank_type;
+    private float form_rank;
+    private float form_rank_type;
+    private float points_per_game_rank;
+    private float points_per_game_rank_type;
+    private float selected_rank;
+    private float selected_rank_type;
+    private float starts_per_90;
+    private float clean_sheets_per_90;
 
 
     // Getter Methods
@@ -381,67 +381,67 @@ public class PlayersData {
         return penalties_text;
     }
 
-    public long getExpected_goals_per_90() {
+    public float getExpected_goals_per_90() {
         return expected_goals_per_90;
     }
 
-    public long getSaves_per_90() {
+    public float getSaves_per_90() {
         return saves_per_90;
     }
 
-    public long getExpected_assists_per_90() {
+    public float getExpected_assists_per_90() {
         return expected_assists_per_90;
     }
 
-    public long getExpected_goal_involvements_per_90() {
+    public float getExpected_goal_involvements_per_90() {
         return expected_goal_involvements_per_90;
     }
 
-    public long getExpected_goals_conceded_per_90() {
+    public float getExpected_goals_conceded_per_90() {
         return expected_goals_conceded_per_90;
     }
 
-    public long getGoals_conceded_per_90() {
+    public float getGoals_conceded_per_90() {
         return goals_conceded_per_90;
     }
 
-    public long getNow_cost_rank() {
+    public float getNow_cost_rank() {
         return now_cost_rank;
     }
 
-    public long getNow_cost_rank_type() {
+    public float getNow_cost_rank_type() {
         return now_cost_rank_type;
     }
 
-    public long getForm_rank() {
+    public float getForm_rank() {
         return form_rank;
     }
 
-    public long getForm_rank_type() {
+    public float getForm_rank_type() {
         return form_rank_type;
     }
 
-    public long getPoints_per_game_rank() {
+    public float getPoints_per_game_rank() {
         return points_per_game_rank;
     }
 
-    public long getPoints_per_game_rank_type() {
+    public float getPoints_per_game_rank_type() {
         return points_per_game_rank_type;
     }
 
-    public long getSelected_rank() {
+    public float getSelected_rank() {
         return selected_rank;
     }
 
-    public long getSelected_rank_type() {
+    public float getSelected_rank_type() {
         return selected_rank_type;
     }
 
-    public long getStarts_per_90() {
+    public float getStarts_per_90() {
         return starts_per_90;
     }
 
-    public long getClean_sheets_per_90() {
+    public float getClean_sheets_per_90() {
         return clean_sheets_per_90;
     }
 

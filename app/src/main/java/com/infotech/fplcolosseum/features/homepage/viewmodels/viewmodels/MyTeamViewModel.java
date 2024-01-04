@@ -44,8 +44,4 @@ public class MyTeamViewModel extends AndroidViewModel {
             apiResultLiveData.setValue(userResponseModelApiResponse);
         });
     }
-
-
-
-
 }

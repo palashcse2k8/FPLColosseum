@@ -73,60 +73,60 @@ public class GameWeekStaticDataModel {
 }
 
 class Game_settings {
-    private long league_join_private_max;
-    private long league_join_public_max;
-    private long league_max_size_public_classic;
-    private long league_max_size_public_h2h;
-    private long league_max_size_private_h2h;
-    private long league_max_ko_rounds_private_h2h;
+    private float league_join_private_max;
+    private float league_join_public_max;
+    private float league_max_size_public_classic;
+    private float league_max_size_public_h2h;
+    private float league_max_size_private_h2h;
+    private float league_max_ko_rounds_private_h2h;
     private String league_prefix_public;
-    private long league_points_h2h_win;
-    private long league_points_h2h_lose;
-    private long league_points_h2h_draw;
+    private float league_points_h2h_win;
+    private float league_points_h2h_lose;
+    private float league_points_h2h_draw;
     private boolean league_ko_first_instead_of_random;
     private String cup_start_event_id = null;
     private String cup_stop_event_id = null;
     private String cup_qualifying_method = null;
     private String cup_type = null;
     ArrayList<Object> featured_entries = new ArrayList<Object>();
-    private long squad_squadplay;
-    private long squad_squadsize;
-    private long squad_team_limit;
-    private long squad_total_spend;
-    private long ui_currency_multiplier;
+    private float squad_squadplay;
+    private float squad_squadsize;
+    private float squad_team_limit;
+    private float squad_total_spend;
+    private float ui_currency_multiplier;
     private boolean ui_use_special_shirts;
     ArrayList<Object> ui_special_shirt_exclusions = new ArrayList<Object>();
-    private long stats_form_days;
+    private float stats_form_days;
     private boolean sys_vice_captain_enabled;
-    private long transfers_cap;
-    private long transfers_sell_on_fee;
+    private float transfers_cap;
+    private float transfers_sell_on_fee;
     ArrayList<Object> league_h2h_tiebreak_stats = new ArrayList<Object>();
     private String timezone;
 
 
     // Getter Methods
 
-    public long getLeague_join_private_max() {
+    public float getLeague_join_private_max() {
         return league_join_private_max;
     }
 
-    public long getLeague_join_public_max() {
+    public float getLeague_join_public_max() {
         return league_join_public_max;
     }
 
-    public long getLeague_max_size_public_classic() {
+    public float getLeague_max_size_public_classic() {
         return league_max_size_public_classic;
     }
 
-    public long getLeague_max_size_public_h2h() {
+    public float getLeague_max_size_public_h2h() {
         return league_max_size_public_h2h;
     }
 
-    public long getLeague_max_size_private_h2h() {
+    public float getLeague_max_size_private_h2h() {
         return league_max_size_private_h2h;
     }
 
-    public long getLeague_max_ko_rounds_private_h2h() {
+    public float getLeague_max_ko_rounds_private_h2h() {
         return league_max_ko_rounds_private_h2h;
     }
 
@@ -134,15 +134,15 @@ class Game_settings {
         return league_prefix_public;
     }
 
-    public long getLeague_points_h2h_win() {
+    public float getLeague_points_h2h_win() {
         return league_points_h2h_win;
     }
 
-    public long getLeague_points_h2h_lose() {
+    public float getLeague_points_h2h_lose() {
         return league_points_h2h_lose;
     }
 
-    public long getLeague_points_h2h_draw() {
+    public float getLeague_points_h2h_draw() {
         return league_points_h2h_draw;
     }
 
@@ -166,23 +166,23 @@ class Game_settings {
         return cup_type;
     }
 
-    public long getSquad_squadplay() {
+    public float getSquad_squadplay() {
         return squad_squadplay;
     }
 
-    public long getSquad_squadsize() {
+    public float getSquad_squadsize() {
         return squad_squadsize;
     }
 
-    public long getSquad_team_limit() {
+    public float getSquad_team_limit() {
         return squad_team_limit;
     }
 
-    public long getSquad_total_spend() {
+    public float getSquad_total_spend() {
         return squad_total_spend;
     }
 
-    public long getUi_currency_multiplier() {
+    public float getUi_currency_multiplier() {
         return ui_currency_multiplier;
     }
 
@@ -190,7 +190,7 @@ class Game_settings {
         return ui_use_special_shirts;
     }
 
-    public long getStats_form_days() {
+    public float getStats_form_days() {
         return stats_form_days;
     }
 
@@ -198,11 +198,11 @@ class Game_settings {
         return sys_vice_captain_enabled;
     }
 
-    public long getTransfers_cap() {
+    public float getTransfers_cap() {
         return transfers_cap;
     }
 
-    public long getTransfers_sell_on_fee() {
+    public float getTransfers_sell_on_fee() {
         return transfers_sell_on_fee;
     }
 

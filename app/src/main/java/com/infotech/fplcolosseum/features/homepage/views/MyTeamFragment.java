@@ -17,10 +17,13 @@ import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.homepage.models.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicks;
 import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicksModel;
+import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class MyTeamFragment extends Fragment{
@@ -70,16 +73,35 @@ public class MyTeamFragment extends Fragment{
 
     private void addPlayers(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel myTeam) {
 
-        ArrayList<GameWeekPicks> teamPlayers = myTeam.getPicks();
+        Map<Long, PlayersData> teamPlayers = new HashMap<>();
 
-        for(GameWeekPicks gameWeekPicks : teamPlayers) {
-            Constants.playerMap.get(gameWeekPicks.getElement());
+
+        for(GameWeekPicks gameWeekPicks : myTeam.getPicks()) {
+            teamPlayers.put(gameWeekPicks.getElement(), Constants.playerMap.get(gameWeekPicks.getElement()));
+        }
+
+        Map<Long, PlayersData> defenders = new HashMap<>();
+        Map<Long, PlayersData> midfielders = new HashMap<>();
+        Map<Long, PlayersData> forwards = new HashMap<>();
+
+        for (Map.Entry<Long, PlayersData> entry: teamPlayers.entrySet()) {
+            if(Constants.playerTypeMap.get(entry.getKey()).getSingular_name_short().equalsIgnoreCase("DEF")) {
+                defenders.put(entry.getKey(), entry.getValue());
+            }
+
+            if(Constants.playerTypeMap.get(entry.getKey()).getSingular_name_short().equalsIgnoreCase("MID")) {
+                midfielders.put(entry.getKey(), entry.getValue());
+            }
+
+            if(Constants.playerTypeMap.get(entry.getKey()).getSingular_name_short().equalsIgnoreCase("FWD")) {
+                forwards.put(entry.getKey(), entry.getValue());
+            }
         }
 
         // Adding players for a 4-4-2 formation (adjust positions based on your layout)
 
         //Adding goal keeper
-        String playerFullName = Objects.requireNonNull(Constants.playerMap.get(myTeam.getPicks().get(0).getElement())).getFirst_name() + Objects.requireNonNull(Constants.playerMap.get(myTeam.getPicks().get(0).getElement())).getSecond_name();
+
         addPlayerNew(playerFullName, "Team A", R.mipmap.no_image, 0, 2, footballFieldLayout);
 
         addPlayerNew(teamPlayers.get(1).getElement() + "", "Team A", R.mipmap.no_image, 1, 0, footballFieldLayout);
