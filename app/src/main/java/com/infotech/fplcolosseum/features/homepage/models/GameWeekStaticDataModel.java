@@ -10,6 +10,7 @@ public class GameWeekStaticDataModel {
 
     @SerializedName("game_settings")
     Game_settings Game_settingsObject;
+    @SerializedName("phases")
     ArrayList<Phase> phases = new ArrayList<>();
 
     @SerializedName("teams")
@@ -19,7 +20,7 @@ public class GameWeekStaticDataModel {
     ArrayList<PlayersData> elements = new ArrayList<>();
     @SerializedName("element_stats")
     ArrayList<Element_Stats> element_stats = new ArrayList<>();
-    @SerializedName("player_types")
+    @SerializedName("element_types")
     ArrayList<Player_Type> player_types = new ArrayList<>();
 
 

@@ -7,16 +7,28 @@
     android:weightSum="10"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".5"/>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7"
-        android:scaleType="fitXY"
+        android:layout_weight="6"
         android:layout_gravity="center"
         android:layout_marginHorizontal="8dp"
         android:src="@mipmap/no_image"
-        android:contentDescription="@string/todo" />
+        android:contentDescription="@string/todo"
+        android:scaleType="centerCrop"
+        android:shape="ring"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".5"/>
+
 
     <TextView
         android:id="@+id/playerNameTextView"

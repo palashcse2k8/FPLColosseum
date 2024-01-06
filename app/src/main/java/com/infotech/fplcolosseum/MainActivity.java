@@ -14,14 +14,13 @@ import com.infotech.fplcolosseum.features.homepage.models.GameWeekStaticDataMode
 import com.infotech.fplcolosseum.features.homepage.models.Player_Type;
 import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.models.TeamData;
-import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment;
-import com.infotech.fplcolosseum.features.homepage.views.MyTeamFragment;
 import com.infotech.fplcolosseum.features.login.views.LoginFragment;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.SharedViewModel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
 
                 // Update Static data with the data
-                createMapData(apiResponse.getData());
+                prepareData(apiResponse.getData());
 
             } else {
                 Log.d(Constants.LOG_TAG, "Data Loading Error" );
@@ -68,14 +67,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setTitle("Game Week Standings");
     }
 
-    public void createMapData(GameWeekStaticDataModel dataModel){
-
-        //setting player map
-        Map<Long, PlayersData> elementMap = new HashMap<>();
-        for (PlayersData element : dataModel.getElements()) {
-            elementMap.put(element.getId(), element);
-        }
-        Constants.playerMap = elementMap;
+    public void prepareData(GameWeekStaticDataModel dataModel){
 
         //setting team map
         Map<Long, TeamData> teamMap = new HashMap<>();
@@ -97,6 +89,18 @@ public class MainActivity extends AppCompatActivity {
             palyerTypeMap.put(type.getId(), type);
         }
         Constants.playerTypeMap = palyerTypeMap;
+
+        //setting player map
+        Map<Long, PlayersData> elementMap = new HashMap<>();
+        for (PlayersData element : dataModel.getElements()) {
+            //adding extra fields here
+            element.setTeam_name_full(Objects.requireNonNull(Constants.teamMap.get(element.getTeam())).getName());
+            element.setTeam_name_short(Objects.requireNonNull(Constants.teamMap.get(element.getTeam())).getShort_name());
+            element.setSingular_name(Objects.requireNonNull(Constants.playerTypeMap.get(element.getElement_type())).getSingular_name());
+            element.setSingular_name_short(Objects.requireNonNull(Constants.playerTypeMap.get(element.getElement_type())).getSingular_name_short());
+            elementMap.put(element.getId(), element);
+        }
+        Constants.playerMap = elementMap;
     }
 
 }

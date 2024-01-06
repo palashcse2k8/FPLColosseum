@@ -85,35 +85,51 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.infotech.fplcolosseum.R;
+import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
+import com.squareup.picasso.Picasso;
 
 public class PlayerView extends LinearLayout {
+
+    PlayersData player;
 
     private ImageView imageView;
     private TextView playerNameTextView;
     private TextView teamNameTextView;
 
+    private boolean isDraggable;
+
     private int row;
     private int column;
 
-    public PlayerView(Context context) {
+    public PlayerView(Context context, PlayersData player, boolean isDraggable) {
         super(context);
         initializeViews(context);
-        setOnTouchListener(new TouchListener());
-        setOnDragListener(new DragListener());
+        this.player = player;
+        this.isDraggable = isDraggable;
+        if(isDraggable) {
+            setOnTouchListener(new TouchListener());
+            setOnDragListener(new DragListener());
+        }
     }
 
-    public PlayerView(Context context, AttributeSet attrs) {
+    public PlayerView(Context context, PlayersData player, AttributeSet attrs) {
         super(context, attrs);
+        this.player = player;
         initializeViews(context);
-        setOnTouchListener(new TouchListener());
-        setOnDragListener(new DragListener());
+        if(isDraggable) {
+            setOnTouchListener(new TouchListener());
+            setOnDragListener(new DragListener());
+        }
     }
 
-    public PlayerView(Context context, AttributeSet attrs, int defStyle) {
+    public PlayerView(Context context, PlayersData player, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        this.player = player;
         initializeViews(context);
-        setOnTouchListener(new TouchListener());
-        setOnDragListener(new DragListener());
+        if(isDraggable) {
+            setOnTouchListener(new TouchListener());
+            setOnDragListener(new DragListener());
+        }
     }
 
     private void initializeViews(Context context) {
@@ -126,8 +142,12 @@ public class PlayerView extends LinearLayout {
     }
 
     // Add methods to set player details (image, name, team name) if needed
-    public void setPlayerImage(int imageResId) {
-        imageView.setImageResource(imageResId);
+    public void setPlayerImage(String imageURL) {
+
+        Picasso.get()
+                .load(imageURL)
+                .error(R.mipmap.no_image)
+                .into(imageView);
     }
 
     public void setPlayerName(String playerName) {

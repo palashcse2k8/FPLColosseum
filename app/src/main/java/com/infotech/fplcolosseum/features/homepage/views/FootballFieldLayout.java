@@ -8,6 +8,7 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 
 import com.infotech.fplcolosseum.R;
+import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
 
 public class FootballFieldLayout extends GridLayout {
 
@@ -38,10 +39,10 @@ public class FootballFieldLayout extends GridLayout {
 
     // Add methods to add players dynamically
     public void addPlayer(String playerName, String teamName, int imageResId, int row, int column) {
-        PlayerView playerView = new PlayerView(this.context);
+        PlayerView playerView = new PlayerView(this.context, new PlayersData(), false);
         playerView.setPlayerName(playerName);
         playerView.setTeamName(teamName);
-        playerView.setPlayerImage(imageResId);
+        playerView.setPlayerImage("imageResI");
 
         // Set the position of the player in the FootballFieldLayout
         playerView.setRow(row);
@@ -60,10 +61,10 @@ public class FootballFieldLayout extends GridLayout {
     public void addPlayerNew(String playerName, String teamName, int imageResId, int row, int column) {
         // Loop to create buttons in each cell
 
-                PlayerView playerView = new PlayerView(this.context);
+                PlayerView playerView = new PlayerView(this.context, new PlayersData(), false);
                 playerView.setPlayerName(playerName);
                 playerView.setTeamName(teamName);
-                playerView.setPlayerImage(imageResId);
+                playerView.setPlayerImage("imageResId");
 
                 // Set the position of the player in the FootballFieldLayout
                 playerView.setRow(row);

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 
-import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,19 +17,15 @@ import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.homepage.models.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicks;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicksModel;
 import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-public class MyTeamFragment extends Fragment {
+public class TransferFragment extends Fragment {
 
     FragmentMyteamBinding binding;
 
@@ -89,13 +84,13 @@ public class MyTeamFragment extends Fragment {
         List<PlayersData> midfielders = new ArrayList<>();
         List<PlayersData> forwards = new ArrayList<>();
 
-        for (int i = 1; i < teamPlayers.size() - 4; i++) {
+        for (int i = 0; i < teamPlayers.size(); i++) {
 
             PlayersData entry = teamPlayers.get(i);
 
             long playerType = entry.getElement_type();
 
-            if ((Constants.playerTypeMap.get(playerType).getSingular_name_short().equalsIgnoreCase("DEF"))) {
+            if ((Objects.requireNonNull(Constants.playerTypeMap.get(playerType)).getSingular_name_short().equalsIgnoreCase("DEF"))) {
                 defenders.add(entry);
             } else if (Objects.requireNonNull(Constants.playerTypeMap.get(playerType)).getSingular_name_short().equalsIgnoreCase("MID")) {
                 midfielders.add(entry);
@@ -183,9 +178,9 @@ public class MyTeamFragment extends Fragment {
 
     public void addPlayerNew(PlayersData player, int row, int column, GridLayout footballFieldLayout) {
 
-        PlayerView playerView = new PlayerView(requireContext(), player, true);
+        PlayerView playerView = new PlayerView(requireContext(), player, false);
         playerView.setPlayerName(player.getWeb_name());
-        playerView.setTeamName(Objects.requireNonNull(Constants.teamMap.get(player.getTeam())).getShort_name());
+        playerView.setTeamName(player.getEvent_points() + "");
 
         //https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
         //https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo

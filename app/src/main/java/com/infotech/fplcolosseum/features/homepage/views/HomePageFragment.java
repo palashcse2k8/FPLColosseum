@@ -45,7 +45,7 @@ public class HomePageFragment extends Fragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(requireActivity());
 
         adapter.addFragment(new MyTeamFragment(), "My Team");
-        adapter.addFragment(new MyTeamFragment(), "Points");
+        adapter.addFragment(new GameWeekPointsFragment(), "Points");
         adapter.addFragment(new MyTeamFragment(), "Transfers");
         adapter.addFragment(new MyTeamFragment(), "Leagues");
         viewPager.setAdapter(adapter);

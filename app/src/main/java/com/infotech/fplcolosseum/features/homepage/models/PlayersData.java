@@ -90,8 +90,115 @@ public class PlayersData {
     private float starts_per_90;
     private float clean_sheets_per_90;
 
+    private String team_name_full;
+    private String team_name_short;
+    private String singular_name;
+    private String singular_name_short;
 
-    // Getter Methods
+    public boolean isIn_dreamteam() {
+        return in_dreamteam;
+    }
+
+    public boolean isSpecial() {
+        return special;
+    }
+
+    public void setExpected_goals_per_90(float expected_goals_per_90) {
+        this.expected_goals_per_90 = expected_goals_per_90;
+    }
+
+    public void setSaves_per_90(float saves_per_90) {
+        this.saves_per_90 = saves_per_90;
+    }
+
+    public void setExpected_assists_per_90(float expected_assists_per_90) {
+        this.expected_assists_per_90 = expected_assists_per_90;
+    }
+
+    public void setExpected_goal_involvements_per_90(float expected_goal_involvements_per_90) {
+        this.expected_goal_involvements_per_90 = expected_goal_involvements_per_90;
+    }
+
+    public void setExpected_goals_conceded_per_90(float expected_goals_conceded_per_90) {
+        this.expected_goals_conceded_per_90 = expected_goals_conceded_per_90;
+    }
+
+    public void setGoals_conceded_per_90(float goals_conceded_per_90) {
+        this.goals_conceded_per_90 = goals_conceded_per_90;
+    }
+
+    public void setNow_cost_rank(float now_cost_rank) {
+        this.now_cost_rank = now_cost_rank;
+    }
+
+    public void setNow_cost_rank_type(float now_cost_rank_type) {
+        this.now_cost_rank_type = now_cost_rank_type;
+    }
+
+    public void setForm_rank(float form_rank) {
+        this.form_rank = form_rank;
+    }
+
+    public void setForm_rank_type(float form_rank_type) {
+        this.form_rank_type = form_rank_type;
+    }
+
+    public void setPoints_per_game_rank(float points_per_game_rank) {
+        this.points_per_game_rank = points_per_game_rank;
+    }
+
+    public void setPoints_per_game_rank_type(float points_per_game_rank_type) {
+        this.points_per_game_rank_type = points_per_game_rank_type;
+    }
+
+    public void setSelected_rank(float selected_rank) {
+        this.selected_rank = selected_rank;
+    }
+
+    public void setSelected_rank_type(float selected_rank_type) {
+        this.selected_rank_type = selected_rank_type;
+    }
+
+    public void setStarts_per_90(float starts_per_90) {
+        this.starts_per_90 = starts_per_90;
+    }
+
+    public void setClean_sheets_per_90(float clean_sheets_per_90) {
+        this.clean_sheets_per_90 = clean_sheets_per_90;
+    }
+
+    public String getTeam_name_full() {
+        return team_name_full;
+    }
+
+    public void setTeam_name_full(String team_name_full) {
+        this.team_name_full = team_name_full;
+    }
+
+    public String getTeam_name_short() {
+        return team_name_short;
+    }
+
+    public void setTeam_name_short(String team_name_short) {
+        this.team_name_short = team_name_short;
+    }
+
+    public String getSingular_name() {
+        return singular_name;
+    }
+
+    public void setSingular_name(String singular_name) {
+        this.singular_name = singular_name;
+    }
+
+    public String getSingular_name_short() {
+        return singular_name_short;
+    }
+
+    public void setSingular_name_short(String singular_name_short) {
+        this.singular_name_short = singular_name_short;
+    }
+// Getter Methods
 
     public long getChance_of_playing_next_round() {
         return chance_of_playing_next_round;
