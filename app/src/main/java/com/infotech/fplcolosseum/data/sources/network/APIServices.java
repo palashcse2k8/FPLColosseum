@@ -15,6 +15,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
+//team manager ids : 10359552, 116074
+
 public interface APIServices {
 
     @GET("api/LeagueFunction")

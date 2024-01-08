@@ -35,7 +35,27 @@ public class MyTeamViewModel extends AndroidViewModel {
         return apiResultLiveData;
     }
 
+    public void getMyTeamDataIfNeeded(long entry_id){
+        if (apiResultLiveData.getValue() == null || apiResultLiveData.getValue().getData() == null) {
+            getMyTeamData(entry_id);
+        }
+    }
+
+    public void resetApiResponse() {
+        apiResultLiveData.setValue(null);
+    }
+
     public void getMyTeamData(long entry_id) {
+
+        dataLoading.setValue(true);
+        // Make API call through the repository
+        apiResultLiveData.addSource(dataRepository.getMyTeamData(entry_id), userResponseModelApiResponse -> {
+            dataLoading.setValue(false);
+            apiResultLiveData.setValue(userResponseModelApiResponse);
+        });
+    }
+
+    public void getTeamData(long entry_id) {
 
         dataLoading.setValue(true);
         // Make API call through the repository

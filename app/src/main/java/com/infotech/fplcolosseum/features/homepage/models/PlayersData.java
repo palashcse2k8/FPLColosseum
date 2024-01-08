@@ -95,6 +95,61 @@ public class PlayersData {
     private String singular_name;
     private String singular_name_short;
 
+    private long position;
+    private long selling_price;
+    private long multiplier;
+    private long purchase_price;
+    private boolean is_captain;
+    private boolean is_vice_captain;
+
+    public long getPosition() {
+        return position;
+    }
+
+    public void setPosition(long position) {
+        this.position = position;
+    }
+
+    public long getSelling_price() {
+        return selling_price;
+    }
+
+    public void setSelling_price(long selling_price) {
+        this.selling_price = selling_price;
+    }
+
+    public long getMultiplier() {
+        return multiplier;
+    }
+
+    public void setMultiplier(long multiplier) {
+        this.multiplier = multiplier;
+    }
+
+    public long getPurchase_price() {
+        return purchase_price;
+    }
+
+    public void setPurchase_price(long purchase_price) {
+        this.purchase_price = purchase_price;
+    }
+
+    public boolean isIs_captain() {
+        return is_captain;
+    }
+
+    public void setIs_captain(boolean is_captain) {
+        this.is_captain = is_captain;
+    }
+
+    public boolean isIs_vice_captain() {
+        return is_vice_captain;
+    }
+
+    public void setIs_vice_captain(boolean is_vice_captain) {
+        this.is_vice_captain = is_vice_captain;
+    }
+
     public boolean isIn_dreamteam() {
         return in_dreamteam;
     }

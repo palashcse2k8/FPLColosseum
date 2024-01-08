@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.infotech.fplcolosseum.databinding.FragmentHomepageBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.ViewPagerAdapter;
+import com.infotech.fplcolosseum.utilities.Constants;
 
 import org.androidannotations.annotations.EFragment;
 
@@ -38,7 +39,7 @@ public class HomePageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupViewPager(binding.topViewPager, binding.topTabLayout);
-//        setupViewPager(binding.bottomViewPager, binding.bottomTabLayout);
+//        setupViewPager(binding.bottomViewPager, binding.bottomTabLayout); // for tab layout if needed
     }
 
     private void setupViewPager(ViewPager2 viewPager, TabLayout tabLayout) {
@@ -46,7 +47,8 @@ public class HomePageFragment extends Fragment {
 
         adapter.addFragment(new MyTeamFragment(), "My Team");
         adapter.addFragment(new GameWeekPointsFragment(), "Points");
-        adapter.addFragment(new MyTeamFragment(), "Transfers");
+//        TransferFragment fragment = new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry());
+        adapter.addFragment(new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry()), "Transfers");
         adapter.addFragment(new MyTeamFragment(), "Leagues");
         viewPager.setAdapter(adapter);
 

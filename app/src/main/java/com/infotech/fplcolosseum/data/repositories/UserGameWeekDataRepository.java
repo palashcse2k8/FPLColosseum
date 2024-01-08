@@ -117,5 +117,19 @@ public class UserGameWeekDataRepository {
 
         return apiData;
     }
+
+    public LiveData<ApiResponse<GameWeekMyTeamResponseModel>> getTeamData(long entry_id) {
+
+        MediatorLiveData<ApiResponse<GameWeekMyTeamResponseModel>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.gameWeekEntries(entry_id);
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekMyTeamResponseModel.class), tApiResponse -> {
+            Log.d("Data ", tApiResponse.getData().toString());
+            apiData.postValue(tApiResponse);
+        });
+
+        return apiData;
+    }
 }
 
