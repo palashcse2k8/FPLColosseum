@@ -26,8 +26,8 @@ public class TeamDataResponseModel {
     private String OverAllRankInfo = null;
     private String TeamH2HData = null;
     List< Object > UsedChips ;
-    private long TeamValue;
-    private long BankValue;
+    private float TeamValue;
+    private double BankValue;
     private boolean IsCupOpponent;
     private String CupLeague = null;
     private boolean IsExcludedFromStats;
@@ -90,11 +90,11 @@ public class TeamDataResponseModel {
         return TeamH2HData;
     }
 
-    public long getTeamValue() {
+    public float getTeamValue() {
         return TeamValue;
     }
 
-    public long getBankValue() {
+    public double getBankValue() {
         return BankValue;
     }
 
@@ -192,11 +192,11 @@ public class TeamDataResponseModel {
         this.TeamH2HData = TeamH2HData;
     }
 
-    public void setTeamValue(long TeamValue) {
+    public void setTeamValue(float TeamValue) {
         this.TeamValue = TeamValue;
     }
 
-    public void setBankValue(long BankValue) {
+    public void setBankValue(double BankValue) {
         this.BankValue = BankValue;
     }
 

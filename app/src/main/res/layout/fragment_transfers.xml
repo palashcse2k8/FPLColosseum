@@ -18,161 +18,155 @@
         android:background="@color/black"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_button_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="10">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+            <!-- First Section: Three Buttons -->
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Auto Pick"
+                app:layout_constraintEnd_toStartOf="@+id/button2"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset"
+                app:layout_constraintEnd_toStartOf="@+id/button3"
+                app:layout_constraintStart_toEndOf="@+id/button1"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play Wildcard"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button2"
+                app:layout_constraintTop_toTopOf="parent" />
 
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        tools:text="Game Week 21 DeadLine" />-->
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        android:gravity="center"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        tools:text="Sat 13 Jan, 00:15" />-->
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Auto Pick"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Reset"/>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/countDownTimer"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        tools:text="04  :   10   :   24   :  12" />-->
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        android:gravity="center"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        tools:text="dys    hrs    min    sec" />-->
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Play WildCard"/>
-
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
+            <!-- Second Section: GridView -->
             <GridLayout
                 android:id="@+id/footballFieldLayout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="7.8"
                 android:background="@drawable/team_background_single_with_bench"
                 android:columnCount="5"
-                android:rowCount="4" />
+                android:rowCount="4"
+                app:layout_constraintBottom_toTopOf="@id/bottomLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button1" />
+
+            <!-- Third Section: Text and Button -->
+            <!-- Left Part with 4 TextViews -->
 
             <LinearLayout
+                android:id="@+id/bottomLayout"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.2"
-                android:baselineAligned="false">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/footballFieldLayout">
 
-                <LinearLayout android:layout_width="0dp"
-                    android:layout_weight="1"
+                <LinearLayout
+                    android:id="@+id/left_part_layout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toStartOf="@+id/right_part_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <!-- TextView 1 -->
                     <TextView
                         android:id="@+id/transfer_count"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        tools:text="Transfer Made : 2"/>
+                        android:text="Transfer Made : 2"
+                        android:textColor="@color/white" />
+
+                    <!-- TextView 2 -->
                     <TextView
-                        android:id="@+id/cost_and_ft"
-                        android:layout_width="match_parent"
+                        android:id="@+id/transfer_calculation"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        tools:text="Cost : 1, FT : 1"/>
+                        android:text="Cost : 4, FT : 1"
+                        android:textColor="@color/white" />
+
+                    <!-- TextView 3 -->
                     <TextView
-                        android:id="@+id/bank_balance"
-                        android:layout_width="match_parent"
+                        android:id="@+id/bank_value"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        tools:text="In Bank : 100"/>
+                        android:text="In Bank : "
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/deadline_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="GW21 Deadline : 15"
+
+                        android:textColor="@color/white" />
+
                 </LinearLayout>
-                <LinearLayout android:layout_width="0dp"
+
+                <!-- Right Part with 1 TextView and 1 Button -->
+                <LinearLayout
+                    android:id="@+id/right_part_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/left_part_layout"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <com.google.android.material.button.MaterialButton
+                    <!-- TextView in the Right Part -->
+                    <TextView
+                        android:layout_marginTop="8dp"
+                        android:id="@+id/deadline_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="GW21 Deadline in"
+                        android:textColor="@color/white" />
+
+
+                    <!-- Button in the Right Part -->
+                    <Button
+                        android:id="@+id/right_button"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="16sp"
-                        android:text="Make Transfer=>"/>
-
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/right_textView"
+                        android:layout_marginTop="8dp"
+                        android:text="Save =>" />
                 </LinearLayout>
-
-
-
             </LinearLayout>
 
-        </LinearLayout>
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- Second part <GridLayout-->
         <ProgressBar
             android:id="@+id/progress_circular"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerInParent="true"
-            android:visibility="@{myTeamViewModel.dataLoading ? View.VISIBLE : View.GONE}">
-        </ProgressBar>
+            android:visibility="@{myTeamViewModel.dataLoading ? View.VISIBLE : View.GONE}" />
     </RelativeLayout>
+
 </layout>

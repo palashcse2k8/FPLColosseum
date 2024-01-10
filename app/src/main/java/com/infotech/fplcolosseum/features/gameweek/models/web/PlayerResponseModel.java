@@ -56,9 +56,9 @@ public class PlayerResponseModel {
     private long LiveBonusPoints;
     private long Difficulty;
     private long ChanceOfPlaying;
-    private long SelectedByPercent;
-    private long Cost;
-    private long ExpectedPoints;
+    private double SelectedByPercent;
+    private double Cost;
+    private double ExpectedPoints;
     private long FormCalculated;
     private long FormCalculatedTransfers;
     private String PlayerDisplayName;
@@ -281,15 +281,15 @@ public class PlayerResponseModel {
         return ChanceOfPlaying;
     }
 
-    public long getSelectedByPercent() {
+    public double getSelectedByPercent() {
         return SelectedByPercent;
     }
 
-    public long getCost() {
+    public double getCost() {
         return Cost;
     }
 
-    public long getExpectedPoints() {
+    public double getExpectedPoints() {
         return ExpectedPoints;
     }
 
@@ -527,15 +527,15 @@ public class PlayerResponseModel {
         this.ChanceOfPlaying = ChanceOfPlaying;
     }
 
-    public void setSelectedByPercent(long SelectedByPercent) {
+    public void setSelectedByPercent(double SelectedByPercent) {
         this.SelectedByPercent = SelectedByPercent;
     }
 
-    public void setCost(long Cost) {
+    public void setCost(double Cost) {
         this.Cost = Cost;
     }
 
-    public void setExpectedPoints(long ExpectedPoints) {
+    public void setExpectedPoints(double ExpectedPoints) {
         this.ExpectedPoints = ExpectedPoints;
     }
 

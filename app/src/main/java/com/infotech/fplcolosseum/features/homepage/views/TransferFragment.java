@@ -6,6 +6,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
@@ -66,9 +69,10 @@ public class TransferFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            entry_id = args.getInt(ARG_ITEM_DATA);
+            entry_id = args.getLong(ARG_ITEM_DATA);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(MyTeamViewModel.class);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -80,6 +84,26 @@ public class TransferFragment extends Fragment {
         viewModel.dataLoading.setValue(true);
         binding.setLifecycleOwner(this);
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_options, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection.
+        if (item.getItemId() == R.id.logout) {
+            logOutUser();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void logOutUser(){
+        Constants.LoggedInUser = null;
     }
 
     @Override
@@ -101,7 +125,7 @@ public class TransferFragment extends Fragment {
 
         // Display the countdown in the TextView
         @SuppressLint("DefaultLocale") String countdownText = String.format("%02d:%02d:%02d:%02d", days, hours, minutes, seconds);
-        binding.transferCount.setText(countdownText);
+        binding.deadlineCounter.setText(countdownText);
     }
 
 

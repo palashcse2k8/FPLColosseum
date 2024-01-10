@@ -62,5 +62,6 @@
         <item>671887</item>
         <item>118990</item>
     </string-array>
+    <string name="logout">Logout</string>
 
 </resources>
