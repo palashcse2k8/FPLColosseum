@@ -139,24 +139,24 @@ public class TransferFragment extends Fragment {
         endTime = LocalDateTime.of(2024, 12, 31, 23, 59, 59);
 
         // Observe changes in DataState
-        viewModel.getApiResultLiveData().observe(getViewLifecycleOwner(), dataState -> {
+        viewModel.getApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
 
-            if (dataState == null) return;
-            switch (dataState.getStatus()) {
+            if (apiResponse == null) return;
+            switch (apiResponse.getStatus()) {
                 case LOADING:
                     showLoading();
                     break;
                 case SUCCESS:
                     viewModel.dataLoading.setValue(false);
                     handler.post(countdownRunnable);
-                    if(dataState.getData() instanceof GameWeekMyTeamResponseModel){
-                        GameWeekMyTeamResponseModel data = (GameWeekMyTeamResponseModel) dataState.getData();
+                    if(apiResponse.getData() instanceof GameWeekMyTeamResponseModel){
+                        GameWeekMyTeamResponseModel data = (GameWeekMyTeamResponseModel) apiResponse.getData();
                         updateUI(footballFieldLayout, data);
                     }
 
                     break;
                 case ERROR:
-                    showFailure(dataState.getMessage());
+                    showFailure(apiResponse.getMessage());
                     break;
             }
         });

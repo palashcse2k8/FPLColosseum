@@ -12,17 +12,105 @@
         android:layout_height="0dp"
         android:layout_weight=".5"/>
 
-    <ImageView
-        android:id="@+id/imageView"
+<!--    <FrameLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="6">-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@mipmap/no_image"/>-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/iconTopLeft"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:visibility="invisible"-->
+<!--            android:layout_gravity="top|left"-->
+<!--            android:src="@drawable/alpha_c_circle"/>-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/iconTopRight"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:visibility="invisible"-->
+<!--            android:layout_gravity="top|right"-->
+<!--            android:src="@drawable/ic_password"/>-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/iconBottomLeft"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:visibility="invisible"-->
+<!--            android:layout_gravity="bottom|left"-->
+<!--            android:src="@drawable/ic_password"/>-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/iconBottomRight"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:visibility="invisible"-->
+<!--            android:layout_gravity="bottom|right"-->
+<!--            android:src="@drawable/alpha_c_circle"/>-->
+
+<!--    </FrameLayout>-->
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="8dp"
-        android:src="@mipmap/no_image"
-        android:contentDescription="@string/todo"
-        android:scaleType="centerCrop"
-        android:shape="ring"/>
+        android:layout_weight="6">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:src="@mipmap/no_image"
+            android:contentDescription="@string/todo"
+            android:scaleType="centerCrop"
+            android:shape="ring"/>
+
+        <ImageView
+            android:id="@+id/iconTopLeft"
+            android:visibility="invisible"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/alpha_c_circle"/>
+
+        <ImageView
+            android:id="@+id/iconTopRight"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="invisible"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_password"/>
+
+        <ImageView
+            android:id="@+id/iconBottomLeft"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="invisible"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_password"/>
+
+        <ImageView
+            android:id="@+id/iconBottomRight"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="invisible"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/alpha_c_circle" />
+    </RelativeLayout>
+
 
     <View
         android:layout_width="match_parent"

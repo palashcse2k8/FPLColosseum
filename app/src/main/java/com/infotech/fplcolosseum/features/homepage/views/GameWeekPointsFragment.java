@@ -196,6 +196,16 @@ public class GameWeekPointsFragment extends Fragment {
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14-66.webp for player shirt
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14_1-66.webp for goal keeper shirt
         playerView.setPlayerImage(imgURL);
+        if(player.isIs_captain()){
+            Log.d("Captain's Info" , player.toString());
+            playerView.setCaptain();
+        }
+
+        if(player.isIs_vice_captain()) {
+            Log.d("Vice Captain's Info" , player.toString());
+            playerView.setViceCaptain();
+        }
+
 
         // Set the position of the player in the GridLayout
         playerView.setRow(row);

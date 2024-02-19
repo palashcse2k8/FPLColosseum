@@ -50,6 +50,7 @@ public class HomePageFragment extends Fragment {
 //        TransferFragment fragment = new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry());
         adapter.addFragment(new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry()), "Transfers");
         adapter.addFragment(new MyTeamFragment(), "Leagues");
+
         viewPager.setAdapter(adapter);
 
         new TabLayoutMediator(tabLayout, viewPager,

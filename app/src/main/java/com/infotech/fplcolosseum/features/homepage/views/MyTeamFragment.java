@@ -36,9 +36,6 @@ public class MyTeamFragment extends Fragment {
 
     MyTeamViewModel viewModel;
 
-    private static final int NUM_ROWS = 5;
-    private static final int NUM_COLUMNS = 5;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,20 +63,49 @@ public class MyTeamFragment extends Fragment {
         // Add players to the football field (customize positions as needed)
 
         viewModel.getApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
-            if (apiResponse == null) return;
-            if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
-                viewModel.dataLoading.setValue(false);
 
-                GameWeekMyTeamResponseModel myTeam = (GameWeekMyTeamResponseModel) apiResponse.getData();
-                addPlayers(footballFieldLayout, myTeam);
+            if (apiResponse == null) return;
+            switch (apiResponse.getStatus()) {
+                case LOADING:
+                    showLoading();
+                    break;
+                case SUCCESS:
+                    viewModel.dataLoading.setValue(false);
+                    if(apiResponse.getData() instanceof GameWeekMyTeamResponseModel){
+                        GameWeekMyTeamResponseModel data = (GameWeekMyTeamResponseModel) apiResponse.getData();
+                        updateUI(footballFieldLayout, data);
+                    }
+
+                    break;
+                case ERROR:
+                    showFailure(apiResponse.getMessage());
+                    break;
             }
         });
+    }
+
+    private void showLoading() {
+        viewModel.dataLoading.setValue(true);
+        binding.progressCircular.setVisibility(View.VISIBLE);
+        binding.footballFieldLayout.setVisibility(View.GONE);
+
+    }
+
+    private void showFailure(String error) {
+        viewModel.dataLoading.setValue(false);
+        binding.progressCircular.setVisibility(View.GONE);
+        binding.footballFieldLayout.setVisibility(View.GONE);
+    }
+
+    private void updateUI(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel data) {
+
+        binding.progressCircular.setVisibility(View.GONE);
+        addPlayers(footballFieldLayout, data);
     }
 
     private void addPlayers(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel myTeam) {
 
         List<PlayersData> teamPlayers = new ArrayList<>();
-
 
         for (GameWeekPicks gameWeekPicks : myTeam.getPicks()) {
             teamPlayers.add(Constants.playerMap.get(gameWeekPicks.getElement()));
@@ -201,6 +227,15 @@ public class MyTeamFragment extends Fragment {
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14-66.webp for player shirt
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14_1-66.webp for goal keeper shirt
         playerView.setPlayerImage(imgURL);
+        if(player.isIs_captain()){
+            Log.d("Captain's Info" , player.toString());
+            playerView.setCaptain();
+        }
+
+        if(player.isIs_vice_captain()) {
+            Log.d("Vice Captain's Info" , player.toString());
+            playerView.setViceCaptain();
+        }
 
         // Set the position of the player in the GridLayout
         playerView.setRow(row);

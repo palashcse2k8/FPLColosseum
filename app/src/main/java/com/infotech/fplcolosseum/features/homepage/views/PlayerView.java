@@ -95,6 +95,10 @@ public class PlayerView extends LinearLayout {
     private ImageView imageView;
     private TextView playerNameTextView;
     private TextView teamNameTextView;
+    private ImageView imageTopLeft;
+    private ImageView imageTopRight;
+    private ImageView imageBottomLeft;
+    private ImageView imageBottomRight;
 
     private boolean isDraggable;
 
@@ -106,7 +110,7 @@ public class PlayerView extends LinearLayout {
         initializeViews(context);
         this.player = player;
         this.isDraggable = isDraggable;
-        if(isDraggable) {
+        if (isDraggable) {
             setOnTouchListener(new TouchListener());
             setOnDragListener(new DragListener());
         }
@@ -116,7 +120,7 @@ public class PlayerView extends LinearLayout {
         super(context, attrs);
         this.player = player;
         initializeViews(context);
-        if(isDraggable) {
+        if (isDraggable) {
             setOnTouchListener(new TouchListener());
             setOnDragListener(new DragListener());
         }
@@ -126,7 +130,7 @@ public class PlayerView extends LinearLayout {
         super(context, attrs, defStyle);
         this.player = player;
         initializeViews(context);
-        if(isDraggable) {
+        if (isDraggable) {
             setOnTouchListener(new TouchListener());
             setOnDragListener(new DragListener());
         }
@@ -139,6 +143,7 @@ public class PlayerView extends LinearLayout {
         imageView = findViewById(R.id.imageView);
         playerNameTextView = findViewById(R.id.playerNameTextView);
         teamNameTextView = findViewById(R.id.teamNameTV);
+        imageBottomRight = findViewById(R.id.iconBottomRight);
     }
 
     // Add methods to set player details (image, name, team name) if needed
@@ -167,6 +172,16 @@ public class PlayerView extends LinearLayout {
         this.column = column;
     }
 
+    public void setCaptain() {
+        imageBottomRight.setVisibility(View.VISIBLE);
+        imageBottomRight.setBackgroundResource(R.drawable.alpha_c_circle);
+    }
+
+    public void setViceCaptain() {
+        imageBottomRight.setVisibility(View.VISIBLE);
+        imageBottomRight.setBackgroundResource(R.drawable.alpha_v_circle);
+    }
+
     private static class TouchListener implements OnTouchListener {
         @SuppressLint("ClickableViewAccessibility")
         @Override
@@ -185,7 +200,7 @@ public class PlayerView extends LinearLayout {
         }
     }
 
-    private  static class DragListener implements OnDragListener{
+    private static class DragListener implements OnDragListener {
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();
