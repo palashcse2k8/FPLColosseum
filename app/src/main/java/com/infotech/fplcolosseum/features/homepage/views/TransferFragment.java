@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.FragmentTransfersBinding;
 import com.infotech.fplcolosseum.features.homepage.models.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicks;
@@ -139,7 +138,7 @@ public class TransferFragment extends Fragment {
         endTime = LocalDateTime.of(2024, 12, 31, 23, 59, 59);
 
         // Observe changes in DataState
-        viewModel.getApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
 
             if (apiResponse == null) return;
             switch (apiResponse.getStatus()) {

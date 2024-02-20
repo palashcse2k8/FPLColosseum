@@ -7,27 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 
-import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.homepage.models.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicks;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicksModel;
 import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class MyTeamFragment extends Fragment {
@@ -50,7 +44,6 @@ public class MyTeamFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(MyTeamViewModel.class);
-        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
     }
 
     @Override
@@ -62,26 +55,28 @@ public class MyTeamFragment extends Fragment {
 
         // Add players to the football field (customize positions as needed)
 
-        viewModel.getApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), myTeamApiResponse -> {
 
-            if (apiResponse == null) return;
-            switch (apiResponse.getStatus()) {
+            if (myTeamApiResponse == null) return;
+            switch (myTeamApiResponse.getStatus()) {
                 case LOADING:
                     showLoading();
                     break;
                 case SUCCESS:
                     viewModel.dataLoading.setValue(false);
-                    if(apiResponse.getData() instanceof GameWeekMyTeamResponseModel){
-                        GameWeekMyTeamResponseModel data = (GameWeekMyTeamResponseModel) apiResponse.getData();
+                    if(myTeamApiResponse.getData() instanceof GameWeekMyTeamResponseModel){
+                        GameWeekMyTeamResponseModel data = (GameWeekMyTeamResponseModel) myTeamApiResponse.getData();
                         updateUI(footballFieldLayout, data);
                     }
 
                     break;
                 case ERROR:
-                    showFailure(apiResponse.getMessage());
+                    showFailure(myTeamApiResponse.getMessage());
                     break;
             }
         });
+
+        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
     }
 
     private void showLoading() {
@@ -108,7 +103,11 @@ public class MyTeamFragment extends Fragment {
         List<PlayersData> teamPlayers = new ArrayList<>();
 
         for (GameWeekPicks gameWeekPicks : myTeam.getPicks()) {
-            teamPlayers.add(Constants.playerMap.get(gameWeekPicks.getElement()));
+            PlayersData playersData = Constants.playerMap.get(gameWeekPicks.getElement());
+            assert playersData != null;
+            playersData.setIs_captain(gameWeekPicks.getIs_captain());
+            playersData.setIs_vice_captain(gameWeekPicks.getIs_vice_captain());
+            teamPlayers.add(playersData);
         }
 
         List<PlayersData> defenders = new ArrayList<>();
@@ -227,14 +226,25 @@ public class MyTeamFragment extends Fragment {
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14-66.webp for player shirt
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14_1-66.webp for goal keeper shirt
         playerView.setPlayerImage(imgURL);
+
+        //set captain icon
         if(player.isIs_captain()){
-            Log.d("Captain's Info" , player.toString());
             playerView.setCaptain();
         }
 
+        //set vice captain icon
         if(player.isIs_vice_captain()) {
-            Log.d("Vice Captain's Info" , player.toString());
             playerView.setViceCaptain();
+        }
+
+        //set dream player icon
+        if(player.isIn_dreamteam()) {
+            playerView.setDreamTeamPlayer();
+        }
+
+        //set availability icon
+        if(player.getChance_of_playing_this_round() < 100) {
+            playerView.setAvailability(player.getChance_of_playing_this_round());
         }
 
         // Set the position of the player in the GridLayout

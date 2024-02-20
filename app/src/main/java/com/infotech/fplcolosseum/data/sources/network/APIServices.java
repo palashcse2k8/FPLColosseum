@@ -69,13 +69,13 @@ public interface APIServices {
     Call<ResponseBody> gameWeekPicks(@Path("entry_id") long entry_id, @Path("event_id") long gameWeekNumber);
 
     @POST("https://fantasy.premierleague.com/api/entry/{entry_id}") // https://fantasy.premierleague.com/api/entry/116074/
-    Call<ResponseBody> gameWeekEntries(@Path("entry_id") long entry_id);
+    Call<ResponseBody> gameWeekEntriesInformation(@Path("entry_id") long entry_id);
 
     @GET("https://fantasy.premierleague.com/api/event/{event_id}/live/") // https://fantasy.premierleague.com/api/event/14/live/
     Call<ResponseBody> gameWeekLive(@Path("event_id") long gameWeekNumber);
 
-    @GET("https://fantasy.premierleague.com/api/fixtures/?event=14") // https://fantasy.premierleague.com/api/fixtures/?event=14
-    Call<ResponseBody> gameWeekFixtures(@Query("event") long gameWeekNumber);
+    @GET("https://fantasy.premierleague.com/api/fixtures/?event={event}") // https://fantasy.premierleague.com/api/fixtures/?event=14
+    Call<ResponseBody> gameWeekFixtureData(@Query("event") long gameWeekNumber);
 
     @GET("https://fantasy.premierleague.com/api/my-team/{entry_id}/") //  https://fantasy.premierleague.com/api/my-team/116074/
     Call<ResponseBody> gameWeekMyTeam(@Path("entry_id") long entry_id);

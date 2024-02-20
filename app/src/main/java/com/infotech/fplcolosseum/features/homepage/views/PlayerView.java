@@ -2,12 +2,15 @@ package com.infotech.fplcolosseum.features.homepage.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -84,6 +87,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
 import com.squareup.picasso.Picasso;
@@ -92,13 +97,16 @@ public class PlayerView extends LinearLayout {
 
     PlayersData player;
 
+    Context context;
     private ImageView imageView;
     private TextView playerNameTextView;
     private TextView teamNameTextView;
     private ImageView imageTopLeft;
     private ImageView imageTopRight;
-    private ImageView imageBottomLeft;
+    private FrameLayout imageBottomLeft;
     private ImageView imageBottomRight;
+    private ImageView imageBottomMiddle;
+    private TextView changeOfPlayingThisRound;
 
     private boolean isDraggable;
 
@@ -110,6 +118,7 @@ public class PlayerView extends LinearLayout {
         initializeViews(context);
         this.player = player;
         this.isDraggable = isDraggable;
+        this.context = context;
         if (isDraggable) {
             setOnTouchListener(new TouchListener());
             setOnDragListener(new DragListener());
@@ -144,6 +153,9 @@ public class PlayerView extends LinearLayout {
         playerNameTextView = findViewById(R.id.playerNameTextView);
         teamNameTextView = findViewById(R.id.teamNameTV);
         imageBottomRight = findViewById(R.id.iconBottomRight);
+        imageBottomMiddle = findViewById(R.id.iconBottomMiddle);
+        imageBottomLeft = findViewById(R.id.iconBottomLeft);
+        changeOfPlayingThisRound = findViewById(R.id.changeOfPlayingThisRound);
     }
 
     // Add methods to set player details (image, name, team name) if needed
@@ -180,6 +192,44 @@ public class PlayerView extends LinearLayout {
     public void setViceCaptain() {
         imageBottomRight.setVisibility(View.VISIBLE);
         imageBottomRight.setBackgroundResource(R.drawable.alpha_v_circle);
+    }
+
+    public void setDreamTeamPlayer() {
+        imageBottomMiddle.setVisibility(View.VISIBLE);
+    }
+
+    public void setAvailability(long chanceOfPlayingThisRound) {
+
+        imageBottomLeft.setVisibility(View.VISIBLE);
+        changeOfPlayingThisRound.setText(String.valueOf(chanceOfPlayingThisRound));
+        GradientDrawable bgDrawable = (GradientDrawable) changeOfPlayingThisRound.getBackground();
+
+        if(chanceOfPlayingThisRound == 25){
+            changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
+            bgDrawable.setColor(Color.parseColor("#FF8000"));
+
+            playerNameTextView.setBackgroundColor(Color.parseColor("#FF8000"));
+            playerNameTextView.setTextColor(Color.parseColor("#000000"));
+        } else if(chanceOfPlayingThisRound == 50){
+            changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
+            bgDrawable.setColor(Color.parseColor("#CCCC00"));
+
+            playerNameTextView.setBackgroundColor(Color.parseColor("#CCCC00"));
+            playerNameTextView.setTextColor(Color.parseColor("#000000"));
+        } else if(chanceOfPlayingThisRound == 75) {
+            changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
+            bgDrawable.setColor(Color.parseColor("#FFFF00"));
+
+            playerNameTextView.setBackgroundColor(Color.parseColor("#FFFF00"));
+            playerNameTextView.setTextColor(Color.parseColor("#000000"));
+
+        } else {
+            changeOfPlayingThisRound.setTextColor(Color.parseColor("#FFFFFF"));
+            bgDrawable.setColor(Color.parseColor("#FF0000"));
+
+            playerNameTextView.setBackgroundColor(Color.parseColor("#FF0000"));
+        }
+
     }
 
     private static class TouchListener implements OnTouchListener {

@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.infotech.fplcolosseum.data.repositories.GameWeekStaticDataRepository;
 import com.infotech.fplcolosseum.data.repositories.UserGameWeekDataRepository;
 import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
@@ -21,37 +20,50 @@ public class MyTeamViewModel extends AndroidViewModel {
 
     SessionManager sessionManager;
 
-    private final MediatorLiveData<ApiResponse<?>> apiResultLiveData;
+    private final MediatorLiveData<ApiResponse<?>> myTeamApiResultLiveData;
+    private final MediatorLiveData<ApiResponse<?>> fixtureApiResultLiveData;
     public MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(false);
 
     Application application;
+
     public MyTeamViewModel(@NonNull Application application) {
         super(application);
         this.dataRepository = new UserGameWeekDataRepository(application);
-        this.apiResultLiveData = new MediatorLiveData<>();
+        this.myTeamApiResultLiveData = new MediatorLiveData<>();
+        this.fixtureApiResultLiveData = new MediatorLiveData<>();
     }
 
-    public LiveData<ApiResponse<?>> getApiResultLiveData() {
-        return apiResultLiveData;
+    public LiveData<ApiResponse<?>> getMyTeamApiResultLiveData() {
+        return myTeamApiResultLiveData;
     }
 
-    public void getMyTeamDataIfNeeded(long entry_id){
-        if (apiResultLiveData.getValue() == null || apiResultLiveData.getValue().getData() == null) {
+    public void getMyTeamDataIfNeeded(long entry_id) {
+        if (myTeamApiResultLiveData.getValue() == null || myTeamApiResultLiveData.getValue().getData() == null) {
             getMyTeamData(entry_id);
         }
     }
 
     public void resetApiResponse() {
-        apiResultLiveData.setValue(null);
+        myTeamApiResultLiveData.setValue(null);
     }
 
     public void getMyTeamData(long entry_id) {
 
         dataLoading.setValue(true);
         // Make API call through the repository
-        apiResultLiveData.addSource(dataRepository.getMyTeamData(entry_id), userResponseModelApiResponse -> {
+        myTeamApiResultLiveData.addSource(dataRepository.getMyTeamData(entry_id), userResponseModelApiResponse -> {
             dataLoading.setValue(false);
-            apiResultLiveData.setValue(userResponseModelApiResponse);
+            myTeamApiResultLiveData.setValue(userResponseModelApiResponse);
+        });
+    }
+
+    public void getFixtureData(int gameWeekNumber) {
+
+        dataLoading.setValue(true);
+        // Make API call through the repository
+        fixtureApiResultLiveData.addSource(dataRepository.getFixtureData(gameWeekNumber), userResponseModelApiResponse -> {
+            dataLoading.setValue(false);
+            fixtureApiResultLiveData.setValue(userResponseModelApiResponse);
         });
     }
 
@@ -59,9 +71,9 @@ public class MyTeamViewModel extends AndroidViewModel {
 
         dataLoading.setValue(true);
         // Make API call through the repository
-        apiResultLiveData.addSource(dataRepository.getMyTeamData(entry_id), userResponseModelApiResponse -> {
+        myTeamApiResultLiveData.addSource(dataRepository.getMyTeamData(entry_id), userResponseModelApiResponse -> {
             dataLoading.setValue(false);
-            apiResultLiveData.setValue(userResponseModelApiResponse);
+            myTeamApiResultLiveData.setValue(userResponseModelApiResponse);
         });
     }
 }

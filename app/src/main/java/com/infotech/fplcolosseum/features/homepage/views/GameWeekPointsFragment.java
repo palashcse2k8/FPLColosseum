@@ -60,7 +60,7 @@ public class GameWeekPointsFragment extends Fragment {
 
         // Add players to the football field (customize positions as needed)
 
-        viewModel.getApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
             if (apiResponse == null) return;
             if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
                 viewModel.dataLoading.setValue(false);

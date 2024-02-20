@@ -11,8 +11,8 @@ import com.infotech.fplcolosseum.data.sources.network.APIHandler;
 import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.data.sources.network.RetroClass;
+import com.infotech.fplcolosseum.features.homepage.models.GameWeekMatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.GameWeekMyTeamResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekStaticDataModel;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.utilities.Constants;
 
@@ -122,7 +122,7 @@ public class UserGameWeekDataRepository {
 
         MediatorLiveData<ApiResponse<GameWeekMyTeamResponseModel>> apiData = new MediatorLiveData<>();
 
-        Call<ResponseBody> callAPI = apiServices.gameWeekEntries(entry_id);
+        Call<ResponseBody> callAPI = apiServices.gameWeekEntriesInformation(entry_id);
 
         apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekMyTeamResponseModel.class), tApiResponse -> {
             Log.d("Data ", tApiResponse.getData().toString());
@@ -131,5 +131,21 @@ public class UserGameWeekDataRepository {
 
         return apiData;
     }
+
+    public LiveData<ApiResponse<GameWeekMatchDetails>> getFixtureData(long gameWeekNumber) {
+
+        MediatorLiveData<ApiResponse<GameWeekMatchDetails>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.gameWeekFixtureData(gameWeekNumber);
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekMatchDetails.class), tApiResponse -> {
+            Log.d("Data ", tApiResponse.getData().toString());
+            apiData.postValue(tApiResponse);
+        });
+
+        return apiData;
+    }
+
+
 }
 
