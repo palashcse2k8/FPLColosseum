@@ -11,8 +11,10 @@ import com.infotech.fplcolosseum.data.sources.network.APIHandler;
 import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.data.sources.network.RetroClass;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekMatchDetails;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.GameWeekMatchDetails;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.picks.GameWeekPicksModel;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.utilities.Constants;
 
@@ -118,19 +120,33 @@ public class UserGameWeekDataRepository {
         return apiData;
     }
 
-    public LiveData<ApiResponse<GameWeekMyTeamResponseModel>> getTeamData(long entry_id) {
+    public LiveData<ApiResponse<GameWeekDataResponseModel>> getTeamInformation(long entry_id) {
 
-        MediatorLiveData<ApiResponse<GameWeekMyTeamResponseModel>> apiData = new MediatorLiveData<>();
+        MediatorLiveData<ApiResponse<GameWeekDataResponseModel>> apiData = new MediatorLiveData<>();
 
         Call<ResponseBody> callAPI = apiServices.gameWeekEntriesInformation(entry_id);
 
-        apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekMyTeamResponseModel.class), tApiResponse -> {
+        apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekDataResponseModel.class), tApiResponse -> {
             Log.d("Data ", tApiResponse.getData().toString());
             apiData.postValue(tApiResponse);
         });
 
         return apiData;
     }
+    public LiveData<ApiResponse<GameWeekPicksModel>> getTeamPicks(long entry_id, long gameWeekNumber) {
+
+        MediatorLiveData<ApiResponse<GameWeekPicksModel>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.gameWeekPicks(entry_id, gameWeekNumber);
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekPicksModel.class), tApiResponse -> {
+            Log.d("Data ", tApiResponse.getData().toString());
+            apiData.postValue(tApiResponse);
+        });
+
+        return apiData;
+    }
+
 
     public LiveData<ApiResponse<GameWeekMatchDetails>> getFixtureData(long gameWeekNumber) {
 

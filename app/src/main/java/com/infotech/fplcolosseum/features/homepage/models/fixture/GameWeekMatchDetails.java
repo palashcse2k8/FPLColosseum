@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.features.homepage.models;
+package com.infotech.fplcolosseum.features.homepage.models.fixture;
 
 import com.google.gson.annotations.SerializedName;
 

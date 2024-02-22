@@ -9,21 +9,19 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.infotech.fplcolosseum.data.repositories.UserGameWeekDataRepository;
-import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
-import com.infotech.fplcolosseum.features.login.models.SessionManager;
+
+import java.util.concurrent.CountDownLatch;
 
 public class MyTeamViewModel extends AndroidViewModel {
 
     UserGameWeekDataRepository dataRepository;
-    APIServices apiServices;
-
-    SessionManager sessionManager;
 
     private final MediatorLiveData<ApiResponse<?>> myTeamApiResultLiveData;
     private final MediatorLiveData<ApiResponse<?>> fixtureApiResultLiveData;
     public MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(false);
-
+    public MutableLiveData<Boolean> dataLoadingDone;
+    CountDownLatch latch;
     Application application;
 
     public MyTeamViewModel(@NonNull Application application) {
@@ -33,8 +31,47 @@ public class MyTeamViewModel extends AndroidViewModel {
         this.fixtureApiResultLiveData = new MediatorLiveData<>();
     }
 
+
+    public LiveData<Boolean> getMyTeamAllData(long entry_id) throws InterruptedException {
+
+        dataLoadingDone.setValue(false);
+
+        latch = new CountDownLatch(2);
+
+        dataLoading.setValue(true);
+        // Make API call through the repository
+        myTeamApiResultLiveData.addSource(dataRepository.getTeamInformation(entry_id), userResponseModelApiResponse -> {
+            dataLoading.setValue(false);
+            long gameWeekNumber = userResponseModelApiResponse.getData().getCurrent_event();
+            latch.countDown();
+            fixtureApiResultLiveData.addSource(
+                    dataRepository.getFixtureData(gameWeekNumber),
+                    gameWeekMatchDetailsApiResponse ->
+                    {
+                        latch.countDown();
+                        fixtureApiResultLiveData.setValue(gameWeekMatchDetailsApiResponse);
+                    }
+            );
+            dataRepository.getTeamPicks(entry_id, gameWeekNumber);
+            myTeamApiResultLiveData.setValue(userResponseModelApiResponse);
+        });
+
+        getMyTeamData(entry_id);
+        getTeamData(entry_id);
+        getMyTeamData(entry_id);
+        latch.await();
+
+        dataLoadingDone.setValue(true);
+
+        return dataLoading;
+    }
+
     public LiveData<ApiResponse<?>> getMyTeamApiResultLiveData() {
         return myTeamApiResultLiveData;
+    }
+
+    public LiveData<Boolean> getDataLoadingDoneLiveData() {
+        return dataLoadingDone;
     }
 
     public void getMyTeamDataIfNeeded(long entry_id) {
@@ -53,6 +90,7 @@ public class MyTeamViewModel extends AndroidViewModel {
         // Make API call through the repository
         myTeamApiResultLiveData.addSource(dataRepository.getMyTeamData(entry_id), userResponseModelApiResponse -> {
             dataLoading.setValue(false);
+            latch.countDown();
             myTeamApiResultLiveData.setValue(userResponseModelApiResponse);
         });
     }

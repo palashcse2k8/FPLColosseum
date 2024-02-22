@@ -15,9 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekMyTeamResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicks;
-import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
@@ -76,8 +76,8 @@ public class GameWeekPointsFragment extends Fragment {
         List<PlayersData> teamPlayers = new ArrayList<>();
 
 
-        for (GameWeekPicks gameWeekPicks : myTeam.getPicks()) {
-            teamPlayers.add(Constants.playerMap.get(gameWeekPicks.getElement()));
+        for (MyTeamPicks myTeamPicks : myTeam.getPicks()) {
+            teamPlayers.add(Constants.playerMap.get(myTeamPicks.getElement()));
         }
 
         List<PlayersData> defenders = new ArrayList<>();

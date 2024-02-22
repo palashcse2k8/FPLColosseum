@@ -2,8 +2,6 @@ package com.infotech.fplcolosseum;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -14,11 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekEvent;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekStaticDataModel;
-import com.infotech.fplcolosseum.features.homepage.models.Player_Type;
-import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
-import com.infotech.fplcolosseum.features.homepage.models.TeamData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 import com.infotech.fplcolosseum.features.login.views.LoginFragment;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.SharedViewModel;

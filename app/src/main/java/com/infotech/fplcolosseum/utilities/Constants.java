@@ -2,11 +2,11 @@ package com.infotech.fplcolosseum.utilities;
 
 import com.infotech.fplcolosseum.features.gameweek.models.custom.CustomGameWeekDataModel;
 import com.infotech.fplcolosseum.features.gameweek.models.custom.ManagerModel;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekEvent;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekStaticDataModel;
-import com.infotech.fplcolosseum.features.homepage.models.Player_Type;
-import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
-import com.infotech.fplcolosseum.features.homepage.models.TeamData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 
 import java.util.ArrayList;

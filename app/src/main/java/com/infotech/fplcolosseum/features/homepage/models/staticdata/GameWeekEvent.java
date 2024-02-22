@@ -1,4 +1,6 @@
-package com.infotech.fplcolosseum.features.homepage.models;
+package com.infotech.fplcolosseum.features.homepage.models.staticdata;
+
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.Top_element_info;
 
 import java.util.ArrayList;
 

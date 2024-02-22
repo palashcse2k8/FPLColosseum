@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.features.homepage.models;
+package com.infotech.fplcolosseum.features.homepage.models.staticdata;
 
 public class PlayersData {
     private long chance_of_playing_next_round;

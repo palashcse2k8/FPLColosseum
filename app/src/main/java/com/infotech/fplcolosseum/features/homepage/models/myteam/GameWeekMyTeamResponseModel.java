@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.features.homepage.models;
+package com.infotech.fplcolosseum.features.homepage.models.myteam;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class GameWeekMyTeamResponseModel {
     @SerializedName("picks")
-    ArrayList<GameWeekPicks> picks = new ArrayList <> ();
+    ArrayList<MyTeamPicks> picks = new ArrayList <> ();
     @SerializedName("chips")
     ArrayList <GameChips> chips = new ArrayList <> ();
     @SerializedName("transfers")
@@ -15,7 +15,7 @@ public class GameWeekMyTeamResponseModel {
 
     // Getter Methods
 
-    public ArrayList<GameWeekPicks> getPicks() {
+    public ArrayList<MyTeamPicks> getPicks() {
         return picks;
     }
 

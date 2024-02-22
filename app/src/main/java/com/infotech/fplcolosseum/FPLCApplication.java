@@ -4,12 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
-import com.infotech.fplcolosseum.data.repositories.GameWeekStaticDataRepository;
-import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekStaticDataModel;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;

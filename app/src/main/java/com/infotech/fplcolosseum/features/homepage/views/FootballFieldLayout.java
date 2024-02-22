@@ -2,13 +2,10 @@ package com.infotech.fplcolosseum.features.homepage.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 
-import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 
 public class FootballFieldLayout extends GridLayout {
 

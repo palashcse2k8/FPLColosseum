@@ -20,9 +20,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentTransfersBinding;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekMyTeamResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.GameWeekPicks;
-import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
@@ -168,15 +168,15 @@ public class TransferFragment extends Fragment {
 
         List<PlayersData> teamPlayers = new ArrayList<>();
 
-        for (GameWeekPicks gameWeekPicks : myTeam.getPicks()) {
-            PlayersData playersData = Constants.playerMap.get(gameWeekPicks.getElement());
+        for (MyTeamPicks myTeamPicks : myTeam.getPicks()) {
+            PlayersData playersData = Constants.playerMap.get(myTeamPicks.getElement());
             assert playersData != null;
-            playersData.setIs_captain(gameWeekPicks.getIs_captain());
-            playersData.setIs_vice_captain(gameWeekPicks.getIs_vice_captain());
-            playersData.setSelling_price(gameWeekPicks.getSelling_price());
-            playersData.setPurchase_price(gameWeekPicks.getPurchase_price());
-            playersData.setMultiplier(gameWeekPicks.getMultiplier());
-            playersData.setPosition(gameWeekPicks.getMultiplier());
+            playersData.setIs_captain(myTeamPicks.getIs_captain());
+            playersData.setIs_vice_captain(myTeamPicks.getIs_vice_captain());
+            playersData.setSelling_price(myTeamPicks.getSelling_price());
+            playersData.setPurchase_price(myTeamPicks.getPurchase_price());
+            playersData.setMultiplier(myTeamPicks.getMultiplier());
+            playersData.setPosition(myTeamPicks.getMultiplier());
             teamPlayers.add(playersData);
         }
 

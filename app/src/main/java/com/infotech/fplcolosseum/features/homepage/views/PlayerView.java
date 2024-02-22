@@ -80,17 +80,7 @@ import com.infotech.fplcolosseum.R;
 //    }
 //}
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import androidx.core.content.ContextCompat;
-
-import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.features.homepage.models.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.squareup.picasso.Picasso;
 
 public class PlayerView extends LinearLayout {

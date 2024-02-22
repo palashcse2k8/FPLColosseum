@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.features.homepage.models;
+package com.infotech.fplcolosseum.features.homepage.models.staticdata;
 
 public class TeamData {
     private long code;

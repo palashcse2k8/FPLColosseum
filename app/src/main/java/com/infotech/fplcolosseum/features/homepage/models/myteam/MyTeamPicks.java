@@ -1,6 +1,6 @@
-package com.infotech.fplcolosseum.features.homepage.models;
+package com.infotech.fplcolosseum.features.homepage.models.myteam;
 
-public class GameWeekPicks {
+public class MyTeamPicks {
     private long element;
     private long position;
     private long selling_price;
