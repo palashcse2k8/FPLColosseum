@@ -46,8 +46,7 @@ public class MyTeamViewModel extends AndroidViewModel {
             latch.countDown();
             fixtureApiResultLiveData.addSource(
                     dataRepository.getFixtureData(gameWeekNumber),
-                    gameWeekMatchDetailsApiResponse ->
-                    {
+                    gameWeekMatchDetailsApiResponse -> {
                         latch.countDown();
                         fixtureApiResultLiveData.setValue(gameWeekMatchDetailsApiResponse);
                     }

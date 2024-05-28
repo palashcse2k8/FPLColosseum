@@ -17,8 +17,8 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
 import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
-import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment;
 import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment_;
+import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 import com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -58,15 +58,15 @@ public class LoginFragment extends Fragment {
                         // Handle success
                         if (apiResponse.getData() instanceof UserResponseModel) {
                             UserResponseModel data = (UserResponseModel) apiResponse.getData();
-                            if(data.getPlayer().getEntry() != 0){
+                            if (data.getPlayer().getEntry() != 0) {
                                 UIUtils.toast(requireContext(), "Successfully logged in, Welcome Mr. " + data.getPlayer().getFirst_name() + " " + data.getPlayer().getLast_name(), ToastLevel.SUCCESS);
                             }
 
+                            saveUserInfo(data);
                             Constants.LoggedInUser = data;
 
-//                            goToStanding();
                             goToHomePage();
-                            // Handle success for YourModel
+
                         } else if (apiResponse.getData() instanceof String) {
                             UIUtils.toast(requireContext(), apiResponse.getMessage(), ToastLevel.WARNING);
                             // Handle success for AnotherModel
@@ -74,26 +74,36 @@ public class LoginFragment extends Fragment {
                             UIUtils.toast(requireContext(), "Login Failed!, Check your credential.", ToastLevel.WARNING);
                         }
 
-                        // ...
                         break;
                     case ERROR:
                         // Handle error
                         UIUtils.toast(requireContext(), apiResponse.getMessage(), ToastLevel.WARNING);
-                        // ...
+
                         break;
                     case LOADING:
                         // Handle loading
-                        // ...
-                        String errorMessag = apiResponse.getMessage();
+
+                        String errorMessage = apiResponse.getMessage();
                         UIUtils.toast(requireContext(), apiResponse.getMessage(), ToastLevel.WARNING);
                         break;
                 }
             }
         });
 
-        binding.buttonGuestLogin.setOnClickListener(view1 -> {
+        binding.fplcStandings.setOnClickListener(view1 -> {
             goToStanding();
         });
+
+        //TODO
+        binding.buttonGuestUser.setOnClickListener(v -> {
+        });
+    }
+
+    public void saveUserInfo(UserResponseModel userData) {
+
+        SessionManager sessionManager = new SessionManager(requireContext().getApplicationContext());
+        sessionManager.saveUserData(userData);
+
     }
 
     public void setOnFocusChangeListener() {

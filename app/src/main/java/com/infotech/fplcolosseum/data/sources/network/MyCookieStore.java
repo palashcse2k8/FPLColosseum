@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,11 +25,32 @@ public class MyCookieStore implements CookieJar {
     Context context;
     SessionManager sessionManager;
 
-
     MyCookieStore(Application context) {
         this.context = context;
         sessionManager = new SessionManager(context);
+
+        //if user logged in retrieve the cookies
+        if(sessionManager.isLoggedIn()) {
+            cookies = getSavedCookies();
+        }
     }
+
+    public List<Cookie> getSavedCookies(){
+        String cookiesString = sessionManager.getAllCookies();
+
+        if(cookiesString == null) return null;
+
+        Set<String> cookieStrings = new HashSet<>(Arrays.asList(cookiesString.split(",")));
+        ArrayList<Cookie> cookies = new ArrayList<>();
+
+        for (String cookieString : cookieStrings) {
+            Cookie cookie = Cookie.parse(null, cookieString);
+            cookies.add(cookie);
+        }
+
+        return cookies;
+    }
+
 
     @Override
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {

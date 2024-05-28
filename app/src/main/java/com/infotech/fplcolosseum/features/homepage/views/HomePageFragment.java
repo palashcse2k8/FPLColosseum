@@ -45,10 +45,17 @@ public class HomePageFragment extends Fragment {
     private void setupViewPager(ViewPager2 viewPager, TabLayout tabLayout) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(requireActivity());
 
-        adapter.addFragment(new MyTeamFragment(), "My Team");
+        // show if user logged in
+        if(Constants.LoggedInUser != null){
+            adapter.addFragment(new MyTeamFragment(), "My Team");
+        }
         adapter.addFragment(new GameWeekPointsFragment(), "Points");
-//        TransferFragment fragment = new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry());
-        adapter.addFragment(new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry()), "Transfers");
+
+        // show if user logged in
+        if(Constants.LoggedInUser != null){
+            adapter.addFragment(new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry()), "Transfers");
+        }
+
         adapter.addFragment(new MyTeamFragment(), "Leagues");
 
         viewPager.setAdapter(adapter);

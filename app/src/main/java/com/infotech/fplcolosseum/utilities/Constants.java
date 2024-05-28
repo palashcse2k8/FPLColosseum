@@ -30,7 +30,7 @@ public class Constants {
     public static final String LOGIN_REDIRECT_URL = "https://fantasy.premierleague.com/";
     public static final String APP_NAME = "plfpl-web";
 
-    public static UserResponseModel LoggedInUser;
+    public static UserResponseModel LoggedInUser = null;
     public static GameWeekStaticDataModel GameWeekStaticData;
 
     public static Map <Long, PlayersData> playerMap = new HashMap<>();

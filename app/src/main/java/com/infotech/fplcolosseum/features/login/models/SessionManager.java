@@ -1,29 +1,34 @@
 package com.infotech.fplcolosseum.features.login.models;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import com.google.gson.Gson;
 
 public class SessionManager {
 
     public static final String COOKIES = "cookies";
+
+    private static final String PREFS_NAME = "ApplicationData";
 
     public static final String ALL_COOKIES = "all_cookies";
 
     public static final String PL_PROFILE = "pl_profile";
     public static final String SESSION_ID = "sessionid";
     private static final String KEY_USERNAME = "user_name";
+    private static final String KEY_USER_DATA = "user_name";
 
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-    private Context context;
+    public static final String MANAGER_ID = "manager_id";
 
-    public SessionManager(Application context) {
+    private final SharedPreferences sharedPreferences;
+    private final SharedPreferences.Editor editor;
+    private final Context context;
+
+    public SessionManager(Context context) {
         this.context = context;
-        sharedPreferences = context.getSharedPreferences(COOKIES, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 
@@ -39,7 +44,7 @@ public class SessionManager {
     }
 
     public boolean isLoggedIn() {
-        return sharedPreferences.getString(PL_PROFILE, null) != null;
+        return sharedPreferences.getString(KEY_USER_DATA, null) != null && sharedPreferences.getString(ALL_COOKIES, null) != null;
     }
 
     public void checkLogin() {
@@ -86,6 +91,41 @@ public class SessionManager {
 
     public void setPlProfile(String plProfile) {
         editor.putString(PL_PROFILE, plProfile).apply();
+    }
+
+    public long getManagerId() {
+
+        UserResponseModel userResponseModel = getUserData();
+        if(userResponseModel == null) return 0;
+        return userResponseModel.getPlayer().getEntry();
+    }
+
+    public void saveManagerId(long managerId) {
+        editor.putLong(MANAGER_ID, managerId).apply();
+    }
+
+    public void saveUserData(UserResponseModel userResponseModel) {
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(userResponseModel);
+        editor.putString(KEY_USER_DATA, json);
+        editor.apply();
+    }
+
+    public UserResponseModel getUserData() {
+        String json = sharedPreferences.getString(KEY_USER_DATA, null);
+        if (json != null) {
+            Gson gson = new Gson();
+            return gson.fromJson(json, UserResponseModel.class);
+        }
+        return null;
+    }
+
+    public void clearUserData() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(KEY_USER_DATA);
+        editor.apply();
     }
 
     public void logout() {

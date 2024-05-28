@@ -8,7 +8,8 @@
     <string name="enter_your_password">Enter your password</string>
     <string name="login">Login</string>
     <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign up</string>
-    <string name="guest_login">Guest Login</string>
+    <string name="guest_user">Guest User</string>
+    <string name="fplc_standings">FPLC Standings</string>
     <string name="todo">TODO</string>
     <string name="team_name">Team Name</string>
     <string name="logout">Logout</string>

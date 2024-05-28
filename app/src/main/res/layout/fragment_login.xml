@@ -122,26 +122,42 @@
             android:gravity="center_horizontal"
             android:text="@string/don_t_have_an_account_sign_up"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/button_guest_login"
+            app:layout_constraintBottom_toBottomOf="@id/button_guest_user"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_login" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_guest_login"
+            android:id="@+id/button_guest_user"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontal"
             android:layout_marginTop="24dp"
             android:padding="8dp"
-            android:text="@string/guest_login"
+            android:text="@string/guest_user"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/fplc_standings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_signup" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fplc_standings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/marginHorizontal"
+            android:layout_marginTop="24dp"
+            android:padding="8dp"
+            android:text="@string/fplc_standings"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/progress_circular"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_signup" />
+
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progress_circular"
