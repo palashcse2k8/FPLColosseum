@@ -4,19 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class GameWeekMatchDetails {
-    ArrayList<MatchDetails> matchDetails = new ArrayList<>();
-
-    public ArrayList<MatchDetails> getMatchDetails() {
-        return matchDetails;
-    }
-
-    public void setMatchDetails(ArrayList<MatchDetails> matchDetails) {
-        this.matchDetails = matchDetails;
-    }
-}
-
-class MatchDetails {
+public class MatchDetails {
     private long code;
     private long event;
     private boolean finished;
@@ -30,8 +18,9 @@ class MatchDetails {
     private long team_a_score;
     private long team_h;
     private long team_h_score;
+
     @SerializedName("stats")
-    ArrayList < MatchStats > stats = new ArrayList < > ();
+    ArrayList<MatchStats> stats = new ArrayList<>();
     private long team_h_difficulty;
     private long team_a_difficulty;
     private long pulse_id;
@@ -167,52 +156,5 @@ class MatchDetails {
 
     public void setPulse_id(long pulse_id) {
         this.pulse_id = pulse_id;
-    }
-}
-
-class MatchStats {
-    private String identifier;
-    @SerializedName("a")
-    ArrayList < MatchElement > a = new ArrayList < > ();
-    @SerializedName("h")
-    ArrayList < MatchElement > h = new ArrayList < > ();
-
-
-    // Getter Methods
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    // Setter Methods
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-}
-
-class MatchElement {
-    private long value;
-    private long element;
-
-
-    // Getter Methods
-
-    public long getValue() {
-        return value;
-    }
-
-    public long getElement() {
-        return element;
-    }
-
-    // Setter Methods
-
-    public void setValue(long value) {
-        this.value = value;
-    }
-
-    public void setElement(long element) {
-        this.element = element;
     }
 }

@@ -51,7 +51,7 @@ public class MyTeamViewModel extends AndroidViewModel {
                         fixtureApiResultLiveData.setValue(gameWeekMatchDetailsApiResponse);
                     }
             );
-            dataRepository.getTeamPicks(entry_id, gameWeekNumber);
+            dataRepository.getGameWeekPicks(entry_id, gameWeekNumber);
             myTeamApiResultLiveData.setValue(userResponseModelApiResponse);
         });
 

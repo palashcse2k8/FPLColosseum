@@ -17,6 +17,7 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
 import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
+import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment;
 import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment_;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
@@ -96,6 +97,7 @@ public class LoginFragment extends Fragment {
 
         //TODO
         binding.buttonGuestUser.setOnClickListener(v -> {
+            goToHomePage();
         });
     }
 
@@ -186,6 +188,8 @@ public class LoginFragment extends Fragment {
     }
 
     public void goToHomePage() {
+
+//        HomePageFragment_ homePageFragment = (HomePageFragment_) HomePageFragment.newInstance(10359552);
         FragmentUtils.replace(
                 requireActivity().getSupportFragmentManager(),
                 HomePageFragment_.builder().build(),

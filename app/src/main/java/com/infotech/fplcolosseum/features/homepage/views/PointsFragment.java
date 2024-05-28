@@ -14,22 +14,22 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
-import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
-import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
+import com.infotech.fplcolosseum.databinding.FragmentPointsBinding;
+import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
-import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
+import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class GameWeekPointsFragment extends Fragment {
+public class PointsFragment extends Fragment {
 
-    FragmentMyteamBinding binding;
+    FragmentPointsBinding binding;
 
-    MyTeamViewModel viewModel;
+    HomePageSharedViewModel viewModel;
 
     private static final int NUM_ROWS = 5;
     private static final int NUM_COLUMNS = 5;
@@ -37,9 +37,9 @@ public class GameWeekPointsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentMyteamBinding.inflate(inflater, container, false);
+        binding = FragmentPointsBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
-        binding.setMyTeamViewModel(viewModel);
+        binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
         return rootView;
     }
@@ -47,8 +47,10 @@ public class GameWeekPointsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(MyTeamViewModel.class);
-        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
+        viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
+//        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
+        viewModel.getTeamCurrentGameWeekAllData(10359552);
+
     }
 
     @Override
@@ -60,24 +62,33 @@ public class GameWeekPointsFragment extends Fragment {
 
         // Add players to the football field (customize positions as needed)
 
-        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+        viewModel.getMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
             if (apiResponse == null) return;
             if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
                 viewModel.dataLoading.setValue(false);
 
-                GameWeekMyTeamResponseModel myTeam = (GameWeekMyTeamResponseModel) apiResponse.getData();
+                MergedResponseModel myTeam = (MergedResponseModel) apiResponse.getData();
                 addPlayers(footballFieldLayout, myTeam);
             }
         });
     }
 
-    private void addPlayers(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel myTeam) {
+    private void addPlayers(GridLayout footballFieldLayout, MergedResponseModel mergedResponseModel) {
 
         List<PlayersData> teamPlayers = new ArrayList<>();
 
 
-        for (MyTeamPicks myTeamPicks : myTeam.getPicks()) {
-            teamPlayers.add(Constants.playerMap.get(myTeamPicks.getElement()));
+        for (Picks myTeamPicks : mergedResponseModel.getGameWeekPicksModel().getPicks()) {
+            PlayersData data = Constants.playerMap.get(myTeamPicks.getElement());
+            assert data != null;
+            data.setEvent_points(
+                    mergedResponseModel.getGameWeekLivePointsResponseModel().elements.stream()
+                            .filter(element -> element.id == myTeamPicks.getElement())
+                            .findFirst()
+                            .map(element -> element.stats.total_points)
+                            .orElse(0) // Provide a default value if no matching element is found
+            );
+            teamPlayers.add(data);
         }
 
         List<PlayersData> defenders = new ArrayList<>();
@@ -196,13 +207,13 @@ public class GameWeekPointsFragment extends Fragment {
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14-66.webp for player shirt
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14_1-66.webp for goal keeper shirt
         playerView.setPlayerImage(imgURL);
-        if(player.isIs_captain()){
-            Log.d("Captain's Info" , player.toString());
+        if (player.isIs_captain()) {
+            Log.d("Captain's Info", player.toString());
             playerView.setCaptain();
         }
 
-        if(player.isIs_vice_captain()) {
-            Log.d("Vice Captain's Info" , player.toString());
+        if (player.isIs_vice_captain()) {
+            Log.d("Vice Captain's Info", player.toString());
             playerView.setViceCaptain();
         }
 

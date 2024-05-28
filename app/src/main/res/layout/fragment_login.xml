@@ -148,7 +148,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontal"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10dp"
             android:padding="8dp"
             android:text="@string/fplc_standings"
             android:textSize="18sp"
@@ -156,7 +156,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_signup" />
+            app:layout_constraintTop_toBottomOf="@+id/button_guest_user" />
 
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -165,12 +165,13 @@
             android:layout_height="200dp"
             android:indeterminate="true"
             app:indicatorColor="@color/white"
+            android:layout_marginTop="10dp"
             android:visibility="@{loginViewModel.dataLoading ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_signup">
+            app:layout_constraintTop_toBottomOf="@+id/fplc_standings">
         </com.google.android.material.progressindicator.CircularProgressIndicator>
 
         <!--            android:visibility="@{LoginViewModel.dataLoading == Boolean.TRUE ? View.VISIBLE : View.GONE}"-->
