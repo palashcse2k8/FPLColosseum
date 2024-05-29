@@ -1,10 +1,12 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 
 import androidx.annotation.NonNull;
@@ -69,8 +71,102 @@ public class PointsFragment extends Fragment {
 
                 MergedResponseModel myTeam = (MergedResponseModel) apiResponse.getData();
                 addPlayers(footballFieldLayout, myTeam);
+                addLeftOverLayView(myTeam);
+                addRightOverLayView(myTeam);
             }
         });
+    }
+
+    private void addRightOverLayView(MergedResponseModel myTeam) {
+        OverlayView overlayView = new OverlayView(requireContext(), false);
+
+        // Add overlay view initially to measure its size
+        binding.frameLayout.addView(overlayView);
+
+        // Measure the view
+        overlayView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+
+        overlayView.setLabel1TextView("Transfers");
+        overlayView.setInfo1TextView(myTeam.getGameWeekPicksModel().getEntry_history().getEvent_transfers() + "(-" + myTeam.getGameWeekPicksModel().getEntry_history().getEvent_transfers_cost() + ")");
+
+        overlayView.setLabel2TextView("Squad Val");
+        overlayView.setInfo2TextView((double)myTeam.getGameWeekPicksModel().getEntry_history().getValue()/10 + "m");
+
+        overlayView.setLabel3TextView("In Bank");
+        overlayView.setInfo3TextView((double)myTeam.getGameWeekPicksModel().getEntry_history().getBank()/10 + "m");
+
+        // Get device width
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int deviceWidth = displayMetrics.widthPixels;
+
+        // Calculate grid width (device width / 5)
+        int gridWidth = deviceWidth / 5;
+
+        // Calculate left margin to center the view in the middle of the 1st and 2nd grid
+        int overlayViewWidth = overlayView.getMeasuredWidth();
+        int leftMargin = (gridWidth*4) - gridWidth/4 - (overlayViewWidth / 2);
+
+        int topMargin = 20;
+
+        FrameLayout.LayoutParams overlayParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+//        overlayParams.gravity = Gravity.CENTER;
+        overlayParams.leftMargin = leftMargin;
+        overlayParams.topMargin = topMargin;
+        overlayView.setLayoutParams(overlayParams);
+//        binding.frameLayout.addView(overlayView, overlayParams);
+    }
+
+    private void addLeftOverLayView(MergedResponseModel myTeam) {
+
+        OverlayView overlayView = new OverlayView(requireContext(), false);
+
+        // Add overlay view initially to measure its size
+        binding.frameLayout.addView(overlayView);
+
+        // Measure the view
+        overlayView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+
+
+        int gameWeekNumber = (int) myTeam.getGameWeekPicksModel().getEntry_history().getEvent();
+        int gameWeekEventIndex = gameWeekNumber - 1;
+
+        overlayView.setLabel1TextView("Final Points");
+        overlayView.setInfo1TextView(myTeam.getGameWeekPicksModel().getEntry_history().getPoints() + "");
+
+        overlayView.setLabel2TextView("Avg Points");
+        overlayView.setInfo2TextView(String.valueOf(Constants.GameWeekStaticData.getEvents().get(gameWeekEventIndex).getAverage_entry_score()));
+
+        overlayView.setLabel3TextView("Max Points");
+        overlayView.setInfo3TextView(String.valueOf(Constants.GameWeekStaticData.getEvents().get(gameWeekEventIndex).getHighest_score()));
+
+        // Get device width
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int deviceWidth = displayMetrics.widthPixels;
+        int deviceHeight = displayMetrics.heightPixels;
+
+        // Calculate grid width (device width / 5)
+        int gridWidth = deviceWidth / 5;
+
+        // Calculate left margin to center the view in the middle of the 1st and 2nd grid
+        int overlayViewWidth = overlayView.getMeasuredWidth();
+        int leftMargin = gridWidth - gridWidth/4 - (overlayViewWidth / 2);
+
+        int topMargin = 20;
+
+        FrameLayout.LayoutParams overlayParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+//        overlayParams.gravity = Gravity.CENTER;
+        overlayParams.leftMargin = leftMargin;
+        overlayParams.topMargin = topMargin;
+        overlayView.setLayoutParams(overlayParams);
+//        binding.frameLayout.addView(overlayView, overlayParams);
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
     private void addPlayers(GridLayout footballFieldLayout, MergedResponseModel mergedResponseModel) {

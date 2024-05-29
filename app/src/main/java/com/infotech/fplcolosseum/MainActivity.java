@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void prepareData(GameWeekStaticDataModel dataModel){
 
+        Constants.GameWeekStaticData = dataModel;
+
         //setting team map
         Map<Long, TeamData> teamMap = new HashMap<>();
         for (TeamData data : dataModel.getTeams()) {
