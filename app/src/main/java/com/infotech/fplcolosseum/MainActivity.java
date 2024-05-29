@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             if(apiResponse == null) return;
             if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
 
-                // Update Static data with the data
+                // Update Static data from api data
                 prepareData(apiResponse.getData());
 
             } else {
@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         if(Constants.playerMap.isEmpty()){
             sharedViewModel.getGameWeekStaticData();
         }
-//        Fragment fragment = new GameWeekDashboardFragment();
         Fragment fragment = new LoginFragment();
 //        Fragment fragment = new HomePageFragment();
 //        Fragment fragment = new MyTeamFragment();
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(false);
         }
         assert actionBar != null;
-        actionBar.setTitle("Game Week Standings");
+        actionBar.setTitle("Fantasy Freakz!");
     }
 
     public void prepareData(GameWeekStaticDataModel dataModel){
