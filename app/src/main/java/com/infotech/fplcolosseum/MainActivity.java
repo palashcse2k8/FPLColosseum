@@ -3,14 +3,17 @@ package com.infotech.fplcolosseum;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
@@ -20,12 +23,13 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 import com.infotech.fplcolosseum.features.login.views.LoginFragment;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.SharedViewModel;
+import com.infotech.fplcolosseum.utilities.ToolbarChangeListener;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ToolbarChangeListener {
 
     private SharedViewModel sharedViewModel;
     @Override
@@ -119,5 +123,31 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Selected Item: " +item.getTitle(), Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
 
+    }
+
+    @Override
+    public void onToolbarChanged(Toolbar newToolbar) {
+//        getSupportActionBar().hide();
+//        setSupportActionBar(newToolbar);
+        Log.d("MainActivity", "onToolbarChanged called with: " + newToolbar);
+        Toolbar defaultToolbar = findViewById(R.id.toolbar);
+        Log.d("MainActivity", "onToolbarChanged default toolbar with: " + defaultToolbar);
+
+        if (newToolbar != null) {
+
+            // Remove newToolbar from its current parent, if any
+            ViewGroup parentViewGroup = (ViewGroup) newToolbar.getParent();
+            if (parentViewGroup != null) {
+                parentViewGroup.removeView(newToolbar);
+            }
+
+            AppBarLayout appBarLayout = findViewById(R.id.appbarLayout);
+            appBarLayout.removeView(defaultToolbar);
+            appBarLayout.addView(newToolbar);
+            setSupportActionBar(newToolbar);
+            Log.d("MainActivity", "setSupportActionBar called with: " + newToolbar);
+        } else {
+            Log.e("MainActivity", "New toolbar is null");
+        }
     }
 }

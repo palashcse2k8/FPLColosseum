@@ -1,5 +1,6 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.widget.GridLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -22,6 +25,7 @@ import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.ToolbarChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +37,50 @@ public class PointsFragment extends Fragment {
 
     HomePageSharedViewModel viewModel;
 
+    private ToolbarChangeListener toolbarChangeListener;
+
     private static final int NUM_ROWS = 5;
     private static final int NUM_COLUMNS = 5;
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof ToolbarChangeListener) {
+            toolbarChangeListener = (ToolbarChangeListener) context;
+        } else {
+            throw new ClassCastException(context.toString() + " must implement PointsFragment.ToolbarChangeListener");
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPointsBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
+//        Toolbar pointToolBar = requireActivity().findViewById(R.id.pointToolbar);
+////        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
+//        ((AppCompatActivity) requireActivity()).setSupportActionBar(pointToolBar);
+
+//        // Reference the toolbar from the fragment's layout
+//        Toolbar pointToolbar = rootView.findViewById(R.id.pointToolbar);
+//        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+//        activity.setSupportActionBar(pointToolbar);
+//
+//        // If you need to modify the toolbar, do it here
+//        if (activity.getSupportActionBar() != null) {
+//            activity.getSupportActionBar().setTitle("Custom Toolbar");
+//            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        }
+
+        // Reference the toolbar from the fragment's layout
+        Toolbar pointToolbar = rootView.findViewById(R.id.pointToolbar);
+
+        // Notify the parent to change the toolbar
+        if (toolbarChangeListener != null) {
+            toolbarChangeListener.onToolbarChanged(pointToolbar);
+        }
+
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
         return rootView;
@@ -76,6 +116,13 @@ public class PointsFragment extends Fragment {
             }
         });
     }
+
+    private void setUpToolBar(@NonNull View view){
+        Toolbar pointToolBar = view.findViewById(R.id.pointToolbar);
+//        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(pointToolBar);
+    }
+
 
     private void addRightOverLayView(MergedResponseModel myTeam) {
         OverlayView overlayView = new OverlayView(requireContext(), false);
