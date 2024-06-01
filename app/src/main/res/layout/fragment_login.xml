@@ -15,9 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/teal_700"
-        android:padding="8dp"
         tools:context=".features.login.views.LoginFragment">
-
+        <include layout="@layout/appbar_layout"
+            android:id="@+id/appbarLogin"/>
         <TextView
             android:id="@+id/textView_username"
             android:layout_width="0dp"

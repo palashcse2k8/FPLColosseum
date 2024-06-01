@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity implements ToolbarChangeList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar(findViewById(R.id.toolbar));
-        setupActionBar();
+//        setSupportActionBar(findViewById(R.id.toolbar));
+//        setupActionBar();
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
 
         sharedViewModel.getApiData().observe(this, apiResponse -> {
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements ToolbarChangeList
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Toast.makeText(this, "Selected Item: " +item.getTitle(), Toast.LENGTH_SHORT).show();
+        super.onBackPressed();
         return super.onOptionsItemSelected(item);
 
     }

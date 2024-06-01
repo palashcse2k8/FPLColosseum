@@ -6,13 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/teal_700"
-    android:padding="8dp"
     tools:context=".features.login.views.LoginFragment">
 
+    <include layout="@layout/appbar_layout_test"
+        android:id="@+id/test"/>
     <WebView
         android:id="@+id/webView_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/test"
         android:layout_centerInParent="true"
         android:visibility="visible"
         tools:ignore="MissingConstraints">

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -39,10 +40,20 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
+
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(binding.appbarLogin.toolbar);
         loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
         binding.setLoginViewModel(loginViewModel);
         binding.setLifecycleOwner(this);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        //        Toolbar pointToolbar = binding.getRoot().findViewById(R.id.toolbar_test);
+//        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+//        activity.getSupportActionBar();
+        super.onResume();
     }
 
     @Override
@@ -200,5 +211,16 @@ public class LoginFragment extends Fragment {
                 R.anim.enter_from_right,   // popEnter
                 R.anim.exit_to_left      // popExit
         );
+//        FragmentUtils.replace(
+//                requireActivity().getSupportFragmentManager(),
+//                TestFragment_.builder().build(),
+//                R.id.contentFrame,
+//                true,
+//                R.anim.enter_from_right, // enter
+//                R.anim.exit_to_left,      // exit
+//                R.anim.enter_from_right,   // popEnter
+//                R.anim.exit_to_left      // popExit
+//        );
     }
+
 }

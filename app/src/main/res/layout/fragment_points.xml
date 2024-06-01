@@ -14,9 +14,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-        <include android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            layout="@layout/point_fragment_toolbar"/>
+<!--        <include android:layout_height="wrap_content"-->
+<!--            android:layout_width="match_parent"-->
+<!--            layout="@layout/point_fragment_toolbar"/>-->
+
+    <include layout="@layout/appbar_layout_test" android:id="@+id/appbarPoint"/>
 
     <FrameLayout
         android:id="@+id/frameLayout"

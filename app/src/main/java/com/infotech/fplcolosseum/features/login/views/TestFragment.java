@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
@@ -17,6 +18,8 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.util.FragmentUtils;
@@ -34,11 +37,41 @@ public class TestFragment extends Fragment {
     private String url = "https://fantasy.premierleague.com/";
     private String redirect_url = "https://fantasy.premierleague.com/";
 
+    @Override
+    public void onResume() {
+        //        Toolbar pointToolbar = binding.getRoot().findViewById(R.id.toolbar_test);
+//        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+//        activity.getSupportActionBar().setTitle("FCGOA");
+//        activity.getSupportActionBar().setSubtitle("Md. Mosiur Rahman Test");
+        super.onResume();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentTestBinding.inflate(inflater, container, false);
 //        binding.setGameWeekViewModel(viewModel);
+
+        Toolbar newToolbar = binding.getRoot().findViewById(R.id.toolbar_test);
+
+        // Get the current Toolbar from the activity
+//        Toolbar currentToolbar = ((AppCompatActivity) requireActivity()).getSupportActionBar().getCustomView().findViewById(R.id.toolbar);
+
+//        // Remove the current Toolbar from the ActionBar
+//        ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayShowCustomEnabled(false);
+//        ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+
+        // Set the new Toolbar as the ActionBar
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(newToolbar);
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         binding.webViewLogin.getSettings().setJavaScriptEnabled(true);
         binding.webViewLogin.getSettings().setDomStorageEnabled(true);
 
@@ -141,13 +174,15 @@ public class TestFragment extends Fragment {
                 }, 0); // Adjust the delay time as needed
             }
         });
-        binding.webViewLogin.loadUrl(url);
+//        binding.webViewLogin.loadUrl(url);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
 
 
     }
