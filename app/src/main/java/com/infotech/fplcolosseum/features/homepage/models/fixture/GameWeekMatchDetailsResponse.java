@@ -1,15 +1,16 @@
 package com.infotech.fplcolosseum.features.homepage.models.fixture;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameWeekMatchDetailsResponse {
-    List<MatchDetails> matchDetails;
+    ArrayList<MatchDetails> matchDetails;
 
-    public List<MatchDetails> getMatchDetails() {
+    public ArrayList<MatchDetails> getMatchDetails() {
         return matchDetails;
     }
 
-    public void setMatchDetails(List<MatchDetails> matchDetails) {
+    public void setMatchDetails(ArrayList<MatchDetails> matchDetails) {
         this.matchDetails = matchDetails;
     }
 }

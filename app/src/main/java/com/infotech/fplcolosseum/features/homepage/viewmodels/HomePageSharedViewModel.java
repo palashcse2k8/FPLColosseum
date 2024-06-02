@@ -60,7 +60,7 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
                                             mergedResponseModelMediatorLiveData.addSource(dataRepository.getFixtureData(currentGameWeek),
                                                     gameWeekMatchDetailsApiResponse -> {
-                                                        mergedResponseModel.setGameWeekMatchDetails(gameWeekMatchDetailsApiResponse.getData());
+                                                        mergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());
                                                         dataLoading.setValue(false); // make progress bar vanish when all api results are combined
                                                         mergedResponseModelMediatorLiveData.setValue(ApiResponse.success(mergedResponseModel));
 //                                                        dataLoading.setValue(false);
@@ -96,7 +96,7 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
                                             mergedResponseModelMediatorLiveData.addSource(dataRepository.getFixtureData(gameWeek),
                                                     gameWeekMatchDetailsApiResponse -> {
-                                                        mergedResponseModel.setGameWeekMatchDetails(gameWeekMatchDetailsApiResponse.getData());
+                                                        mergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());
                                                         dataLoading.setValue(false); // make progress bar vanish when all api results are combined
                                                         mergedResponseModelMediatorLiveData.setValue(ApiResponse.success(mergedResponseModel));
                                                     });

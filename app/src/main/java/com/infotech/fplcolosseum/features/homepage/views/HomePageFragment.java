@@ -7,12 +7,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentHomepageBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.ViewPagerAdapter;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
@@ -27,6 +30,8 @@ public class HomePageFragment extends Fragment {
     FragmentHomepageBinding binding;
 
     HomePageSharedViewModel viewModel;
+    private Toolbar currentToolbar;
+
 
     private long managerId;
 
@@ -83,5 +88,53 @@ public class HomePageFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(adapter.getPageTitle(position).toString())
         ).attach();
+
+
+        handleTabSelection();
+
+        // Set the initial toolbar
+        switchToolbar(0);
+    }
+
+    private void handleTabSelection() {
+        binding.topTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                switchToolbar(position);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    }
+
+    private void switchToolbar(int position) {
+        if (getActivity() != null) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            ViewGroup rootView = getView().findViewById(R.id.toolbar_container);
+
+            // Remove the current toolbar if exists
+            if (currentToolbar != null) {
+                rootView.removeView(currentToolbar);
+            }
+
+            // Inflate the new toolbar layout
+            if (position == 0) {
+                currentToolbar = (Toolbar) inflater.inflate(R.layout.toolbar_point_fragment, rootView, false);
+            } else if (position == 1) {
+                currentToolbar = (Toolbar) inflater.inflate(R.layout.toolbar_league_fragment, rootView, false);
+            }
+            // Add more cases for additional tabs
+
+            // Add the new toolbar to the root view
+            rootView.addView(currentToolbar);
+
+            // Set the new toolbar as the action bar
+            ((AppCompatActivity) getActivity()).setSupportActionBar(currentToolbar);
+        }
     }
 }

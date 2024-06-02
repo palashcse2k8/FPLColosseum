@@ -62,26 +62,6 @@ public class PointsFragment extends Fragment {
 ////        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 //        ((AppCompatActivity) requireActivity()).setSupportActionBar(pointToolBar);
 
-//        // Reference the toolbar from the fragment's layout
-        ((AppCompatActivity) requireActivity()).setSupportActionBar(binding.appbarPoint.toolbarTest);
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-//
-//        // If you need to modify the toolbar, do it here
-//        if (activity.getSupportActionBar() != null) {
-//            activity.getSupportActionBar().setTitle("Custom Toolbar");
-//            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
-
-        // Reference the toolbar from the fragment's layout
-//        Toolbar pointToolbar = rootView.findViewById(R.id.pointToolbar);
-
-
-//        // Notify the parent to change the toolbar
-//        if (toolbarChangeListener != null) {
-//            toolbarChangeListener.onToolbarChanged(pointToolbar);
-//        }
-
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
         return rootView;

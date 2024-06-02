@@ -27,6 +27,8 @@ package com.infotech.fplcolosseum.data.sources.network;
 //    }
 //}
 
+import java.util.List;
+
 public class ApiResponse<T> {
 
     public enum Status {
@@ -37,20 +39,28 @@ public class ApiResponse<T> {
 
     private final Status status;
     private final T data;
+
+//    private final List<T> listData;
     private final String message;
 
     private ApiResponse(Status status, T data, String message) {
         this.status = status;
         this.data = data;
+//        this.listData = listData;
         this.message = message;
     }
+
 
     public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>(Status.SUCCESS, data, null);
     }
 
+//    public static <T> ApiResponse<T> successWithListData(List<T> data) {
+//        return new ApiResponse<>(Status.SUCCESS, null, data, null);
+//    }
+
     public static <T> ApiResponse<T> error(String message, T data) {
-        return new ApiResponse<>(Status.ERROR, data, message);
+        return new ApiResponse<>(Status.ERROR, data , message);
     }
 
     public static <T> ApiResponse<T> loading(T data) {
@@ -70,4 +80,9 @@ public class ApiResponse<T> {
     public String getMessage() {
         return message;
     }
+
+//    public List<T> getListData() {
+//        return listData;
+//    }
 }
+

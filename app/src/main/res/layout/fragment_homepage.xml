@@ -6,12 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <FrameLayout
+        android:id="@+id/toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
     <!-- Top TabLayout -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/topTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/toolbar_container"
         app:tabGravity="fill"
         app:tabMode="fixed" />
 

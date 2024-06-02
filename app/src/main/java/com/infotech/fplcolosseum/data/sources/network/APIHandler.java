@@ -6,8 +6,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -74,6 +78,18 @@ public class APIHandler {
         return null;
     }
 
+//    public static <T> T convertResponseWithType(ResponseBody responseBody, Type type) throws IOException {
+//
+//        Gson gson = new Gson();
+//        String json = responseBody.string();
+////        Logger.d("apiResponse=>> " + json);
+//        try {
+//            return gson.fromJson(json, type);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
     //special case for login api
     public static <T> LiveData<ApiResponse<T>> makeApiCall(Call<ResponseBody> callingAPI, Class<T> apiResponseType) {
 
@@ -102,5 +118,88 @@ public class APIHandler {
         });
 
         return resultLiveData;
+    }
+
+    public static <T> LiveData<ApiResponse<List<T>>> makeApiCallForList(Call<ResponseBody> callingAPI, Class<T> typeOfT) {
+        MutableLiveData<ApiResponse<List<T>>> resultLiveData = new MutableLiveData<>();
+
+        callingAPI.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        List<T> convertedResponse = convertListResponse(response.body(), typeOfT);
+                        resultLiveData.postValue(ApiResponse.success(Collections.unmodifiableList(convertedResponse)));
+                    } catch (IOException e) {
+                        resultLiveData.postValue(ApiResponse.error("API call failed: " + e.getMessage(), null));
+                        e.printStackTrace();
+                    }
+                } else {
+                    resultLiveData.postValue(ApiResponse.error("API call failed: response unsuccessful", null));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                resultLiveData.postValue(ApiResponse.error("API call failed: " + t.getMessage(), null));
+                t.printStackTrace();
+            }
+        });
+
+        return resultLiveData;
+    }
+
+
+//    public static <T> LiveData<ApiResponse<T>> makeApiCall2(Call<ResponseBody> callingAPI, Class<T> apiResponseType) {
+//        MutableLiveData<ApiResponse<T>> resultLiveData = new MutableLiveData<>();
+//
+//        callingAPI.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    try {
+//                        new TypeToken<T>() {}.getType();
+//                        T convertedResponse = convertResponseWithType(response.body(), T, typeOfT);
+//                        resultLiveData.postValue(ApiResponse.success(convertedResponse));
+//                    } catch (IOException e) {
+//                        resultLiveData.postValue(ApiResponse.error("API call failed: " + e.getMessage(), null));
+//                        e.printStackTrace();
+//                    }
+//                } else {
+//                    resultLiveData.postValue(ApiResponse.error("API call failed: response unsuccessful", null));
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                resultLiveData.postValue(ApiResponse.error("API call failed: " + t.getMessage(), null));
+//                t.printStackTrace();
+//            }
+//        });
+//
+//        return resultLiveData;
+//    }
+
+//    public static <T> T convertResponseWithType(ResponseBody responseBody, Type type) throws IOException {
+//        Gson gson = new Gson();
+//        String json = responseBody.string();
+//        try {
+//            return gson.fromJson(json, type);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new IOException("JSON parsing error", e);
+//        }
+//    }
+
+    public static <T> List<T> convertListResponse(ResponseBody responseBody, Class<T> type) throws IOException {
+        Gson gson = new Gson();
+        Type conversionType = new TypeToken<List<T>>() {}.getType();
+        String json = responseBody.string();
+        try {
+            return gson.fromJson(json, conversionType);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IOException("JSON parsing error", e);
+        }
     }
 }

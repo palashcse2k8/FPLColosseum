@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pointToolbar"
+    android:id="@+id/leagueToolbar"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/backgroundPrimary"
+    android:background="@color/purple_700"
     android:layout_height="?attr/actionBarSize">
 
     <LinearLayout
@@ -17,21 +17,21 @@
             android:layout_weight="1.2"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="@color/textColorPrimary"
-                android:text="FCGOA"/>
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textColor="@color/textColorPrimary"-->
+<!--                android:text="FCGOA"/>-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/textColorPrimary"
-                android:textSize="14sp"
-                android:text="Md. Mosiur Rahman">
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textColor="@color/textColorPrimary"-->
+<!--                android:textSize="14sp"-->
+<!--                android:text="Md. Mosiur Rahman">-->
 
-            </TextView>
+<!--            </TextView>-->
 
         </LinearLayout>
 

@@ -18,7 +18,7 @@
 <!--            android:layout_width="match_parent"-->
 <!--            layout="@layout/point_fragment_toolbar"/>-->
 
-    <include layout="@layout/appbar_layout_test" android:id="@+id/appbarPoint"/>
+<!--    <include layout="@layout/appbar_layout_test" android:id="@+id/appbarPoint"/>-->
 
     <FrameLayout
         android:id="@+id/frameLayout"
