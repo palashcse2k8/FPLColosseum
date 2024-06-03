@@ -86,4 +86,19 @@ public interface APIServices {
     @GET("https://fantasy.premierleague.com/api/bootstrap-static/") // https://fantasy.premierleague.com/api/bootstrap-static/
     Call<ResponseBody> getGameWeeKStaticData();
 
+    @GET("https://fantasy.premierleague.com/api/team/set-piece-notes/") // "https://fantasy.premierleague.com/api/team/set-piece-notes/"
+    Call<ResponseBody> getSetPieceNotes();
+
+    //update user data
+    @POST("https://fantasy.premierleague.com/api/entry-update/") // "https://fantasy.premierleague.com/api/team/set-piece-notes/"
+    Call<ResponseBody> updateUserData();
+
+    //create classic league
+    @GET("https://fantasy.premierleague.com/api/entry/league-classic/") // "https://fantasy.premierleague.com/api/team/set-piece-notes/"
+    Call<ResponseBody> createClassicLeague();
+    @GET("https://fantasy.premierleague.com/api/dream-team/") // "https://fantasy.premierleague.com/api/team/set-piece-notes/"
+    Call<ResponseBody> getDreamTeam();
+
+    @GET("https://fantasy.premierleague.com/api/dream-team/{gameWeek}") // "https://fantasy.premierleague.com/api/team/set-piece-notes/"
+    Call<ResponseBody> getWeekDreamTeam(@Path("gameWeek") long gameWeek);
 }

@@ -65,19 +65,6 @@ public class APIHandler {
         return apiData;
     }
 
-    public static <T> T convertResponse(ResponseBody responseBody, Class<T> classofT) throws IOException {
-
-        Gson gson = new Gson();
-        String json = responseBody.string();
-//        Logger.d("apiResponse=>> " + json);
-        try {
-            return gson.fromJson(json, classofT);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 //    public static <T> T convertResponseWithType(ResponseBody responseBody, Type type) throws IOException {
 //
 //        Gson gson = new Gson();
@@ -129,7 +116,7 @@ public class APIHandler {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         List<T> convertedResponse = convertListResponse(response.body(), typeOfT);
-                        resultLiveData.postValue(ApiResponse.success(Collections.unmodifiableList(convertedResponse)));
+                        resultLiveData.postValue(ApiResponse.success(convertedResponse));
                     } catch (IOException e) {
                         resultLiveData.postValue(ApiResponse.error("API call failed: " + e.getMessage(), null));
                         e.printStackTrace();
@@ -201,5 +188,18 @@ public class APIHandler {
             e.printStackTrace();
             throw new IOException("JSON parsing error", e);
         }
+    }
+
+    public static <T> T convertResponse(ResponseBody responseBody, Class<T> classofT) throws IOException {
+
+        Gson gson = new Gson();
+        String json = responseBody.string();
+//        Logger.d("apiResponse=>> " + json);
+        try {
+            return gson.fromJson(json, classofT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
