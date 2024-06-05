@@ -37,7 +37,7 @@ public class PointsFragment extends Fragment {
 
     HomePageSharedViewModel viewModel;
 
-    private ToolbarChangeListener toolbarChangeListener;
+//    private ToolbarChangeListener toolbarChangeListener;
 
     private static final int NUM_ROWS = 5;
     private static final int NUM_COLUMNS = 5;
@@ -72,7 +72,7 @@ public class PointsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
 //        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
-        viewModel.getTeamCurrentGameWeekAllData(10359552);
+//        viewModel.getTeamCurrentGameWeekAllData(10359552);
 
     }
 

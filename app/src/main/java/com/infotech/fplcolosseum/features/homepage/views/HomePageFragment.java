@@ -42,6 +42,7 @@ public class HomePageFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +51,7 @@ public class HomePageFragment extends Fragment {
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
 //        viewModel.getTeamCurrentGameWeekAllData(managerId);
+        viewModel.getTeamCurrentGameWeekAllData(managerId);
     }
 
     @Nullable
@@ -70,13 +72,13 @@ public class HomePageFragment extends Fragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(requireActivity());
 
         // show if user logged in
-        if(Constants.LoggedInUser != null){
+        if (Constants.LoggedInUser != null) {
             adapter.addFragment(new MyTeamFragment(), "My Team");
         }
         adapter.addFragment(new PointsFragment(), "Points");
 
         // show if user logged in
-        if(Constants.LoggedInUser != null){
+        if (Constants.LoggedInUser != null) {
             adapter.addFragment(new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry()), "Transfers");
         }
 
@@ -105,17 +107,19 @@ public class HomePageFragment extends Fragment {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
     }
 
     private void switchToolbar(int position) {
         if (getActivity() != null) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            ViewGroup rootView = getView().findViewById(R.id.toolbar_container);
+            ViewGroup rootView = requireView().findViewById(R.id.toolbar_container);
 
             // Remove the current toolbar if exists
             if (currentToolbar != null) {
