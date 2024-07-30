@@ -138,6 +138,7 @@ public class GameWeekDashboardFragment extends Fragment {
             progressDialog.show();
             viewModel.gameWeekDataFromAPI(leagueID, gameWeek);
         } catch (IOException e) {
+            progressDialog.hide();
             throw new RuntimeException(e);
         }
     }

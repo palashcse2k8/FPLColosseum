@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements ToolbarChangeList
 //        setupActionBar();
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
 
+        //request api for updating static data
         sharedViewModel.getApiData().observe(this, apiResponse -> {
             // Handle API response in the fragment
             if(apiResponse == null) return;
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements ToolbarChangeList
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Toast.makeText(this, "Selected Item: " +item.getTitle(), Toast.LENGTH_SHORT).show();
-        super.onBackPressed();
+//        onBackPressed();
         return super.onOptionsItemSelected(item);
 
     }

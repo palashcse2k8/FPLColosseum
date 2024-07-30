@@ -85,6 +85,7 @@ public class GameWeekRepository {
         LiveData<LeagueGameWeekDataModel> leagueGameWeekDataModel = callAPI(callAPI, LeagueGameWeekDataModel.class);
         return Transformations.switchMap(leagueGameWeekDataModel, complexData -> {
             if (complexData != null) {
+                if(complexData.getTeamDatas() == null) return null;
                 return filterMangers(complexData);
             }
             return null; // Handle the case where complexData is null
@@ -98,6 +99,10 @@ public class GameWeekRepository {
         List<ManagerModel> managerModels = new ArrayList<>();
 
         List<TeamDataResponseModel> customModelList = leagueGameWeekDataModel.getTeamDatas();
+
+        if(leagueGameWeekDataModel.getTeamDatas() == null){
+            return null;
+        }
 
         if (leagueGameWeekDataModel.getTeamDatas().size() > 5) {
             customModelList = leagueGameWeekDataModel.getTeamDatas().subList(0, 10);
@@ -419,6 +424,8 @@ public class GameWeekRepository {
 //                 Source 1 is completed, now call Source 2
 //                if (leagueID.equalsIgnoreCase("671887"))
 //                    callSource2(_managerList, leagueID, currentGameweek);
+            } else {
+                _managerList.postValue( new ArrayList<>());
             }
         });
 
