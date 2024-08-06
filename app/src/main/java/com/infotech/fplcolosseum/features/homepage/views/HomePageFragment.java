@@ -26,7 +26,7 @@ import org.androidannotations.annotations.EFragment;
 @EFragment(resName = "fragment_homepage")
 public class HomePageFragment extends Fragment {
 
-    private static final String ARG_MANAGER_ID = "manager_id";
+    public static final String ARG_MANAGER_ID = "manager_id";
     FragmentHomepageBinding binding;
 
     HomePageSharedViewModel viewModel;
@@ -47,7 +47,7 @@ public class HomePageFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            managerId = getArguments().getInt(ARG_MANAGER_ID);
+            managerId = getArguments().getLong(ARG_MANAGER_ID);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
 //        viewModel.getTeamCurrentGameWeekAllData(managerId);

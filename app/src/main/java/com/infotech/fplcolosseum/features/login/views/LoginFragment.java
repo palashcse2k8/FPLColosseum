@@ -77,7 +77,7 @@ public class LoginFragment extends Fragment {
                             saveUserInfo(data);
                             Constants.LoggedInUser = data;
 
-                            goToHomePage();
+                            goToHomePage(Constants.LoggedInUser.getPlayer().getEntry());
 
                         } else if (apiResponse.getData() instanceof String) {
                             UIUtils.toast(requireContext(), apiResponse.getMessage(), ToastLevel.WARNING);
@@ -108,7 +108,7 @@ public class LoginFragment extends Fragment {
 
         //TODO
         binding.buttonGuestUser.setOnClickListener(v -> {
-            goToHomePage();
+//            goToHomePage();
         });
     }
 
@@ -198,12 +198,12 @@ public class LoginFragment extends Fragment {
         );
     }
 
-    public void goToHomePage() {
+    public void goToHomePage(long managerID) {
 
 //        HomePageFragment_ homePageFragment = (HomePageFragment_) HomePageFragment.newInstance(10359552);
         FragmentUtils.replace(
                 requireActivity().getSupportFragmentManager(),
-                HomePageFragment_.builder().build(),
+                HomePageFragment_.builder().arg(HomePageFragment.ARG_MANAGER_ID, managerID).build(),
                 R.id.contentFrame,
                 true,
                 R.anim.enter_from_right, // enter

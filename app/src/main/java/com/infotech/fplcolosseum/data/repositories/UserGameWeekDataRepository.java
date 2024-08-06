@@ -62,7 +62,7 @@ public class UserGameWeekDataRepository {
                 Call<ResponseBody> callAPI = apiServices.getManagerProfileData();
 
                 userProfileLiveData.addSource(APIHandler.makeApiCall(callAPI, responseClass), tApiResponse -> {
-                    Log.d("Data ", tApiResponse.getData().toString());
+//                    Log.d("Data ", tApiResponse.getData().toString());
                     userProfileLiveData.postValue(tApiResponse);
                 });
             }
