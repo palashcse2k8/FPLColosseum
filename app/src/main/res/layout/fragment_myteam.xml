@@ -7,7 +7,7 @@
 
         <variable
             name="myTeamViewModel"
-            type="com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel" />
+            type="com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel" />
     </data>
 
 <RelativeLayout

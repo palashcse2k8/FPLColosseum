@@ -14,9 +14,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
+import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
+import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
@@ -28,7 +31,7 @@ public class MyTeamFragment extends Fragment {
 
     FragmentMyteamBinding binding;
 
-    MyTeamViewModel viewModel;
+    HomePageSharedViewModel viewModel;
 
     @Nullable
     @Override
@@ -43,7 +46,7 @@ public class MyTeamFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(MyTeamViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
     }
 
     @Override
@@ -55,23 +58,23 @@ public class MyTeamFragment extends Fragment {
 
         // Add players to the football field (customize positions as needed)
 
-        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), myTeamApiResponse -> {
+        viewModel.getMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
 
-            if (myTeamApiResponse == null) return;
-            switch (myTeamApiResponse.getStatus()) {
+            if (apiResponse == null) return;
+            switch (apiResponse.getStatus()) {
                 case LOADING:
                     showLoading();
                     break;
                 case SUCCESS:
                     viewModel.dataLoading.setValue(false);
-                    if(myTeamApiResponse.getData() instanceof GameWeekMyTeamResponseModel){
-                        GameWeekMyTeamResponseModel data = (GameWeekMyTeamResponseModel) myTeamApiResponse.getData();
-                        updateUI(footballFieldLayout, data);
-                    }
+
+                    MergedResponseModel myTeam = (MergedResponseModel) apiResponse.getData();
+                    updateUI(footballFieldLayout, myTeam);
+
 
                     break;
                 case ERROR:
-                    showFailure(myTeamApiResponse.getMessage());
+                    showFailure(apiResponse.getMessage());
                     break;
             }
         });
@@ -92,17 +95,17 @@ public class MyTeamFragment extends Fragment {
         binding.footballFieldLayout.setVisibility(View.GONE);
     }
 
-    private void updateUI(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel data) {
+    private void updateUI(GridLayout footballFieldLayout, MergedResponseModel data) {
 
         binding.progressCircular.setVisibility(View.GONE);
         addPlayers(footballFieldLayout, data);
     }
 
-    private void addPlayers(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel myTeam) {
+    private void addPlayers(GridLayout footballFieldLayout, MergedResponseModel mergedResponseModel) {
 
         List<PlayersData> teamPlayers = new ArrayList<>();
 
-        for (MyTeamPicks myTeamPicks : myTeam.getPicks()) {
+        for (Picks myTeamPicks : mergedResponseModel.getGameWeekPicksModel().getPicks()) {
             PlayersData playersData = Constants.playerMap.get(myTeamPicks.getElement());
             assert playersData != null;
             playersData.setIs_captain(myTeamPicks.getIs_captain());
