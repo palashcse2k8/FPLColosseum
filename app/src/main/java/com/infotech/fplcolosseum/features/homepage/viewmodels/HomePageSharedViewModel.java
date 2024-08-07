@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.infotech.fplcolosseum.data.repositories.UserGameWeekDataRepository;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
+import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -46,19 +47,22 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         mergedResponseModelMediatorLiveData.addSource(dataRepository.getTeamInformation(managerID),
                 gameWeekDataResponseModelApiResponse -> {
                     long currentGameWeek = gameWeekDataResponseModelApiResponse.getData().getCurrent_event();
+                    if(currentGameWeek == 0) {++currentGameWeek;}
+                    Constants.currentGameWeek = currentGameWeek;
                     mergedResponseModel.setGameWeekDataResponseModel(gameWeekDataResponseModelApiResponse.getData());
 
                     // call game week players picked api
+                    long finalCurrentGameWeek = currentGameWeek;
                     mergedResponseModelMediatorLiveData.addSource(dataRepository.getGameWeekPicks(managerID, currentGameWeek),
                             gameWeekPicksModelApiResponse -> {
                                 mergedResponseModel.setGameWeekPicksModel(gameWeekPicksModelApiResponse.getData());
 
                                 //call game week live points api
-                                mergedResponseModelMediatorLiveData.addSource(dataRepository.getPlayerGameWeekLivePoints(currentGameWeek),
+                                mergedResponseModelMediatorLiveData.addSource(dataRepository.getPlayerGameWeekLivePoints(finalCurrentGameWeek),
                                         gameWeekLivePointsResponseModelApiResponse -> {
                                             mergedResponseModel.setGameWeekLivePointsResponseModel(gameWeekLivePointsResponseModelApiResponse.getData());
 
-                                            mergedResponseModelMediatorLiveData.addSource(dataRepository.getFixtureData(currentGameWeek),
+                                            mergedResponseModelMediatorLiveData.addSource(dataRepository.getFixtureData(finalCurrentGameWeek),
                                                     gameWeekMatchDetailsApiResponse -> {
                                                         mergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());
                                                         dataLoading.setValue(false); // make progress bar vanish when all api results are combined

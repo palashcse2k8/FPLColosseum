@@ -55,7 +55,7 @@ public class UserGameWeekDataRepository {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.code() != 200 || !response.raw().request().url().toString().contains("success")) {
-                    userProfileLiveData.postValue(ApiResponse.error("API call failed", null));
+                    userProfileLiveData.postValue(ApiResponse.error("Login failed or API call failed", null));
                     return;
                 }
 
