@@ -32,7 +32,6 @@ public class HomePageFragment extends Fragment {
     HomePageSharedViewModel viewModel;
     private Toolbar currentToolbar;
 
-
     private long managerId;
 
     public static HomePageFragment newInstance(long managerId) {
@@ -78,12 +77,12 @@ public class HomePageFragment extends Fragment {
         adapter.addFragment(new PointsFragment(), "Points");
 
         // show if user logged in
-        if (Constants.LoggedInUser != null) {
-            adapter.addFragment(new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry()), "Transfers");
-        }
+//        if (Constants.LoggedInUser != null) {
+//            adapter.addFragment(new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry()), "Transfers");
+//        }
 
 //        adapter.addFragment(new MyTeamFragment(), "Leagues");
-        adapter.addFragment(new PointsFragment(), "Leagues");
+//        adapter.addFragment(new PointsFragment(), "Leagues");
 
         viewPager.setAdapter(adapter);
 

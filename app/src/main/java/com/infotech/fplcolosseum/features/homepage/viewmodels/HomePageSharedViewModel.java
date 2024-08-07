@@ -43,39 +43,49 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         MergedResponseModel mergedResponseModel = new MergedResponseModel();
         dataLoading.setValue(true);
 
-        //call manager information with league data
-        mergedResponseModelMediatorLiveData.addSource(dataRepository.getTeamInformation(managerID),
-                gameWeekDataResponseModelApiResponse -> {
-                    long currentGameWeek = gameWeekDataResponseModelApiResponse.getData().getCurrent_event();
-                    if(currentGameWeek == 0) {++currentGameWeek;}
-                    Constants.currentGameWeek = currentGameWeek;
-                    mergedResponseModel.setGameWeekDataResponseModel(gameWeekDataResponseModelApiResponse.getData());
+        mergedResponseModelMediatorLiveData.addSource(dataRepository.getMyTeamData(managerID), gameWeekMyTeamResponseModelApiResponse -> {
+            mergedResponseModel.setGameWeekMyTeamResponseModel(gameWeekMyTeamResponseModelApiResponse.getData());
 
-                    // call game week players picked api
-                    long finalCurrentGameWeek = currentGameWeek;
-                    mergedResponseModelMediatorLiveData.addSource(dataRepository.getGameWeekPicks(managerID, currentGameWeek),
-                            gameWeekPicksModelApiResponse -> {
-                                mergedResponseModel.setGameWeekPicksModel(gameWeekPicksModelApiResponse.getData());
+            //call manager information with league data
+            mergedResponseModelMediatorLiveData.addSource(dataRepository.getTeamInformation(managerID),
+                    gameWeekDataResponseModelApiResponse -> {
+                        long currentGameWeek = gameWeekDataResponseModelApiResponse.getData().getCurrent_event();
+                        Constants.currentGameWeek = currentGameWeek;
+                        Constants.nextGameWeek = currentGameWeek + 1;
+                        mergedResponseModel.setGameWeekDataResponseModel(gameWeekDataResponseModelApiResponse.getData());
 
-                                //call game week live points api
-                                mergedResponseModelMediatorLiveData.addSource(dataRepository.getPlayerGameWeekLivePoints(finalCurrentGameWeek),
-                                        gameWeekLivePointsResponseModelApiResponse -> {
-                                            mergedResponseModel.setGameWeekLivePointsResponseModel(gameWeekLivePointsResponseModelApiResponse.getData());
+                        //call game week live points api
+                        mergedResponseModelMediatorLiveData.addSource(dataRepository.getPlayerGameWeekLivePoints(Constants.nextGameWeek),
+                                gameWeekLivePointsResponseModelApiResponse -> {
+                                    mergedResponseModel.setGameWeekLivePointsResponseModel(gameWeekLivePointsResponseModelApiResponse.getData());
 
-                                            mergedResponseModelMediatorLiveData.addSource(dataRepository.getFixtureData(finalCurrentGameWeek),
-                                                    gameWeekMatchDetailsApiResponse -> {
-                                                        mergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());
-                                                        dataLoading.setValue(false); // make progress bar vanish when all api results are combined
-                                                        mergedResponseModelMediatorLiveData.setValue(ApiResponse.success(mergedResponseModel));
+                                    mergedResponseModelMediatorLiveData.addSource(dataRepository.getFixtureData(Constants.nextGameWeek),
+                                            gameWeekMatchDetailsApiResponse -> {
+                                                mergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());
+
+                                                if (Constants.currentGameWeek > 0) {
+                                                    // call game week players picked api
+                                                    mergedResponseModelMediatorLiveData.addSource(dataRepository.getGameWeekPicks(managerID, Constants.currentGameWeek),
+                                                            gameWeekPicksModelApiResponse -> {
+
+                                                                dataLoading.setValue(false); // make progress bar vanish when all api results are combined
+                                                                mergedResponseModel.setGameWeekPicksModel(gameWeekPicksModelApiResponse.getData());
+                                                                mergedResponseModelMediatorLiveData.setValue(ApiResponse.success(mergedResponseModel));
+                                                            });
+                                                } else {
+                                                    dataLoading.setValue(false); // make progress bar vanish when all api results are combined
+                                                    mergedResponseModelMediatorLiveData.setValue(ApiResponse.success(mergedResponseModel));
+                                                }
 //                                                        dataLoading.setValue(false);
                                             });
-                                        });
+                                });
 
-                            });
+//                            });
 
-                }
-        );
+                    }
+            );
 
+        });
     }
 
     public void getTeamSpecificGameWeekAllData(long managerID, long gameWeek) {

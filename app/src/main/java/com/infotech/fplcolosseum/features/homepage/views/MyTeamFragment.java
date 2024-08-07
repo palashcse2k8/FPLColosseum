@@ -79,7 +79,7 @@ public class MyTeamFragment extends Fragment {
             }
         });
 
-        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
+//        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
     }
 
     private void showLoading() {
@@ -105,7 +105,7 @@ public class MyTeamFragment extends Fragment {
 
         List<PlayersData> teamPlayers = new ArrayList<>();
 
-        for (Picks myTeamPicks : mergedResponseModel.getGameWeekPicksModel().getPicks()) {
+        for (MyTeamPicks myTeamPicks : mergedResponseModel.getGameWeekMyTeamResponseModel().getPicks()) {
             PlayersData playersData = Constants.playerMap.get(myTeamPicks.getElement());
             assert playersData != null;
             playersData.setIs_captain(myTeamPicks.getIs_captain());

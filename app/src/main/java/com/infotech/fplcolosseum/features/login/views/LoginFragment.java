@@ -211,16 +211,6 @@ public class LoginFragment extends Fragment {
                 R.anim.enter_from_right,   // popEnter
                 R.anim.exit_to_left      // popExit
         );
-//        FragmentUtils.replace(
-//                requireActivity().getSupportFragmentManager(),
-//                TestFragment_.builder().build(),
-//                R.id.contentFrame,
-//                true,
-//                R.anim.enter_from_right, // enter
-//                R.anim.exit_to_left,      // exit
-//                R.anim.enter_from_right,   // popEnter
-//                R.anim.exit_to_left      // popExit
-//        );
     }
 
 }

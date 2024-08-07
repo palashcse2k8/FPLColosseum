@@ -4,6 +4,7 @@ import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameW
 import com.infotech.fplcolosseum.features.homepage.models.fixture.GameWeekMatchDetailsResponse;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.picks.GameWeekPicksModel;
 
 import java.util.ArrayList;
@@ -55,5 +56,23 @@ public class MergedResponseModel {
 
     public void setGameWeekLivePointsResponseModel(GameWeekLivePointsResponseModel gameWeekLivePointsResponseModel) {
         this.gameWeekLivePointsResponseModel = gameWeekLivePointsResponseModel;
+    }
+
+    private GameWeekMyTeamResponseModel gameWeekMyTeamResponseModel;
+
+    public GameWeekMatchDetailsResponse getGameWeekMatchDetailsResponse() {
+        return gameWeekMatchDetailsResponse;
+    }
+
+    public void setGameWeekMatchDetailsResponse(GameWeekMatchDetailsResponse gameWeekMatchDetailsResponse) {
+        this.gameWeekMatchDetailsResponse = gameWeekMatchDetailsResponse;
+    }
+
+    public GameWeekMyTeamResponseModel getGameWeekMyTeamResponseModel() {
+        return gameWeekMyTeamResponseModel;
+    }
+
+    public void setGameWeekMyTeamResponseModel(GameWeekMyTeamResponseModel gameWeekMyTeamResponseModel) {
+        this.gameWeekMyTeamResponseModel = gameWeekMyTeamResponseModel;
     }
 }

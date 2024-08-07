@@ -38,6 +38,7 @@ public class Constants {
     public static Map <Long, TeamData> teamMap = new HashMap<>();
     public static Map<Long, GameWeekEvent> gameWeekMap = new HashMap<>();
     public static long currentGameWeek;
+    public static long nextGameWeek;
 
     //image link
 
