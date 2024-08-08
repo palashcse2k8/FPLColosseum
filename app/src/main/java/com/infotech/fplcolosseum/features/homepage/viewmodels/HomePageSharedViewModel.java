@@ -11,8 +11,12 @@ import androidx.lifecycle.MutableLiveData;
 import com.infotech.fplcolosseum.data.repositories.UserGameWeekDataRepository;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.utilities.Constants;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class HomePageSharedViewModel extends AndroidViewModel {
@@ -61,7 +65,9 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
                                     mergedResponseModelMediatorLiveData.addSource(dataRepository.getFixtureData(Constants.nextGameWeek),
                                             gameWeekMatchDetailsApiResponse -> {
+
                                                 mergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());
+
 
                                                 if (Constants.currentGameWeek > 0) {
                                                     // call game week players picked api

@@ -12,11 +12,20 @@ import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
@@ -119,6 +128,53 @@ public class CustomUtil {
      */
     public static boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    public static void updateFixtureData(List<MatchDetails> matchDetails){
+//
+//        Gson gson = new Gson();
+//
+//        // Example JSON string
+////        String jsonString = "[{\"code\":123,\"event\":1,\"finished\":true,\"id\":456,...}, {...}]";
+//
+//        // Correctly specify the type of the list
+//        Type listType = new TypeToken<List<MatchDetails>>() {}.getType();
+//
+//        // Deserialize JSON string into a List<MatchDetails>
+//        List<MatchDetails> matchDetailsList = gson.fromJson((matchDetails, listType);
+
+        for(MatchDetails match: matchDetails) {
+
+            long event = match.getEvent();
+
+            // Creating OpponentData for team_a
+            OpponentData teamAData = new OpponentData();
+            teamAData.setTeamID(match.getTeam_a());
+            teamAData.setDifficulty(match.getTeam_a_score()); // Assuming difficulty is team score for simplicity, adjust as necessary
+            teamAData.setKickOffTime(match.getKickoff_time());
+            teamAData.setMinutesPlayed(match.getMinutes());
+            teamAData.setFinished(match.isFinished());
+            teamAData.setGoalConceded(match.getTeam_h_score());
+            teamAData.setGoalScored(match.getTeam_a_score());
+            teamAData.setHome(false);
+
+            // Creating OpponentData for team_h
+            OpponentData teamHData = new OpponentData();
+            teamHData.setTeamID(match.getTeam_h());
+            teamHData.setDifficulty(match.getTeam_h_score()); // Assuming difficulty is team score for simplicity, adjust as necessary
+            teamHData.setKickOffTime(match.getKickoff_time());
+            teamHData.setMinutesPlayed(match.getMinutes());
+            teamHData.setFinished(match.isFinished());
+            teamHData.setGoalConceded(match.getTeam_a_score());
+            teamHData.setGoalScored(match.getTeam_h_score());
+            teamHData.setHome(true);
+
+            // Update fixtureData for team_a
+            Constants.fixtureData.computeIfAbsent(event, k -> new HashMap<>()).put(match.getTeam_a(), teamAData);
+
+            // Update fixtureData for team_h
+            Constants.fixtureData.computeIfAbsent(event, k -> new HashMap<>()).put(match.getTeam_h(), teamHData);
+        }
     }
 
 }

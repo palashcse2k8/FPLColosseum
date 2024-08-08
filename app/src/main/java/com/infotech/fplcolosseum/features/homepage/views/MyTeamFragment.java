@@ -1,5 +1,7 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
+import static com.infotech.fplcolosseum.utilities.CustomUtil.updateFixtureData;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
 import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
@@ -24,6 +27,7 @@ import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamV
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,6 +73,7 @@ public class MyTeamFragment extends Fragment {
                     viewModel.dataLoading.setValue(false);
 
                     MergedResponseModel myTeam = (MergedResponseModel) apiResponse.getData();
+                    updateFixtureData(myTeam.getMatchDetails());
                     updateUI(footballFieldLayout, myTeam);
 
 
@@ -211,9 +216,17 @@ public class MyTeamFragment extends Fragment {
 
     public void addPlayerNew(PlayersData player, int row, int column, GridLayout footballFieldLayout) {
 
-        PlayerView playerView = new PlayerView(requireContext(), player, true);
+        PlayerView playerView = new PlayerView(requireContext(), player, false);
         playerView.setPlayerName(player.getWeb_name());
-        playerView.setTeamName(Objects.requireNonNull(Constants.teamMap.get(player.getTeam())).getShort_name());
+
+
+        //update opponent team name
+        HashMap<Long, OpponentData> fixtures = (HashMap<Long, OpponentData>) Constants.fixtureData.get(Constants.nextGameWeek);
+        OpponentData opponentData = fixtures.get(player.getTeam());
+        assert opponentData != null;
+        String homeOrAway = opponentData.isHome() ? "H" : "A";
+        String opponentTeamName = Constants.teamMap.get(opponentData.getTeamID()).getShort_name();
+        playerView.setTeamName("v " + opponentTeamName + "(" + homeOrAway + ")");
 
         //https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
         //https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo
@@ -231,22 +244,22 @@ public class MyTeamFragment extends Fragment {
         playerView.setPlayerImage(imgURL);
 
         //set captain icon
-        if(player.isIs_captain()){
+        if (player.isIs_captain()) {
             playerView.setCaptain();
         }
 
         //set vice captain icon
-        if(player.isIs_vice_captain()) {
+        if (player.isIs_vice_captain()) {
             playerView.setViceCaptain();
         }
 
         //set dream player icon
-        if(player.isIn_dreamteam()) {
+        if (player.isIn_dreamteam()) {
             playerView.setDreamTeamPlayer();
         }
 
         //set availability icon
-        if(player.getChance_of_playing_this_round() < 100) {
+        if (player.getChance_of_playing_this_round() < 100) {
             playerView.setAvailability(player.getChance_of_playing_this_round());
         }
 

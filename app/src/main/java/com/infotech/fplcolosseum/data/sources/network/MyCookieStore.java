@@ -1,5 +1,7 @@
 package com.infotech.fplcolosseum.data.sources.network;
 
+import static com.infotech.fplcolosseum.utilities.Constants.LOGIN_REDIRECT_URL;
+
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
@@ -44,8 +46,10 @@ public class MyCookieStore implements CookieJar {
         ArrayList<Cookie> cookies = new ArrayList<>();
 
         for (String cookieString : cookieStrings) {
-            Cookie cookie = Cookie.parse(null, cookieString);
-            cookies.add(cookie);
+            Cookie cookie = Cookie.parse(HttpUrl.parse(LOGIN_REDIRECT_URL), cookieString);
+            if(cookie != null){
+                cookies.add(cookie);
+            }
         }
 
         return cookies;

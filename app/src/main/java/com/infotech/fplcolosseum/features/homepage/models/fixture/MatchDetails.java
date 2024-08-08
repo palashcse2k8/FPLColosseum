@@ -18,13 +18,36 @@ public class MatchDetails {
     private long team_a_score;
     private long team_h;
     private long team_h_score;
-
     @SerializedName("stats")
     ArrayList<MatchStats> stats = new ArrayList<>();
     private long team_h_difficulty;
     private long team_a_difficulty;
     private long pulse_id;
 
+
+    public ArrayList<MatchStats> getStats() {
+        return stats;
+    }
+
+    public void setStats(ArrayList<MatchStats> stats) {
+        this.stats = stats;
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public boolean isProvisional_start_time() {
+        return provisional_start_time;
+    }
+
+    public boolean isFinished_provisional() {
+        return finished_provisional;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
 
     // Getter Methods
 

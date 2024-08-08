@@ -2,6 +2,7 @@ package com.infotech.fplcolosseum.utilities;
 
 import com.infotech.fplcolosseum.features.gameweek.models.custom.CustomGameWeekDataModel;
 import com.infotech.fplcolosseum.features.gameweek.models.custom.ManagerModel;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type;
@@ -39,6 +40,8 @@ public class Constants {
     public static Map<Long, GameWeekEvent> gameWeekMap = new HashMap<>();
     public static long currentGameWeek;
     public static long nextGameWeek;
+
+    public static Map <Long, Map<Long, OpponentData>> fixtureData = new HashMap<>();
 
     //image link
 

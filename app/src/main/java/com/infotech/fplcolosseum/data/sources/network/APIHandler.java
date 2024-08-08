@@ -10,6 +10,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -189,6 +191,7 @@ public class APIHandler {
             throw new IOException("JSON parsing error", e);
         }
     }
+
 
     public static <T> T convertResponse(ResponseBody responseBody, Class<T> classofT) throws IOException {
 
