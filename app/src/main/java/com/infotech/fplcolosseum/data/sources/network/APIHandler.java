@@ -180,18 +180,29 @@ public class APIHandler {
 //        }
 //    }
 
+//    public static <T> List<T> convertListResponse(ResponseBody responseBody, Class<T> type) throws IOException {
+//        Gson gson = new Gson();
+//        Type conversionType = new TypeToken<List<T>>() {}.getType();
+//        String json = responseBody.string();
+//        try {
+//            return gson.fromJson(json, conversionType);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new IOException("JSON parsing error", e);
+//        }
+//    }
+
     public static <T> List<T> convertListResponse(ResponseBody responseBody, Class<T> type) throws IOException {
         Gson gson = new Gson();
-        Type conversionType = new TypeToken<List<T>>() {}.getType();
         String json = responseBody.string();
         try {
+            Type conversionType = TypeToken.getParameterized(List.class, type).getType();
             return gson.fromJson(json, conversionType);
         } catch (Exception e) {
             e.printStackTrace();
             throw new IOException("JSON parsing error", e);
         }
     }
-
 
     public static <T> T convertResponse(ResponseBody responseBody, Class<T> classofT) throws IOException {
 

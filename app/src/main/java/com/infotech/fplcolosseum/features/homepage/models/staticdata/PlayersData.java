@@ -2,7 +2,7 @@ package com.infotech.fplcolosseum.features.homepage.models.staticdata;
 
 public class PlayersData {
     private long chance_of_playing_next_round;
-    private long chance_of_playing_this_round;
+    private Long chance_of_playing_this_round;
     private long code;
     private long cost_change_event;
     private long cost_change_event_fall;
@@ -259,7 +259,7 @@ public class PlayersData {
         return chance_of_playing_next_round;
     }
 
-    public long getChance_of_playing_this_round() {
+    public Long getChance_of_playing_this_round() {
         return chance_of_playing_this_round;
     }
 
@@ -613,7 +613,7 @@ public class PlayersData {
         this.chance_of_playing_next_round = chance_of_playing_next_round;
     }
 
-    public void setChance_of_playing_this_round(long chance_of_playing_this_round) {
+    public void setChance_of_playing_this_round(Long chance_of_playing_this_round) {
         this.chance_of_playing_this_round = chance_of_playing_this_round;
     }
 

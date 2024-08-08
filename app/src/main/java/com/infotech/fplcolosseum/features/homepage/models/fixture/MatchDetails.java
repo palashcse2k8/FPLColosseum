@@ -24,7 +24,6 @@ public class MatchDetails {
     private long team_a_difficulty;
     private long pulse_id;
 
-
     public ArrayList<MatchStats> getStats() {
         return stats;
     }

@@ -150,30 +150,30 @@ public class CustomUtil {
             // Creating OpponentData for team_a
             OpponentData teamAData = new OpponentData();
             teamAData.setTeamID(match.getTeam_a());
-            teamAData.setDifficulty(match.getTeam_a_score()); // Assuming difficulty is team score for simplicity, adjust as necessary
+            teamAData.setDifficulty(match.getTeam_a_difficulty()); // Assuming difficulty is team score for simplicity, adjust as necessary
             teamAData.setKickOffTime(match.getKickoff_time());
             teamAData.setMinutesPlayed(match.getMinutes());
             teamAData.setFinished(match.isFinished());
             teamAData.setGoalConceded(match.getTeam_h_score());
             teamAData.setGoalScored(match.getTeam_a_score());
-            teamAData.setHome(false);
+            teamAData.setHome(true);
 
             // Creating OpponentData for team_h
             OpponentData teamHData = new OpponentData();
             teamHData.setTeamID(match.getTeam_h());
-            teamHData.setDifficulty(match.getTeam_h_score()); // Assuming difficulty is team score for simplicity, adjust as necessary
+            teamHData.setDifficulty(match.getTeam_h_difficulty()); // Assuming difficulty is team score for simplicity, adjust as necessary
             teamHData.setKickOffTime(match.getKickoff_time());
             teamHData.setMinutesPlayed(match.getMinutes());
             teamHData.setFinished(match.isFinished());
             teamHData.setGoalConceded(match.getTeam_a_score());
             teamHData.setGoalScored(match.getTeam_h_score());
-            teamHData.setHome(true);
+            teamHData.setHome(false);
 
             // Update fixtureData for team_a
-            Constants.fixtureData.computeIfAbsent(event, k -> new HashMap<>()).put(match.getTeam_a(), teamAData);
+            Constants.fixtureData.computeIfAbsent(event, k -> new HashMap<>()).put(match.getTeam_a(), teamHData);
 
             // Update fixtureData for team_h
-            Constants.fixtureData.computeIfAbsent(event, k -> new HashMap<>()).put(match.getTeam_h(), teamHData);
+            Constants.fixtureData.computeIfAbsent(event, k -> new HashMap<>()).put(match.getTeam_h(), teamAData);
         }
     }
 

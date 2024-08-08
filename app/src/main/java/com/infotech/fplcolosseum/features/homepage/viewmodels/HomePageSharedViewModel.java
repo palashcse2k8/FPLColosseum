@@ -68,7 +68,6 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
                                                 mergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());
 
-
                                                 if (Constants.currentGameWeek > 0) {
                                                     // call game week players picked api
                                                     mergedResponseModelMediatorLiveData.addSource(dataRepository.getGameWeekPicks(managerID, Constants.currentGameWeek),
