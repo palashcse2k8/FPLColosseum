@@ -35,6 +35,25 @@
             android:rowCount="5"
             >
         </GridLayout>
+        <LinearLayout
+            android:id="@+id/noPointLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/teal_700"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="Game Week Not Started Yet! Points well be shown from next game week :) "
+                android:gravity="center"/>
+
+
+        </LinearLayout>
         <ProgressBar
             android:id="@+id/progress_circular"
             android:layout_width="100dp"

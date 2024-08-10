@@ -16,7 +16,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6">
+        android:layout_weight="5">
 
         <ImageView
             android:id="@+id/imageView"
@@ -26,7 +26,7 @@
             android:layout_marginHorizontal="8dp"
             android:src="@mipmap/no_image"
             android:contentDescription="@string/todo"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:shape="ring"/>
 
         <ImageView
@@ -133,6 +133,22 @@
         android:autoSizeMaxTextSize="50sp"
         android:autoSizeStepGranularity="2sp"
         android:text="@string/team_name" />
+
+    <TextView
+        android:id="@+id/opponentTeamNameTV"
+        android:background="#16063A"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeMaxTextSize="50sp"
+        android:autoSizeStepGranularity="2sp"
+        android:text="@string/player_name" />
 
     <LinearLayout
         android:layout_width="match_parent"

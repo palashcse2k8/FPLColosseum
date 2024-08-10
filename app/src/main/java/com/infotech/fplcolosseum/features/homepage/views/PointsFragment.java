@@ -39,9 +39,6 @@ public class PointsFragment extends Fragment {
 
 //    private ToolbarChangeListener toolbarChangeListener;
 
-    private static final int NUM_ROWS = 5;
-    private static final int NUM_COLUMNS = 5;
-
 
 //    @Override
 //    public void onAttach(@NonNull Context context) {
@@ -89,6 +86,15 @@ public class PointsFragment extends Fragment {
             if (apiResponse == null) return;
             if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
                 viewModel.dataLoading.setValue(false);
+
+                if(Constants.currentGameWeek == 0){
+                    binding.noPointLayout.setVisibility(View.VISIBLE);
+                    binding.footballFieldLayout.setVisibility(View.GONE);
+                    return;
+                } else {
+                    binding.noPointLayout.setVisibility(View.GONE);
+                    binding.footballFieldLayout.setVisibility(View.VISIBLE);
+                }
 
                 MergedResponseModel myTeam = (MergedResponseModel) apiResponse.getData();
                 addPlayers(footballFieldLayout, myTeam);

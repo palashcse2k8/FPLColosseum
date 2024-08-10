@@ -73,13 +73,9 @@ public class HomePageFragment extends Fragment {
         // show if user logged in
         if (Constants.LoggedInUser != null) {
             adapter.addFragment(new MyTeamFragment(), "My Team");
+            adapter.addFragment(new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry()), "Transfers");
         }
         adapter.addFragment(new PointsFragment(), "Points");
-
-        // show if user logged in
-//        if (Constants.LoggedInUser != null) {
-//            adapter.addFragment(new TransferFragment().newInstance(Constants.LoggedInUser.getPlayer().getEntry()), "Transfers");
-//        }
 
 //        adapter.addFragment(new MyTeamFragment(), "Leagues");
 //        adapter.addFragment(new PointsFragment(), "Leagues");

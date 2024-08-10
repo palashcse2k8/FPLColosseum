@@ -91,6 +91,7 @@ public class PlayerView extends LinearLayout {
     private ImageView imageView;
     private TextView playerNameTextView;
     private TextView teamNameTextView;
+    private TextView opponentTeamNameTextView;
     private ImageView imageTopLeft;
     private ImageView imageTopRight;
     private FrameLayout imageBottomLeft;
@@ -142,6 +143,7 @@ public class PlayerView extends LinearLayout {
         imageView = findViewById(R.id.imageView);
         playerNameTextView = findViewById(R.id.playerNameTextView);
         teamNameTextView = findViewById(R.id.teamNameTV);
+        opponentTeamNameTextView = findViewById(R.id.opponentTeamNameTV);
         imageBottomRight = findViewById(R.id.iconBottomRight);
         imageBottomMiddle = findViewById(R.id.iconBottomMiddle);
         imageBottomLeft = findViewById(R.id.iconBottomLeft);
@@ -163,6 +165,10 @@ public class PlayerView extends LinearLayout {
 
     public void setTeamName(String teamName) {
         teamNameTextView.setText(teamName);
+    }
+
+    public void setOpponentTeamName(String teamName) {
+        opponentTeamNameTextView.setText(teamName);
     }
 
     // Methods to set player position

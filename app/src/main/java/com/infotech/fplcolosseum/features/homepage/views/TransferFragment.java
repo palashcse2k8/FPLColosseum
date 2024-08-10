@@ -20,23 +20,23 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentTransfersBinding;
-import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
-import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
+import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class TransferFragment extends Fragment {
 
     FragmentTransfersBinding binding;
 
-    MyTeamViewModel viewModel;
+    HomePageSharedViewModel viewModel;
 
     private static final String ARG_ITEM_DATA = "entry_id";
 
@@ -70,7 +70,7 @@ public class TransferFragment extends Fragment {
         if (args != null) {
             entry_id = args.getLong(ARG_ITEM_DATA);
         }
-        viewModel = new ViewModelProvider(requireActivity()).get(MyTeamViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
         setHasOptionsMenu(true);
     }
 
@@ -101,7 +101,7 @@ public class TransferFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void logOutUser(){
+    public void logOutUser() {
         Constants.LoggedInUser = null;
     }
 
@@ -137,8 +137,8 @@ public class TransferFragment extends Fragment {
 
         endTime = LocalDateTime.of(2024, 12, 31, 23, 59, 59);
 
-        // Observe changes in DataState
-        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+        // Add players to the football field (customize positions as needed)
+        viewModel.getMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
 
             if (apiResponse == null) return;
             switch (apiResponse.getStatus()) {
@@ -147,11 +147,11 @@ public class TransferFragment extends Fragment {
                     break;
                 case SUCCESS:
                     viewModel.dataLoading.setValue(false);
-                    handler.post(countdownRunnable);
-                    if(apiResponse.getData() instanceof GameWeekMyTeamResponseModel){
-                        GameWeekMyTeamResponseModel data = (GameWeekMyTeamResponseModel) apiResponse.getData();
-                        updateUI(footballFieldLayout, data);
-                    }
+
+                    MergedResponseModel myTeam = (MergedResponseModel) apiResponse.getData();
+//                    updateFixtureData(myTeam.getMatchDetails());
+                    updateUI(footballFieldLayout, myTeam);
+
 
                     break;
                 case ERROR:
@@ -160,15 +160,38 @@ public class TransferFragment extends Fragment {
             }
         });
 
+        // Observe changes in DataState
+//        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+//
+//            if (apiResponse == null) return;
+//            switch (apiResponse.getStatus()) {
+//                case LOADING:
+//                    showLoading();
+//                    break;
+//                case SUCCESS:
+//                    viewModel.dataLoading.setValue(false);
+//                    handler.post(countdownRunnable);
+//                    if(apiResponse.getData() instanceof GameWeekMyTeamResponseModel){
+//                        GameWeekMyTeamResponseModel data = (GameWeekMyTeamResponseModel) apiResponse.getData();
+//                        updateUI(footballFieldLayout, data);
+//                    }
+//
+//                    break;
+//                case ERROR:
+//                    showFailure(apiResponse.getMessage());
+//                    break;
+//            }
+//        });
+
         // Trigger data fetching
-        viewModel.getMyTeamDataIfNeeded(entry_id);
+//        viewModel.getMyTeamDataIfNeeded(entry_id);
     }
 
-    private void addPlayers(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel myTeam) {
+    private void addPlayers(GridLayout footballFieldLayout, MergedResponseModel myTeam) {
 
         List<PlayersData> teamPlayers = new ArrayList<>();
 
-        for (MyTeamPicks myTeamPicks : myTeam.getPicks()) {
+        for (MyTeamPicks myTeamPicks : myTeam.getGameWeekMyTeamResponseModel().getPicks()) {
             PlayersData playersData = Constants.playerMap.get(myTeamPicks.getElement());
             assert playersData != null;
             playersData.setIs_captain(myTeamPicks.getIs_captain());
@@ -249,8 +272,13 @@ public class TransferFragment extends Fragment {
         PlayerView playerView = new PlayerView(requireContext(), player, false);
         playerView.setPlayerName(player.getWeb_name());
 
-        String amount = "€" + (float)player.getSelling_price()/10 + "m";
-        playerView.setTeamName(amount);
+        //set team name
+        String teamName = Constants.teamMap.get(player.getTeam()).getShort_name();
+        String playerType = Constants.playerTypeMap.get(player.getElement_type()).getSingular_name_short();
+        playerView.setTeamName(teamName + " - (" + playerType + ")");
+
+        String amount = "€" + (float) player.getSelling_price() / 10 + "m";
+        playerView.setOpponentTeamName(amount);
 
         //https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
         //https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo
@@ -294,7 +322,7 @@ public class TransferFragment extends Fragment {
 
     }
 
-    private void updateUI(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel data) {
+    private void updateUI(GridLayout footballFieldLayout, MergedResponseModel data) {
 
         binding.progressCircular.setVisibility(View.GONE);
         binding.progressCircular.setVisibility(View.GONE);

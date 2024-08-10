@@ -61,7 +61,6 @@ public class MyTeamFragment extends Fragment {
         GridLayout footballFieldLayout = view.findViewById(R.id.footballFieldLayout);
 
         // Add players to the football field (customize positions as needed)
-
         viewModel.getMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
 
             if (apiResponse == null) return;
@@ -220,13 +219,18 @@ public class MyTeamFragment extends Fragment {
         playerView.setPlayerName(player.getWeb_name());
 
 
+        //set team name
+        String teamName = Constants.teamMap.get(player.getTeam()).getShort_name();
+        String playerType = Constants.playerTypeMap.get(player.getElement_type()).getSingular_name_short();
+        playerView.setTeamName(teamName + " - (" + playerType+ ")");
+
         //update opponent team name
         HashMap<Long, OpponentData> fixtures = (HashMap<Long, OpponentData>) Constants.fixtureData.get(Constants.nextGameWeek);
         OpponentData opponentData = fixtures.get(player.getTeam());
         assert opponentData != null;
         String homeOrAway = opponentData.isHome() ? "H" : "A";
         String opponentTeamName = Constants.teamMap.get(opponentData.getTeamID()).getShort_name();
-        playerView.setTeamName("v " + opponentTeamName + " (" + homeOrAway + ")");
+        playerView.setOpponentTeamName("v " + opponentTeamName + " (" + homeOrAway + ")");
 
         //https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
         //https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo
@@ -259,7 +263,7 @@ public class MyTeamFragment extends Fragment {
         }
 
         //set availability icon
-        if (player.getChance_of_playing_this_round()!= null && player.getChance_of_playing_this_round() < 100) {
+        if (player.getChance_of_playing_this_round() != null && player.getChance_of_playing_this_round() < 100) {
             playerView.setAvailability(player.getChance_of_playing_this_round());
         }
 
