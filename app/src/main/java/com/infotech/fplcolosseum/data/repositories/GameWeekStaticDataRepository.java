@@ -37,7 +37,7 @@ public class GameWeekStaticDataRepository {
         Call<ResponseBody> callAPI = apiServices.getGameWeeKStaticData();
 
         apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekStaticDataModel.class), tApiResponse -> {
-            Log.d("Data ", tApiResponse.getData().toString());
+//            Log.d("Data ", tApiResponse.getData().toString());
             apiData.postValue(tApiResponse);
         });
 

@@ -319,7 +319,7 @@ public class PointsFragment extends Fragment {
 
     public void addPlayerNew(PlayersData player, int row, int column, GridLayout footballFieldLayout) {
 
-        PlayerView playerView = new PlayerView(requireContext(), player, false);
+        PlayerView playerView = new PlayerView(requireContext(), player, false, null);
         playerView.setPlayerName(player.getWeb_name());
         playerView.setTeamName(player.getEvent_points() + "");
 

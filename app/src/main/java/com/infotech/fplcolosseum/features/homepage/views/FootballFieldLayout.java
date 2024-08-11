@@ -36,7 +36,7 @@ public class FootballFieldLayout extends GridLayout {
 
     // Add methods to add players dynamically
     public void addPlayer(String playerName, String teamName, int imageResId, int row, int column) {
-        PlayerView playerView = new PlayerView(this.context, new PlayersData(), false);
+        PlayerView playerView = new PlayerView(this.context, new PlayersData(), false, null);
         playerView.setPlayerName(playerName);
         playerView.setTeamName(teamName);
         playerView.setPlayerImage("imageResI");
@@ -58,7 +58,7 @@ public class FootballFieldLayout extends GridLayout {
     public void addPlayerNew(String playerName, String teamName, int imageResId, int row, int column) {
         // Loop to create buttons in each cell
 
-                PlayerView playerView = new PlayerView(this.context, new PlayersData(), false);
+                PlayerView playerView = new PlayerView(this.context, new PlayersData(), false, null);
                 playerView.setPlayerName(playerName);
                 playerView.setTeamName(teamName);
                 playerView.setPlayerImage("imageResId");

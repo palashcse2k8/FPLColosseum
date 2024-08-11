@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
+import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
@@ -27,15 +28,17 @@ import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamV
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class MyTeamFragment extends Fragment {
+public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
 
     FragmentMyteamBinding binding;
 
     HomePageSharedViewModel viewModel;
+    List<PlayersData> teamPlayers = new ArrayList<>();
 
     @Nullable
     @Override
@@ -73,7 +76,8 @@ public class MyTeamFragment extends Fragment {
 
                     MergedResponseModel myTeam = (MergedResponseModel) apiResponse.getData();
                     updateFixtureData(myTeam.getMatchDetails());
-                    updateUI(footballFieldLayout, myTeam);
+                    updateTeamPlayers(myTeam.getGameWeekMyTeamResponseModel().getPicks());
+                    updateUI(footballFieldLayout);
 
 
                     break;
@@ -84,6 +88,19 @@ public class MyTeamFragment extends Fragment {
         });
 
 //        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
+    }
+
+    private void updateTeamPlayers(ArrayList<MyTeamPicks> picks) {
+
+        this.teamPlayers = new ArrayList<>();
+        for (MyTeamPicks myTeamPicks : picks) {
+            PlayersData playersData = Constants.playerMap.get(myTeamPicks.getElement());
+            assert playersData != null;
+            playersData.setIs_captain(myTeamPicks.getIs_captain());
+            playersData.setIs_vice_captain(myTeamPicks.getIs_vice_captain());
+            playersData.setPosition(myTeamPicks.getPosition());
+            teamPlayers.add(playersData);
+        }
     }
 
     private void showLoading() {
@@ -99,23 +116,13 @@ public class MyTeamFragment extends Fragment {
         binding.footballFieldLayout.setVisibility(View.GONE);
     }
 
-    private void updateUI(GridLayout footballFieldLayout, MergedResponseModel data) {
+    private void updateUI(GridLayout footballFieldLayout) {
 
         binding.progressCircular.setVisibility(View.GONE);
-        addPlayers(footballFieldLayout, data);
+        addPlayers(footballFieldLayout);
     }
 
-    private void addPlayers(GridLayout footballFieldLayout, MergedResponseModel mergedResponseModel) {
-
-        List<PlayersData> teamPlayers = new ArrayList<>();
-
-        for (MyTeamPicks myTeamPicks : mergedResponseModel.getGameWeekMyTeamResponseModel().getPicks()) {
-            PlayersData playersData = Constants.playerMap.get(myTeamPicks.getElement());
-            assert playersData != null;
-            playersData.setIs_captain(myTeamPicks.getIs_captain());
-            playersData.setIs_vice_captain(myTeamPicks.getIs_vice_captain());
-            teamPlayers.add(playersData);
-        }
+    private void addPlayers(GridLayout footballFieldLayout) {
 
         List<PlayersData> defenders = new ArrayList<>();
         List<PlayersData> midfielders = new ArrayList<>();
@@ -215,9 +222,10 @@ public class MyTeamFragment extends Fragment {
 
     public void addPlayerNew(PlayersData player, int row, int column, GridLayout footballFieldLayout) {
 
-        PlayerView playerView = new PlayerView(requireContext(), player, false);
+        PlayerView playerView = new PlayerView(requireContext(), player, true, this);
         playerView.setPlayerName(player.getWeb_name());
 
+        playerView.setTag(player.getPosition());
 
         //set team name
         String teamName = Constants.teamMap.get(player.getTeam()).getShort_name();
@@ -285,5 +293,33 @@ public class MyTeamFragment extends Fragment {
 
         // Add the PlayerView to the GridLayout
         footballFieldLayout.addView(playerView);
+    }
+
+    @Override
+    public void onPlayerDragged(int fromPosition, int toPosition) {
+
+        Log.d("FPLC", "Before");
+        printTeamPlayers();
+
+        PlayersData fromPositionPlayer = teamPlayers.get(fromPosition-1);
+        PlayersData toPositionPlayer = teamPlayers.get(toPosition-1);
+//        fromPositionPlayer.setPosition(toPosition);
+//        toPositionPlayer.setPosition(fromPosition);
+
+        Collections.swap(teamPlayers, fromPosition-1, toPosition-1);
+        teamPlayers.get(fromPosition-1).setPosition(fromPosition);
+        teamPlayers.get(toPosition-1).setPosition(toPosition);
+        Log.d("FPLC", "After");
+        printTeamPlayers();
+
+        // Update the GridLayout with the new positions
+//        updateUI(binding.footballFieldLayout);
+
+    }
+
+    private void printTeamPlayers(){
+        for (PlayersData player : this.teamPlayers) {
+            Log.d("FPLC", player.getPosition() + " -> " +player.getWeb_name());
+        }
     }
 }

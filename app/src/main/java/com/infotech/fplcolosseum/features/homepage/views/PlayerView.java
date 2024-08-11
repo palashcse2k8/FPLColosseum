@@ -80,6 +80,7 @@ import com.infotech.fplcolosseum.R;
 //    }
 //}
 
+import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.squareup.picasso.Picasso;
 
@@ -87,6 +88,7 @@ public class PlayerView extends LinearLayout {
 
     PlayersData player;
 
+    private OnPlayerDragListener dragListener;
     Context context;
     private ImageView imageView;
     private TextView playerNameTextView;
@@ -104,15 +106,16 @@ public class PlayerView extends LinearLayout {
     private int row;
     private int column;
 
-    public PlayerView(Context context, PlayersData player, boolean isDraggable) {
+    public PlayerView(Context context, PlayersData player, boolean isDraggable, OnPlayerDragListener onPlayerDragListener) {
         super(context);
         initializeViews(context);
         this.player = player;
         this.isDraggable = isDraggable;
         this.context = context;
+        this.dragListener = onPlayerDragListener;
         if (isDraggable) {
-            setOnTouchListener(new TouchListener());
-            setOnDragListener(new DragListener());
+            setOnTouchListener(new TouchListener(onPlayerDragListener));
+            setOnDragListener(new DragListener(onPlayerDragListener));
         }
     }
 
@@ -121,8 +124,8 @@ public class PlayerView extends LinearLayout {
         this.player = player;
         initializeViews(context);
         if (isDraggable) {
-            setOnTouchListener(new TouchListener());
-            setOnDragListener(new DragListener());
+            setOnTouchListener(new TouchListener(this.dragListener));
+            setOnDragListener(new DragListener(this.dragListener));
         }
     }
 
@@ -131,8 +134,8 @@ public class PlayerView extends LinearLayout {
         this.player = player;
         initializeViews(context);
         if (isDraggable) {
-            setOnTouchListener(new TouchListener());
-            setOnDragListener(new DragListener());
+            setOnTouchListener(new TouchListener(this.dragListener));
+            setOnDragListener(new DragListener(this.dragListener));
         }
     }
 
@@ -229,6 +232,13 @@ public class PlayerView extends LinearLayout {
     }
 
     private static class TouchListener implements OnTouchListener {
+
+        OnPlayerDragListener onPlayerDragListener;
+
+        public TouchListener(OnPlayerDragListener onPlayerDragListener) {
+            this.onPlayerDragListener = onPlayerDragListener;
+        }
+
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouch(View view, MotionEvent event) {
@@ -247,6 +257,11 @@ public class PlayerView extends LinearLayout {
     }
 
     private static class DragListener implements OnDragListener {
+        OnPlayerDragListener onPlayerDragListener;
+        public DragListener(OnPlayerDragListener onPlayerDragListener) {
+            this.onPlayerDragListener = onPlayerDragListener;
+        }
+
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();
@@ -276,15 +291,20 @@ public class PlayerView extends LinearLayout {
 
                     // Remove the views from their parent layouts
                     ViewGroup draggedParent = (ViewGroup) draggedView.getParent();
+                    int fromPosition = getViewPosition(draggedView);
                     draggedParent.removeView(draggedView);
 
                     ViewGroup dropTargetParent = (ViewGroup) dropTargetView.getParent();
+                    int toPosition = getViewPosition(dropTargetView);
                     dropTargetParent.removeView(dropTargetView);
 
                     // Add the views to the opposite layouts
                     draggedParent.addView(dropTargetView, draggedParams);
                     dropTargetParent.addView(draggedView, dropTargetParams);
 
+                    if (onPlayerDragListener != null) {
+                        onPlayerDragListener.onPlayerDragged(fromPosition, toPosition);
+                    }
                     draggedView.setVisibility(View.VISIBLE); // Show the dragged view
                     return true;
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -294,5 +314,13 @@ public class PlayerView extends LinearLayout {
                     return false;
             }
         }
+
+        private int getViewPosition(View view) {
+            // Implement a method to find the position of the view in the list or grid
+            // For example, if you have tags set on views that correspond to their positions:
+            Long position = (Long) view.getTag();
+            return Math.toIntExact(Long.valueOf(position != null ? position : -1));
+        }
+
     }
 }
