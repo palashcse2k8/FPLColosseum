@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
@@ -39,6 +40,9 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
 
     HomePageSharedViewModel viewModel;
     List<PlayersData> teamPlayers = new ArrayList<>();
+    Map<Long, PlayerView> playerViewMap = new HashMap<>();
+    PlayerView captain;
+    PlayerView viceCaptain;
 
     @Nullable
     @Override
@@ -99,6 +103,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
             playersData.setIs_captain(myTeamPicks.getIs_captain());
             playersData.setIs_vice_captain(myTeamPicks.getIs_vice_captain());
             playersData.setPosition(myTeamPicks.getPosition());
+            playersData.setSingular_name_short((Constants.playerTypeMap.get(playersData.getElement_type()).getSingular_name_short()));
             teamPlayers.add(playersData);
         }
     }
@@ -226,6 +231,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         playerView.setPlayerName(player.getWeb_name());
 
         playerView.setTag(player.getPosition());
+        playerViewMap.put(player.getPosition(), playerView);
 
         //set team name
         String teamName = Constants.teamMap.get(player.getTeam()).getShort_name();
@@ -258,11 +264,13 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         //set captain icon
         if (player.isIs_captain()) {
             playerView.setCaptain();
+            captain = playerView;
         }
 
         //set vice captain icon
         if (player.isIs_vice_captain()) {
             playerView.setViceCaptain();
+            viceCaptain = playerView;
         }
 
         //set dream player icon
@@ -296,7 +304,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
     }
 
     @Override
-    public void onPlayerDragged(int fromPosition, int toPosition) {
+    public void onPlayerDragged(int fromPosition, int toPosition, PlayerView draggedPlayerView, PlayerView dropPlayerView) {
 
         Log.d("FPLC", "Before");
         printTeamPlayers();
@@ -311,6 +319,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         teamPlayers.get(toPosition-1).setPosition(toPosition);
         Log.d("FPLC", "After");
         printTeamPlayers();
+
+
 
         // Update the GridLayout with the new positions
 //        updateUI(binding.footballFieldLayout);

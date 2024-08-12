@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -82,6 +83,7 @@ import com.infotech.fplcolosseum.R;
 
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
+import com.infotech.fplcolosseum.utilities.Constants;
 import com.squareup.picasso.Picasso;
 
 public class PlayerView extends LinearLayout {
@@ -187,6 +189,10 @@ public class PlayerView extends LinearLayout {
         imageBottomRight.setVisibility(View.VISIBLE);
         imageBottomRight.setBackgroundResource(R.drawable.alpha_c_circle);
     }
+    public void unSetCaptain() {
+        imageBottomRight.setVisibility(View.GONE);
+//        imageBottomRight.setBackgroundResource(R.drawable.alpha_c_circle);
+    }
 
     public void setViceCaptain() {
         imageBottomRight.setVisibility(View.VISIBLE);
@@ -229,6 +235,11 @@ public class PlayerView extends LinearLayout {
             playerNameTextView.setBackgroundColor(Color.parseColor("#FF0000"));
         }
 
+    }
+
+
+    public PlayersData getPlayerData(){
+        return this.player;
     }
 
     private static class TouchListener implements OnTouchListener {
@@ -292,21 +303,50 @@ public class PlayerView extends LinearLayout {
                     // Remove the views from their parent layouts
                     ViewGroup draggedParent = (ViewGroup) draggedView.getParent();
                     int fromPosition = getViewPosition(draggedView);
-                    draggedParent.removeView(draggedView);
 
                     ViewGroup dropTargetParent = (ViewGroup) dropTargetView.getParent();
                     int toPosition = getViewPosition(dropTargetView);
-                    dropTargetParent.removeView(dropTargetView);
 
-                    // Add the views to the opposite layouts
-                    draggedParent.addView(dropTargetView, draggedParams);
-                    dropTargetParent.addView(draggedView, dropTargetParams);
+                    // Get the PlayerView instances
+                    PlayerView draggedPlayerView = (PlayerView) draggedView;
+                    PlayerView dropTargetPlayerView = (PlayerView) dropTargetView;
 
-                    if (onPlayerDragListener != null) {
-                        onPlayerDragListener.onPlayerDragged(fromPosition, toPosition);
+                    // Retrieve the player data
+                    PlayersData draggedPlayerData = draggedPlayerView.getPlayerData();
+                    PlayersData dropTargetPlayerData = dropTargetPlayerView.getPlayerData();
+
+                    if(draggedPlayerData.getElement_type() == dropTargetPlayerData.getElement_type()){
+                        //remove both view
+                        draggedParent.removeView(draggedView);
+                        dropTargetParent.removeView(dropTargetView);
+
+
+                        // Add the views to the opposite layouts
+                        draggedParent.addView(dropTargetView, draggedParams);
+                        dropTargetParent.addView(draggedView, dropTargetParams);
+
+                        if(dropTargetPlayerView.getPlayerData().isIs_captain()){
+                            draggedPlayerView.setCaptain();
+                            draggedPlayerView.getPlayerData().setIs_captain(true);
+                            dropTargetPlayerView.unSetCaptain();
+                            dropTargetPlayerView.getPlayerData().setIs_captain(false);
+                        }
+
+                        if (onPlayerDragListener != null) {
+                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView);
+                        }
+                        draggedView.setVisibility(View.VISIBLE); // Show the dragged view
+                        return true;
+                    } else {
+                        Log.d(Constants.LOG_TAG, "Element type not same");
+                        if (onPlayerDragListener != null) {
+                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView);
+                        }
+                        return false;
                     }
-                    draggedView.setVisibility(View.VISIBLE); // Show the dragged view
-                    return true;
+
+
+
                 case DragEvent.ACTION_DRAG_ENDED:
                     // Do something when the drag ends
                     return true;
