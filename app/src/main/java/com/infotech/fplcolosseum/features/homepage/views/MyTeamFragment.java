@@ -124,6 +124,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
     private void updateUI(GridLayout footballFieldLayout) {
 
         binding.progressCircular.setVisibility(View.GONE);
+        binding.footballFieldLayout.removeAllViews();
         addPlayers(footballFieldLayout);
     }
 
@@ -149,6 +150,27 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
                 Log.d(Constants.LOG_TAG, "type not defined");
             }
         }
+
+
+        List<PlayersData> concatenatedPlayerList = new ArrayList<>(defenders);
+        concatenatedPlayerList.addAll(midfielders);
+        concatenatedPlayerList.addAll(forwards);
+
+        concatenatedPlayerList.add(0, teamPlayers.get(0));
+
+        for (int i = 11; i < teamPlayers.size(); i++){
+            concatenatedPlayerList.add(teamPlayers.get(i));
+        }
+
+        teamPlayers = concatenatedPlayerList;
+
+        for (int i = 0; i < teamPlayers.size(); i++) {
+            teamPlayers.get(i).setPosition(i+1);
+        }
+
+        Log.d("FPLC", "After Sorting");
+
+        printTeamPlayers();
 
         //Adding players to the ui
 
@@ -205,7 +227,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
 
         // formation for forwards
         if (forwards.size() == 1) {
-            addPlayerNew(forwards.get(0), 3, 3, footballFieldLayout);
+            addPlayerNew(forwards.get(0), 3, 2, footballFieldLayout);
 
         } else if (forwards.size() == 2) {
             addPlayerNew(forwards.get(0), 3, 1, footballFieldLayout);
@@ -223,6 +245,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         addPlayerNew(teamPlayers.get(12), 4, 2, footballFieldLayout); // first bench
         addPlayerNew(teamPlayers.get(13), 4, 3, footballFieldLayout); // second bench
         addPlayerNew(teamPlayers.get(14), 4, 4, footballFieldLayout); // third bench
+
     }
 
     public void addPlayerNew(PlayersData player, int row, int column, GridLayout footballFieldLayout) {
@@ -231,6 +254,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         playerView.setPlayerName(player.getWeb_name());
 
         playerView.setTag(player.getPosition());
+
+        //save player view for later access
         playerViewMap.put(player.getPosition(), playerView);
 
         //set team name
@@ -308,11 +333,10 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
 
         Log.d("FPLC", "Before");
         printTeamPlayers();
+        binding.footballFieldLayout.requestLayout();
 
         PlayersData fromPositionPlayer = teamPlayers.get(fromPosition-1);
         PlayersData toPositionPlayer = teamPlayers.get(toPosition-1);
-//        fromPositionPlayer.setPosition(toPosition);
-//        toPositionPlayer.setPosition(fromPosition);
 
         Collections.swap(teamPlayers, fromPosition-1, toPosition-1);
         teamPlayers.get(fromPosition-1).setPosition(fromPosition);
@@ -320,10 +344,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         Log.d("FPLC", "After");
         printTeamPlayers();
 
-
-
         // Update the GridLayout with the new positions
-//        updateUI(binding.footballFieldLayout);
+        updateUI(binding.footballFieldLayout);
 
     }
 

@@ -18,69 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.infotech.fplcolosseum.R;
-
-//public class PlayerView extends LinearLayout {
-//
-//    private ImageView imageView;
-//    private TextView playerNameTextView;
-//    private TextView teamNameTextView;
-//
-//    private int row;
-//    private int column;
-//
-//    public PlayerView(Context context) {
-//        super(context);
-//        initializeViews(context);
-//    }
-//
-//    public PlayerView(Context context, AttributeSet attrs) {
-//        super(context, attrs);
-//        initializeViews(context);
-//    }
-//
-//    public PlayerView(Context context, AttributeSet attrs, int defStyle) {
-//        super(context, attrs, defStyle);
-//        initializeViews(context);
-//    }
-//
-//    private void initializeViews(Context context) {
-//        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        inflater.inflate(R.layout.player_template, this);
-//
-//        imageView = findViewById(R.id.imageView);
-//        playerNameTextView = findViewById(R.id.playerNameTextView);
-//        teamNameTextView = findViewById(R.id.teamNameTV);
-//
-//        // Set LayoutParams for PlayerView
-////        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-////                LinearLayout.LayoutParams.MATCH_PARENT,
-////                LinearLayout.LayoutParams.WRAP_CONTENT);
-////        setLayoutParams(layoutParams);
-//    }
-//
-//    // Add methods to set player details (image, name, team name) if needed
-//    public void setPlayerImage(int imageResId) {
-//        imageView.setImageResource(imageResId);
-//    }
-//
-//    public void setPlayerName(String playerName) {
-//        playerNameTextView.setText(playerName);
-//    }
-//
-//    public void setTeamName(String teamName) {
-//        teamNameTextView.setText(teamName);
-//    }
-//
-//    // Methods to set player position
-//    public void setRow(int row) {
-//        this.row = row;
-//    }
-//
-//    public void setColumn(int column) {
-//        this.column = column;
-//    }
-//}
-
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -189,6 +126,7 @@ public class PlayerView extends LinearLayout {
         imageBottomRight.setVisibility(View.VISIBLE);
         imageBottomRight.setBackgroundResource(R.drawable.alpha_c_circle);
     }
+
     public void unSetCaptain() {
         imageBottomRight.setVisibility(View.GONE);
 //        imageBottomRight.setBackgroundResource(R.drawable.alpha_c_circle);
@@ -209,19 +147,19 @@ public class PlayerView extends LinearLayout {
         changeOfPlayingThisRound.setText(String.valueOf(chanceOfPlayingThisRound));
         GradientDrawable bgDrawable = (GradientDrawable) changeOfPlayingThisRound.getBackground();
 
-        if(chanceOfPlayingThisRound == 25){
+        if (chanceOfPlayingThisRound == 25) {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
             bgDrawable.setColor(Color.parseColor("#FF8000"));
 
             playerNameTextView.setBackgroundColor(Color.parseColor("#FF8000"));
             playerNameTextView.setTextColor(Color.parseColor("#000000"));
-        } else if(chanceOfPlayingThisRound == 50){
+        } else if (chanceOfPlayingThisRound == 50) {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
             bgDrawable.setColor(Color.parseColor("#CCCC00"));
 
             playerNameTextView.setBackgroundColor(Color.parseColor("#CCCC00"));
             playerNameTextView.setTextColor(Color.parseColor("#000000"));
-        } else if(chanceOfPlayingThisRound == 75) {
+        } else if (chanceOfPlayingThisRound == 75) {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
             bgDrawable.setColor(Color.parseColor("#FFFF00"));
 
@@ -238,7 +176,7 @@ public class PlayerView extends LinearLayout {
     }
 
 
-    public PlayersData getPlayerData(){
+    public PlayersData getPlayerData() {
         return this.player;
     }
 
@@ -269,6 +207,7 @@ public class PlayerView extends LinearLayout {
 
     private static class DragListener implements OnDragListener {
         OnPlayerDragListener onPlayerDragListener;
+
         public DragListener(OnPlayerDragListener onPlayerDragListener) {
             this.onPlayerDragListener = onPlayerDragListener;
         }
@@ -315,36 +254,115 @@ public class PlayerView extends LinearLayout {
                     PlayersData draggedPlayerData = draggedPlayerView.getPlayerData();
                     PlayersData dropTargetPlayerData = dropTargetPlayerView.getPlayerData();
 
-                    if(draggedPlayerData.getElement_type() == dropTargetPlayerData.getElement_type()){
-                        //remove both view
+                    if (draggedPlayerData.getPosition() == 1 && dropTargetPlayerData.getPosition() == 12) {
                         draggedParent.removeView(draggedView);
                         dropTargetParent.removeView(dropTargetView);
-
 
                         // Add the views to the opposite layouts
                         draggedParent.addView(dropTargetView, draggedParams);
                         dropTargetParent.addView(draggedView, dropTargetParams);
 
-                        if(dropTargetPlayerView.getPlayerData().isIs_captain()){
+                        if (dropTargetPlayerView.getPlayerData().isIs_captain()) {
                             draggedPlayerView.setCaptain();
                             draggedPlayerView.getPlayerData().setIs_captain(true);
                             dropTargetPlayerView.unSetCaptain();
                             dropTargetPlayerView.getPlayerData().setIs_captain(false);
                         }
 
-                        if (onPlayerDragListener != null) {
-                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView);
-                        }
                         draggedView.setVisibility(View.VISIBLE); // Show the dragged view
-                        return true;
-                    } else {
-                        Log.d(Constants.LOG_TAG, "Element type not same");
+
                         if (onPlayerDragListener != null) {
                             onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView);
                         }
-                        return false;
+
+                        return true;
                     }
 
+                    if (draggedPlayerData.getPosition() == 12 && dropTargetPlayerData.getPosition() == 1) {
+                        draggedParent.removeView(draggedView);
+                        dropTargetParent.removeView(dropTargetView);
+
+                        // Add the views to the opposite layouts
+                        draggedParent.addView(dropTargetView, draggedParams);
+                        dropTargetParent.addView(draggedView, dropTargetParams);
+
+                        if (dropTargetPlayerView.getPlayerData().isIs_captain()) {
+                            draggedPlayerView.setCaptain();
+                            draggedPlayerView.getPlayerData().setIs_captain(true);
+                            dropTargetPlayerView.unSetCaptain();
+                            dropTargetPlayerView.getPlayerData().setIs_captain(false);
+                        }
+
+                        draggedView.setVisibility(View.VISIBLE); // Show the dragged view
+
+                        if (onPlayerDragListener != null) {
+                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, null, null);
+                        }
+
+                        return true;
+                    }
+
+                    if (draggedPlayerData.getPosition() > 12) {
+                        if (dropTargetPlayerData.getPosition() > 1 && dropTargetPlayerData.getPosition() < 12) {
+                            draggedParent.removeView(draggedView);
+                            dropTargetParent.removeView(dropTargetView);
+
+                            // Add the views to the opposite layouts
+                            draggedParent.addView(dropTargetView, draggedParams);
+                            dropTargetParent.addView(draggedView, dropTargetParams);
+
+                            if (dropTargetPlayerView.getPlayerData().isIs_captain()) {
+                                draggedPlayerView.setCaptain();
+                                draggedPlayerView.getPlayerData().setIs_captain(true);
+                                dropTargetPlayerView.unSetCaptain();
+                                dropTargetPlayerView.getPlayerData().setIs_captain(false);
+                            }
+
+                            draggedView.setVisibility(View.VISIBLE); // Show the dragged view
+
+                            if (onPlayerDragListener != null) {
+                                onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView);
+                            }
+
+                            return true;
+
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    if (draggedPlayerData.getPosition() > 1 && draggedPlayerData.getPosition() < 12) {
+                        if (dropTargetPlayerData.getPosition() > 12) {
+
+                            draggedParent.removeView(draggedView);
+                            dropTargetParent.removeView(dropTargetView);
+
+                            // Add the views to the opposite layouts
+                            draggedParent.addView(dropTargetView, draggedParams);
+                            dropTargetParent.addView(draggedView, dropTargetParams);
+
+                            if (dropTargetPlayerView.getPlayerData().isIs_captain()) {
+                                draggedPlayerView.setCaptain();
+                                draggedPlayerView.getPlayerData().setIs_captain(true);
+                                dropTargetPlayerView.unSetCaptain();
+                                dropTargetPlayerView.getPlayerData().setIs_captain(false);
+                            }
+
+                            draggedView.setVisibility(View.VISIBLE);// Show the dragged view
+
+                            if (onPlayerDragListener != null) {
+                                onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView);
+                            }
+
+                            return true;
+
+                        } else {
+                            return false;
+                        }
+                    }
+
+
+                    return false;
 
 
                 case DragEvent.ACTION_DRAG_ENDED:
