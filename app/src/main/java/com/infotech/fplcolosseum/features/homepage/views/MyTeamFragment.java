@@ -158,14 +158,14 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
 
         concatenatedPlayerList.add(0, teamPlayers.get(0));
 
-        for (int i = 11; i < teamPlayers.size(); i++){
+        for (int i = 11; i < teamPlayers.size(); i++) {
             concatenatedPlayerList.add(teamPlayers.get(i));
         }
 
         teamPlayers = concatenatedPlayerList;
 
         for (int i = 0; i < teamPlayers.size(); i++) {
-            teamPlayers.get(i).setPosition(i+1);
+            teamPlayers.get(i).setPosition(i + 1);
         }
 
         Log.d("FPLC", "After Sorting");
@@ -261,7 +261,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         //set team name
         String teamName = Constants.teamMap.get(player.getTeam()).getShort_name();
         String playerType = Constants.playerTypeMap.get(player.getElement_type()).getSingular_name_short();
-        playerView.setTeamName(teamName + " - (" + playerType+ ")");
+        playerView.setTeamName(teamName + " - (" + playerType + ")");
 
         //update opponent team name
         HashMap<Long, OpponentData> fixtures = (HashMap<Long, OpponentData>) Constants.fixtureData.get(Constants.nextGameWeek);
@@ -329,18 +329,34 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
     }
 
     @Override
-    public void onPlayerDragged(int fromPosition, int toPosition, PlayerView draggedPlayerView, PlayerView dropPlayerView) {
+    public void onPlayerDragged(int fromPosition, int toPosition, PlayerView draggedPlayerView, PlayerView dropPlayerView, boolean isSwapData) {
 
         Log.d("FPLC", "Before");
         printTeamPlayers();
-        binding.footballFieldLayout.requestLayout();
+//        binding.footballFieldLayout.requestLayout();
 
-        PlayersData fromPositionPlayer = teamPlayers.get(fromPosition-1);
-        PlayersData toPositionPlayer = teamPlayers.get(toPosition-1);
+        List<PlayersData> tempTeamPlayers = new ArrayList<>(teamPlayers);
+        Collections.swap(tempTeamPlayers, fromPosition - 1, toPosition - 1);
 
-        Collections.swap(teamPlayers, fromPosition-1, toPosition-1);
-        teamPlayers.get(fromPosition-1).setPosition(fromPosition);
-        teamPlayers.get(toPosition-1).setPosition(toPosition);
+        if(!isValidFormation(tempTeamPlayers)){
+            return;
+        }
+
+        Collections.swap(teamPlayers, fromPosition - 1, toPosition - 1);
+
+        if (isSwapData) {
+
+            // swap vice captain property
+            boolean tempViceCaptainStatus = teamPlayers.get(fromPosition - 1).isIs_vice_captain();
+            teamPlayers.get(fromPosition - 1).setIs_vice_captain(teamPlayers.get(toPosition - 1).isIs_vice_captain());
+            teamPlayers.get(toPosition - 1).setIs_vice_captain(tempViceCaptainStatus);
+
+            // swap captain property
+            boolean tempCaptainStatus = teamPlayers.get(fromPosition - 1).isIs_captain();
+            teamPlayers.get(fromPosition - 1).setIs_captain(teamPlayers.get(toPosition - 1).isIs_captain());
+            teamPlayers.get(toPosition - 1).setIs_captain(tempCaptainStatus);
+        }
+
         Log.d("FPLC", "After");
         printTeamPlayers();
 
@@ -349,9 +365,41 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
 
     }
 
-    private void printTeamPlayers(){
+    private void printTeamPlayers() {
         for (PlayersData player : this.teamPlayers) {
-            Log.d("FPLC", player.getPosition() + " -> " +player.getWeb_name());
+            Log.d("FPLC", player.getPosition() + " -> " + player.getWeb_name());
         }
+    }
+
+    private boolean isValidFormation(List<PlayersData> teamPlayers) {
+        List<PlayersData> defenders = new ArrayList<>();
+        List<PlayersData> midfielders = new ArrayList<>();
+        List<PlayersData> forwards = new ArrayList<>();
+
+        for (int i = 1; i < teamPlayers.size() - 4; i++) {
+
+            PlayersData entry = teamPlayers.get(i);
+
+            if (entry.getSingular_name_short().equalsIgnoreCase("DEF")) {
+                defenders.add(entry);
+            } else if (entry.getSingular_name_short().equalsIgnoreCase("MID")) {
+                midfielders.add(entry);
+            } else if (entry.getSingular_name_short().equalsIgnoreCase("FWD")) {
+                forwards.add(entry);
+            } else {
+                Log.d(Constants.LOG_TAG, "type not defined");
+            }
+        }
+
+        if (defenders.size() > 5 || defenders.size() < 3) {
+            return false;
+        }
+
+        if (midfielders.size() > 5 || defenders.size() < 3) {
+            return false;
+        }
+
+        return forwards.size() <= 3 && !forwards.isEmpty();
+
     }
 }

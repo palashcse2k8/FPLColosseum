@@ -255,112 +255,61 @@ public class PlayerView extends LinearLayout {
                     PlayersData dropTargetPlayerData = dropTargetPlayerView.getPlayerData();
 
                     if (draggedPlayerData.getPosition() == 1 && dropTargetPlayerData.getPosition() == 12) {
-                        draggedParent.removeView(draggedView);
-                        dropTargetParent.removeView(dropTargetView);
-
-                        // Add the views to the opposite layouts
-                        draggedParent.addView(dropTargetView, draggedParams);
-                        dropTargetParent.addView(draggedView, dropTargetParams);
-
-                        if (dropTargetPlayerView.getPlayerData().isIs_captain()) {
-                            draggedPlayerView.setCaptain();
-                            draggedPlayerView.getPlayerData().setIs_captain(true);
-                            dropTargetPlayerView.unSetCaptain();
-                            dropTargetPlayerView.getPlayerData().setIs_captain(false);
-                        }
-
-                        draggedView.setVisibility(View.VISIBLE); // Show the dragged view
+//                        draggedParent.removeView(draggedView);
+//                        dropTargetParent.removeView(dropTargetView);
+//
+//                        // Add the views to the opposite layouts
+//                        draggedParent.addView(dropTargetView, draggedParams);
+//                        dropTargetParent.addView(draggedView, dropTargetParams);
+//
+//                        if (dropTargetPlayerView.getPlayerData().isIs_captain()) {
+//                            draggedPlayerView.setCaptain();
+//                            draggedPlayerView.getPlayerData().setIs_captain(true);
+//                            dropTargetPlayerView.unSetCaptain();
+//                            dropTargetPlayerView.getPlayerData().setIs_captain(false);
+//                        }
+//
+//                        draggedView.setVisibility(View.VISIBLE); // Show the dragged view
 
                         if (onPlayerDragListener != null) {
-                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView);
+                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, true);
                         }
 
                         return true;
                     }
 
                     if (draggedPlayerData.getPosition() == 12 && dropTargetPlayerData.getPosition() == 1) {
-                        draggedParent.removeView(draggedView);
-                        dropTargetParent.removeView(dropTargetView);
-
-                        // Add the views to the opposite layouts
-                        draggedParent.addView(dropTargetView, draggedParams);
-                        dropTargetParent.addView(draggedView, dropTargetParams);
-
-                        if (dropTargetPlayerView.getPlayerData().isIs_captain()) {
-                            draggedPlayerView.setCaptain();
-                            draggedPlayerView.getPlayerData().setIs_captain(true);
-                            dropTargetPlayerView.unSetCaptain();
-                            dropTargetPlayerView.getPlayerData().setIs_captain(false);
-                        }
-
-                        draggedView.setVisibility(View.VISIBLE); // Show the dragged view
 
                         if (onPlayerDragListener != null) {
-                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, null, null);
+                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, true);
                         }
 
                         return true;
                     }
 
                     if (draggedPlayerData.getPosition() > 12) {
-                        if (dropTargetPlayerData.getPosition() > 1 && dropTargetPlayerData.getPosition() < 12) {
-                            draggedParent.removeView(draggedView);
-                            dropTargetParent.removeView(dropTargetView);
-
-                            // Add the views to the opposite layouts
-                            draggedParent.addView(dropTargetView, draggedParams);
-                            dropTargetParent.addView(draggedView, dropTargetParams);
-
-                            if (dropTargetPlayerView.getPlayerData().isIs_captain()) {
-                                draggedPlayerView.setCaptain();
-                                draggedPlayerView.getPlayerData().setIs_captain(true);
-                                dropTargetPlayerView.unSetCaptain();
-                                dropTargetPlayerView.getPlayerData().setIs_captain(false);
-                            }
-
-                            draggedView.setVisibility(View.VISIBLE); // Show the dragged view
-
-                            if (onPlayerDragListener != null) {
-                                onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView);
-                            }
-
-                            return true;
-
-                        } else {
+                        if (dropTargetPlayerData.getPosition() == 1 || dropTargetPlayerData.getPosition() == 12) {
                             return false;
                         }
+
+                        if (onPlayerDragListener != null) {
+
+                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, dropTargetPlayerData.getPosition() <= 13);
+                        }
+
+                        return true;
                     }
 
                     if (draggedPlayerData.getPosition() > 1 && draggedPlayerData.getPosition() < 12) {
                         if (dropTargetPlayerData.getPosition() > 12) {
 
-                            draggedParent.removeView(draggedView);
-                            dropTargetParent.removeView(dropTargetView);
-
-                            // Add the views to the opposite layouts
-                            draggedParent.addView(dropTargetView, draggedParams);
-                            dropTargetParent.addView(draggedView, dropTargetParams);
-
-                            if (dropTargetPlayerView.getPlayerData().isIs_captain()) {
-                                draggedPlayerView.setCaptain();
-                                draggedPlayerView.getPlayerData().setIs_captain(true);
-                                dropTargetPlayerView.unSetCaptain();
-                                dropTargetPlayerView.getPlayerData().setIs_captain(false);
-                            }
-
-                            draggedView.setVisibility(View.VISIBLE);// Show the dragged view
-
                             if (onPlayerDragListener != null) {
-                                onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView);
+                                onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, true);
                             }
 
                             return true;
-
-                        } else {
-                            return false;
                         }
                     }
-
 
                     return false;
 
@@ -377,7 +326,7 @@ public class PlayerView extends LinearLayout {
             // Implement a method to find the position of the view in the list or grid
             // For example, if you have tags set on views that correspond to their positions:
             Long position = (Long) view.getTag();
-            return Math.toIntExact(Long.valueOf(position != null ? position : -1));
+            return Math.toIntExact(position != null ? position : -1);
         }
 
     }
