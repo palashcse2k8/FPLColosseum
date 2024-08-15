@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -124,6 +125,22 @@ public class HomePageFragment extends Fragment {
             // Inflate the new toolbar layout
             if (position == 0) {
                 currentToolbar = (Toolbar) inflater.inflate(R.layout.toolbar_point_fragment, rootView, false);
+
+                // Set team and manager names dynamically
+                if (currentToolbar != null) {
+                    TextView teamNameTextView = currentToolbar.findViewById(R.id.teamName);
+                    TextView managerNameTextView = currentToolbar.findViewById(R.id.managerName);
+
+                    // Set the team and manager names (these could come from a model or passed as arguments)
+
+                    if(Constants.managerName != null){
+                        managerNameTextView.setText(Constants.managerName);
+                    }
+
+                    if(Constants.teamName != null){
+                        teamNameTextView.setText(Constants.teamName);
+                    }
+                }
             } else if (position == 1) {
                 currentToolbar = (Toolbar) inflater.inflate(R.layout.toolbar_league_fragment, rootView, false);
             }

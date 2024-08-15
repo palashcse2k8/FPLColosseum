@@ -13,8 +13,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1.2"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
@@ -22,54 +21,75 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:textColor="@color/textColorPrimary"
-                android:text="FCGOA"/>
+                android:textColor="@color/textColorPrimary"/>
 
             <TextView
                 android:id="@+id/managerName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="14sp"
-                android:text="Md. Mosiur Rahman">
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:textSize="14sp">
 
             </TextView>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight=".8"
-            android:gravity="end"
-            >
+<!--        <LinearLayout-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight=".8"-->
+<!--            android:gravity="end"-->
+<!--            >-->
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:tint="@color/teal_200"
-                android:layout_gravity="center_vertical"
-                android:src="@android:drawable/ic_menu_share"/>
+<!--            <ImageButton-->
+<!--                android:id="@+id/undo_btn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="4dp"-->
+<!--                app:tint="@color/white"-->
+<!--                android:background="#0000ffff"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                android:src="@drawable/cross_icon"/>-->
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:tint="@color/teal_200"
-                android:layout_gravity="center_vertical"
-                android:src="@android:drawable/ic_menu_rotate"/>
+<!--            <ImageButton-->
+<!--                android:id="@+id/refresh_btn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:paddingStart="4dp"-->
+<!--                app:tint="@color/white"-->
+<!--                android:background="#0000ffff"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                android:src="@drawable/refresh_icon"/>-->
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:tint="@color/teal_200"
-                android:layout_gravity="center_vertical"
-                android:src="@android:drawable/ic_menu_set_as"/>
+<!--            <ImageButton-->
+<!--                android:id="@+id/share_btn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:paddingHorizontal="8dp"-->
+<!--                app:tint="@color/white"-->
+<!--                android:background="#0000ffff"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                android:src="@drawable/share_icon"/>-->
 
-            <View
-                android:layout_width="8dp"
-                android:layout_height="match_parent"
-                />
-        </LinearLayout>
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/save_btn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="4dp"-->
+<!--                app:tint="@color/white"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                android:background="#0000ffff"-->
+<!--                android:src="@drawable/save_button"/>-->
+
+<!--            <View-->
+<!--                android:layout_width="8dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                />-->
+<!--        </LinearLayout>-->
 
 
 

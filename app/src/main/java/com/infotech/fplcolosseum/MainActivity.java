@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements ToolbarChangeList
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Toast.makeText(this, "Selected Item: " +item.getTitle(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Selected Item: " +item.getTitle(), Toast.LENGTH_SHORT).show();
 //        onBackPressed();
         return super.onOptionsItemSelected(item);
 

@@ -43,6 +43,9 @@ public class Constants {
 
     public static Map <Long, Map<Long, OpponentData>> fixtureData = new HashMap<>();
 
+    public static String managerName;
+    public static String teamName;
+
     //image link
 
 }

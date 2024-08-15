@@ -17,21 +17,6 @@
             android:layout_weight="1.2"
             android:layout_height="match_parent"
             android:orientation="vertical">
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="20sp"-->
-<!--                android:textColor="@color/textColorPrimary"-->
-<!--                android:text="FCGOA"/>-->
-
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textColor="@color/textColorPrimary"-->
-<!--                android:textSize="14sp"-->
-<!--                android:text="Md. Mosiur Rahman">-->
-
-<!--            </TextView>-->
 
         </LinearLayout>
 
@@ -47,12 +32,14 @@
                 android:layout_height="wrap_content"
                 app:tint="@color/teal_200"
                 android:layout_gravity="center_vertical"
+                android:background="#0000ffff"
                 android:src="@android:drawable/ic_menu_share"/>
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:tint="@color/teal_200"
+                android:background="#0000ffff"
                 android:layout_gravity="center_vertical"
                 android:src="@android:drawable/ic_menu_rotate"/>
 
@@ -60,6 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:tint="@color/teal_200"
+                android:background="#0000ffff"
                 android:layout_gravity="center_vertical"
                 android:src="@android:drawable/ic_menu_set_as"/>
 
