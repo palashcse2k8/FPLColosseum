@@ -27,12 +27,9 @@ import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
-import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
-import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
-import com.infotech.fplcolosseum.features.homepage.viewmodels.viewmodels.MyTeamViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
@@ -63,7 +60,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMyteamBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
         binding.setMyTeamViewModel(viewModel);
@@ -113,13 +110,10 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
     @Override
     public void onResume() {
         super.onResume();
-
-
-
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.my_team_menu, menu);
 
@@ -132,7 +126,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         MenuItem refreshItem = menu.findItem(R.id.action_refresh);
@@ -206,11 +200,13 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         for (MyTeamPicks myTeamPicks : picks) {
             PlayersData playersData = Constants.playerMap.get(myTeamPicks.getElement());
 
-            if(playersData != null){
+            if (playersData != null) {
                 playersData.setIs_captain(myTeamPicks.getIs_captain());
                 playersData.setIs_vice_captain(myTeamPicks.getIs_vice_captain());
                 playersData.setPosition(myTeamPicks.getPosition());
-                playersData.setSingular_name_short((Constants.playerTypeMap.get(playersData.getElement_type()).getSingular_name_short()));
+                playersData.setSingular_name_short(Objects.requireNonNull(Constants.playerTypeMap.get(playersData.getElement_type())).getSingular_name_short());
+                playersData.setTeam_name_short(Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getShort_name());
+                playersData.setTeam_name_full(Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getName());
                 teamPlayers.add(playersData);
             } else {
                 UIUtils.toast(requireContext(), "Player data is null please reload again", ToastLevel.WARNING);
@@ -253,8 +249,6 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         for (int i = 1; i < teamPlayers.size() - 4; i++) {
 
             PlayersData entry = teamPlayers.get(i);
-
-            long playerType = entry.getElement_type();
 
             if (entry.getSingular_name_short().equalsIgnoreCase("DEF")) {
                 defenders.add(entry);
@@ -375,22 +369,23 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         playerViewMap.put(player.getPosition(), playerView);
 
         //set team name
-        String teamName = Constants.teamMap.get(player.getTeam()).getShort_name();
-        String playerType = Constants.playerTypeMap.get(player.getElement_type()).getSingular_name_short();
+        String teamName = Objects.requireNonNull(Constants.teamMap.get(player.getTeam())).getShort_name();
+        String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(player.getElement_type())).getSingular_name_short();
         playerView.setTeamName(teamName + " - (" + playerType + ")");
 
         //update opponent team name
         HashMap<Long, OpponentData> fixtures = (HashMap<Long, OpponentData>) Constants.fixtureData.get(Constants.nextGameWeek);
+        assert fixtures != null;
         OpponentData opponentData = fixtures.get(player.getTeam());
         assert opponentData != null;
         String homeOrAway = opponentData.isHome() ? "H" : "A";
-        String opponentTeamName = Constants.teamMap.get(opponentData.getTeamID()).getShort_name();
+        String opponentTeamName = Objects.requireNonNull(Constants.teamMap.get(opponentData.getTeamID())).getShort_name();
         playerView.setOpponentTeamName("v " + opponentTeamName + " (" + homeOrAway + ")");
 
-        //https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
-        //https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo
+        // https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
+        // https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo
 
-        String imgURL = "";
+        String imgURL;
         if ((row == 0 && column == 2) || (row == 4 && column == 0)) // for two goal keeper shirt will be changed
         {
             imgURL = "https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_" + player.getTeam_code() + "_1-66.webp";
@@ -440,8 +435,27 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
         // Apply layout parameters to the PlayerView
         playerView.setLayoutParams(params);
 
+//        playerView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Handle the click event
+//                // You can use the position parameter if needed
+//                // For example, you could start an activity, update the UI, etc.
+//                handleCustomViewClick((PlayerView) v);
+//            }
+//        });
+
+
         // Add the PlayerView to the GridLayout
         footballFieldLayout.addView(playerView);
+    }
+
+    // Method to handle the click event
+    private void handleCustomViewClick(PlayerView playerView) {
+        // Implement your logic for handling the click event here
+        // For example:
+        Toast.makeText(requireContext(), "Clicked on position: " + playerView.getPlayerData().getPosition(), Toast.LENGTH_SHORT).show();
+        // Perform other actions as needed
     }
 
     @Override
@@ -486,10 +500,21 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
 
     }
 
+    @Override
+    public void onClickPlayer(PlayerView view) {
+        Log.d(Constants.LOG_TAG, "Player Clicked! " + view.player.getPosition());
+        showBottomSheetDialogue(view.getPlayerData());
+    }
+
     private void printTeamPlayers(List<PlayersData> teamPlayers) {
         for (PlayersData player : teamPlayers) {
             Log.d("FPLC", player.getPosition() + " -> " + player.getWeb_name() + (player.isIs_captain() ? " Captain" : "") + (player.isIs_vice_captain() ? " Vice Captain" : ""));
         }
+    }
+
+    private void showBottomSheetDialogue(PlayersData playersData){
+        PlayerInfoBottomSheetFragment bottomSheet = PlayerInfoBottomSheetFragment.newInstance(playersData);
+        bottomSheet.show(requireActivity().getSupportFragmentManager(), bottomSheet.getTag());
     }
 
     private boolean isValidFormation(List<PlayersData> teamPlayers) {
@@ -516,7 +541,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
             return false;
         }
 
-        if (midfielders.size() > 5 || defenders.size() < 3) {
+        if (midfielders.size() > 5 || midfielders.size() < 3) {
             return false;
         }
 

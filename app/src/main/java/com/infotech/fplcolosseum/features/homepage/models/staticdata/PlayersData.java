@@ -1,6 +1,8 @@
 package com.infotech.fplcolosseum.features.homepage.models.staticdata;
 
-public class PlayersData {
+import java.io.Serializable;
+
+public class PlayersData implements Serializable {
     private long chance_of_playing_next_round;
     private Long chance_of_playing_this_round;
     private long code;

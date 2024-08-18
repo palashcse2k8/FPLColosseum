@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.infotech.fplcolosseum.R;
+import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 
 public class OverlayView extends LinearLayout {
@@ -34,8 +35,8 @@ public class OverlayView extends LinearLayout {
         this.isDraggable = isDraggable;
         this.context = context;
         if (isDraggable) {
-            setOnTouchListener(new TouchListener());
-            setOnDragListener(new DragListener());
+//            setOnTouchListener(new TouchListener());
+//            setOnDragListener(new DragListener());
         }
     }
 
@@ -43,8 +44,8 @@ public class OverlayView extends LinearLayout {
         super(context, attrs);
         initializeViews(context);
         if (isDraggable) {
-            setOnTouchListener(new TouchListener());
-            setOnDragListener(new DragListener());
+//            setOnTouchListener(new TouchListener());
+//            setOnDragListener(new DragListener());
         }
     }
 
@@ -52,8 +53,8 @@ public class OverlayView extends LinearLayout {
         super(context, attrs, defStyle);
         initializeViews(context);
         if (isDraggable) {
-            setOnTouchListener(new TouchListener());
-            setOnDragListener(new DragListener());
+//            setOnTouchListener(new TouchListener());
+//            setOnDragListener(new DragListener());
         }
     }
 
@@ -117,6 +118,13 @@ class TouchListener implements View.OnTouchListener {
 }
 
 class DragListener implements View.OnDragListener {
+
+    OnPlayerDragListener onPlayerDragListener;
+
+    public DragListener(OnPlayerDragListener onPlayerDragListener) {
+        this.onPlayerDragListener = onPlayerDragListener;
+    }
+
     @Override
     public boolean onDrag(View v, DragEvent event) {
         int action = event.getAction();
