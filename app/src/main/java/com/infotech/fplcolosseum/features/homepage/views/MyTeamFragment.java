@@ -2,6 +2,7 @@ package com.infotech.fplcolosseum.features.homepage.views;
 
 import static com.infotech.fplcolosseum.utilities.CustomUtil.updateFixtureData;
 
+import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
+import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
 import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
@@ -41,13 +43,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
+public class MyTeamFragment extends Fragment implements OnPlayerDragListener, PlayerInfoUpdateListener {
 
     FragmentMyteamBinding binding;
 
     HomePageSharedViewModel viewModel;
     List<PlayersData> teamPlayers = new ArrayList<>();
     Map<Long, PlayerView> playerViewMap = new HashMap<>();
+    List<PlayerView> playerViewList = new ArrayList<>();
     PlayerView captain;
     PlayerView viceCaptain;
 
@@ -367,6 +370,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
 
         //save player view for later access
         playerViewMap.put(player.getPosition(), playerView);
+        playerViewList.add(playerView);
 
         //set team name
         String teamName = Objects.requireNonNull(Constants.teamMap.get(player.getTeam())).getShort_name();
@@ -514,6 +518,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
 
     private void showBottomSheetDialogue(PlayersData playersData){
         PlayerInfoBottomSheetFragment bottomSheet = PlayerInfoBottomSheetFragment.newInstance(playersData);
+        bottomSheet.setPlayerInfoUpdateListener(this);
         bottomSheet.show(requireActivity().getSupportFragmentManager(), bottomSheet.getTag());
     }
 
@@ -572,4 +577,123 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener {
             managerNameTextView.setText(Constants.managerName);
         }
     }
+
+    @Override
+    public void onSetCaptain(PlayersData player) {
+        PlayersData currentCaptain = null;
+
+        // Loop through the list to find the current captain
+        for (PlayersData p : this.teamPlayers) {
+            if (p.isIs_captain()) {
+                currentCaptain = p;
+                break; // No need to continue once we find the current captain
+            }
+        }
+
+        // Check if the selected player is the current vice-captain
+        if (player.isIs_vice_captain()) {
+            // If the player is vice-captain, make the current captain the vice-captain
+            if (currentCaptain != null) {
+                currentCaptain.setIs_captain(false);
+                currentCaptain.setIs_vice_captain(true);
+            }
+            // Set the selected player as the new captain
+            player.setIs_vice_captain(false);
+            player.setIs_captain(true);
+        } else {
+            // If the selected player is not vice-captain, simply update the captain
+            if (currentCaptain != null) {
+                currentCaptain.setIs_captain(false);
+            }
+            player.setIs_captain(true);
+        }
+
+        updateUI(binding.footballFieldLayout);
+    }
+
+
+    @Override
+    public void onSetViceCaptain(PlayersData player) {
+        PlayersData currentViceCaptain = null;
+
+        // Loop through the list to find the current captain
+        for (PlayersData p : this.teamPlayers) {
+            if (p.isIs_vice_captain()) {
+                currentViceCaptain = p;
+                break; // No need to continue once we find the current captain
+            }
+        }
+
+        // Check if the selected player is the current vice-captain
+        if (player.isIs_captain()) {
+            // If the player is captain, make the current captain the vice-captain
+            if (currentViceCaptain != null) {
+                currentViceCaptain.setIs_captain(true);
+                currentViceCaptain.setIs_vice_captain(false);
+            }
+            // Set the selected player as the new captain
+            player.setIs_vice_captain(true);
+            player.setIs_captain(false);
+        } else {
+            // If the selected player is not captain, simply update the vice captain
+            if (currentViceCaptain != null) {
+                currentViceCaptain.setIs_vice_captain(false);
+            }
+            player.setIs_vice_captain(true);
+        }
+
+        updateUI(binding.footballFieldLayout);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public void onSwitchPlayer(PlayersData player) {
+        // Highlight switchable players in the grid
+
+//        for (PlayerView playerView: this.playerViewList) {
+//            if(playerView.getPlayerData().getPosition() != player.getPosition()){
+//                playerView.setHighlight("#e9ff32");
+//            } else {
+//                Log.d(Constants.LOG_TAG, "Same Player");
+//            }
+//        }
+
+        //check if the player is goal keeper
+
+        if(player.getPosition() == 12){
+            for (PlayerView playerView : this.playerViewList) {
+
+                playerView.setOnDragListener(null);
+                playerView.setOnTouchListener(null);
+
+                if(playerView.getPlayerData().getPosition() == 1) {
+                    playerView.setHighlight("#e9ff32");// Implement setHighlight in PlayerView to visually indicate the player can be swapped
+                    playerView.setOnDragListener(null);
+                    playerView.setOnTouchListener(null);
+                    playerView.setOnClickListener(v -> {
+                        onPlayerDragged(12, 1, playerView, playerView, true);
+                    });
+                } else {
+                    playerView.setOnClickListener(
+                            v -> updateUI(binding.footballFieldLayout)
+                    );
+                }
+            }
+        }
+
+    }
+
+//    private boolean isPlayerSwitchable(PlayersData data) {
+//        // Implement your logic to determine if a player is switchable
+//        return data.getPosition() < 12 && !data.isIs_captain() && !data.isIs_vice_captain();
+//    }
+//
+//    private void swapPlayers(PlayersData player1, PlayersData player2) {
+//        // Swap the players in the list
+//        int index1 = playersList.indexOf(player1);
+//        int index2 = playersList.indexOf(player2);
+//
+//        playersList.set(index1, player2);
+//        playersList.set(index2, player1);
+//    }
 }

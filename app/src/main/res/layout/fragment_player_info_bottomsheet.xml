@@ -11,22 +11,46 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/backgroundPrimary"
+        android:background="@color/backgroundSecondary"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/closeIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="end"
-            android:src="@drawable/cross_icon"
-            android:background="@android:color/holo_red_dark"
-            android:contentDescription="cross icon" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/button_primary"
+            android:padding="4dp"
+            android:layout_margin="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:text="Player Information"/>
+
+            <ImageView
+                android:id="@+id/closeIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end"
+                android:src="@drawable/cross_icon"
+                android:background="@android:color/holo_red_dark"
+                android:contentDescription="cross icon" />
+
+        </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:padding="4dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -69,38 +93,26 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
-                        android:textColor="@color/white"
-                        android:text="@{player.getSingular_name_short}"/>
+                        android:text="@{player.getSingular_name_short}"
+                        android:textColor="@color/white" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".5"
-                        android:textColor="@color/white"
-                        android:text="|"/>
+                        android:layout_weight=".1"
+                        android:text=" | "
+                        android:textColor="@color/white" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1.5"
-                        android:textColor="@color/white"
+                        android:layout_weight="1.4"
+                        android:text="@{player.getTeam_name_full}"
                         android:textAlignment="textStart"
-                        android:text="@{player.getTeam_name_full}"/>
+                        android:textColor="@color/white" />
 
 
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/btn_vice_cap"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:textColor="@color/white"
-                    android:text="Make Vice Captain"
-                    android:visibility="@{player.isIs_vice_captain() ? View.GONE : View.VISIBLE}"
-                    android:layout_gravity="center_horizontal"
-                    android:clickable="true"
-                    android:layout_marginTop="16dp" />
 
                 <TextView
                     android:id="@+id/btn_cap"
@@ -109,9 +121,19 @@
                     android:padding="4dp"
                     android:text="Make Captain"
                     android:textColor="@color/white"
-                    android:visibility="@{player.isIs_captain() ? View.GONE : View.VISIBLE}"
                     android:clickable="true"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp" />
+
+                <TextView
+                    android:id="@+id/btn_vice_cap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:textColor="@color/white"
+                    android:text="Make Vice Captain"
+                    android:layout_gravity="center_horizontal"
+                    android:clickable="true"
                     android:layout_marginTop="16dp" />
 
                 <TextView
@@ -137,6 +159,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="View Full Profile"
+            android:backgroundTint="@color/button_primary"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp" />
 

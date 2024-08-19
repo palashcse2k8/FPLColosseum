@@ -14,17 +14,20 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/teal_700"
+        android:background="@color/background"
         tools:context=".features.login.views.LoginFragment">
-        <include layout="@layout/appbar_layout"
-            android:id="@+id/appbarLogin"/>
+
+        <include
+            android:id="@+id/appbarLogin"
+            layout="@layout/appbar_layout" />
+
         <TextView
             android:id="@+id/textView_username"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontal"
             android:text="@string/username_or_email"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             app:layout_constraintBottom_toTopOf="@+id/text_input_layout_username"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -64,7 +67,7 @@
             android:layout_marginHorizontal="@dimen/marginHorizontal"
             android:layout_marginTop="10dp"
             android:text="@string/password"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             app:layout_constraintBottom_toTopOf="@+id/text_input_layout_password"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -104,6 +107,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontal"
             android:layout_marginTop="24dp"
+            android:backgroundTint="@color/button_primary"
+            app:cornerRadius="16dp"
             android:onClick="@{()->loginViewModel.onLoginClick()}"
             android:padding="8dp"
             android:text="@string/login"
@@ -121,7 +126,7 @@
             android:layout_marginHorizontal="@dimen/marginHorizontal"
             android:gravity="center_horizontal"
             android:text="@string/don_t_have_an_account_sign_up"
-            android:textColor="@color/white"
+            android:textColor="@color/text_secondary"
             app:layout_constraintBottom_toBottomOf="@id/button_guest_user"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -134,14 +139,34 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontal"
             android:layout_marginTop="24dp"
+            android:backgroundTint="@color/button_primary"
             android:padding="8dp"
             android:text="@string/guest_user"
             android:textSize="18sp"
+            app:cornerRadius="16dp"
             app:layout_constraintBottom_toTopOf="@+id/fplc_standings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_signup" />
+
+        <!--        <com.google.android.material.button.MaterialButton-->
+        <!--            android:id="@+id/fplc_standings"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginHorizontal="@dimen/marginHorizontal"-->
+        <!--            android:layout_marginTop="10dp"-->
+        <!--            android:padding="8dp"-->
+        <!--            android:text="@string/fplc_standings"-->
+        <!--            android:textSize="18sp"-->
+        <!--            android:textColor="@color/text_primary"-->
+        <!--            app:backgroundTint="@color/button_primary"-->
+        <!--            app:cornerRadius="16dp"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/progress_circular"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.5"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/button_guest_user" />-->
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/fplc_standings"
@@ -149,9 +174,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontal"
             android:layout_marginTop="10dp"
+            android:backgroundTint="@color/button_primary"
             android:padding="8dp"
             android:text="@string/fplc_standings"
             android:textSize="18sp"
+            app:cornerRadius="16dp"
             app:layout_constraintBottom_toTopOf="@+id/progress_circular"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -163,16 +190,15 @@
             android:id="@+id/progress_circular"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:indeterminate="true"
-            app:indicatorColor="@color/white"
             android:layout_marginTop="10dp"
+            android:indeterminate="true"
             android:visibility="@{loginViewModel.dataLoading ? View.VISIBLE : View.GONE}"
+            app:indicatorColor="@color/progress_bar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fplc_standings">
-        </com.google.android.material.progressindicator.CircularProgressIndicator>
+            app:layout_constraintTop_toBottomOf="@+id/fplc_standings"/>
 
         <!--            android:visibility="@{LoginViewModel.dataLoading == Boolean.TRUE ? View.VISIBLE : View.GONE}"-->
 

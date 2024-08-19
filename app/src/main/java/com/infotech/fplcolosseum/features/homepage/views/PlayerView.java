@@ -42,11 +42,9 @@ public class PlayerView extends LinearLayout {
     private ImageView imageBottomRight;
     private ImageView imageBottomMiddle;
     private TextView changeOfPlayingThisRound;
+    private LinearLayout playerView;
 
     private boolean isDraggable;
-
-    private int row;
-    private int column;
 
     private static boolean isDragging = false;
     private static long startClickTime;
@@ -97,6 +95,7 @@ public class PlayerView extends LinearLayout {
         imageBottomMiddle = findViewById(R.id.iconBottomMiddle);
         imageBottomLeft = findViewById(R.id.iconBottomLeft);
         changeOfPlayingThisRound = findViewById(R.id.changeOfPlayingThisRound);
+        playerView = findViewById(R.id.playerView);
     }
 
     // Add methods to set player details (image, name, team name) if needed
@@ -122,11 +121,9 @@ public class PlayerView extends LinearLayout {
 
     // Methods to set player position
     public void setRow(int row) {
-        this.row = row;
     }
 
     public void setColumn(int column) {
-        this.column = column;
     }
 
     public void setCaptain() {
@@ -180,6 +177,11 @@ public class PlayerView extends LinearLayout {
             playerNameTextView.setBackgroundColor(Color.parseColor("#FF0000"));
         }
 
+    }
+
+    public void setHighlight(String colorString){
+
+        playerView.setBackgroundColor(Color.parseColor(colorString));
     }
 
 

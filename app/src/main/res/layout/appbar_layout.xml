@@ -17,7 +17,8 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            app:title="Login tool bar"
+            android:background="@color/toolbar"
+            app:title="Welcome back! Login to continue"
             android:layout_height="?attr/actionBarSize"
             app:titleTextColor="@color/white" />
 
