@@ -516,7 +516,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
         }
     }
 
-    private void showBottomSheetDialogue(PlayersData playersData){
+    private void showBottomSheetDialogue(PlayersData playersData) {
         PlayerInfoBottomSheetFragment bottomSheet = PlayerInfoBottomSheetFragment.newInstance(playersData);
         bottomSheet.setPlayerInfoUpdateListener(this);
         bottomSheet.show(requireActivity().getSupportFragmentManager(), bottomSheet.getTag());
@@ -660,18 +660,74 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
 
         //check if the player is goal keeper
 
-        if(player.getPosition() == 12){
+        if (player.getPosition() == 12) {
             for (PlayerView playerView : this.playerViewList) {
 
                 playerView.setOnDragListener(null);
                 playerView.setOnTouchListener(null);
 
-                if(playerView.getPlayerData().getPosition() == 1) {
+                if (playerView.getPlayerData().getPosition() == 1) {
                     playerView.setHighlight("#e9ff32");// Implement setHighlight in PlayerView to visually indicate the player can be swapped
-                    playerView.setOnDragListener(null);
-                    playerView.setOnTouchListener(null);
                     playerView.setOnClickListener(v -> {
                         onPlayerDragged(12, 1, playerView, playerView, true);
+                    });
+                } else {
+                    playerView.setOnClickListener(
+                            v -> updateUI(binding.footballFieldLayout)
+                    );
+                }
+            }
+        }
+
+        // check if the player is goal keeper
+        if (player.getPosition() == 1) {
+            for (PlayerView playerView : this.playerViewList) {
+
+                playerView.setOnDragListener(null);
+                playerView.setOnTouchListener(null);
+
+                if (playerView.getPlayerData().getPosition() == 12) {
+                    playerView.setHighlight("#e9ff32");// Implement setHighlight in PlayerView to visually indicate the player can be swapped
+                    playerView.setOnClickListener(v -> {
+                        onPlayerDragged(1, 12, playerView, playerView, true);
+                    });
+                } else {
+                    playerView.setOnClickListener(
+                            v -> updateUI(binding.footballFieldLayout)
+                    );
+                }
+            }
+        }
+
+        if (player.getPosition() > 12) {
+            for (PlayerView playerView : this.playerViewList) {
+
+                playerView.setOnDragListener(null);
+                playerView.setOnTouchListener(null);
+
+                if (playerView.getPlayerData().getPosition() != player.getPosition() && playerView.getPlayerData().getPosition() != 12 && playerView.getPlayerData().getPosition() != 1) {
+                    playerView.setHighlight("#e9ff32");// Implement setHighlight in PlayerView to visually indicate the player can be swapped
+                    playerView.setOnClickListener(v -> {
+                        onPlayerDragged((int) player.getPosition(), (int) playerView.getPlayerData().getPosition(), playerView, playerView, true);
+                    });
+                } else {
+                    playerView.setOnClickListener(
+                            v -> updateUI(binding.footballFieldLayout)
+                    );
+                }
+            }
+        }
+
+        if (player.getPosition() > 1 && player.getPosition() < 12) {
+            for (PlayerView playerView : this.playerViewList) {
+
+                playerView.setOnDragListener(null);
+                playerView.setOnTouchListener(null);
+
+                if (playerView.getPlayerData().getPosition() > 12) {
+                    playerView.setHighlight("#e9ff32");// Implement setHighlight in PlayerView to visually indicate the player can be swapped
+                    playerView.setOnClickListener(v -> {
+                        onPlayerDragged((int) player.getPosition(), (int) playerView.getPlayerData().getPosition(), playerView, playerView, true);
                     });
                 } else {
                     playerView.setOnClickListener(
