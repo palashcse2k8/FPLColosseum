@@ -213,7 +213,7 @@ public class PointsFragment extends Fragment {
             assert data != null;
             data.setEvent_points(
                     mergedResponseModel.getGameWeekLivePointsResponseModel().elements.stream()
-                            .filter(element -> element.id == myTeamPicks.getElement())
+                            .filter(element -> element.id == data.getId())
                             .findFirst()
                             .map(element -> element.stats.total_points)
                             .orElse(0) // Provide a default value if no matching element is found
@@ -321,7 +321,12 @@ public class PointsFragment extends Fragment {
 
         PlayerView playerView = new PlayerView(requireContext(), player, false, null);
         playerView.setPlayerName(player.getWeb_name());
-        playerView.setTeamName(player.getEvent_points() + "");
+        //set team name
+        String teamName = Objects.requireNonNull(Constants.teamMap.get(player.getTeam())).getShort_name();
+        String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(player.getElement_type())).getSingular_name_short();
+        playerView.setTeamName(teamName + " - (" + playerType + ")");
+
+        playerView.setOpponentTeamName(player.getEvent_points()+"");
 
         //https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
         //https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo

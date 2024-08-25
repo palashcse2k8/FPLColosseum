@@ -5,6 +5,7 @@ import static android.os.Environment.getExternalStoragePublicDirectory;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Patterns;
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -130,7 +133,7 @@ public class CustomUtil {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public static void updateFixtureData(List<MatchDetails> matchDetails){
+    public static void updateFixtureData(List<MatchDetails> matchDetails) {
 //
 //        Gson gson = new Gson();
 //
@@ -143,14 +146,14 @@ public class CustomUtil {
 //        // Deserialize JSON string into a List<MatchDetails>
 //        List<MatchDetails> matchDetailsList = gson.fromJson((matchDetails, listType);
 
-        for(MatchDetails match: matchDetails) {
+        for (MatchDetails match : matchDetails) {
 
             long event = match.getEvent();
 
             // Creating OpponentData for team_a
             OpponentData teamAData = new OpponentData();
             teamAData.setTeamID(match.getTeam_a());
-            teamAData.setDifficulty(match.getTeam_a_difficulty()); // Assuming difficulty is team score for simplicity, adjust as necessary
+            teamAData.setDifficulty(match.getTeam_h_difficulty()); // Assuming difficulty is team score for simplicity, adjust as necessary
             teamAData.setKickOffTime(match.getKickoff_time());
             teamAData.setMinutesPlayed(match.getMinutes());
             teamAData.setFinished(match.isFinished());
@@ -161,7 +164,7 @@ public class CustomUtil {
             // Creating OpponentData for team_h
             OpponentData teamHData = new OpponentData();
             teamHData.setTeamID(match.getTeam_h());
-            teamHData.setDifficulty(match.getTeam_h_difficulty()); // Assuming difficulty is team score for simplicity, adjust as necessary
+            teamHData.setDifficulty(match.getTeam_a_difficulty()); // Assuming difficulty is team score for simplicity, adjust as necessary
             teamHData.setKickOffTime(match.getKickoff_time());
             teamHData.setMinutesPlayed(match.getMinutes());
             teamHData.setFinished(match.isFinished());
@@ -174,6 +177,31 @@ public class CustomUtil {
 
             // Update fixtureData for team_h
             Constants.fixtureData.computeIfAbsent(event, k -> new HashMap<>()).put(match.getTeam_h(), teamAData);
+        }
+    }
+
+
+    public static List<PlayersData> deepCopyPlayerList(List<PlayersData> originalList) {
+        List<PlayersData> copyList = new ArrayList<>();
+        for (PlayersData player : originalList) {
+            copyList.add(new PlayersData(player)); // Assuming PlayersData has a copy constructor
+        }
+        return copyList;
+    }
+
+    public static int getDifficultyLevelColor(long number) {
+        if (number == 1) {
+            return Color.parseColor("#375523");  // lowest value
+        } else if (number == 2) {
+            return Color.parseColor("#01fc7a");
+        } else if (number == 3) {
+            return Color.parseColor("#e7e7e7");
+        } else if (number == 4) {
+            return Color.parseColor("#ff1751");
+        } else if (number ==5){
+            return Color.parseColor("#80072d"); // high difficulty value
+        } else {
+            return 0;
         }
     }
 

@@ -11,12 +11,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.infotech.fplcolosseum.data.repositories.UserGameWeekDataRepository;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
-import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.utilities.Constants;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class HomePageSharedViewModel extends AndroidViewModel {
@@ -55,15 +51,17 @@ public class HomePageSharedViewModel extends AndroidViewModel {
                     gameWeekDataResponseModelApiResponse -> {
                         long currentGameWeek = gameWeekDataResponseModelApiResponse.getData().getCurrent_event();
                         Constants.currentGameWeek = currentGameWeek;
+                        Constants.previousGameWeek = currentGameWeek - 1;
                         Constants.nextGameWeek = currentGameWeek + 1;
+
                         mergedResponseModel.setGameWeekDataResponseModel(gameWeekDataResponseModelApiResponse.getData());
 
                         //call game week live points api
-                        mergedResponseModelMediatorLiveData.addSource(dataRepository.getPlayerGameWeekLivePoints(Constants.nextGameWeek),
+                        mergedResponseModelMediatorLiveData.addSource(dataRepository.getPlayerGameWeekLivePoints(Constants.currentGameWeek),
                                 gameWeekLivePointsResponseModelApiResponse -> {
                                     mergedResponseModel.setGameWeekLivePointsResponseModel(gameWeekLivePointsResponseModelApiResponse.getData());
 
-                                    mergedResponseModelMediatorLiveData.addSource(dataRepository.getFixtureData(Constants.nextGameWeek),
+                                    mergedResponseModelMediatorLiveData.addSource(dataRepository.getAllFixtureData(1),
                                             gameWeekMatchDetailsApiResponse -> {
 
                                                 mergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());

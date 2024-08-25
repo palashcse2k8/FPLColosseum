@@ -1,5 +1,6 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
+import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayerList;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.updateFixtureData;
 
 import android.annotation.SuppressLint;
@@ -33,6 +34,7 @@ import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 
@@ -423,6 +425,12 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
             playerView.setAvailability(player.getChance_of_playing_this_round());
         }
 
+        //set difficulty color
+        playerView.setDifficulty1BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek).get(player.getTeam()).getDifficulty()));
+        playerView.setDifficulty2BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek + 1).get(player.getTeam()).getDifficulty()));
+        playerView.setDifficulty3BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek + 2).get(player.getTeam()).getDifficulty()));
+
+
         // Set the position of the player in the GridLayout
         playerView.setRow(row);
         playerView.setColumn(column);
@@ -554,13 +562,6 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
 
     }
 
-    private List<PlayersData> deepCopyPlayerList(List<PlayersData> originalList) {
-        List<PlayersData> copyList = new ArrayList<>();
-        for (PlayersData player : originalList) {
-            copyList.add(new PlayersData(player)); // Assuming PlayersData has a copy constructor
-        }
-        return copyList;
-    }
 
     private void setUpToolbar(GameWeekDataResponseModel responseModel) {
 

@@ -186,6 +186,18 @@ public class UserGameWeekDataRepository {
         return apiData;
     }
 
+    public LiveData<ApiResponse<List<MatchDetails>>> getAllFixtureData(long gameWeekNumber) {
+        MediatorLiveData<ApiResponse<List<MatchDetails>>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.allGameWeekFixtureData(gameWeekNumber);
+
+        apiData.addSource(APIHandler.makeApiCallForList(callAPI, MatchDetails.class), listApiResponse -> {
+            apiData.postValue(listApiResponse);
+        });
+
+        return apiData;
+    }
+
     public LiveData<ApiResponse<GameWeekLivePointsResponseModel>> getPlayerGameWeekLivePoints(long gameWeekNumber) {
 
         MediatorLiveData<ApiResponse<GameWeekLivePointsResponseModel>> apiData = new MediatorLiveData<>();

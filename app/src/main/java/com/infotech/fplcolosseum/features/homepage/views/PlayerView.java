@@ -42,6 +42,9 @@ public class PlayerView extends LinearLayout {
     private ImageView imageBottomRight;
     private ImageView imageBottomMiddle;
     private TextView changeOfPlayingThisRound;
+    private TextView difficulty1;
+    private TextView difficulty2;
+    private TextView difficulty3;
     private LinearLayout playerView;
 
     private boolean isDraggable;
@@ -96,6 +99,9 @@ public class PlayerView extends LinearLayout {
         imageBottomLeft = findViewById(R.id.iconBottomLeft);
         changeOfPlayingThisRound = findViewById(R.id.changeOfPlayingThisRound);
         playerView = findViewById(R.id.playerView);
+        difficulty1 = findViewById(R.id.difficulty1);
+        difficulty2 = findViewById(R.id.difficulty2);
+        difficulty3 = findViewById(R.id.difficulty3);
     }
 
     // Add methods to set player details (image, name, team name) if needed
@@ -187,6 +193,16 @@ public class PlayerView extends LinearLayout {
 
     public PlayersData getPlayerData() {
         return this.player;
+    }
+
+    public void setDifficulty1BackgroundColor( int color){
+        difficulty1.setBackgroundColor(color);
+    }
+    public void setDifficulty2BackgroundColor( int color){
+        difficulty2.setBackgroundColor(color);
+    }
+    public void setDifficulty3BackgroundColor( int color){
+        difficulty3.setBackgroundColor(color);
     }
 
 //    private static class TouchListener implements OnTouchListener {
