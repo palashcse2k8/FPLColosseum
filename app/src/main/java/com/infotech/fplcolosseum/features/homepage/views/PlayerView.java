@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
+
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
@@ -161,26 +163,26 @@ public class PlayerView extends LinearLayout {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
             bgDrawable.setColor(Color.parseColor("#FF8000"));
 
-            playerNameTextView.setBackgroundColor(Color.parseColor("#FF8000"));
-            playerNameTextView.setTextColor(Color.parseColor("#000000"));
+//            playerNameTextView.setBackgroundColor(Color.parseColor("#FF8000"));
+//            playerNameTextView.setTextColor(Color.parseColor("#000000"));
         } else if (chanceOfPlayingThisRound == 50) {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
-            bgDrawable.setColor(Color.parseColor("#CCCC00"));
-
-            playerNameTextView.setBackgroundColor(Color.parseColor("#CCCC00"));
-            playerNameTextView.setTextColor(Color.parseColor("#000000"));
+            bgDrawable.setColor(Color.parseColor("#FF8C00"));
+//
+//            playerNameTextView.setBackgroundColor(Color.parseColor("#CCCC00"));
+//            playerNameTextView.setTextColor(Color.parseColor("#000000"));
         } else if (chanceOfPlayingThisRound == 75) {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
             bgDrawable.setColor(Color.parseColor("#FFFF00"));
 
-            playerNameTextView.setBackgroundColor(Color.parseColor("#FFFF00"));
-            playerNameTextView.setTextColor(Color.parseColor("#000000"));
+//            playerNameTextView.setBackgroundColor(Color.parseColor("#FFFF00"));
+//            playerNameTextView.setTextColor(Color.parseColor("#000000"));
 
         } else {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#FFFFFF"));
             bgDrawable.setColor(Color.parseColor("#FF0000"));
 
-            playerNameTextView.setBackgroundColor(Color.parseColor("#FF0000"));
+//            playerNameTextView.setBackgroundColor(Color.parseColor("#FF0000"));
         }
 
     }

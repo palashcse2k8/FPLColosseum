@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.infotech.fplcolosseum.data.repositories.UserGameWeekDataRepository;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.concurrent.CountDownLatch;
@@ -209,6 +210,16 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         dataLoading.setValue(true);
         // Make API call through the repository
         myTeamApiResultLiveData.addSource(dataRepository.getMyTeamData(entry_id), userResponseModelApiResponse -> {
+            dataLoading.setValue(false);
+            myTeamApiResultLiveData.setValue(userResponseModelApiResponse);
+        });
+    }
+
+    public void updateMyTeam(long entry_id, GameWeekMyTeamUpdateModel updateModel) {
+
+        dataLoading.setValue(true);
+        // Make API call through the repository
+        myTeamApiResultLiveData.addSource(dataRepository.updateMyTeam(entry_id, updateModel), userResponseModelApiResponse -> {
             dataLoading.setValue(false);
             myTeamApiResultLiveData.setValue(userResponseModelApiResponse);
         });

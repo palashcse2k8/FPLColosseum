@@ -1,11 +1,14 @@
 package com.infotech.fplcolosseum.data.sources.network;
 
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -85,6 +88,9 @@ public interface APIServices {
 
     @GET("https://fantasy.premierleague.com/api/my-team/{entry_id}/") //  https://fantasy.premierleague.com/api/my-team/116074/
     Call<ResponseBody> gameWeekMyTeam(@Path("entry_id") long entry_id);
+
+    @POST("https://fantasy.premierleague.com/api/my-team/{entry_id}/") //  https://fantasy.premierleague.com/api/my-team/116074/
+    Call<ResponseBody> updateMyTeam(@Path("entry_id") long entry_id , @Body GameWeekMyTeamUpdateModel request);
 
     @GET("https://fantasy.premierleague.com/api/bootstrap-static/") // https://fantasy.premierleague.com/api/bootstrap-static/
     Call<ResponseBody> getGameWeeKStaticData();

@@ -7,17 +7,20 @@
     android:layout_height="match_parent"
     android:padding="2dp"
     android:weightSum="10"
-    android:orientation="vertical">
+    android:layout_marginHorizontal="1dp"
+    app:cardCornerRadius="8dp"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".8"/>
+        android:layout_weight=".5"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5.4">
+        android:layout_weight="5.3">
 
         <ImageView
             android:id="@+id/imageView"
@@ -140,7 +143,7 @@
         android:background="#16063A"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:layout_gravity="center"
         android:gravity="center"
         android:textStyle="bold"

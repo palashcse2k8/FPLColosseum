@@ -2,39 +2,66 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
         <import type="android.view.View" />
-
         <variable
             name="myTeamViewModel"
             type="com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel" />
     </data>
 
-<RelativeLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/team_background_single_with_bench"
-    android:orientation="vertical">
-
-    <GridLayout
-        android:id="@+id/footballFieldLayout"
+    <RelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnCount="5"
-        android:rowCount="5"
-        >
-    </GridLayout>
-    <ProgressBar
-        android:id="@+id/progress_circular"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerInParent="true"
-        android:visibility="@{myTeamViewModel.dataLoading ? View.VISIBLE : View.GONE}"
-        >
+        android:orientation="vertical">
 
-    </ProgressBar>
+        <LinearLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true">
 
-</RelativeLayout>
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="BB"/>
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TC"/>
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Free Hit"/>
+
+        </LinearLayout>
+
+        <GridLayout
+            android:id="@+id/footballFieldLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnCount="5"
+            android:rowCount="5"
+            android:background="@drawable/team_background_single_with_bench"
+            android:layout_below="@id/buttonLayout">
+        </GridLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_circular"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:visibility="@{myTeamViewModel.dataLoading ? View.VISIBLE : View.GONE}">
+        </ProgressBar>
+
+    </RelativeLayout>
 </layout>

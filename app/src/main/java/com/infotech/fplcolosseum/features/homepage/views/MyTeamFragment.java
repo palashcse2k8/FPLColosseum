@@ -30,7 +30,10 @@ import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListe
 import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
+import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -176,17 +179,14 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
         this.teamPlayers = deepCopyPlayerList(this.initialTeamPlayers);
         updateUI(binding.footballFieldLayout); //update the player list view
 
-        isClearVisible = false;     // Show share button
-        isSaveVisible = false;     // Hide save button
-
-        requireActivity().invalidateOptionsMenu();
-
+        resetToolBar();
     }
 
     private void handleRefreshClick() {
         // Logic for refresh button
         binding.footballFieldLayout.removeAllViews();
         viewModel.getTeamCurrentGameWeekAllData(Constants.LoggedInUser.getPlayer().getEntry());
+        resetToolBar();
     }
 
     private void handleShareClick() {
@@ -196,7 +196,53 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
 
     private void handleSaveClick() {
         // Logic for save button
-        Toast.makeText(getActivity(), "Save clicked", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "Save clicked", Toast.LENGTH_SHORT).show();
+
+        GameWeekMyTeamUpdateModel updateModel = new GameWeekMyTeamUpdateModel();
+
+        ArrayList<Picks> picks = new ArrayList<>();
+
+        //add player data
+        for (PlayersData player : this.teamPlayers) {
+            Picks pick = new Picks();
+            pick.setElement(player.getId());
+            pick.setPosition(player.getPosition());
+            pick.setIs_captain(player.isIs_captain());
+            pick.setIs_vice_captain(player.isIs_vice_captain());
+            picks.add(pick);
+        }
+        updateModel.setPicks(picks);
+
+        //add chips data
+        //TODO
+
+        viewModel.updateMyTeam(Constants.LoggedInUser.getPlayer().getEntry(), updateModel);
+        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse ->{
+
+            if (apiResponse == null) return;
+            switch (apiResponse.getStatus()) {
+                case LOADING:
+                    showLoading();
+                    break;
+                case SUCCESS:
+                    viewModel.dataLoading.setValue(false);
+
+                    viewModel.getTeamCurrentGameWeekAllData(Constants.LoggedInUser.getPlayer().getEntry());
+                    resetToolBar();
+
+                    break;
+                case ERROR:
+                    showFailure(apiResponse.getMessage());
+                    break;
+            }
+        } );
+    }
+
+    private void resetToolBar(){
+        isClearVisible = false;     // Hide undo button
+        isSaveVisible = false;     // Hide save button
+
+        requireActivity().invalidateOptionsMenu();
     }
 
     private void updateTeamPlayers(ArrayList<MyTeamPicks> picks) {
@@ -421,8 +467,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
         }
 
         //set availability icon
-        if (player.getChance_of_playing_this_round() != null && player.getChance_of_playing_this_round() < 100) {
-            playerView.setAvailability(player.getChance_of_playing_this_round());
+        if (player.getChance_of_playing_this_round() != null && player.getChance_of_playing_next_round() < 100) {
+            playerView.setAvailability(player.getChance_of_playing_next_round());
         }
 
         //set difficulty color
@@ -610,6 +656,11 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
         }
 
         updateUI(binding.footballFieldLayout);
+
+        isClearVisible = true;     // Show share button
+        isSaveVisible = true;     // Hide save button
+
+        requireActivity().invalidateOptionsMenu();
     }
 
 
@@ -644,6 +695,11 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
         }
 
         updateUI(binding.footballFieldLayout);
+
+        isClearVisible = true;     // Show share button
+        isSaveVisible = true;     // Hide save button
+
+        requireActivity().invalidateOptionsMenu();
     }
 
     @SuppressLint("ClickableViewAccessibility")
