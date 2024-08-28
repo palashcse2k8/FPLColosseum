@@ -1,9 +1,13 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
+import static com.infotech.fplcolosseum.utilities.ButtonStateManager.getButtonState;
+import static com.infotech.fplcolosseum.utilities.ButtonStateManager.updateButtonState;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayerList;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.updateFixtureData;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,10 +23,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
@@ -30,12 +36,14 @@ import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListe
 import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
-import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameChips;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
 import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
+import com.infotech.fplcolosseum.utilities.ButtonStateManager;
+import com.infotech.fplcolosseum.utilities.Chips;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
@@ -62,9 +70,10 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
     boolean isRefreshVisible = true;  // Hide refresh button
     boolean isShareVisible = true;    // Show share button
     boolean isSaveVisible = false;
-    boolean isClearVisible = false; // Hide save button
+    boolean isClearVisible = false;  // Hide save button
 
     List<PlayersData> initialTeamPlayers = new ArrayList<>();
+    String activeChip;
 
     @Nullable
     @Override
@@ -103,6 +112,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
                     setUpToolbar(myTeam.getGameWeekDataResponseModel()); // set up toolbar
                     updateFixtureData(myTeam.getMatchDetails()); //update fixture data
                     updateTeamPlayers(myTeam.getGameWeekMyTeamResponseModel().getPicks()); // update team player
+                    updateChipsStatus(requireContext(), myTeam.getGameWeekMyTeamResponseModel().getChips());
                     updateUI(binding.footballFieldLayout); //finally update the UI
 
                     break;
@@ -217,7 +227,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
         //TODO
 
         viewModel.updateMyTeam(Constants.LoggedInUser.getPlayer().getEntry(), updateModel);
-        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse ->{
+        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
 
             if (apiResponse == null) return;
             switch (apiResponse.getStatus()) {
@@ -235,12 +245,19 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
                     showFailure(apiResponse.getMessage());
                     break;
             }
-        } );
+        });
     }
 
-    private void resetToolBar(){
+    private void resetToolBar() {
         isClearVisible = false;     // Hide undo button
         isSaveVisible = false;     // Hide save button
+
+        requireActivity().invalidateOptionsMenu();
+    }
+
+    private void enableEditToolBar() {
+        isClearVisible = true;     // Hide undo button
+        isSaveVisible = true;     // Hide save button
 
         requireActivity().invalidateOptionsMenu();
     }
@@ -796,7 +813,143 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
 
     }
 
-//    private boolean isPlayerSwitchable(PlayersData data) {
+    private void updateChipsStatus(Context context, ArrayList<GameChips> chips) {
+
+        setupButton(binding.buttonBB, Chips.BB.getDisplayName());
+        setupButton(binding.buttonTC, Chips.TC.getDisplayName());
+        setupButton(binding.buttonFH, Chips.FH.getDisplayName());
+
+        Map<String, MaterialButton> chipButtons = new HashMap<>();
+        chipButtons.put("bboost", binding.buttonBB);
+        chipButtons.put("3xc", binding.buttonTC);
+        chipButtons.put("freehit", binding.buttonFH);
+
+        for (GameChips chip : chips) {
+            MaterialButton button = chipButtons.get(chip.getName());
+            if (button != null) {
+                ButtonStateManager.ButtonState state;
+                switch (chip.getStatus_for_entry().toLowerCase()) {
+                    case "available":
+                        state = ButtonStateManager.ButtonState.AVAILABLE;
+                        break;
+                    case "active":
+                        state = ButtonStateManager.ButtonState.ACTIVE;
+                        activeChip = chip.getName();
+                        break;
+                    case "unavailable":
+                        state = ButtonStateManager.ButtonState.NOT_AVAILABLE;
+                        break;
+                    default:
+                        continue; // Skip unknown statuses
+                }
+                updateButtonState(context, button, state);
+            }
+        }
+
+//        for (GameChips chip : chips) {
+//            if (chip.getName().equalsIgnoreCase(Chips.BB.getShortName())) {
+//                if (chip.getStatus_for_entry().equalsIgnoreCase("available")) {
+//                    updateButtonState(context, binding.buttonBB, ButtonStateManager.ButtonState.AVAILABLE);
+//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("active")) {
+//                    updateButtonState(context, binding.buttonBB, ButtonStateManager.ButtonState.ACTIVE);
+//                    activeChip = Chips.BB.getShortName();
+//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("unavailable")) {
+//                    updateButtonState(context, binding.buttonBB, ButtonStateManager.ButtonState.NOT_AVAILABLE);
+//                }
+//            } else if (chip.getName().equalsIgnoreCase(Chips.TC.getShortName())) {
+//                if (chip.getStatus_for_entry().equalsIgnoreCase("available")) {
+//                    updateButtonState(context, binding.buttonTC, ButtonStateManager.ButtonState.AVAILABLE);
+//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("active")) {
+//                    updateButtonState(context, binding.buttonTC, ButtonStateManager.ButtonState.ACTIVE);
+//                    activeChip = Chips.TC.getShortName();
+//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("unavailable")) {
+//                    updateButtonState(context, binding.buttonTC, ButtonStateManager.ButtonState.NOT_AVAILABLE);
+//                }
+//            } else if (chip.getName().equalsIgnoreCase(Chips.FH.getShortName())) {
+//                if (chip.getStatus_for_entry().equalsIgnoreCase("available")) {
+//                    updateButtonState(context, binding.buttonFH, ButtonStateManager.ButtonState.AVAILABLE);
+//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("active")) {
+//                    updateButtonState(context, binding.buttonFH, ButtonStateManager.ButtonState.ACTIVE);
+//                    activeChip = Chips.FH.getShortName();
+//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("unavailable")) {
+//                    updateButtonState(context, binding.buttonFH, ButtonStateManager.ButtonState.NOT_AVAILABLE);
+//                }
+//            }
+//        }
+    }
+
+    private void setupButton(final MaterialButton button, final String buttonName) {
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ButtonStateManager.ButtonState currentState = getButtonState(button);
+                switch (currentState) {
+                    case ACTIVE:
+                        showConfirmationDialog(button, buttonName, "Deactivate " + buttonName + "?", ButtonStateManager.ButtonState.AVAILABLE);
+                        break;
+                    case AVAILABLE:
+                        showConfirmationDialog(button, buttonName, "Activate " + buttonName + "?", ButtonStateManager.ButtonState.ACTIVE);
+                        break;
+                    case NOT_AVAILABLE:
+                        showPopup(buttonName + " is not available!");
+                        break;
+                }
+            }
+        });
+    }
+
+    private void showPopup(String message) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void showConfirmationDialog(final MaterialButton button, final String buttonName, String message, final ButtonStateManager.ButtonState newState) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(message)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        updateButtonState(requireContext(), button, newState);
+//                        showPopup(buttonName + " state updated to " + newState);
+                        enableEditToolBar();
+                        if (newState == ButtonStateManager.ButtonState.ACTIVE) {
+                            if (buttonName.equalsIgnoreCase(Chips.BB.getDisplayName())) {
+                                activeChip = Chips.BB.getShortName();
+                            } else if (buttonName.equalsIgnoreCase(Chips.TC.getDisplayName())) {
+                                activeChip = Chips.TC.getShortName();
+                            } else {
+                                activeChip = Chips.FH.getShortName();
+                            }
+                        } else if (newState == ButtonStateManager.ButtonState.AVAILABLE) {
+                            activeChip = null;
+                        } else {
+                            if (buttonName.equalsIgnoreCase(Chips.BB.getDisplayName())) {
+                                activeChip = Chips.BB.getShortName();
+                            } else if (buttonName.equalsIgnoreCase(Chips.TC.getDisplayName())) {
+                                activeChip = Chips.TC.getShortName();
+                            } else {
+                                activeChip = Chips.FH.getShortName();
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    //    private boolean isPlayerSwitchable(PlayersData data) {
 //        // Implement your logic to determine if a player is switchable
 //        return data.getPosition() < 12 && !data.isIs_captain() && !data.isIs_vice_captain();
 //    }

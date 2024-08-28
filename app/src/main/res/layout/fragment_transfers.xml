@@ -25,34 +25,86 @@
 
             <!-- First Section: Three Buttons -->
 
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="wrap_content"
+<!--            <Button-->
+<!--                android:id="@+id/button1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Auto Pick"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/buttonTC"-->
+<!--                app:layout_constraintHorizontal_bias="0.5"-->
+<!--                app:layout_constraintHorizontal_chainStyle="spread"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/button2"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Reset"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/buttonFH"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/buttonBB"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/button3"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Play Wildcard"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/buttonTC"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Auto Pick"
-                app:layout_constraintEnd_toStartOf="@+id/button2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread"
+                android:layout_alignParentTop="true"
+                android:layout_marginHorizontal="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reset"
-                app:layout_constraintEnd_toStartOf="@+id/button3"
-                app:layout_constraintStart_toEndOf="@+id/button1"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Play Wildcard"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/button2"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toTopOf="footballFieldLayout">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonBB"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="BB"
+                    android:textSize="12sp"
+                    app:cornerRadius="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/buttonTC"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonTC"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="TC"
+                    android:textSize="12sp"
+                    app:cornerRadius="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/buttonFH"
+                    app:layout_constraintStart_toEndOf="@id/buttonBB"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonFH"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="FH"
+                    android:textSize="12sp"
+                    app:cornerRadius="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/buttonTC"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Second Section: GridView -->
             <GridLayout
@@ -65,7 +117,7 @@
                 app:layout_constraintBottom_toTopOf="@id/bottomLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button1" />
+                app:layout_constraintTop_toBottomOf="@+id/buttonLayout" />
 
             <!-- Third Section: Text and Button -->
             <!-- Left Part with 4 TextViews -->

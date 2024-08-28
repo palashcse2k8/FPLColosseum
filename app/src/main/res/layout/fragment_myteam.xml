@@ -15,35 +15,85 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buttonLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="2dp"
+            android:layout_marginHorizontal="8dp">
 
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="BB"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonPrevious"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:icon="@drawable/previous"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:cornerRadius="20dp"
+                android:padding="0dp"
+                app:strokeWidth="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TC"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonBB"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="BB"
+                android:textSize="12sp"
+                app:cornerRadius="20dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:layout_constraintStart_toEndOf="@id/buttonPrevious"
+                app:layout_constraintEnd_toStartOf="@id/buttonTC"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread"/>
 
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Free Hit"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonTC"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="TC"
+                android:textSize="12sp"
+                app:cornerRadius="20dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:layout_constraintStart_toEndOf="@id/buttonBB"
+                app:layout_constraintEnd_toStartOf="@id/buttonFH"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonFH"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="FH"
+                android:textSize="12sp"
+                app:cornerRadius="20dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:layout_constraintStart_toEndOf="@id/buttonTC"
+                app:layout_constraintEnd_toStartOf="@id/buttonNext"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonNext"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:icon="@drawable/next"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:cornerRadius="20dp"
+                android:padding="0dp"
+                app:strokeWidth="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <GridLayout
             android:id="@+id/footballFieldLayout"
