@@ -6,18 +6,21 @@ import java.util.ArrayList;
 
 public class GameWeekPicksModel {
     private String active_chip = null;
-    ArrayList<Object> automatic_subs = new ArrayList<Object>();
+
+    @SerializedName("automatic_subs")
+    ArrayList<AutomaticSubs> automatic_subs = new ArrayList<>();
+
     @SerializedName("entry_history")
     Entry_history Entry_historyObject;
 
     @SerializedName("picks")
     ArrayList<Picks> picks = new ArrayList<>();
 
-    public ArrayList<Object> getAutomatic_subs() {
+    public ArrayList<AutomaticSubs> getAutomatic_subs() {
         return automatic_subs;
     }
 
-    public void setAutomatic_subs(ArrayList<Object> automatic_subs) {
+    public void setAutomatic_subs(ArrayList<AutomaticSubs> automatic_subs) {
         this.automatic_subs = automatic_subs;
     }
 

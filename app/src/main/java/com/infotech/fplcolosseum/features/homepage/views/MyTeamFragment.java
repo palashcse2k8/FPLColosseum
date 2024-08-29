@@ -2,7 +2,10 @@ package com.infotech.fplcolosseum.features.homepage.views;
 
 import static com.infotech.fplcolosseum.utilities.ButtonStateManager.getButtonState;
 import static com.infotech.fplcolosseum.utilities.ButtonStateManager.updateButtonState;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayer;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayerList;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.prepareData;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.printTeamPlayers;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.updateFixtureData;
 
 import android.annotation.SuppressLint;
@@ -33,7 +36,7 @@ import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
-import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameChips;
@@ -98,7 +101,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
         super.onViewCreated(view, savedInstanceState);
 
         // Add players to the football field (customize positions as needed)
-        viewModel.getMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+        viewModel.getMyTeamMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
 
             if (apiResponse == null) return;
             switch (apiResponse.getStatus()) {
@@ -108,12 +111,13 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
                 case SUCCESS:
                     viewModel.dataLoading.setValue(false);
 
-                    MergedResponseModel myTeam = apiResponse.getData();
+                    MyTeamMergedResponseModel myTeam = apiResponse.getData();
                     setUpToolbar(myTeam.getGameWeekDataResponseModel()); // set up toolbar
+                    prepareData(myTeam.getGameWeekStaticDataModel()); //update static data
                     updateFixtureData(myTeam.getMatchDetails()); //update fixture data
                     updateTeamPlayers(myTeam.getGameWeekMyTeamResponseModel().getPicks()); // update team player
-                    updateChipsStatus(requireContext(), myTeam.getGameWeekMyTeamResponseModel().getChips());
-                    updateUI(binding.footballFieldLayout); //finally update the UI
+                    updateChipsStatus(requireContext(), myTeam.getGameWeekMyTeamResponseModel().getChips()); //update chips
+                    updateFieldUI(binding.footballFieldLayout); //finally update the UI
 
                     break;
                 case ERROR:
@@ -185,9 +189,9 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
     private void handleUndoClick() {
 
         // Logic for undo button
-
+        updateChipsStatus(requireContext(), viewModel.getMyTeamMergedResponseLiveData().getValue().getData().getGameWeekMyTeamResponseModel().getChips());
         this.teamPlayers = deepCopyPlayerList(this.initialTeamPlayers);
-        updateUI(binding.footballFieldLayout); //update the player list view
+        updateFieldUI(binding.footballFieldLayout); //update the player list view
 
         resetToolBar();
     }
@@ -195,7 +199,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
     private void handleRefreshClick() {
         // Logic for refresh button
         binding.footballFieldLayout.removeAllViews();
-        viewModel.getTeamCurrentGameWeekAllData(Constants.LoggedInUser.getPlayer().getEntry());
+        viewModel.getMyTeamMergedData(Constants.LoggedInUser.getPlayer().getEntry());
         resetToolBar();
     }
 
@@ -205,9 +209,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
     }
 
     private void handleSaveClick() {
-        // Logic for save button
-//        Toast.makeText(getActivity(), "Save clicked", Toast.LENGTH_SHORT).show();
 
+        // Logic for save button
         GameWeekMyTeamUpdateModel updateModel = new GameWeekMyTeamUpdateModel();
 
         ArrayList<Picks> picks = new ArrayList<>();
@@ -237,7 +240,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
                 case SUCCESS:
                     viewModel.dataLoading.setValue(false);
 
-                    viewModel.getTeamCurrentGameWeekAllData(Constants.LoggedInUser.getPlayer().getEntry());
+                    viewModel.getMyTeamMergedData(Constants.LoggedInUser.getPlayer().getEntry());
                     resetToolBar();
 
                     break;
@@ -266,7 +269,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
 
         this.teamPlayers = new ArrayList<>();
         for (MyTeamPicks myTeamPicks : picks) {
-            PlayersData playersData = Constants.playerMap.get(myTeamPicks.getElement());
+            PlayersData playersData = deepCopyPlayer(Constants.playerMap.get(myTeamPicks.getElement()));
 
             if (playersData != null) {
                 playersData.setIs_captain(myTeamPicks.getIs_captain());
@@ -284,8 +287,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
 
         this.initialTeamPlayers = deepCopyPlayerList(this.teamPlayers);
 
-        Log.d(Constants.LOG_TAG, "Initial Team Players");
-        printTeamPlayers(this.initialTeamPlayers);
+//        Log.d(Constants.LOG_TAG, "Initial Team Players");
+//        printTeamPlayers(this.initialTeamPlayers);
     }
 
     private void showLoading() {
@@ -301,7 +304,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
         binding.footballFieldLayout.setVisibility(View.GONE);
     }
 
-    private void updateUI(GridLayout footballFieldLayout) {
+    private void updateFieldUI(GridLayout footballFieldLayout) {
 
         binding.progressCircular.setVisibility(View.GONE);
         binding.footballFieldLayout.removeAllViews();
@@ -348,7 +351,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
 
         Log.d("FPLC", "After Sorting");
 
-        printTeamPlayers(this.teamPlayers);
+//        printTeamPlayers(this.teamPlayers);
 
         //Adding players to the ui
 
@@ -566,7 +569,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
 //        printTeamPlayers(this.teamPlayers);
 
         // Update the GridLayout with the new positions
-        updateUI(binding.footballFieldLayout);
+        updateFieldUI(binding.footballFieldLayout);
 
         isClearVisible = true;     // Show share button
         isSaveVisible = true;     // Hide save button
@@ -581,11 +584,6 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
         showBottomSheetDialogue(view.getPlayerData());
     }
 
-    private void printTeamPlayers(List<PlayersData> teamPlayers) {
-        for (PlayersData player : teamPlayers) {
-            Log.d("FPLC", player.getPosition() + " -> " + player.getWeb_name() + (player.isIs_captain() ? " Captain" : "") + (player.isIs_vice_captain() ? " Vice Captain" : ""));
-        }
-    }
 
     private void showBottomSheetDialogue(PlayersData playersData) {
         PlayerInfoBottomSheetFragment bottomSheet = PlayerInfoBottomSheetFragment.newInstance(playersData);
@@ -672,7 +670,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
             player.setIs_captain(true);
         }
 
-        updateUI(binding.footballFieldLayout);
+        updateFieldUI(binding.footballFieldLayout);
 
         isClearVisible = true;     // Show share button
         isSaveVisible = true;     // Hide save button
@@ -711,7 +709,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
             player.setIs_vice_captain(true);
         }
 
-        updateUI(binding.footballFieldLayout);
+        updateFieldUI(binding.footballFieldLayout);
 
         isClearVisible = true;     // Show share button
         isSaveVisible = true;     // Hide save button
@@ -747,7 +745,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
                     });
                 } else {
                     playerView.setOnClickListener(
-                            v -> updateUI(binding.footballFieldLayout)
+                            v -> updateFieldUI(binding.footballFieldLayout)
                     );
                 }
             }
@@ -767,7 +765,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
                     });
                 } else {
                     playerView.setOnClickListener(
-                            v -> updateUI(binding.footballFieldLayout)
+                            v -> updateFieldUI(binding.footballFieldLayout)
                     );
                 }
             }
@@ -786,7 +784,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
                     });
                 } else {
                     playerView.setOnClickListener(
-                            v -> updateUI(binding.footballFieldLayout)
+                            v -> updateFieldUI(binding.footballFieldLayout)
                     );
                 }
             }
@@ -805,7 +803,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
                     });
                 } else {
                     playerView.setOnClickListener(
-                            v -> updateUI(binding.footballFieldLayout)
+                            v -> updateFieldUI(binding.footballFieldLayout)
                     );
                 }
             }

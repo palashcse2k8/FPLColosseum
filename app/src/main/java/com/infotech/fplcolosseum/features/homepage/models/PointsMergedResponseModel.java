@@ -6,11 +6,11 @@ import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.picks.GameWeekPicksModel;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MergedResponseModel {
+public class PointsMergedResponseModel {
     private GameWeekDataResponseModel gameWeekDataResponseModel;
 
     public List<MatchDetails> getMatchDetails() {

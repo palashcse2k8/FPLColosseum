@@ -51,7 +51,7 @@ public class HomePageFragment extends Fragment {
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
 //        viewModel.getTeamCurrentGameWeekAllData(managerId);
-        viewModel.getTeamCurrentGameWeekAllData(managerId);
+        viewModel.getMyTeamMergedData(managerId);
     }
 
     @Nullable
@@ -123,7 +123,7 @@ public class HomePageFragment extends Fragment {
             }
 
             // Inflate the new toolbar layout
-            if (position == 0) {
+            if (position == 0 || position == 1 || position == 2) {
                 currentToolbar = (Toolbar) inflater.inflate(R.layout.toolbar_point_fragment, rootView, false);
 
                 // Set team and manager names dynamically
@@ -133,15 +133,15 @@ public class HomePageFragment extends Fragment {
 
                     // Set the team and manager names (these could come from a model or passed as arguments)
 
-                    if(Constants.managerName != null){
+                    if (Constants.managerName != null) {
                         managerNameTextView.setText(Constants.managerName);
                     }
 
-                    if(Constants.teamName != null){
+                    if (Constants.teamName != null) {
                         teamNameTextView.setText(Constants.teamName);
                     }
                 }
-            } else if (position == 1) {
+            } else if (position == -1) {
                 currentToolbar = (Toolbar) inflater.inflate(R.layout.toolbar_league_fragment, rootView, false);
             }
             // Add more cases for additional tabs

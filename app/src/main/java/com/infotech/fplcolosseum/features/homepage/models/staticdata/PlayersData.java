@@ -103,6 +103,15 @@ public class PlayersData implements Serializable {
     private long purchase_price;
     private boolean is_captain;
     private boolean is_vice_captain;
+    private long substitute_number;
+
+    public long getSubstitute_number() {
+        return substitute_number;
+    }
+
+    public void setSubstitute_number(long substitute_number) {
+        this.substitute_number = substitute_number;
+    }
 
     public PlayersData(PlayersData player) {
         this.chance_of_playing_next_round = player.chance_of_playing_next_round;

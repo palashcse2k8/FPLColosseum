@@ -1,14 +1,21 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
-import android.content.Context;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayer;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.printTeamPlayers;
+
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,14 +27,19 @@ import androidx.lifecycle.ViewModelProvider;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.FragmentPointsBinding;
-import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.PointsMergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.picks.AutomaticSubs;
 import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
-import com.infotech.fplcolosseum.utilities.ToolbarChangeListener;
+import com.infotech.fplcolosseum.utilities.CustomUtil;
+import com.infotech.fplcolosseum.utilities.ToastLevel;
+import com.infotech.fplcolosseum.utilities.UIUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +48,12 @@ public class PointsFragment extends Fragment {
     FragmentPointsBinding binding;
 
     HomePageSharedViewModel viewModel;
+
+    List<PlayersData> teamPlayers = new ArrayList<>();
+    boolean isRefreshVisible = true;  // Hide refresh button
+    boolean isShareVisible = true;    // Show share button
+    boolean isSaveVisible = false;
+    boolean isClearVisible = false;
 
 //    private ToolbarChangeListener toolbarChangeListener;
 
@@ -68,11 +86,100 @@ public class PointsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-//        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
+        viewModel.getPointsMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
 //        viewModel.getTeamCurrentGameWeekAllData(10359552);
-
+        setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.my_team_menu, menu);
+
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        }
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+        MenuItem shareItem = menu.findItem(R.id.action_share);
+        MenuItem saveItem = menu.findItem(R.id.action_save);
+        MenuItem clearItem = menu.findItem(R.id.action_undo);
+
+
+        // Set visibility based on your conditions
+        refreshItem.setVisible(isRefreshVisible);
+        shareItem.setVisible(isShareVisible);
+        saveItem.setVisible(isSaveVisible);
+        clearItem.setVisible(isClearVisible);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here
+        int id = item.getItemId();
+
+        if (id == R.id.action_undo) {
+            handleUndoClick();
+            return true;
+        } else if (id == R.id.action_refresh) {
+            handleRefreshClick();
+            return true;
+        } else if (id == R.id.action_share) {
+            handleShareClick();
+            return true;
+        } else if (id == R.id.action_save) {
+            handleSaveClick();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void handleUndoClick() {
+
+        // Logic for undo button
+        // update the player list view
+
+        resetToolBar();
+    }
+
+    private void handleRefreshClick() {
+        // Logic for refresh button
+        Toast.makeText(getActivity(), "Refresh clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    private void handleShareClick() {
+        // Logic for share button
+        Toast.makeText(getActivity(), "Share clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    private void handleSaveClick() {
+
+        Toast.makeText(getActivity(), "Save clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    private void resetToolBar() {
+        isClearVisible = false;     // Hide undo button
+        isSaveVisible = false;     // Hide save button
+
+        requireActivity().invalidateOptionsMenu();
+    }
+
+    private void enableEditToolBar() {
+        isClearVisible = true;     // Hide undo button
+        isSaveVisible = true;     // Hide save button
+
+        requireActivity().invalidateOptionsMenu();
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -82,12 +189,12 @@ public class PointsFragment extends Fragment {
 
         // Add players to the football field (customize positions as needed)
 
-        viewModel.getMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+        viewModel.getPointsMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
             if (apiResponse == null) return;
             if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
                 viewModel.dataLoading.setValue(false);
 
-                if(Constants.currentGameWeek == 0){
+                if (Constants.currentGameWeek == 0) {
                     binding.noPointLayout.setVisibility(View.VISIBLE);
                     binding.footballFieldLayout.setVisibility(View.GONE);
                     return;
@@ -96,7 +203,7 @@ public class PointsFragment extends Fragment {
                     binding.footballFieldLayout.setVisibility(View.VISIBLE);
                 }
 
-                MergedResponseModel myTeam = (MergedResponseModel) apiResponse.getData();
+                PointsMergedResponseModel myTeam = apiResponse.getData();
                 addPlayers(footballFieldLayout, myTeam);
                 addLeftOverLayView(myTeam);
                 addRightOverLayView(myTeam);
@@ -104,14 +211,14 @@ public class PointsFragment extends Fragment {
         });
     }
 
-    private void setUpToolBar(@NonNull View view){
+    private void setUpToolBar(@NonNull View view) {
         Toolbar pointToolBar = view.findViewById(R.id.pointToolbar);
 //        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
         ((AppCompatActivity) requireActivity()).setSupportActionBar(pointToolBar);
     }
 
 
-    private void addRightOverLayView(MergedResponseModel myTeam) {
+    private void addRightOverLayView(PointsMergedResponseModel myTeam) {
         OverlayView overlayView = new OverlayView(requireContext(), false);
 
         // Add overlay view initially to measure its size
@@ -124,10 +231,10 @@ public class PointsFragment extends Fragment {
         overlayView.setInfo1TextView(myTeam.getGameWeekPicksModel().getEntry_history().getEvent_transfers() + "(-" + myTeam.getGameWeekPicksModel().getEntry_history().getEvent_transfers_cost() + ")");
 
         overlayView.setLabel2TextView("Squad Val");
-        overlayView.setInfo2TextView((double)myTeam.getGameWeekPicksModel().getEntry_history().getValue()/10 + "m");
+        overlayView.setInfo2TextView((double) myTeam.getGameWeekPicksModel().getEntry_history().getValue() / 10 + "m");
 
         overlayView.setLabel3TextView("In Bank");
-        overlayView.setInfo3TextView((double)myTeam.getGameWeekPicksModel().getEntry_history().getBank()/10 + "m");
+        overlayView.setInfo3TextView((double) myTeam.getGameWeekPicksModel().getEntry_history().getBank() / 10 + "m");
 
         // Get device width
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -139,7 +246,7 @@ public class PointsFragment extends Fragment {
 
         // Calculate left margin to center the view in the middle of the 1st and 2nd grid
         int overlayViewWidth = overlayView.getMeasuredWidth();
-        int leftMargin = (gridWidth*4) - gridWidth/4 - (overlayViewWidth / 2);
+        int leftMargin = (gridWidth * 4) - gridWidth / 4 - (overlayViewWidth / 2);
 
         int topMargin = 20;
 
@@ -152,7 +259,7 @@ public class PointsFragment extends Fragment {
 //        binding.frameLayout.addView(overlayView, overlayParams);
     }
 
-    private void addLeftOverLayView(MergedResponseModel myTeam) {
+    private void addLeftOverLayView(PointsMergedResponseModel myTeam) {
 
         OverlayView overlayView = new OverlayView(requireContext(), false);
 
@@ -186,7 +293,7 @@ public class PointsFragment extends Fragment {
 
         // Calculate left margin to center the view in the middle of the 1st and 2nd grid
         int overlayViewWidth = overlayView.getMeasuredWidth();
-        int leftMargin = gridWidth - gridWidth/4 - (overlayViewWidth / 2);
+        int leftMargin = gridWidth - gridWidth / 4 - (overlayViewWidth / 2);
 
         int topMargin = 20;
 
@@ -203,23 +310,60 @@ public class PointsFragment extends Fragment {
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
-    private void addPlayers(GridLayout footballFieldLayout, MergedResponseModel mergedResponseModel) {
 
-        List<PlayersData> teamPlayers = new ArrayList<>();
+    private void updateTeamPlayers(ArrayList<Picks> picks, GameWeekLivePointsResponseModel gameWeekLivePointsResponseModel) {
 
+        this.teamPlayers = new ArrayList<>();
+        for (Picks myTeamPicks : picks) {
+            PlayersData playersData = deepCopyPlayer(Constants.playerMap.get(myTeamPicks.getElement()));
 
-        for (Picks myTeamPicks : mergedResponseModel.getGameWeekPicksModel().getPicks()) {
-            PlayersData data = Constants.playerMap.get(myTeamPicks.getElement());
-            assert data != null;
-            data.setEvent_points(
-                    mergedResponseModel.getGameWeekLivePointsResponseModel().elements.stream()
-                            .filter(element -> element.id == data.getId())
-                            .findFirst()
-                            .map(element -> element.stats.total_points)
-                            .orElse(0) // Provide a default value if no matching element is found
-            );
-            teamPlayers.add(data);
+            if (playersData != null) {
+                playersData.setIs_captain(myTeamPicks.getIs_captain());
+                playersData.setIs_vice_captain(myTeamPicks.getIs_vice_captain());
+                playersData.setMultiplier(myTeamPicks.getMultiplier());
+                playersData.setPosition(myTeamPicks.getPosition());
+                playersData.setSingular_name_short(Objects.requireNonNull(Constants.playerTypeMap.get(playersData.getElement_type())).getSingular_name_short());
+                playersData.setTeam_name_short(Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getShort_name());
+                playersData.setTeam_name_full(Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getName());
+
+                playersData.setEvent_points(
+                        gameWeekLivePointsResponseModel.elements.stream()
+                                .filter(element -> element.id == playersData.getId())
+                                .findFirst()
+                                .map(element -> element.stats.total_points)
+                                .orElse(0) // Provide a default value if no matching element is found
+                );
+                teamPlayers.add(playersData);
+            } else {
+                UIUtils.toast(requireContext(), "Player data is null please reload again", ToastLevel.WARNING);
+                return;
+            }
         }
+    }
+
+    private void addPlayers(GridLayout footballFieldLayout, PointsMergedResponseModel myTeamMergedResponseModel) {
+
+//        List<PlayersData> teamPlayers = new ArrayList<>();
+//
+//
+//        for (Picks myTeamPicks : myTeamMergedResponseModel.getGameWeekPicksModel().getPicks()) {
+//
+//            PlayersData data = deepCopyPlayer(Constants.playerMap.get(myTeamPicks.getElement()));
+//            assert data != null;
+//            data.setEvent_points(
+//                    myTeamMergedResponseModel.getGameWeekLivePointsResponseModel().elements.stream()
+//                            .filter(element -> element.id == data.getId())
+//                            .findFirst()
+//                            .map(element -> element.stats.total_points)
+//                            .orElse(0) // Provide a default value if no matching element is found
+//            );
+//            teamPlayers.add(data);
+//
+//        }
+
+        updateTeamPlayers(myTeamMergedResponseModel.getGameWeekPicksModel().getPicks(), myTeamMergedResponseModel.getGameWeekLivePointsResponseModel());
+
+        substitutePlayer(myTeamMergedResponseModel.getGameWeekPicksModel().getAutomatic_subs());
 
         List<PlayersData> defenders = new ArrayList<>();
         List<PlayersData> midfielders = new ArrayList<>();
@@ -317,6 +461,26 @@ public class PointsFragment extends Fragment {
         addPlayerNew(teamPlayers.get(14), 4, 4, footballFieldLayout); // third bench
     }
 
+    private void substitutePlayer(ArrayList<AutomaticSubs> automaticSubs) {
+//        printTeamPlayers(this.teamPlayers);
+        for (AutomaticSubs sub : automaticSubs) {
+            int fromPosition = getPlayerPosition(sub.getElement_in());
+            int toPosition = getPlayerPosition(sub.getElement_out());
+            this.teamPlayers.get(fromPosition).setSubstitute_number(1);
+            this.teamPlayers.get(toPosition).setSubstitute_number(1);
+        }
+//        printTeamPlayers(this.teamPlayers);
+    }
+
+    private int getPlayerPosition(long playerId) {
+        for (int i = 0; i < teamPlayers.size(); i++) {
+            if (teamPlayers.get(i).getId() == playerId) {
+                return i;
+            }
+        }
+        return -1; // Return -1 if the player is not found
+    }
+
     public void addPlayerNew(PlayersData player, int row, int column, GridLayout footballFieldLayout) {
 
         PlayerView playerView = new PlayerView(requireContext(), player, false, null);
@@ -326,7 +490,7 @@ public class PointsFragment extends Fragment {
         String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(player.getElement_type())).getSingular_name_short();
         playerView.setTeamName(teamName + " - (" + playerType + ")");
 
-        playerView.setOpponentTeamName(player.getEvent_points()+"");
+        playerView.setOpponentTeamName((player.getEvent_points()*player.getMultiplier()) + "");
 
         //https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
         //https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo
@@ -342,16 +506,36 @@ public class PointsFragment extends Fragment {
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14-66.webp for player shirt
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14_1-66.webp for goal keeper shirt
         playerView.setPlayerImage(imgURL);
+
+        //set captaincy
         if (player.isIs_captain()) {
-            Log.d("Captain's Info", player.toString());
             playerView.setCaptain();
         }
 
+        //set vice captain icon
         if (player.isIs_vice_captain()) {
-            Log.d("Vice Captain's Info", player.toString());
             playerView.setViceCaptain();
         }
 
+        // set substitute player icon
+        if(player.getSubstitute_number()>0){
+            playerView.setSubstitutePlayer();
+        }
+
+        //set dream player icon
+        if (player.isIn_dreamteam()) {
+            playerView.setDreamTeamPlayer();
+        }
+
+        //set availability icon
+        if (player.getChance_of_playing_this_round() != null && player.getChance_of_playing_next_round() < 100) {
+            playerView.setAvailability(player.getChance_of_playing_next_round());
+        }
+
+        //set difficulty color
+        playerView.setDifficulty1BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek).get(player.getTeam()).getDifficulty()));
+        playerView.setDifficulty2BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek + 1).get(player.getTeam()).getDifficulty()));
+        playerView.setDifficulty3BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek + 2).get(player.getTeam()).getDifficulty()));
 
         // Set the position of the player in the GridLayout
         playerView.setRow(row);

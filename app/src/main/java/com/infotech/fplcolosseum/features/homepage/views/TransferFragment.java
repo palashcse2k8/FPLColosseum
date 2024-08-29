@@ -1,6 +1,9 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
+import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayerList;
+
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,11 +24,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentTransfersBinding;
-import com.infotech.fplcolosseum.features.homepage.models.MergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
+import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.CustomUtil;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -43,6 +50,10 @@ public class TransferFragment extends Fragment {
     private long entry_id;
 
     private LocalDateTime endTime;
+    boolean isRefreshVisible = true;  // Hide refresh button
+    boolean isShareVisible = true;    // Show share button
+    boolean isSaveVisible = false;
+    boolean isClearVisible = false;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable countdownRunnable = new Runnable() {
@@ -72,6 +83,7 @@ public class TransferFragment extends Fragment {
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
     }
 
     @Nullable
@@ -86,21 +98,93 @@ public class TransferFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_options, menu);
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.my_team_menu, menu);
+
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        }
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+        MenuItem shareItem = menu.findItem(R.id.action_share);
+        MenuItem saveItem = menu.findItem(R.id.action_save);
+        MenuItem clearItem = menu.findItem(R.id.action_undo);
+
+
+        // Set visibility based on your conditions
+        refreshItem.setVisible(isRefreshVisible);
+        shareItem.setVisible(isShareVisible);
+        saveItem.setVisible(isSaveVisible);
+        clearItem.setVisible(isClearVisible);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection.
-        if (item.getItemId() == R.id.logout) {
-            logOutUser();
+        // Handle action bar item clicks here
+        int id = item.getItemId();
+
+        if (id == R.id.action_undo) {
+            handleUndoClick();
+            return true;
+        } else if (id == R.id.action_refresh) {
+            handleRefreshClick();
+            return true;
+        } else if (id == R.id.action_share) {
+            handleShareClick();
+            return true;
+        } else if (id == R.id.action_save) {
+            handleSaveClick();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
+    private void handleUndoClick() {
+
+        // Logic for undo button
+        // update the player list view
+
+        resetToolBar();
+    }
+
+    private void handleRefreshClick() {
+        // Logic for refresh button
+        Toast.makeText(getActivity(), "Refresh clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    private void handleShareClick() {
+        // Logic for share button
+        Toast.makeText(getActivity(), "Share clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    private void handleSaveClick() {
+
+        Toast.makeText(getActivity(), "Save clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    private void resetToolBar() {
+        isClearVisible = false;     // Hide undo button
+        isSaveVisible = false;     // Hide save button
+
+        requireActivity().invalidateOptionsMenu();
+    }
+
+    private void enableEditToolBar() {
+        isClearVisible = true;     // Hide undo button
+        isSaveVisible = true;     // Hide save button
+
+        requireActivity().invalidateOptionsMenu();
+    }
     public void logOutUser() {
         Constants.LoggedInUser = null;
     }
@@ -138,7 +222,7 @@ public class TransferFragment extends Fragment {
         endTime = LocalDateTime.of(2024, 12, 31, 23, 59, 59);
 
         // Add players to the football field (customize positions as needed)
-        viewModel.getMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+        viewModel.getMyTeamMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
 
             if (apiResponse == null) return;
             switch (apiResponse.getStatus()) {
@@ -148,7 +232,7 @@ public class TransferFragment extends Fragment {
                 case SUCCESS:
                     viewModel.dataLoading.setValue(false);
 
-                    MergedResponseModel myTeam = (MergedResponseModel) apiResponse.getData();
+                    MyTeamMergedResponseModel myTeam = (MyTeamMergedResponseModel) apiResponse.getData();
 //                    updateFixtureData(myTeam.getMatchDetails());
                     updateUI(footballFieldLayout, myTeam);
 
@@ -187,7 +271,7 @@ public class TransferFragment extends Fragment {
 //        viewModel.getMyTeamDataIfNeeded(entry_id);
     }
 
-    private void addPlayers(GridLayout footballFieldLayout, MergedResponseModel myTeam) {
+    private void addPlayers(GridLayout footballFieldLayout, MyTeamMergedResponseModel myTeam) {
 
         List<PlayersData> teamPlayers = new ArrayList<>();
 
@@ -295,6 +379,16 @@ public class TransferFragment extends Fragment {
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14_1-66.webp for goal keeper shirt
         playerView.setPlayerImage(imgURL);
 
+        //set availability icon
+        if (player.getChance_of_playing_this_round() != null && player.getChance_of_playing_next_round() < 100) {
+            playerView.setAvailability(player.getChance_of_playing_next_round());
+        }
+
+        //set difficulty color
+        playerView.setDifficulty1BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek).get(player.getTeam()).getDifficulty()));
+        playerView.setDifficulty2BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek + 1).get(player.getTeam()).getDifficulty()));
+        playerView.setDifficulty3BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek + 2).get(player.getTeam()).getDifficulty()));
+
         // Set the position of the player in the GridLayout
         playerView.setRow(row);
         playerView.setColumn(column);
@@ -322,7 +416,7 @@ public class TransferFragment extends Fragment {
 
     }
 
-    private void updateUI(GridLayout footballFieldLayout, MergedResponseModel data) {
+    private void updateUI(GridLayout footballFieldLayout, MyTeamMergedResponseModel data) {
 
         binding.progressCircular.setVisibility(View.GONE);
         binding.progressCircular.setVisibility(View.GONE);

@@ -19,6 +19,7 @@ import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLiv
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.picks.GameWeekPicksModel;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.utilities.Constants;
 
@@ -228,5 +229,19 @@ public class UserGameWeekDataRepository {
         return apiData;
     }
 
+
+    public LiveData<ApiResponse<GameWeekStaticDataModel>> getGameWeekStaticData() {
+
+        MediatorLiveData<ApiResponse<GameWeekStaticDataModel>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getGameWeeKStaticData();
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekStaticDataModel.class), tApiResponse -> {
+//            Log.d("Data ", tApiResponse.getData().toString());
+            apiData.postValue(tApiResponse);
+        });
+
+        return apiData;
+    }
 }
 

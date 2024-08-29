@@ -41,22 +41,22 @@ public class MainActivity extends AppCompatActivity implements ToolbarChangeList
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
 
         //request api for updating static data
-        sharedViewModel.getApiData().observe(this, apiResponse -> {
-            // Handle API response in the fragment
-            if(apiResponse == null) return;
-            if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
+//        sharedViewModel.getApiData().observe(this, apiResponse -> {
+//            // Handle API response in the fragment
+//            if(apiResponse == null) return;
+//            if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
+//
+//                // Update Static data from api data
+//                prepareData(apiResponse.getData());
+//
+//            } else {
+//                Log.d(Constants.LOG_TAG, "Data Loading Error" );
+//            }
+//        });
 
-                // Update Static data from api data
-                prepareData(apiResponse.getData());
-
-            } else {
-                Log.d(Constants.LOG_TAG, "Data Loading Error" );
-            }
-        });
-
-        if(Constants.playerMap.isEmpty()){
-            sharedViewModel.getGameWeekStaticData();
-        }
+//        if(Constants.playerMap.isEmpty()){
+//            sharedViewModel.getGameWeekStaticData();
+//        }
         Fragment fragment = new LoginFragment();
 //        Fragment fragment = new HomePageFragment();
 //        Fragment fragment = new MyTeamFragment();
@@ -74,43 +74,7 @@ public class MainActivity extends AppCompatActivity implements ToolbarChangeList
         actionBar.setTitle("Fantasy Freakz!");
     }
 
-    public void prepareData(GameWeekStaticDataModel dataModel){
 
-        Constants.GameWeekStaticData = dataModel;
-
-        //setting team map
-        Map<Long, TeamData> teamMap = new HashMap<>();
-        for (TeamData data : dataModel.getTeams()) {
-            teamMap.put(data.getId(), data);
-        }
-        Constants.teamMap = teamMap;
-
-        //setting gameWeek map
-        Map<Long, GameWeekEvent> gameWeekMap = new HashMap<>();
-        for (GameWeekEvent weekEvent : dataModel.getEvents()) {
-            gameWeekMap.put(weekEvent.getId(), weekEvent);
-        }
-        Constants.gameWeekMap = gameWeekMap;
-
-        //setting player type map
-        Map<Long, Player_Type> palyerTypeMap = new HashMap<>();
-        for (Player_Type type : dataModel.getPlayer_types()) {
-            palyerTypeMap.put(type.getId(), type);
-        }
-        Constants.playerTypeMap = palyerTypeMap;
-
-        //setting player map
-        Map<Long, PlayersData> elementMap = new HashMap<>();
-        for (PlayersData element : dataModel.getElements()) {
-            //adding extra fields here
-            element.setTeam_name_full(Objects.requireNonNull(Constants.teamMap.get(element.getTeam())).getName());
-            element.setTeam_name_short(Objects.requireNonNull(Constants.teamMap.get(element.getTeam())).getShort_name());
-            element.setSingular_name(Objects.requireNonNull(Constants.playerTypeMap.get(element.getElement_type())).getSingular_name());
-            element.setSingular_name_short(Objects.requireNonNull(Constants.playerTypeMap.get(element.getElement_type())).getSingular_name_short());
-            elementMap.put(element.getId(), element);
-        }
-        Constants.playerMap = elementMap;
-    }
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {

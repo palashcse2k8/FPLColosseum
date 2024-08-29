@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
 
@@ -17,7 +18,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +35,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -189,6 +196,10 @@ public class CustomUtil {
         return copyList;
     }
 
+    public static PlayersData deepCopyPlayer(PlayersData original) {
+        return new PlayersData(original);
+    }
+
     public static int getDifficultyLevelColor(long number) {
         if (number == 1) {
             return Color.parseColor("#375523");  // lowest value
@@ -202,6 +213,50 @@ public class CustomUtil {
             return Color.parseColor("#80072d"); // high difficulty value
         } else {
             return 0;
+        }
+    }
+
+    public static void prepareData(GameWeekStaticDataModel dataModel){
+
+        Constants.GameWeekStaticData = dataModel;
+
+        //setting team map
+        Map<Long, TeamData> teamMap = new HashMap<>();
+        for (TeamData data : dataModel.getTeams()) {
+            teamMap.put(data.getId(), data);
+        }
+        Constants.teamMap = teamMap;
+
+        //setting gameWeek map
+        Map<Long, GameWeekEvent> gameWeekMap = new HashMap<>();
+        for (GameWeekEvent weekEvent : dataModel.getEvents()) {
+            gameWeekMap.put(weekEvent.getId(), weekEvent);
+        }
+        Constants.gameWeekMap = gameWeekMap;
+
+        //setting player type map
+        Map<Long, Player_Type> palyerTypeMap = new HashMap<>();
+        for (Player_Type type : dataModel.getPlayer_types()) {
+            palyerTypeMap.put(type.getId(), type);
+        }
+        Constants.playerTypeMap = palyerTypeMap;
+
+        //setting player map
+        Map<Long, PlayersData> elementMap = new HashMap<>();
+        for (PlayersData element : dataModel.getElements()) {
+            //adding extra fields here
+            element.setTeam_name_full(Objects.requireNonNull(Constants.teamMap.get(element.getTeam())).getName());
+            element.setTeam_name_short(Objects.requireNonNull(Constants.teamMap.get(element.getTeam())).getShort_name());
+            element.setSingular_name(Objects.requireNonNull(Constants.playerTypeMap.get(element.getElement_type())).getSingular_name());
+            element.setSingular_name_short(Objects.requireNonNull(Constants.playerTypeMap.get(element.getElement_type())).getSingular_name_short());
+            elementMap.put(element.getId(), element);
+        }
+        Constants.playerMap = elementMap;
+    }
+
+    public static void printTeamPlayers(List<PlayersData> teamPlayers) {
+        for (PlayersData player : teamPlayers) {
+            Log.d("FPLC", player.getPosition() + " -> " + player.getWeb_name() + (player.isIs_captain() ? " Captain" : "") + (player.isIs_vice_captain() ? " Vice Captain" : ""));
         }
     }
 

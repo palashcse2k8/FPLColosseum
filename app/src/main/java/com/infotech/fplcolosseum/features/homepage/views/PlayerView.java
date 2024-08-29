@@ -43,6 +43,7 @@ public class PlayerView extends LinearLayout {
     private FrameLayout imageBottomLeft;
     private ImageView imageBottomRight;
     private ImageView imageBottomMiddle;
+    private ImageView getImageTopLeft;
     private TextView changeOfPlayingThisRound;
     private TextView difficulty1;
     private TextView difficulty2;
@@ -99,6 +100,7 @@ public class PlayerView extends LinearLayout {
         imageBottomRight = findViewById(R.id.iconBottomRight);
         imageBottomMiddle = findViewById(R.id.iconBottomMiddle);
         imageBottomLeft = findViewById(R.id.iconBottomLeft);
+        imageTopLeft = findViewById(R.id.iconTopLeft);
         changeOfPlayingThisRound = findViewById(R.id.changeOfPlayingThisRound);
         playerView = findViewById(R.id.playerView);
         difficulty1 = findViewById(R.id.difficulty1);
@@ -149,6 +151,11 @@ public class PlayerView extends LinearLayout {
         imageBottomRight.setBackgroundResource(R.drawable.alpha_v_circle);
     }
 
+    public void setSubstitutePlayer(){
+        imageTopLeft.setVisibility(View.VISIBLE);
+        imageTopLeft.setBackgroundResource(R.drawable.substitute);
+    }
+
     public void setDreamTeamPlayer() {
         imageBottomMiddle.setVisibility(View.VISIBLE);
     }
@@ -163,26 +170,26 @@ public class PlayerView extends LinearLayout {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
             bgDrawable.setColor(Color.parseColor("#FF8000"));
 
-//            playerNameTextView.setBackgroundColor(Color.parseColor("#FF8000"));
-//            playerNameTextView.setTextColor(Color.parseColor("#000000"));
+            playerNameTextView.setBackgroundColor(Color.parseColor("#FF8000"));
+            playerNameTextView.setTextColor(Color.parseColor("#000000"));
         } else if (chanceOfPlayingThisRound == 50) {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
             bgDrawable.setColor(Color.parseColor("#FF8C00"));
 //
-//            playerNameTextView.setBackgroundColor(Color.parseColor("#CCCC00"));
-//            playerNameTextView.setTextColor(Color.parseColor("#000000"));
+            playerNameTextView.setBackgroundColor(Color.parseColor("#FF8C00"));
+            playerNameTextView.setTextColor(Color.parseColor("#000000"));
         } else if (chanceOfPlayingThisRound == 75) {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#000000"));
             bgDrawable.setColor(Color.parseColor("#FFFF00"));
 
-//            playerNameTextView.setBackgroundColor(Color.parseColor("#FFFF00"));
-//            playerNameTextView.setTextColor(Color.parseColor("#000000"));
+            playerNameTextView.setBackgroundColor(Color.parseColor("#FFFF00"));
+            playerNameTextView.setTextColor(Color.parseColor("#000000"));
 
         } else {
             changeOfPlayingThisRound.setTextColor(Color.parseColor("#FFFFFF"));
             bgDrawable.setColor(Color.parseColor("#FF0000"));
 
-//            playerNameTextView.setBackgroundColor(Color.parseColor("#FF0000"));
+            playerNameTextView.setBackgroundColor(Color.parseColor("#FF0000"));
         }
 
     }
