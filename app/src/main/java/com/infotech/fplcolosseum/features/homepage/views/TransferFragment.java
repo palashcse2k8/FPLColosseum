@@ -1,12 +1,19 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
-import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayerList;
+import static com.infotech.fplcolosseum.utilities.ButtonStateManager.getButtonState;
+import static com.infotech.fplcolosseum.utilities.ButtonStateManager.updateButtonState;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,27 +26,37 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentTransfersBinding;
+import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
+import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
+import com.infotech.fplcolosseum.features.homepage.adapter.PlayerTransferListener;
 import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameChips;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
-import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.Transfers;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
+import com.infotech.fplcolosseum.utilities.ButtonStateManager;
+import com.infotech.fplcolosseum.utilities.Chips;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-public class TransferFragment extends Fragment {
+public class TransferFragment extends Fragment implements OnPlayerClickOrDragListener, PlayerTransferListener {
 
     FragmentTransfersBinding binding;
 
@@ -49,12 +66,18 @@ public class TransferFragment extends Fragment {
 
     private long entry_id;
 
+    private List<PlayersData> teamPlayers;
+    private List<PlayerView> playerViewList;
+
     private LocalDateTime endTime;
     boolean isRefreshVisible = true;  // Hide refresh button
     boolean isShareVisible = true;    // Show share button
     boolean isSaveVisible = false;
     boolean isClearVisible = false;
 
+    String activeChip;
+    GameWeekMyTeamResponseModel initialResponse;
+    Transfers currentTransfer;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable countdownRunnable = new Runnable() {
         @Override
@@ -185,6 +208,7 @@ public class TransferFragment extends Fragment {
 
         requireActivity().invalidateOptionsMenu();
     }
+
     public void logOutUser() {
         Constants.LoggedInUser = null;
     }
@@ -232,10 +256,9 @@ public class TransferFragment extends Fragment {
                 case SUCCESS:
                     viewModel.dataLoading.setValue(false);
 
-                    MyTeamMergedResponseModel myTeam = (MyTeamMergedResponseModel) apiResponse.getData();
-//                    updateFixtureData(myTeam.getMatchDetails());
-                    updateUI(footballFieldLayout, myTeam);
-
+                    MyTeamMergedResponseModel myTeam = apiResponse.getData();
+                    initialResponse = myTeam.getGameWeekMyTeamResponseModel();
+                    updateUI(initialResponse);
 
                     break;
                 case ERROR:
@@ -243,39 +266,21 @@ public class TransferFragment extends Fragment {
                     break;
             }
         });
-
-        // Observe changes in DataState
-//        viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
-//
-//            if (apiResponse == null) return;
-//            switch (apiResponse.getStatus()) {
-//                case LOADING:
-//                    showLoading();
-//                    break;
-//                case SUCCESS:
-//                    viewModel.dataLoading.setValue(false);
-//                    handler.post(countdownRunnable);
-//                    if(apiResponse.getData() instanceof GameWeekMyTeamResponseModel){
-//                        GameWeekMyTeamResponseModel data = (GameWeekMyTeamResponseModel) apiResponse.getData();
-//                        updateUI(footballFieldLayout, data);
-//                    }
-//
-//                    break;
-//                case ERROR:
-//                    showFailure(apiResponse.getMessage());
-//                    break;
-//            }
-//        });
-
-        // Trigger data fetching
-//        viewModel.getMyTeamDataIfNeeded(entry_id);
     }
 
-    private void addPlayers(GridLayout footballFieldLayout, MyTeamMergedResponseModel myTeam) {
+    private void updateUI(GameWeekMyTeamResponseModel response) {
+        updateChipsStatus(requireContext(), response.getChips()); //update chips
+        updatePlayersUI(binding.footballFieldLayout, response);
+        currentTransfer = response.getTransfers(); // hold the data for next update
+        updateTransferInfo(currentTransfer);
+    }
 
-        List<PlayersData> teamPlayers = new ArrayList<>();
+    private void addPlayers(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel myTeam) {
 
-        for (MyTeamPicks myTeamPicks : myTeam.getGameWeekMyTeamResponseModel().getPicks()) {
+        this.teamPlayers = new ArrayList<>();
+        this.playerViewList = new ArrayList<>();
+
+        for (MyTeamPicks myTeamPicks : myTeam.getPicks()) {
             PlayersData playersData = Constants.playerMap.get(myTeamPicks.getElement());
             assert playersData != null;
             playersData.setIs_captain(myTeamPicks.getIs_captain());
@@ -355,10 +360,22 @@ public class TransferFragment extends Fragment {
 
         PlayerView playerView = new PlayerView(requireContext(), player, false, null);
         playerView.setPlayerName(player.getWeb_name());
+        playerViewList.add(playerView); // add reference of the player view for later modification
+
+        //setting the listener for click operation
+        playerView.setPlayerClickOrDragListener(this);
+        playerView.setOnClickListener(v -> {
+            OnPlayerClickOrDragListener playerClickOrDragListener = playerView.getPlayerClickOrDragListener();
+
+            if (playerClickOrDragListener != null) {
+                playerClickOrDragListener.onClickPlayer(playerView);
+            }
+        });
+
 
         //set team name
-        String teamName = Constants.teamMap.get(player.getTeam()).getShort_name();
-        String playerType = Constants.playerTypeMap.get(player.getElement_type()).getSingular_name_short();
+        String teamName = Objects.requireNonNull(Constants.teamMap.get(player.getTeam())).getShort_name();
+        String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(player.getElement_type())).getSingular_name_short();
         playerView.setTeamName(teamName + " - (" + playerType + ")");
 
         String amount = "€" + (float) player.getSelling_price() / 10 + "m";
@@ -416,16 +433,248 @@ public class TransferFragment extends Fragment {
 
     }
 
-    private void updateUI(GridLayout footballFieldLayout, MyTeamMergedResponseModel data) {
+    private void showFailure(String error) {
+        viewModel.dataLoading.setValue(false);
+        binding.progressCircular.setVisibility(View.GONE);
+        binding.footballFieldLayout.setVisibility(View.GONE);
+    }
+
+    private void updateChipsStatus(Context context, ArrayList<GameChips> chips) {
+
+//        setupButton(binding.buttonAutoPick, Chips.AP.getDisplayName());
+        setupButton(binding.buttonWildCard, Chips.WC.getDisplayName());
+        setupButton(binding.buttonFH, Chips.FH.getDisplayName());
+
+        Map<String, MaterialButton> chipButtons = new HashMap<>();
+//        chipButtons.put(Chips.AP.getShortName(), binding.buttonAutoPick);
+        chipButtons.put(Chips.WC.getShortName(), binding.buttonWildCard);
+        chipButtons.put(Chips.FH.getShortName(), binding.buttonFH);
+
+        for (GameChips chip : chips) {
+            MaterialButton button = chipButtons.get(chip.getName());
+            if (button != null) {
+                ButtonStateManager.ButtonState state;
+                switch (chip.getStatus_for_entry().toLowerCase()) {
+                    case "available":
+                        state = ButtonStateManager.ButtonState.AVAILABLE;
+                        break;
+                    case "active":
+                        state = ButtonStateManager.ButtonState.ACTIVE;
+                        activeChip = chip.getName();
+                        break;
+                    case "unavailable":
+                        state = ButtonStateManager.ButtonState.NOT_AVAILABLE;
+                        break;
+                    default:
+                        continue; // Skip unknown statuses
+                }
+                updateButtonState(context, button, state);
+            }
+        }
+
+        updateButtonState(context, binding.buttonAutoPick, ButtonStateManager.ButtonState.NOT_AVAILABLE); //
+    }
+
+    private void updatePlayersUI(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel data) {
 
         binding.progressCircular.setVisibility(View.GONE);
         binding.progressCircular.setVisibility(View.GONE);
         addPlayers(footballFieldLayout, data);
     }
 
-    private void showFailure(String error) {
-        viewModel.dataLoading.setValue(false);
-        binding.progressCircular.setVisibility(View.GONE);
-        binding.footballFieldLayout.setVisibility(View.GONE);
+    private void setupButton(final MaterialButton button, final String buttonName) {
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ButtonStateManager.ButtonState currentState = getButtonState(button);
+                switch (currentState) {
+                    case ACTIVE:
+                        showConfirmationDialog(button, buttonName, "Deactivate " + buttonName + "?", ButtonStateManager.ButtonState.AVAILABLE);
+                        break;
+                    case AVAILABLE:
+                        showConfirmationDialog(button, buttonName, "Activate " + buttonName + "?", ButtonStateManager.ButtonState.ACTIVE);
+                        break;
+                    case NOT_AVAILABLE:
+                        showPopup(buttonName + " is not available!");
+                        break;
+                }
+            }
+        });
+    }
+
+    private void showPopup(String message) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void showConfirmationDialog(final MaterialButton button, final String buttonName, String message, final ButtonStateManager.ButtonState newState) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(message)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        updateButtonState(requireContext(), button, newState);
+//                        showPopup(buttonName + " state updated to " + newState);
+                        enableEditToolBar();
+                        if (newState == ButtonStateManager.ButtonState.ACTIVE) {
+                            if (buttonName.equalsIgnoreCase(Chips.BB.getDisplayName())) {
+                                activeChip = Chips.BB.getShortName();
+                            } else if (buttonName.equalsIgnoreCase(Chips.TC.getDisplayName())) {
+                                activeChip = Chips.TC.getShortName();
+                            } else {
+                                activeChip = Chips.FH.getShortName();
+                            }
+                        } else if (newState == ButtonStateManager.ButtonState.AVAILABLE) {
+                            activeChip = null;
+                        } else {
+                            if (buttonName.equalsIgnoreCase(Chips.BB.getDisplayName())) {
+                                activeChip = Chips.BB.getShortName();
+                            } else if (buttonName.equalsIgnoreCase(Chips.TC.getDisplayName())) {
+                                activeChip = Chips.TC.getShortName();
+                            } else {
+                                activeChip = Chips.FH.getShortName();
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    public void updateTransferInfo(Transfers transfers) {
+        updateTransferMade(transfers.getMade(), transfers.getLimit());
+        updateCostAndFT(transfers.getMade(), transfers.getLimit());
+        updateBankBalance(transfers.getBank(), transfers.getValue());
+    }
+
+    private void updateTransferMade(long transferMade, long limit) {
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+
+        String blackText = "Transfer Made : ";
+        SpannableString blackSpannable = new SpannableString(blackText);
+        builder.append(blackSpannable);
+
+        String redOrGreenText = String.valueOf(transferMade);
+        SpannableString redSpannable = new SpannableString(redOrGreenText);
+        if (transferMade > limit) {
+            redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, redOrGreenText.length(), 0);
+        } else {
+            redSpannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, redOrGreenText.length(), 0);
+        }
+        builder.append(redSpannable);
+
+        binding.transferMade.setText(builder);
+    }
+
+    private void updateCostAndFT(long transferMade, long limit) {
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+
+        String blackText = "Cost : ";
+        SpannableString blackSpannable = new SpannableString(blackText);
+        builder.append(blackSpannable);
+
+        long costCalculation = limit - transferMade;
+
+        if (costCalculation < 0) {
+            costCalculation = costCalculation * 4;
+        } else {
+            costCalculation = 0;
+        }
+        String redOrGreenText = String.valueOf(costCalculation);
+        SpannableString redSpannable = new SpannableString(redOrGreenText);
+        if (costCalculation < 0) {
+            redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, redOrGreenText.length(), 0);
+        } else {
+            redSpannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, redOrGreenText.length(), 0);
+        }
+        builder.append(redSpannable).append(", ");
+
+        String nextBlackText = "FT : ";
+        SpannableString nextBlackSpannable = new SpannableString(nextBlackText);
+        builder.append(nextBlackSpannable);
+
+        long ftCalculation = limit - transferMade;
+
+        if (ftCalculation < 0) {
+            ftCalculation = 0;
+        }
+        String greenText = String.valueOf(ftCalculation);
+        SpannableString greenSpannable = new SpannableString(greenText);
+        greenSpannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, greenText.length(), 0);
+
+        builder.append(greenSpannable);
+
+        binding.transferCalculation.setText(builder);
+    }
+
+    private void updateBankBalance(long bank, long value) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+
+        String blackText = "In Bank : ";
+        SpannableString blackSpannable = new SpannableString(blackText);
+        builder.append(blackSpannable);
+
+        String redOrGreenText = String.valueOf(bank);
+        SpannableString redSpannable = new SpannableString(redOrGreenText);
+        if (bank < 0) {
+            redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, redOrGreenText.length(), 0);
+        } else {
+            redSpannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, redOrGreenText.length(), 0);
+        }
+        builder.append(redSpannable);
+
+//        String nextBlackText = "Squad Value : ";
+//        SpannableString nextBlackSpannable = new SpannableString(nextBlackText);
+//        builder.append(nextBlackSpannable);
+//
+//        String greenText = String.valueOf(value);
+//        SpannableString greenSpannable = new SpannableString(greenText);
+//        greenSpannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, greenText.length(), 0);
+
+//        builder.append(greenSpannable);
+
+        binding.bankValue.setText(builder);
+    }
+
+    @Override
+    public void onPlayerDragged(int fromPosition, int toPosition, PlayerView draggedPlayerView, PlayerView dropPlayerView, boolean isSwapData) {
+
+    }
+
+    @Override
+    public void onClickPlayer(PlayerView view) {
+        Log.d(Constants.LOG_TAG, "Player Clicked! " + view.player.getPosition());
+        showBottomSheetDialogue(view.getPlayerData());
+    }
+
+    private void showBottomSheetDialogue(PlayersData playersData) {
+        TransferPlayerInfoBottomSheetFragment bottomSheet = TransferPlayerInfoBottomSheetFragment.newInstance(playersData);
+        bottomSheet.setPlayerTransferListener(this);
+        bottomSheet.show(requireActivity().getSupportFragmentManager(), bottomSheet.getTag());
+    }
+
+
+    @Override
+    public void onTransferPlayer(PlayersData player) {
+
+    }
+
+    @Override
+    public void onCancelTransfer(PlayersData player) {
+
     }
 }

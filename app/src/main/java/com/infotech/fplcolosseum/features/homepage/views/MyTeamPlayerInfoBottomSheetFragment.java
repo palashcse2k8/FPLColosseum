@@ -9,24 +9,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.databinding.FragmentPlayerInfoBottomsheetBinding;
+import com.infotech.fplcolosseum.databinding.FragmentMyTeamPlayerInfoBottomSheetBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 
-import java.io.Serializable;
+public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
-public class PlayerInfoBottomSheetFragment extends BottomSheetDialogFragment {
-
-    private FragmentPlayerInfoBottomsheetBinding binding;
+    private FragmentMyTeamPlayerInfoBottomSheetBinding binding;
     private PlayersData playerData;
     private PlayerInfoUpdateListener playerInfoUpdateListener;
 
-    public static PlayerInfoBottomSheetFragment newInstance(PlayersData playerData) {
-        PlayerInfoBottomSheetFragment fragment = new PlayerInfoBottomSheetFragment();
+    public static MyTeamPlayerInfoBottomSheetFragment newInstance(PlayersData playerData) {
+        MyTeamPlayerInfoBottomSheetFragment fragment = new MyTeamPlayerInfoBottomSheetFragment();
         Bundle args = new Bundle();
         args.putSerializable("player_data", playerData);
         fragment.setArguments(args);
@@ -40,7 +37,7 @@ public class PlayerInfoBottomSheetFragment extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_player_info_bottomsheet, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_team_player_info_bottom_sheet, container, false);
 
         if (getDialog() == null) {
             return null;

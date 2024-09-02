@@ -5,34 +5,25 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.cardview.widget.CardView;
 
 import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
+import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
-import com.infotech.fplcolosseum.utilities.Constants;
-import com.infotech.fplcolosseum.utilities.ToastLevel;
-import com.infotech.fplcolosseum.utilities.UIUtils;
 import com.squareup.picasso.Picasso;
 
 public class PlayerView extends LinearLayout {
 
     PlayersData player;
 
-    private OnPlayerDragListener dragListener;
+    private OnPlayerClickOrDragListener playerClickOrDragListener;
     Context context;
     private ImageView imageView;
     private TextView playerNameTextView;
@@ -54,18 +45,17 @@ public class PlayerView extends LinearLayout {
 
     private static boolean isDragging = false;
     private static long startClickTime;
-    private static final int MAX_CLICK_DURATION = 200;
 
-    public PlayerView(Context context, PlayersData player, boolean isDraggable, OnPlayerDragListener onPlayerDragListener) {
+    public PlayerView(Context context, PlayersData player, boolean isDraggable, OnPlayerClickOrDragListener onPlayerClickOrDragListener) {
         super(context);
         initializeViews(context);
         this.player = player;
         this.isDraggable = isDraggable;
         this.context = context;
-        this.dragListener = onPlayerDragListener;
+        this.playerClickOrDragListener = onPlayerClickOrDragListener;
         if (isDraggable) {
-            setOnTouchListener(new TouchListener(onPlayerDragListener));
-            setOnDragListener(new DragListener(onPlayerDragListener));
+            setOnTouchListener(new TouchListener(onPlayerClickOrDragListener));
+            setOnDragListener(new DragListener(onPlayerClickOrDragListener));
         }
     }
 
@@ -74,8 +64,8 @@ public class PlayerView extends LinearLayout {
         this.player = player;
         initializeViews(context);
         if (isDraggable) {
-            setOnTouchListener(new TouchListener(this.dragListener));
-            setOnDragListener(new DragListener(this.dragListener));
+            setOnTouchListener(new TouchListener(this.playerClickOrDragListener));
+            setOnDragListener(new DragListener(this.playerClickOrDragListener));
         }
     }
 
@@ -84,8 +74,8 @@ public class PlayerView extends LinearLayout {
         this.player = player;
         initializeViews(context);
         if (isDraggable) {
-            setOnTouchListener(new TouchListener(this.dragListener));
-            setOnDragListener(new DragListener(this.dragListener));
+            setOnTouchListener(new TouchListener(this.playerClickOrDragListener));
+            setOnDragListener(new DragListener(this.playerClickOrDragListener));
         }
     }
 
@@ -106,6 +96,15 @@ public class PlayerView extends LinearLayout {
         difficulty1 = findViewById(R.id.difficulty1);
         difficulty2 = findViewById(R.id.difficulty2);
         difficulty3 = findViewById(R.id.difficulty3);
+    }
+
+    //set and get player click or drag action from outside
+    public void setPlayerClickOrDragListener(OnPlayerClickOrDragListener playerClickOrDragListener) {
+        this.playerClickOrDragListener = playerClickOrDragListener;
+    }
+
+    public OnPlayerClickOrDragListener getPlayerClickOrDragListener() {
+        return playerClickOrDragListener;
     }
 
     // Add methods to set player details (image, name, team name) if needed
@@ -263,13 +262,13 @@ public class PlayerView extends LinearLayout {
 
     private static class TouchListener implements OnTouchListener {
 
-        OnPlayerDragListener onPlayerDragListener;
+        OnPlayerClickOrDragListener onPlayerClickOrDragListener;
         private static final int MAX_CLICK_DURATION = 200;
         private static final int DRAG_THRESHOLD = 10; // Minimal movement threshold to distinguish drag
         private float downX, downY;
 
-        public TouchListener(OnPlayerDragListener onPlayerDragListener) {
-            this.onPlayerDragListener = onPlayerDragListener;
+        public TouchListener(OnPlayerClickOrDragListener onPlayerClickOrDragListener) {
+            this.onPlayerClickOrDragListener = onPlayerClickOrDragListener;
         }
 
         @SuppressLint("ClickableViewAccessibility")
@@ -301,8 +300,8 @@ public class PlayerView extends LinearLayout {
                 case MotionEvent.ACTION_UP:
                     long clickDuration = System.currentTimeMillis() - startClickTime;
                     if (!isDragging && clickDuration < MAX_CLICK_DURATION) {
-                        if (onPlayerDragListener != null) {
-                            onPlayerDragListener.onClickPlayer((PlayerView) view);
+                        if (onPlayerClickOrDragListener != null) {
+                            onPlayerClickOrDragListener.onClickPlayer((PlayerView) view);
                         }
                     }
                     return true;
@@ -314,10 +313,10 @@ public class PlayerView extends LinearLayout {
     }
 
     private static class DragListener implements OnDragListener {
-        OnPlayerDragListener onPlayerDragListener;
+        OnPlayerClickOrDragListener onPlayerClickOrDragListener;
 
-        public DragListener(OnPlayerDragListener onPlayerDragListener) {
-            this.onPlayerDragListener = onPlayerDragListener;
+        public DragListener(OnPlayerClickOrDragListener onPlayerClickOrDragListener) {
+            this.onPlayerClickOrDragListener = onPlayerClickOrDragListener;
         }
 
         @Override
@@ -334,7 +333,7 @@ public class PlayerView extends LinearLayout {
                     View dropTargetView = v;
 
                     // Handle the logic for swapping the players here
-                    if (onPlayerDragListener != null) {
+                    if (onPlayerClickOrDragListener != null) {
                         int fromPosition = getViewPosition(draggedView);
                         int toPosition = getViewPosition(dropTargetView);
 
@@ -343,16 +342,16 @@ public class PlayerView extends LinearLayout {
 
                         // Example of drag handling
                         if (draggedPlayerView.getPlayerData().getPosition() == 1 && dropTargetPlayerView.getPlayerData().getPosition() == 12) {
-                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, true);
+                            onPlayerClickOrDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, true);
                         } else if (draggedPlayerView.getPlayerData().getPosition() == 12 && dropTargetPlayerView.getPlayerData().getPosition() == 1) {
-                            onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, true);
+                            onPlayerClickOrDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, true);
                         } else if (draggedPlayerView.getPlayerData().getPosition() > 12) {
                             if (dropTargetPlayerView.getPlayerData().getPosition() != 1 && dropTargetPlayerView.getPlayerData().getPosition() != 12) {
-                                onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, dropTargetPlayerView.getPlayerData().getPosition() <= 13);
+                                onPlayerClickOrDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, dropTargetPlayerView.getPlayerData().getPosition() <= 13);
                             }
                         } else if (draggedPlayerView.getPlayerData().getPosition() > 1 && draggedPlayerView.getPlayerData().getPosition() < 12) {
                             if (dropTargetPlayerView.getPlayerData().getPosition() > 12) {
-                                onPlayerDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, true);
+                                onPlayerClickOrDragListener.onPlayerDragged(fromPosition, toPosition, draggedPlayerView, dropTargetPlayerView, true);
                             }
                         }
                     }

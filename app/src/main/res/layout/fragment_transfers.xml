@@ -66,7 +66,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/footballFieldLayout">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonBB"
+                    android:id="@+id/buttonAutoPick"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -74,13 +74,13 @@
                     android:textSize="12sp"
                     app:cornerRadius="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/buttonTC"
+                    app:layout_constraintEnd_toStartOf="@id/buttonWildCard"
                     app:layout_constraintHorizontal_chainStyle="spread"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonTC"
+                    android:id="@+id/buttonWildCard"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -89,7 +89,7 @@
                     app:cornerRadius="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/buttonFH"
-                    app:layout_constraintStart_toEndOf="@id/buttonBB"
+                    app:layout_constraintStart_toEndOf="@id/buttonAutoPick"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.button.MaterialButton
@@ -102,7 +102,7 @@
                     app:cornerRadius="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/buttonTC"
+                    app:layout_constraintStart_toEndOf="@id/buttonWildCard"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -146,10 +146,9 @@
 
                     <!-- TextView 1 -->
                     <TextView
-                        android:id="@+id/transfer_count"
+                        android:id="@+id/transfer_made"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Transfer Made : 2"
                         android:textColor="@color/black" />
 
                     <!-- TextView 2 -->
@@ -157,7 +156,6 @@
                         android:id="@+id/transfer_calculation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cost : 4, FT : 1"
                         android:textColor="@color/black" />
 
                     <!-- TextView 3 -->
@@ -165,7 +163,6 @@
                         android:id="@+id/bank_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="In Bank : "
                         android:textColor="@color/black" />
 
                     <TextView

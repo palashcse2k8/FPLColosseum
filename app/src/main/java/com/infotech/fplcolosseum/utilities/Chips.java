@@ -3,7 +3,9 @@ package com.infotech.fplcolosseum.utilities;
 public enum Chips {
     BB("Bench Boost", -1, "bboost"),
     FH("Free Hit", -1, "freehit"),
-    TC("Triple Captain", -1, "3xc");
+    TC("Triple Captain", -1, "3xc"),
+    WC("WildCard", -1, "wildcard"),
+    AP("AutoPick", -1, "ap");
 
     private final String displayName;
     private final int iconResourceId;

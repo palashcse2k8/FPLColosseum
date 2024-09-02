@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
+import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 
 public class OverlayView extends LinearLayout {
@@ -119,10 +119,10 @@ class TouchListener implements View.OnTouchListener {
 
 class DragListener implements View.OnDragListener {
 
-    OnPlayerDragListener onPlayerDragListener;
+    OnPlayerClickOrDragListener onPlayerClickOrDragListener;
 
-    public DragListener(OnPlayerDragListener onPlayerDragListener) {
-        this.onPlayerDragListener = onPlayerDragListener;
+    public DragListener(OnPlayerClickOrDragListener onPlayerClickOrDragListener) {
+        this.onPlayerClickOrDragListener = onPlayerClickOrDragListener;
     }
 
     @Override

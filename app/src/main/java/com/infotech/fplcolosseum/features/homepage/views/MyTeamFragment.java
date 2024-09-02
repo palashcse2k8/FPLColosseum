@@ -5,7 +5,6 @@ import static com.infotech.fplcolosseum.utilities.ButtonStateManager.updateButto
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayer;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayerList;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.prepareData;
-import static com.infotech.fplcolosseum.utilities.CustomUtil.printTeamPlayers;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.updateFixtureData;
 
 import android.annotation.SuppressLint;
@@ -34,7 +33,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.button.MaterialButton;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
-import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerDragListener;
+import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
 import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
@@ -59,7 +58,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MyTeamFragment extends Fragment implements OnPlayerDragListener, PlayerInfoUpdateListener {
+public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListener, PlayerInfoUpdateListener {
 
     FragmentMyteamBinding binding;
 
@@ -586,7 +585,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
 
 
     private void showBottomSheetDialogue(PlayersData playersData) {
-        PlayerInfoBottomSheetFragment bottomSheet = PlayerInfoBottomSheetFragment.newInstance(playersData);
+        MyTeamPlayerInfoBottomSheetFragment bottomSheet = MyTeamPlayerInfoBottomSheetFragment.newInstance(playersData);
         bottomSheet.setPlayerInfoUpdateListener(this);
         bottomSheet.show(requireActivity().getSupportFragmentManager(), bottomSheet.getTag());
     }
@@ -818,9 +817,9 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
         setupButton(binding.buttonFH, Chips.FH.getDisplayName());
 
         Map<String, MaterialButton> chipButtons = new HashMap<>();
-        chipButtons.put("bboost", binding.buttonBB);
-        chipButtons.put("3xc", binding.buttonTC);
-        chipButtons.put("freehit", binding.buttonFH);
+        chipButtons.put(Chips.BB.getShortName(), binding.buttonBB);
+        chipButtons.put(Chips.TC.getShortName(), binding.buttonTC);
+        chipButtons.put(Chips.FH.getShortName(), binding.buttonFH);
 
         for (GameChips chip : chips) {
             MaterialButton button = chipButtons.get(chip.getName());
@@ -843,37 +842,6 @@ public class MyTeamFragment extends Fragment implements OnPlayerDragListener, Pl
                 updateButtonState(context, button, state);
             }
         }
-
-//        for (GameChips chip : chips) {
-//            if (chip.getName().equalsIgnoreCase(Chips.BB.getShortName())) {
-//                if (chip.getStatus_for_entry().equalsIgnoreCase("available")) {
-//                    updateButtonState(context, binding.buttonBB, ButtonStateManager.ButtonState.AVAILABLE);
-//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("active")) {
-//                    updateButtonState(context, binding.buttonBB, ButtonStateManager.ButtonState.ACTIVE);
-//                    activeChip = Chips.BB.getShortName();
-//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("unavailable")) {
-//                    updateButtonState(context, binding.buttonBB, ButtonStateManager.ButtonState.NOT_AVAILABLE);
-//                }
-//            } else if (chip.getName().equalsIgnoreCase(Chips.TC.getShortName())) {
-//                if (chip.getStatus_for_entry().equalsIgnoreCase("available")) {
-//                    updateButtonState(context, binding.buttonTC, ButtonStateManager.ButtonState.AVAILABLE);
-//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("active")) {
-//                    updateButtonState(context, binding.buttonTC, ButtonStateManager.ButtonState.ACTIVE);
-//                    activeChip = Chips.TC.getShortName();
-//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("unavailable")) {
-//                    updateButtonState(context, binding.buttonTC, ButtonStateManager.ButtonState.NOT_AVAILABLE);
-//                }
-//            } else if (chip.getName().equalsIgnoreCase(Chips.FH.getShortName())) {
-//                if (chip.getStatus_for_entry().equalsIgnoreCase("available")) {
-//                    updateButtonState(context, binding.buttonFH, ButtonStateManager.ButtonState.AVAILABLE);
-//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("active")) {
-//                    updateButtonState(context, binding.buttonFH, ButtonStateManager.ButtonState.ACTIVE);
-//                    activeChip = Chips.FH.getShortName();
-//                } else if (chip.getStatus_for_entry().equalsIgnoreCase("unavailable")) {
-//                    updateButtonState(context, binding.buttonFH, ButtonStateManager.ButtonState.NOT_AVAILABLE);
-//                }
-//            }
-//        }
     }
 
     private void setupButton(final MaterialButton button, final String buttonName) {
