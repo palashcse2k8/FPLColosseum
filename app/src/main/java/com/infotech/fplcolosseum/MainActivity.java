@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements ToolbarChangeListener {
+public class MainActivity extends AppCompatActivity {
 
     private SharedViewModel sharedViewModel;
     @Override
@@ -91,29 +91,29 @@ public class MainActivity extends AppCompatActivity implements ToolbarChangeList
 
     }
 
-    @Override
-    public void onToolbarChanged(Toolbar newToolbar) {
-//        getSupportActionBar().hide();
-//        setSupportActionBar(newToolbar);
-        Log.d("MainActivity", "onToolbarChanged called with: " + newToolbar);
-        Toolbar defaultToolbar = findViewById(R.id.toolbar);
-        Log.d("MainActivity", "onToolbarChanged default toolbar with: " + defaultToolbar);
-
-        if (newToolbar != null) {
-
-            // Remove newToolbar from its current parent, if any
-            ViewGroup parentViewGroup = (ViewGroup) newToolbar.getParent();
-            if (parentViewGroup != null) {
-                parentViewGroup.removeView(newToolbar);
-            }
-
-            AppBarLayout appBarLayout = findViewById(R.id.appbarLayout);
-            appBarLayout.removeView(defaultToolbar);
-            appBarLayout.addView(newToolbar);
-            setSupportActionBar(newToolbar);
-            Log.d("MainActivity", "setSupportActionBar called with: " + newToolbar);
-        } else {
-            Log.e("MainActivity", "New toolbar is null");
-        }
-    }
+//    @Override
+//    public void onToolbarChanged(Toolbar newToolbar) {
+////        getSupportActionBar().hide();
+////        setSupportActionBar(newToolbar);
+//        Log.d("MainActivity", "onToolbarChanged called with: " + newToolbar);
+//        Toolbar defaultToolbar = findViewById(R.id.toolbar);
+//        Log.d("MainActivity", "onToolbarChanged default toolbar with: " + defaultToolbar);
+//
+//        if (newToolbar != null) {
+//
+//            // Remove newToolbar from its current parent, if any
+//            ViewGroup parentViewGroup = (ViewGroup) newToolbar.getParent();
+//            if (parentViewGroup != null) {
+//                parentViewGroup.removeView(newToolbar);
+//            }
+//
+//            AppBarLayout appBarLayout = findViewById(R.id.appbarLayout);
+//            appBarLayout.removeView(defaultToolbar);
+//            appBarLayout.addView(newToolbar);
+//            setSupportActionBar(newToolbar);
+//            Log.d("MainActivity", "setSupportActionBar called with: " + newToolbar);
+//        } else {
+//            Log.e("MainActivity", "New toolbar is null");
+//        }
+//    }
 }

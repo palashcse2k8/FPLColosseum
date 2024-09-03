@@ -20,6 +20,7 @@ import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
 import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
 import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment;
 import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment_;
+import com.infotech.fplcolosseum.features.homepage.views.PlayerSelectionFragment;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 import com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel;
@@ -109,6 +110,17 @@ public class LoginFragment extends Fragment {
         //TODO
         binding.buttonGuestUser.setOnClickListener(v -> {
 //            goToHomePage();
+
+            FragmentUtils.replace(
+                    requireActivity().getSupportFragmentManager(),
+                    new PlayerSelectionFragment(),
+                    R.id.contentFrame,
+                    true,
+                    R.anim.enter_from_right, // enter
+                    R.anim.exit_to_left,      // exit
+                    R.anim.enter_from_right,   // popEnter
+                    R.anim.exit_to_left      // popExit
+            );
         });
     }
 

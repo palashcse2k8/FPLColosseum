@@ -21,18 +21,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.blankj.utilcode.util.FragmentUtils;
 import com.google.android.material.button.MaterialButton;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentTransfersBinding;
+import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerTransferListener;
@@ -71,7 +77,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
     private LocalDateTime endTime;
     boolean isRefreshVisible = true;  // Hide refresh button
-    boolean isShareVisible = true;    // Show share button
+    boolean isShareVisible = false;    // Show share button
     boolean isSaveVisible = false;
     boolean isClearVisible = false;
 
@@ -105,7 +111,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
             entry_id = args.getLong(ARG_ITEM_DATA);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-        setHasOptionsMenu(true);
+//        setHasOptionsMenu(true);
         setRetainInstance(true);
     }
 
@@ -117,60 +123,119 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         binding.setMyTeamViewModel(viewModel);
         viewModel.dataLoading.setValue(true);
         binding.setLifecycleOwner(this);
+
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+
+                // Inflate the menu; this adds items to the action bar if it is present.
+                menuInflater.inflate(R.menu.my_team_menu, menu);
+
+                for (int i = 0; i < menu.size(); i++) {
+                    MenuItem item = menu.getItem(i);
+                    item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                }
+
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+
+                // Handle option Menu Here
+                // Handle action bar item clicks here
+                int id = menuItem.getItemId();
+
+                if (id == R.id.action_undo) {
+                    handleUndoClick();
+                    return true;
+                } else if (id == R.id.action_refresh) {
+                    handleRefreshClick();
+                    return true;
+                } else if (id == R.id.action_share) {
+                    handleShareClick();
+                    return true;
+                } else if (id == R.id.action_save) {
+                    handleSaveClick();
+                    return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onPrepareMenu(@NonNull Menu menu) {
+
+                MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+                MenuItem shareItem = menu.findItem(R.id.action_share);
+                MenuItem saveItem = menu.findItem(R.id.action_save);
+                MenuItem clearItem = menu.findItem(R.id.action_undo);
+
+
+                // Set visibility based on your conditions
+                refreshItem.setVisible(isRefreshVisible);
+                shareItem.setVisible(isShareVisible);
+                saveItem.setVisible(isSaveVisible);
+                clearItem.setVisible(isClearVisible);
+
+                MenuProvider.super.onPrepareMenu(menu);
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+
+
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.my_team_menu, menu);
-
-        for (int i = 0; i < menu.size(); i++) {
-            MenuItem item = menu.getItem(i);
-            item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        }
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
-        MenuItem shareItem = menu.findItem(R.id.action_share);
-        MenuItem saveItem = menu.findItem(R.id.action_save);
-        MenuItem clearItem = menu.findItem(R.id.action_undo);
-
-
-        // Set visibility based on your conditions
-        refreshItem.setVisible(isRefreshVisible);
-        shareItem.setVisible(isShareVisible);
-        saveItem.setVisible(isSaveVisible);
-        clearItem.setVisible(isClearVisible);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here
-        int id = item.getItemId();
-
-        if (id == R.id.action_undo) {
-            handleUndoClick();
-            return true;
-        } else if (id == R.id.action_refresh) {
-            handleRefreshClick();
-            return true;
-        } else if (id == R.id.action_share) {
-            handleShareClick();
-            return true;
-        } else if (id == R.id.action_save) {
-            handleSaveClick();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        inflater.inflate(R.menu.my_team_menu, menu);
+//
+//        for (int i = 0; i < menu.size(); i++) {
+//            MenuItem item = menu.getItem(i);
+//            item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+//        }
+//
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
+//
+//    @Override
+//    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+//        super.onPrepareOptionsMenu(menu);
+//
+//        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+//        MenuItem shareItem = menu.findItem(R.id.action_share);
+//        MenuItem saveItem = menu.findItem(R.id.action_save);
+//        MenuItem clearItem = menu.findItem(R.id.action_undo);
+//
+//
+//        // Set visibility based on your conditions
+//        refreshItem.setVisible(isRefreshVisible);
+//        shareItem.setVisible(isShareVisible);
+//        saveItem.setVisible(isSaveVisible);
+//        clearItem.setVisible(isClearVisible);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here
+//        int id = item.getItemId();
+//
+//        if (id == R.id.action_undo) {
+//            handleUndoClick();
+//            return true;
+//        } else if (id == R.id.action_refresh) {
+//            handleRefreshClick();
+//            return true;
+//        } else if (id == R.id.action_share) {
+//            handleShareClick();
+//            return true;
+//        } else if (id == R.id.action_save) {
+//            handleSaveClick();
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     private void handleUndoClick() {
 
@@ -671,6 +736,17 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     @Override
     public void onTransferPlayer(PlayersData player) {
 
+        // go to player selection
+        FragmentUtils.replace(
+                requireActivity().getSupportFragmentManager(),
+                new PlayerSelectionFragment(),
+                R.id.contentFrame,
+                true,
+                R.anim.enter_from_right, // enter
+                R.anim.exit_to_left,      // exit
+                R.anim.enter_from_right,   // popEnter
+                R.anim.exit_to_left      // popExit
+        );
     }
 
     @Override
