@@ -10,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.views.PlayerSelectionBottomSheetFragment;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.ArrayList;
@@ -27,9 +29,11 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
     private List<PlayersData> playersList;
     private List<PlayersData> filteredList;
     private final OnPlayerClickListener onPlayerClickListener;
+    private FragmentActivity activity;
 
-    public PlayerListAdapter(List<PlayersData> playersList, OnPlayerClickListener listener) {
+    public PlayerListAdapter(List<PlayersData> playersList, OnPlayerClickListener listener, FragmentActivity activity) {
         this.playersList = playersList;
+        this.activity = activity;
 
         if(this.playersList != null) {
             this.filteredList = new ArrayList<>(playersList);
@@ -49,6 +53,12 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
     public void onBindViewHolder(@NonNull PlayerViewHolder holder, int position) {
         PlayersData player = filteredList.get(position);
         holder.bind(player);
+        holder.itemView.setOnClickListener(v -> {
+            // Open the bottom sheet
+            PlayerSelectionBottomSheetFragment bottomSheet = PlayerSelectionBottomSheetFragment.newInstance(player);
+            bottomSheet.show(activity.getSupportFragmentManager(), "PlayerBottomSheet");
+        });
+
     }
 
     @Override
@@ -135,6 +145,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
                     onPlayerClickListener.onPlayerClick(playersList.get(getAdapterPosition()));
                 }
             });
+
+
         }
 
         public void bind(PlayersData player) {

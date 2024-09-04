@@ -1,5 +1,8 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
+import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.TRANSFERRED_PLAYER_DATA;
+import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.TRANSFER_REQUEST_KEY;
+
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +37,27 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     private RecyclerView recyclerView;
     private PlayerListAdapter adapter;
     private List<PlayersData> playersList;
+    private PlayersData transferredPlayerData;
+
+    public static String SELECTED_PLAYER_DATA = "selected_player_data";
+    public static String REQUEST_KEY = "requestKey";
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (getArguments() != null) {
+            transferredPlayerData = (PlayersData) getArguments().getSerializable(TRANSFERRED_PLAYER_DATA);
+        }
+    }
+
+    public static PlayerSelectionFragment newInstance(PlayersData playerData) {
+        PlayerSelectionFragment fragment = new PlayerSelectionFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(TRANSFERRED_PLAYER_DATA, playerData);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -56,39 +81,12 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         recyclerView = view.findViewById(R.id.player_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new PlayerListAdapter(playersList, this::onPlayerSelected);
+        adapter = new PlayerListAdapter(playersList, this::onPlayerSelected, requireActivity());
         fetchPlayersFromApi();
         recyclerView.setAdapter(adapter);
 
         return view;
     }
-
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//
-//        // Clear the previous menu items
-////        menu.clear();
-//
-//        inflater.inflate(R.menu.menu_player_search, menu);
-//
-//        MenuItem searchItem = menu.findItem(R.id.action_search);
-//        SearchView searchView = (SearchView) searchItem.getActionView();
-//
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                adapter.getFilter().filter(newText);
-//                return true;
-//            }
-//        });
-//
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
 
     private void fetchPlayersFromApi() {
         // Simulating API call
@@ -104,6 +102,19 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Set the listener on the child fragmentManager.
+        getParentFragmentManager()
+                .setFragmentResultListener(REQUEST_KEY, this, new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+//
+                        bundle.putSerializable(TRANSFERRED_PLAYER_DATA, transferredPlayerData);
+                        // The child fragment needs to still set the result on its parent fragment manager.
+                        getParentFragmentManager().setFragmentResult(TRANSFER_REQUEST_KEY, bundle);
+
+                        requireActivity().getSupportFragmentManager().popBackStack();
+                    }
+                });
     }
 
     public void sortPlayersByPrice() {
@@ -112,19 +123,6 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
 
     @Override
     public void onPrepareMenu(@NonNull Menu menu) {
-
-        //                MenuItem refreshItem = menu.findItem(R.id.action_refresh);
-//                MenuItem shareItem = menu.findItem(R.id.action_share);
-//                MenuItem saveItem = menu.findItem(R.id.action_save);
-//                MenuItem clearItem = menu.findItem(R.id.action_undo);
-//
-//
-//                // Set visibility based on your conditions
-//                refreshItem.setVisible(isRefreshVisible);
-//                shareItem.setVisible(isShareVisible);
-//                saveItem.setVisible(isSaveVisible);
-//                clearItem.setVisible(isClearVisible);
-//                menu.clear();
 
         // Instead of clearing the entire menu, selectively show/hide items
         for (int i = 0; i < menu.size(); i++) {
@@ -143,9 +141,6 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
 
-        // Inflate the menu; this adds items to the action bar if it is present.
-//                menuInflater.inflate(R.menu.my_team_menu, menu);
-//
 //        menu.clear(); // Clear any existing menu items
         menuInflater.inflate(R.menu.menu_player_search, menu);
 

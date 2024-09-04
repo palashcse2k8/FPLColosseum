@@ -13,6 +13,7 @@ import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.PointsMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekTransferUpdateModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.concurrent.CountDownLatch;
@@ -24,6 +25,8 @@ public class HomePageSharedViewModel extends AndroidViewModel {
     public MutableLiveData<Long> managerID;
 
     private final MediatorLiveData<ApiResponse<?>> myTeamApiResultLiveData;
+    private final MediatorLiveData<ApiResponse<?>> transferApiResultLiveData;
+
     private final MediatorLiveData<ApiResponse<?>> fixtureApiResultLiveData;
     public MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(false);
     public MutableLiveData<Boolean> dataLoadingDone;
@@ -37,9 +40,11 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         super(application);
         this.dataRepository = new UserGameWeekDataRepository(application);
         this.myTeamApiResultLiveData = new MediatorLiveData<>();
+        this.transferApiResultLiveData = new MediatorLiveData<>();
         this.fixtureApiResultLiveData = new MediatorLiveData<>();
         myTeamMergedMediatorLiveData = new MediatorLiveData<>();
         pointsMergedMediatorLiveData = new MediatorLiveData<>();
+
     }
 
     public void getMyTeamMergedData(long managerID) {
@@ -205,6 +210,10 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         return myTeamApiResultLiveData;
     }
 
+    public LiveData<ApiResponse<?>> getTransferApiResultLiveData() {
+        return transferApiResultLiveData;
+    }
+
     public LiveData<ApiResponse<MyTeamMergedResponseModel>> getMyTeamMergedResponseLiveData() {
         return myTeamMergedMediatorLiveData;
     }
@@ -265,6 +274,16 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         myTeamApiResultLiveData.addSource(dataRepository.updateMyTeam(entry_id, updateModel), userResponseModelApiResponse -> {
             dataLoading.setValue(false);
             myTeamApiResultLiveData.setValue(userResponseModelApiResponse);
+        });
+    }
+
+    public void transferMyTeam(GameWeekTransferUpdateModel updateModel) {
+
+        dataLoading.setValue(true);
+        // Make API call through the repository
+        transferApiResultLiveData.addSource(dataRepository.transferMyTeam(updateModel), userResponseModelApiResponse -> {
+            dataLoading.setValue(false);
+            transferApiResultLiveData.setValue(userResponseModelApiResponse);
         });
     }
 }

@@ -2,6 +2,8 @@ package com.infotech.fplcolosseum.features.homepage.views;
 
 import static com.infotech.fplcolosseum.utilities.ButtonStateManager.getButtonState;
 import static com.infotech.fplcolosseum.utilities.ButtonStateManager.updateButtonState;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayer;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayerList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,16 +23,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -38,21 +39,25 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.google.android.material.button.MaterialButton;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentTransfersBinding;
-import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
-import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerTransferListener;
 import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameChips;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekTransferUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.TransferUpdate;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.Transfers;
+import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.ButtonStateManager;
 import com.infotech.fplcolosseum.utilities.Chips;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
+import com.infotech.fplcolosseum.utilities.ToastLevel;
+import com.infotech.fplcolosseum.utilities.UIUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -62,6 +67,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import es.dmoral.toasty.Toasty;
+
 public class TransferFragment extends Fragment implements OnPlayerClickOrDragListener, PlayerTransferListener {
 
     FragmentTransfersBinding binding;
@@ -69,21 +76,29 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     HomePageSharedViewModel viewModel;
 
     private static final String ARG_ITEM_DATA = "entry_id";
+    public static String PLAYER_DATA = "selected_player_data";
+    public static String TRANSFERRED_PLAYER_DATA = "transferred_player_data";
+    public static String TRANSFER_REQUEST_KEY = "transfer_request_key";
 
     private long entry_id;
 
     private List<PlayersData> teamPlayers;
+    private List<PlayersData> initialTeamPlayers;
     private List<PlayerView> playerViewList;
 
     private LocalDateTime endTime;
     boolean isRefreshVisible = true;  // Hide refresh button
-    boolean isShareVisible = false;    // Show share button
+    boolean isShareVisible = true;    // Show share button
     boolean isSaveVisible = false;
     boolean isClearVisible = false;
 
     String activeChip;
     GameWeekMyTeamResponseModel initialResponse;
     Transfers currentTransfer;
+
+    Map<Long, Map<PlayersData, PlayersData>> transferredPlayerList = new HashMap<>();
+    Map<Long, TransferUpdate> transferredPlayerListNew = new HashMap<>();
+
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable countdownRunnable = new Runnable() {
         @Override
@@ -111,6 +126,66 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
             entry_id = args.getLong(ARG_ITEM_DATA);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
+
+        // Set the listener on the child fragmentManager.
+        getParentFragmentManager()
+                .setFragmentResultListener(TRANSFER_REQUEST_KEY, this, new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                        PlayersData selectedPlayer = (PlayersData) bundle.getSerializable(PLAYER_DATA);
+                        PlayersData transferredPlayer = (PlayersData) bundle.getSerializable(TRANSFERRED_PLAYER_DATA);
+
+                        // trigger ui change with the new selected player
+                        selectedPlayer.setPurchase_price(selectedPlayer.getNow_cost());
+                        selectedPlayer.setSelling_price(selectedPlayer.getNow_cost()); // update the price with selling price
+                        int transferredPlayerIndex = (int) transferredPlayer.getPosition() - 1;
+                        selectedPlayer.setSubstitute_number(transferredPlayerIndex + 1);
+                        selectedPlayer.setPosition(transferredPlayer.getPosition());
+
+                        teamPlayers.set(transferredPlayerIndex, selectedPlayer);
+                        updateFieldUI(binding.footballFieldLayout);
+
+                        long updatedBankBalance = transferredPlayer.getPurchase_price() + currentTransfer.getBank() - selectedPlayer.getPurchase_price();
+                        currentTransfer.setBank(updatedBankBalance);
+                        long transferCount = currentTransfer.getMade();
+                        currentTransfer.setMade(++transferCount);
+
+                        updateTransferInfo(currentTransfer);
+
+                        enableEditToolBar();
+
+                        //store transferred player list
+
+//                        Map<PlayersData, PlayersData> previousData = transferredPlayerList.get(transferredPlayer.getPosition());
+                        TransferUpdate previousData = transferredPlayerListNew.get(transferredPlayer.getPosition());
+
+//                        if (previousData != null && !previousData.isEmpty()) {
+//                            // Find the first (and presumably only) entry in the inner map
+//                            Map.Entry<PlayersData, PlayersData> entry = previousData.entrySet().iterator().next();
+//                            PlayersData existingKey = entry.getKey();
+//
+//                            // Update the value for the existing key
+//                            previousData.put(existingKey, selectedPlayer);
+//                        } else {
+//                            // If the position doesn't exist or the inner map is empty, add a new entry
+//                            transferredPlayerList
+//                                    .computeIfAbsent(transferredPlayer.getPosition(), k -> new HashMap<>())
+//                                    .put(transferredPlayer, selectedPlayer); // Using newValue as both key and value here
+//                        }
+
+                        if(previousData != null) {
+                            previousData.setElement_out(selectedPlayer.getId());
+                           previousData.setPurchase_price((selectedPlayer.getPurchase_price() * 10) + "");
+                        } else {
+                            TransferUpdate transferUpdate = new TransferUpdate();
+                            transferUpdate.setElement_in(selectedPlayer.getId());
+                            transferUpdate.setElement_out(transferredPlayer.getId());
+                            transferUpdate.setSelling_price((transferredPlayer.getSelling_price() * 10) + "");
+                            transferUpdate.setPurchase_price((selectedPlayer.getPurchase_price() * 10) + "");
+                        }
+
+                    }
+                });
 //        setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -185,69 +260,20 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         return rootView;
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        inflater.inflate(R.menu.my_team_menu, menu);
-//
-//        for (int i = 0; i < menu.size(); i++) {
-//            MenuItem item = menu.getItem(i);
-//            item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-//        }
-//
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
-//
-//    @Override
-//    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-//        super.onPrepareOptionsMenu(menu);
-//
-//        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
-//        MenuItem shareItem = menu.findItem(R.id.action_share);
-//        MenuItem saveItem = menu.findItem(R.id.action_save);
-//        MenuItem clearItem = menu.findItem(R.id.action_undo);
-//
-//
-//        // Set visibility based on your conditions
-//        refreshItem.setVisible(isRefreshVisible);
-//        shareItem.setVisible(isShareVisible);
-//        saveItem.setVisible(isSaveVisible);
-//        clearItem.setVisible(isClearVisible);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here
-//        int id = item.getItemId();
-//
-//        if (id == R.id.action_undo) {
-//            handleUndoClick();
-//            return true;
-//        } else if (id == R.id.action_refresh) {
-//            handleRefreshClick();
-//            return true;
-//        } else if (id == R.id.action_share) {
-//            handleShareClick();
-//            return true;
-//        } else if (id == R.id.action_save) {
-//            handleSaveClick();
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     private void handleUndoClick() {
 
         // Logic for undo button
-        // update the player list view
-
-        resetToolBar();
+        updateChipsStatus(requireContext(), viewModel.getMyTeamMergedResponseLiveData().getValue().getData().getGameWeekMyTeamResponseModel().getChips());
+        this.teamPlayers = deepCopyPlayerList(this.initialTeamPlayers);
+        updateFieldUI(binding.footballFieldLayout); //update the player list view
+        resetToolBar(); // reset the toolbar
     }
 
     private void handleRefreshClick() {
         // Logic for refresh button
-        Toast.makeText(getActivity(), "Refresh clicked", Toast.LENGTH_SHORT).show();
+        binding.footballFieldLayout.removeAllViews();
+        viewModel.getMyTeamMergedData(Constants.LoggedInUser.getPlayer().getEntry());
+        resetToolBar();
     }
 
     private void handleShareClick() {
@@ -257,7 +283,40 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
     private void handleSaveClick() {
 
-        Toast.makeText(getActivity(), "Save clicked", Toast.LENGTH_SHORT).show();
+        // Logic for save button
+        GameWeekTransferUpdateModel updateModel = new GameWeekTransferUpdateModel();
+
+        updateModel.setChip(activeChip); // add chips data
+        updateModel.setEntry(Constants.LoggedInUser.getPlayer().getEntry() + "");
+        updateModel.setEvent(Constants.nextGameWeek);
+
+        //add player data
+        ArrayList<TransferUpdate> transferUpdateList = new ArrayList<>(this.transferredPlayerListNew.values());
+        updateModel.setTransfers(transferUpdateList);
+
+        //add chips data
+        //TODO
+
+        viewModel.transferMyTeam(updateModel);
+        viewModel.getTransferApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+
+            if (apiResponse == null) return;
+            switch (apiResponse.getStatus()) {
+                case LOADING:
+                    showLoading();
+                    break;
+                case SUCCESS:
+                    viewModel.dataLoading.setValue(false);
+
+                    viewModel.getMyTeamMergedData(Constants.LoggedInUser.getPlayer().getEntry());
+                    resetToolBar(); // reset toolbar action
+
+                    break;
+                case ERROR:
+                    showFailure(apiResponse.getMessage());
+                    break;
+            }
+        });
     }
 
     private void resetToolBar() {
@@ -305,9 +364,6 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Find the GridLayout in your fragment layout
-        GridLayout footballFieldLayout = view.findViewById(R.id.footballFieldLayout);
-
         endTime = LocalDateTime.of(2024, 12, 31, 23, 59, 59);
 
         // Add players to the football field (customize positions as needed)
@@ -335,27 +391,44 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
     private void updateUI(GameWeekMyTeamResponseModel response) {
         updateChipsStatus(requireContext(), response.getChips()); //update chips
-        updatePlayersUI(binding.footballFieldLayout, response);
+        updateTeamPlayers(response.getPicks()); // update team player
+        updateFieldUI(binding.footballFieldLayout);
         currentTransfer = response.getTransfers(); // hold the data for next update
         updateTransferInfo(currentTransfer);
     }
 
-    private void addPlayers(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel myTeam) {
+    private void updateTeamPlayers(ArrayList<MyTeamPicks> picks) {
 
         this.teamPlayers = new ArrayList<>();
-        this.playerViewList = new ArrayList<>();
+        for (MyTeamPicks myTeamPicks : picks) {
+            PlayersData playersData = deepCopyPlayer(Constants.playerMap.get(myTeamPicks.getElement()));
 
-        for (MyTeamPicks myTeamPicks : myTeam.getPicks()) {
-            PlayersData playersData = Constants.playerMap.get(myTeamPicks.getElement());
-            assert playersData != null;
-            playersData.setIs_captain(myTeamPicks.getIs_captain());
-            playersData.setIs_vice_captain(myTeamPicks.getIs_vice_captain());
-            playersData.setSelling_price(myTeamPicks.getSelling_price());
-            playersData.setPurchase_price(myTeamPicks.getPurchase_price());
-            playersData.setMultiplier(myTeamPicks.getMultiplier());
-            playersData.setPosition(myTeamPicks.getMultiplier());
-            teamPlayers.add(playersData);
+            if (playersData != null) {
+                playersData.setIs_captain(myTeamPicks.getIs_captain());
+                playersData.setIs_vice_captain(myTeamPicks.getIs_vice_captain());
+                playersData.setPosition(myTeamPicks.getPosition());
+                playersData.setSelling_price(myTeamPicks.getSelling_price());
+                playersData.setPurchase_price(myTeamPicks.getPurchase_price());
+                playersData.setMultiplier(myTeamPicks.getMultiplier());
+                playersData.setSingular_name_short(Objects.requireNonNull(Constants.playerTypeMap.get(playersData.getElement_type())).getSingular_name_short());
+                playersData.setTeam_name_short(Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getShort_name());
+                playersData.setTeam_name_full(Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getName());
+                teamPlayers.add(playersData);
+            } else {
+                UIUtils.toast(requireContext(), "Player data is null please reload again", ToastLevel.WARNING);
+                return;
+            }
         }
+
+        this.initialTeamPlayers = deepCopyPlayerList(this.teamPlayers);
+
+//        Log.d(Constants.LOG_TAG, "Initial Team Players");
+//        printTeamPlayers(this.initialTeamPlayers);
+    }
+
+    private void addPlayers(GridLayout footballFieldLayout) {
+
+        this.playerViewList = new ArrayList<>();
 
         List<PlayersData> goalkeepers = new ArrayList<>();
         List<PlayersData> defenders = new ArrayList<>();
@@ -383,7 +456,6 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         }
 
         //Adding players to the ui
-
         addPlayerNew(goalkeepers.get(0), 0, 1, footballFieldLayout); // playing goalkeeper
         addPlayerNew(goalkeepers.get(1), 0, 3, footballFieldLayout); // playing goalkeeper
 
@@ -409,7 +481,6 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         } else {
             Log.d(Constants.LOG_TAG, "Unknown Formation");
         }
-
 
         // formation for forwards
         if (forwards.size() == 3) {
@@ -437,7 +508,6 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
             }
         });
 
-
         //set team name
         String teamName = Objects.requireNonNull(Constants.teamMap.get(player.getTeam())).getShort_name();
         String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(player.getElement_type())).getSingular_name_short();
@@ -461,9 +531,20 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14_1-66.webp for goal keeper shirt
         playerView.setPlayerImage(imgURL);
 
+
+        //set dream player icon
+        if (player.isIn_dreamteam()) {
+            playerView.setDreamTeamPlayer();
+        }
+
         //set availability icon
         if (player.getChance_of_playing_this_round() != null && player.getChance_of_playing_next_round() < 100) {
             playerView.setAvailability(player.getChance_of_playing_next_round());
+        }
+
+        // highlight transfer player
+        if (player.getSubstitute_number() > 0) {
+            playerView.setHighlight("#e9ff32");
         }
 
         //set difficulty color
@@ -540,11 +621,11 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         updateButtonState(context, binding.buttonAutoPick, ButtonStateManager.ButtonState.NOT_AVAILABLE); //
     }
 
-    private void updatePlayersUI(GridLayout footballFieldLayout, GameWeekMyTeamResponseModel data) {
+    private void updateFieldUI(GridLayout footballFieldLayout) {
 
         binding.progressCircular.setVisibility(View.GONE);
         binding.progressCircular.setVisibility(View.GONE);
-        addPlayers(footballFieldLayout, data);
+        addPlayers(footballFieldLayout);
     }
 
     private void setupButton(final MaterialButton button, final String buttonName) {
@@ -632,6 +713,9 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         SpannableString blackSpannable = new SpannableString(blackText);
         builder.append(blackSpannable);
 
+        if (activeChip != null) {
+            transferMade = 0;
+        }
         String redOrGreenText = String.valueOf(transferMade);
         SpannableString redSpannable = new SpannableString(redOrGreenText);
         if (transferMade > limit) {
@@ -659,6 +743,10 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         } else {
             costCalculation = 0;
         }
+
+        if (activeChip != null) {
+            costCalculation = 0;
+        }
         String redOrGreenText = String.valueOf(costCalculation);
         SpannableString redSpannable = new SpannableString(redOrGreenText);
         if (costCalculation < 0) {
@@ -678,6 +766,10 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
             ftCalculation = 0;
         }
         String greenText = String.valueOf(ftCalculation);
+
+        if (activeChip != null) {
+            greenText = "∞";
+        }
         SpannableString greenSpannable = new SpannableString(greenText);
         greenSpannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, greenText.length(), 0);
 
@@ -722,7 +814,6 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
     @Override
     public void onClickPlayer(PlayerView view) {
-        Log.d(Constants.LOG_TAG, "Player Clicked! " + view.player.getPosition());
         showBottomSheetDialogue(view.getPlayerData());
     }
 
@@ -736,10 +827,12 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     @Override
     public void onTransferPlayer(PlayersData player) {
 
+
+        PlayerSelectionFragment playerSelectionFragment = PlayerSelectionFragment.newInstance(player);
         // go to player selection
         FragmentUtils.replace(
                 requireActivity().getSupportFragmentManager(),
-                new PlayerSelectionFragment(),
+                playerSelectionFragment,
                 R.id.contentFrame,
                 true,
                 R.anim.enter_from_right, // enter

@@ -2,6 +2,7 @@ package com.infotech.fplcolosseum.data.sources.network;
 
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekTransferUpdateModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.Map;
@@ -91,6 +92,9 @@ public interface APIServices {
 
     @POST("https://fantasy.premierleague.com/api/my-team/{entry_id}/") //  https://fantasy.premierleague.com/api/my-team/116074/
     Call<ResponseBody> updateMyTeam(@Path("entry_id") long entry_id , @Body GameWeekMyTeamUpdateModel request);
+
+    @POST("https://fantasy.premierleague.com/api/transfers/") //  https://fantasy.premierleague.com/api/transfers/
+    Call<ResponseBody> transferMyTeam(@Body GameWeekTransferUpdateModel request);
 
     @GET("https://fantasy.premierleague.com/api/bootstrap-static/") // https://fantasy.premierleague.com/api/bootstrap-static/
     Call<ResponseBody> getGameWeeKStaticData();

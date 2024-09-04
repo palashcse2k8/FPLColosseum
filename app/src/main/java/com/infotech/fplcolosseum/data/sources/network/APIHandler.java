@@ -79,30 +79,87 @@ public class APIHandler {
 //        }
 //        return null;
 //    }
+
     //special case for login api
     public static <T> LiveData<ApiResponse<T>> makeApiCall(Call<ResponseBody> callingAPI, Class<T> apiResponseType) {
 
         MutableLiveData<ApiResponse<T>> resultLiveData = new MutableLiveData<>();
         // Enqueue the call and handle the response
         callingAPI.enqueue(new Callback<ResponseBody>() {
+
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//
+//                // API call successful
+////                ResponseBody responseBody = response.body();
+////                assert responseBody != null;
+////                try {
+////                    T convertedResponse = convertResponse(responseBody, apiResponseType);
+////                    resultLiveData.postValue(ApiResponse.success(convertedResponse));
+////                } catch (IOException e) {
+////                    resultLiveData.postValue(ApiResponse.error("API call failed", null));
+////                    throw new RuntimeException(e);
+////                }
+//
+//                if (response.isSuccessful()) {
+//                    ResponseBody responseBody = response.body();
+//
+//                    if (responseBody != null) {
+//                        try {
+//                            T convertedResponse = convertResponse(responseBody, apiResponseType);
+//                            resultLiveData.postValue(ApiResponse.success(convertedResponse));
+//                        } catch (IOException e) {
+//                            resultLiveData.postValue(ApiResponse.error("Failed to parse response", null));
+//                            e.printStackTrace();
+//                        }
+//                    } else {
+//                        // Handle case where there is no response body
+//                        resultLiveData.postValue(ApiResponse.success( new T("")));
+//                    }
+//                } else {
+//                    // Handle unsuccessful response
+//                    resultLiveData.postValue(ApiResponse.error("API call failed with status: " + response.code(), null));
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                // API call failed
+//                resultLiveData.postValue(ApiResponse.error("API call failed", null));
+//            }
+
+
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    ResponseBody responseBody = response.body();
 
-                // API call successful
-                ResponseBody responseBody = response.body();
-                assert responseBody != null;
-                try {
-                    T convertedResponse = convertResponse(responseBody, apiResponseType);
-                    resultLiveData.postValue(ApiResponse.success(convertedResponse));
-                } catch (IOException e) {
-                    resultLiveData.postValue(ApiResponse.error("API call failed", null));
-                    throw new RuntimeException(e);
+                    if (responseBody != null) {
+                        try {
+                            T convertedResponse = convertResponse(responseBody, apiResponseType);
+                            resultLiveData.postValue(ApiResponse.success(convertedResponse));
+                        } catch (IOException e) {
+                            resultLiveData.postValue(ApiResponse.error("Failed to parse response", null));
+                            e.printStackTrace();
+                        }
+                    } else {
+                        // Handle case where there is no response body
+                        if (apiResponseType == String.class) {
+                            // Returning a custom string if the type is String and response body is null
+                            resultLiveData.postValue(ApiResponse.success((T) "Success"));
+                        } else {
+                            resultLiveData.postValue(ApiResponse.success(null));
+                        }
+                    }
+                } else {
+                    // Handle unsuccessful response
+                    resultLiveData.postValue(ApiResponse.error("API call failed with status: " + response.code(), null));
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // API call failed
-                resultLiveData.postValue(ApiResponse.error("API call failed", null));
+                resultLiveData.postValue(ApiResponse.error("API call failed: " + t.getMessage(), null));
             }
         });
 

@@ -312,6 +312,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
 
     private void addPlayers(GridLayout footballFieldLayout) {
 
+        this.playerViewList = new ArrayList<>();
         List<PlayersData> defenders = new ArrayList<>();
         List<PlayersData> midfielders = new ArrayList<>();
         List<PlayersData> forwards = new ArrayList<>();
@@ -511,17 +512,6 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
 
         // Apply layout parameters to the PlayerView
         playerView.setLayoutParams(params);
-
-//        playerView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Handle the click event
-//                // You can use the position parameter if needed
-//                // For example, you could start an activity, update the UI, etc.
-//                handleCustomViewClick((PlayerView) v);
-//            }
-//        });
-
 
         // Add the PlayerView to the GridLayout
         footballFieldLayout.addView(playerView);
