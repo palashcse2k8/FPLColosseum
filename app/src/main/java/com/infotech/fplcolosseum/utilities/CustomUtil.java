@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -258,6 +260,21 @@ public class CustomUtil {
         for (PlayersData player : teamPlayers) {
             Log.d("FPLC", player.getPosition() + " -> " + player.getWeb_name() + (player.isIs_captain() ? " Captain" : "") + (player.isIs_vice_captain() ? " Vice Captain" : ""));
         }
+    }
+
+    public static boolean hasMoreThanThreePlayersFromSameTeam(List<PlayersData> players) {
+        // Group players by their team ID and count the number of players in each team
+        Map<Long, Long> teamCounts = players.stream()
+                .collect(Collectors.groupingBy(PlayersData::getTeam, Collectors.counting()));
+
+        // Check if any team has more than 3 players
+        return teamCounts.values().stream().anyMatch(count -> count > 3);
+    }
+
+    public static Optional<PlayersData> findPlayerById(List<PlayersData> playerList, Long playerId) {
+        return playerList.stream()
+                .filter(player -> player.getId() == playerId) // Assuming PlayerData has a getId() method
+                .findFirst();
     }
 
 }

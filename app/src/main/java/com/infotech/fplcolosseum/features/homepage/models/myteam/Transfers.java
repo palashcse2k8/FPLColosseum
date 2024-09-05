@@ -9,6 +9,16 @@ public class Transfers {
     private long value;
 
 
+    // Deep copy constructor
+    public Transfers(Transfers other) {
+        this.cost = other.cost;
+        this.status = other.status; // String is immutable, so no need for new String(other.status)
+        this.limit = other.limit;
+        this.made = other.made;
+        this.bank = other.bank;
+        this.value = other.value;
+    }
+
     // Getter Methods
 
     public long getCost() {
@@ -60,4 +70,5 @@ public class Transfers {
     public void setValue(long value) {
         this.value = value;
     }
+
 }

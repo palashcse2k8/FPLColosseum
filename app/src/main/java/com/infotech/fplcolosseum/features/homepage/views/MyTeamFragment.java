@@ -112,8 +112,6 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
 
                     MyTeamMergedResponseModel myTeam = apiResponse.getData();
                     setUpToolbar(myTeam.getGameWeekDataResponseModel()); // set up toolbar
-                    prepareData(myTeam.getGameWeekStaticDataModel()); //update static data
-                    updateFixtureData(myTeam.getMatchDetails()); //update fixture data
                     updateTeamPlayers(myTeam.getGameWeekMyTeamResponseModel().getPicks()); // update team player
                     updateChipsStatus(requireContext(), myTeam.getGameWeekMyTeamResponseModel().getChips()); //update chips
                     updateFieldUI(binding.footballFieldLayout); //finally update the UI

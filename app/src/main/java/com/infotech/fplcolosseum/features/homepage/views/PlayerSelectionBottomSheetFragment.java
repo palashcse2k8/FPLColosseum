@@ -64,9 +64,7 @@ public class PlayerSelectionBottomSheetFragment extends BottomSheetDialogFragmen
             binding.setPlayer(playerData); // Bind player data to the view
         }
 
-        if (playerData.getSubstitute_number() == 0) {
-            binding.btnCancelTransfer.setVisibility(View.GONE);
-        }
+        binding.btnCancelTransfer.setVisibility(View.GONE); // always make cancel button disabled
 
         binding.fullInfoButton.setOnClickListener(v -> dismiss());
         binding.closeIcon.setOnClickListener(v -> dismiss());

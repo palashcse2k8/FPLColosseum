@@ -8,11 +8,18 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -87,53 +94,13 @@ public class APIHandler {
         // Enqueue the call and handle the response
         callingAPI.enqueue(new Callback<ResponseBody>() {
 
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                // API call successful
-////                ResponseBody responseBody = response.body();
-////                assert responseBody != null;
-////                try {
-////                    T convertedResponse = convertResponse(responseBody, apiResponseType);
-////                    resultLiveData.postValue(ApiResponse.success(convertedResponse));
-////                } catch (IOException e) {
-////                    resultLiveData.postValue(ApiResponse.error("API call failed", null));
-////                    throw new RuntimeException(e);
-////                }
-//
-//                if (response.isSuccessful()) {
-//                    ResponseBody responseBody = response.body();
-//
-//                    if (responseBody != null) {
-//                        try {
-//                            T convertedResponse = convertResponse(responseBody, apiResponseType);
-//                            resultLiveData.postValue(ApiResponse.success(convertedResponse));
-//                        } catch (IOException e) {
-//                            resultLiveData.postValue(ApiResponse.error("Failed to parse response", null));
-//                            e.printStackTrace();
-//                        }
-//                    } else {
-//                        // Handle case where there is no response body
-//                        resultLiveData.postValue(ApiResponse.success( new T("")));
-//                    }
-//                } else {
-//                    // Handle unsuccessful response
-//                    resultLiveData.postValue(ApiResponse.error("API call failed with status: " + response.code(), null));
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                // API call failed
-//                resultLiveData.postValue(ApiResponse.error("API call failed", null));
-//            }
-
-
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     ResponseBody responseBody = response.body();
 
                     if (responseBody != null) {
+
                         try {
                             T convertedResponse = convertResponse(responseBody, apiResponseType);
                             resultLiveData.postValue(ApiResponse.success(convertedResponse));
@@ -151,8 +118,23 @@ public class APIHandler {
                         }
                     }
                 } else {
+
                     // Handle unsuccessful response
-                    resultLiveData.postValue(ApiResponse.error("API call failed with status: " + response.code(), null));
+                    ResponseBody errorBody = response.errorBody();
+                    String errorMessage = "API call failed with status: " + response.code() + " " + response.message();
+
+                    if (errorBody != null) {
+                        try {
+                            // Extract the error message from the error body
+                            String errorResponse = errorBody.string();
+                            JSONObject jsonObject = new JSONObject(errorResponse);
+                            errorMessage = findMessageInJson(jsonObject);
+
+                        } catch (IOException | JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    resultLiveData.postValue(ApiResponse.error(errorMessage, null));
                 }
             }
 
@@ -160,6 +142,24 @@ public class APIHandler {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // API call failed
                 resultLiveData.postValue(ApiResponse.error("API call failed: " + t.getMessage(), null));
+
+                String errorMessage;
+
+                // Detect timeout
+                if (t instanceof SocketTimeoutException) {
+                    errorMessage = "Request timed out. Please try again.";
+                }
+                // Detect no internet connection or network issues
+                else if (t instanceof UnknownHostException || t instanceof IOException) {
+                    errorMessage = "No internet connection. Please check your network and try again.";
+                }
+                // Other types of exceptions
+                else {
+                    errorMessage = "API call failed: " + t.getMessage();
+                }
+
+                // Post the error message to LiveData
+                resultLiveData.postValue(ApiResponse.error(errorMessage, null));
             }
         });
 
@@ -195,6 +195,47 @@ public class APIHandler {
         return resultLiveData;
     }
 
+    private static String findMessageInJson(JSONObject jsonObject) {
+        // Base case: Check if the current object contains the "message" key
+        if (jsonObject.has("message")) {
+            return jsonObject.optString("message", "");
+        }
+
+        // Recursively search through all keys in the current object
+        for (Iterator<String> it = jsonObject.keys(); it.hasNext(); ) {
+            String key = it.next();
+            try {
+                Object value = jsonObject.get(key);
+
+                // If the value is another JSONObject, search within that object
+                if (value instanceof JSONObject) {
+                    String result = findMessageInJson((JSONObject) value);
+                    if (!result.isEmpty()) {
+                        return result;
+                    }
+                }
+
+                // If the value is a JSONArray, search within each JSONObject in the array
+                if (value instanceof JSONArray) {
+                    JSONArray jsonArray = (JSONArray) value;
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        Object arrayElement = jsonArray.get(i);
+                        if (arrayElement instanceof JSONObject) {
+                            String result = findMessageInJson((JSONObject) arrayElement);
+                            if (!result.isEmpty()) {
+                                return result;
+                            }
+                        }
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        // Return an empty string if no "message" key is found
+        return "";
+    }
 
 //    public static <T> LiveData<ApiResponse<T>> makeApiCall2(Call<ResponseBody> callingAPI, Class<T> apiResponseType) {
 //        MutableLiveData<ApiResponse<T>> resultLiveData = new MutableLiveData<>();

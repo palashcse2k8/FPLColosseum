@@ -1,5 +1,8 @@
 package com.infotech.fplcolosseum.features.homepage.viewmodels;
 
+import static com.infotech.fplcolosseum.utilities.CustomUtil.prepareData;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.updateFixtureData;
+
 import android.app.Application;
 
 import androidx.annotation.NonNull;
@@ -55,6 +58,8 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         myTeamMergedMediatorLiveData.addSource(dataRepository.getGameWeekStaticData(), gameWeekStaticDataModelApiResponse -> {
             myTeamMergedResponseModel.setGameWeekStaticDataModel(gameWeekStaticDataModelApiResponse.getData());
 
+            prepareData(gameWeekStaticDataModelApiResponse.getData()); //update static data
+
             //call manager information with league data
             myTeamMergedMediatorLiveData.addSource(dataRepository.getTeamInformation(managerID),
                     gameWeekDataResponseModelApiResponse -> {
@@ -74,6 +79,8 @@ public class HomePageSharedViewModel extends AndroidViewModel {
                                             gameWeekMatchDetailsApiResponse -> {
 
                                                 myTeamMergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());
+
+                                                updateFixtureData(myTeamMergedResponseModel.getMatchDetails()); //update future fixture data
 
                                                 dataLoading.setValue(false); // make progress bar vanish when all api results are combined
                                                 myTeamMergedMediatorLiveData.setValue(ApiResponse.success(myTeamMergedResponseModel));

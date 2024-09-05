@@ -4,6 +4,8 @@ import static com.infotech.fplcolosseum.utilities.ButtonStateManager.getButtonSt
 import static com.infotech.fplcolosseum.utilities.ButtonStateManager.updateButtonState;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayer;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayerList;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.findPlayerById;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.hasMoreThanThreePlayersFromSameTeam;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -44,12 +46,10 @@ import com.infotech.fplcolosseum.features.homepage.adapter.PlayerTransferListene
 import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameChips;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekTransferUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.TransferUpdate;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.Transfers;
-import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.ButtonStateManager;
@@ -66,6 +66,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import es.dmoral.toasty.Toasty;
 
@@ -93,11 +94,11 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     boolean isClearVisible = false;
 
     String activeChip;
+    int activeChipCount = 0;
     GameWeekMyTeamResponseModel initialResponse;
     Transfers currentTransfer;
 
-    Map<Long, Map<PlayersData, PlayersData>> transferredPlayerList = new HashMap<>();
-    Map<Long, TransferUpdate> transferredPlayerListNew = new HashMap<>();
+    Map<Long, TransferUpdate> transferredPlayerList = new HashMap<>();
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable countdownRunnable = new Runnable() {
@@ -136,14 +137,13 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
                         PlayersData transferredPlayer = (PlayersData) bundle.getSerializable(TRANSFERRED_PLAYER_DATA);
 
                         // trigger ui change with the new selected player
-                        selectedPlayer.setPurchase_price(selectedPlayer.getNow_cost());
+                        selectedPlayer.setPurchase_price(selectedPlayer.getNow_cost()); // update the price with purchase price
                         selectedPlayer.setSelling_price(selectedPlayer.getNow_cost()); // update the price with selling price
                         int transferredPlayerIndex = (int) transferredPlayer.getPosition() - 1;
                         selectedPlayer.setSubstitute_number(transferredPlayerIndex + 1);
                         selectedPlayer.setPosition(transferredPlayer.getPosition());
 
                         teamPlayers.set(transferredPlayerIndex, selectedPlayer);
-                        updateFieldUI(binding.footballFieldLayout);
 
                         long updatedBankBalance = transferredPlayer.getPurchase_price() + currentTransfer.getBank() - selectedPlayer.getPurchase_price();
                         currentTransfer.setBank(updatedBankBalance);
@@ -151,39 +151,23 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
                         currentTransfer.setMade(++transferCount);
 
                         updateTransferInfo(currentTransfer);
+                        updateFieldUI(binding.footballFieldLayout);
 
                         enableEditToolBar();
 
                         //store transferred player list
-
-//                        Map<PlayersData, PlayersData> previousData = transferredPlayerList.get(transferredPlayer.getPosition());
-                        TransferUpdate previousData = transferredPlayerListNew.get(transferredPlayer.getPosition());
-
-//                        if (previousData != null && !previousData.isEmpty()) {
-//                            // Find the first (and presumably only) entry in the inner map
-//                            Map.Entry<PlayersData, PlayersData> entry = previousData.entrySet().iterator().next();
-//                            PlayersData existingKey = entry.getKey();
-//
-//                            // Update the value for the existing key
-//                            previousData.put(existingKey, selectedPlayer);
-//                        } else {
-//                            // If the position doesn't exist or the inner map is empty, add a new entry
-//                            transferredPlayerList
-//                                    .computeIfAbsent(transferredPlayer.getPosition(), k -> new HashMap<>())
-//                                    .put(transferredPlayer, selectedPlayer); // Using newValue as both key and value here
-//                        }
-
+                        TransferUpdate previousData = transferredPlayerList.get(transferredPlayer.getPosition());
                         if(previousData != null) {
                             previousData.setElement_out(selectedPlayer.getId());
-                           previousData.setPurchase_price((selectedPlayer.getPurchase_price() * 10) + "");
+                           previousData.setPurchase_price(selectedPlayer.getPurchase_price() + "");
                         } else {
                             TransferUpdate transferUpdate = new TransferUpdate();
                             transferUpdate.setElement_in(selectedPlayer.getId());
                             transferUpdate.setElement_out(transferredPlayer.getId());
-                            transferUpdate.setSelling_price((transferredPlayer.getSelling_price() * 10) + "");
-                            transferUpdate.setPurchase_price((selectedPlayer.getPurchase_price() * 10) + "");
+                            transferUpdate.setSelling_price(transferredPlayer.getSelling_price() + "");
+                            transferUpdate.setPurchase_price(selectedPlayer.getPurchase_price() + "");
+                            transferredPlayerList.put(transferredPlayer.getPosition(), transferUpdate);
                         }
-
                     }
                 });
 //        setHasOptionsMenu(true);
@@ -263,10 +247,10 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     private void handleUndoClick() {
 
         // Logic for undo button
-        updateChipsStatus(requireContext(), viewModel.getMyTeamMergedResponseLiveData().getValue().getData().getGameWeekMyTeamResponseModel().getChips());
-        this.teamPlayers = deepCopyPlayerList(this.initialTeamPlayers);
-        updateFieldUI(binding.footballFieldLayout); //update the player list view
+        binding.footballFieldLayout.removeAllViews();
+        updateUI(initialResponse);
         resetToolBar(); // reset the toolbar
+        transferredPlayerList = new HashMap<>(); // reset transferred player list
     }
 
     private void handleRefreshClick() {
@@ -281,7 +265,28 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         Toast.makeText(getActivity(), "Share clicked", Toast.LENGTH_SHORT).show();
     }
 
+    private boolean isValid() {
+
+        //check the current balance is sufficient enough
+        if(currentTransfer.getBank()<0)
+        {
+            Toasty.warning(requireContext(), "You don't have enough money to make this transfer").show();
+            return false;
+        }
+
+        //check if more than 3 player from same team is selected
+        if(hasMoreThanThreePlayersFromSameTeam(this.teamPlayers)){
+            Toasty.warning(requireContext(), "You can't select more than 3 player from same team").show();
+            return false;
+        }
+
+        return true;
+    }
     private void handleSaveClick() {
+
+        if(!isValid()){
+            return;
+        }
 
         // Logic for save button
         GameWeekTransferUpdateModel updateModel = new GameWeekTransferUpdateModel();
@@ -291,7 +296,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         updateModel.setEvent(Constants.nextGameWeek);
 
         //add player data
-        ArrayList<TransferUpdate> transferUpdateList = new ArrayList<>(this.transferredPlayerListNew.values());
+        ArrayList<TransferUpdate> transferUpdateList = new ArrayList<>(this.transferredPlayerList.values());
         updateModel.setTransfers(transferUpdateList);
 
         //add chips data
@@ -307,7 +312,8 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
                     break;
                 case SUCCESS:
                     viewModel.dataLoading.setValue(false);
-
+                    transferredPlayerList = new HashMap<>();// reset transferred player list
+                    binding.footballFieldLayout.removeAllViews(); // remove all existing ui
                     viewModel.getMyTeamMergedData(Constants.LoggedInUser.getPlayer().getEntry());
                     resetToolBar(); // reset toolbar action
 
@@ -393,7 +399,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         updateChipsStatus(requireContext(), response.getChips()); //update chips
         updateTeamPlayers(response.getPicks()); // update team player
         updateFieldUI(binding.footballFieldLayout);
-        currentTransfer = response.getTransfers(); // hold the data for next update
+        currentTransfer = new Transfers(response.getTransfers()); // hold the data for next update
         updateTransferInfo(currentTransfer);
     }
 
@@ -582,7 +588,8 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     private void showFailure(String error) {
         viewModel.dataLoading.setValue(false);
         binding.progressCircular.setVisibility(View.GONE);
-        binding.footballFieldLayout.setVisibility(View.GONE);
+//        binding.footballFieldLayout.setVisibility(View.GONE);
+        Toasty.warning(requireContext(), error).show();
     }
 
     private void updateChipsStatus(Context context, ArrayList<GameChips> chips) {
@@ -667,18 +674,37 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         updateButtonState(requireContext(), button, newState);
-//                        showPopup(buttonName + " state updated to " + newState);
-                        enableEditToolBar();
+
                         if (newState == ButtonStateManager.ButtonState.ACTIVE) {
-                            if (buttonName.equalsIgnoreCase(Chips.BB.getDisplayName())) {
-                                activeChip = Chips.BB.getShortName();
-                            } else if (buttonName.equalsIgnoreCase(Chips.TC.getDisplayName())) {
-                                activeChip = Chips.TC.getShortName();
+                            if (buttonName.equalsIgnoreCase(Chips.WC.getDisplayName())) {
+                                activeChip = Chips.WC.getShortName();
+                                activeChipCount++;
+                            } else if (buttonName.equalsIgnoreCase(Chips.FH.getDisplayName())) {
+                                activeChip = Chips.FH.getShortName();
+                                activeChipCount--;
                             } else {
                                 activeChip = Chips.FH.getShortName();
+                                activeChipCount--;
                             }
+
+                            //check if any transfer happens
+                            if(activeChipCount == 0  && transferredPlayerList.isEmpty()){
+                                resetToolBar();
+                            } else {
+                                enableEditToolBar();
+                            }
+
                         } else if (newState == ButtonStateManager.ButtonState.AVAILABLE) {
                             activeChip = null;
+                            activeChipCount--;
+
+                            //check if any transfer happens
+                            if(activeChipCount == 0 && transferredPlayerList.isEmpty()){
+                                resetToolBar();
+                            } else {
+                                enableEditToolBar();
+                            }
+
                         } else {
                             if (buttonName.equalsIgnoreCase(Chips.BB.getDisplayName())) {
                                 activeChip = Chips.BB.getShortName();
@@ -721,7 +747,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         if (transferMade > limit) {
             redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, redOrGreenText.length(), 0);
         } else {
-            redSpannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, redOrGreenText.length(), 0);
+            redSpannable.setSpan(new ForegroundColorSpan(Color.BLUE), 0, redOrGreenText.length(), 0);
         }
         builder.append(redSpannable);
 
@@ -752,7 +778,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         if (costCalculation < 0) {
             redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, redOrGreenText.length(), 0);
         } else {
-            redSpannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, redOrGreenText.length(), 0);
+            redSpannable.setSpan(new ForegroundColorSpan(Color.BLUE), 0, redOrGreenText.length(), 0);
         }
         builder.append(redSpannable).append(", ");
 
@@ -771,7 +797,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
             greenText = "∞";
         }
         SpannableString greenSpannable = new SpannableString(greenText);
-        greenSpannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, greenText.length(), 0);
+        greenSpannable.setSpan(new ForegroundColorSpan(Color.BLUE), 0, greenText.length(), 0);
 
         builder.append(greenSpannable);
 
@@ -785,12 +811,12 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         SpannableString blackSpannable = new SpannableString(blackText);
         builder.append(blackSpannable);
 
-        String redOrGreenText = String.valueOf(bank);
+        String redOrGreenText = String.valueOf("€" + (float) bank / 10 + "m");
         SpannableString redSpannable = new SpannableString(redOrGreenText);
         if (bank < 0) {
             redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, redOrGreenText.length(), 0);
         } else {
-            redSpannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, redOrGreenText.length(), 0);
+            redSpannable.setSpan(new ForegroundColorSpan(Color.BLUE), 0, redOrGreenText.length(), 0);
         }
         builder.append(redSpannable);
 
@@ -823,7 +849,6 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         bottomSheet.show(requireActivity().getSupportFragmentManager(), bottomSheet.getTag());
     }
 
-
     @Override
     public void onTransferPlayer(PlayersData player) {
 
@@ -844,6 +869,31 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
     @Override
     public void onCancelTransfer(PlayersData player) {
+        TransferUpdate transferUpdate = transferredPlayerList.get(player.getPosition());
+
+        Optional<PlayersData> playerOpt = findPlayerById(this.initialTeamPlayers, transferUpdate.getElement_out());
+
+        PlayersData playerOrException = playerOpt.orElseThrow(() -> new RuntimeException("Player not found"));
+
+        teamPlayers.set((int) player.getPosition() -1, playerOrException);
+        binding.footballFieldLayout.removeAllViews();
+        updateFieldUI(binding.footballFieldLayout);
+
+        long updatedBankBalance = currentTransfer.getBank() - playerOrException.getSelling_price() + player.getPurchase_price();
+        currentTransfer.setBank(updatedBankBalance);
+        long transferCount = currentTransfer.getMade();
+        currentTransfer.setMade(++transferCount);
+
+        updateTransferInfo(currentTransfer);
+
+        transferredPlayerList.remove(player.getPosition());
+
+        //check if any transfer happens
+        if(activeChipCount == 0 && transferredPlayerList.isEmpty()){
+            resetToolBar();
+        } else {
+            enableEditToolBar();
+        }
 
     }
 }

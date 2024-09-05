@@ -1,19 +1,19 @@
 package com.infotech.fplcolosseum.features.homepage.models.myteam;
 
 public class TransferUpdate {
-    private float element_in;
-    private float element_out;
+    private long element_in;
+    private long element_out;
     private String purchase_price;
     private String selling_price;
 
 
     // Getter Methods
 
-    public float getElement_in() {
+    public long getElement_in() {
         return element_in;
     }
 
-    public float getElement_out() {
+    public long getElement_out() {
         return element_out;
     }
 
@@ -27,11 +27,11 @@ public class TransferUpdate {
 
     // Setter Methods
 
-    public void setElement_in(float element_in) {
+    public void setElement_in(long element_in) {
         this.element_in = element_in;
     }
 
-    public void setElement_out(float element_out) {
+    public void setElement_out(long element_out) {
         this.element_out = element_out;
     }
 
