@@ -165,13 +165,6 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/black" />
 
-                    <TextView
-                        android:id="@+id/deadline_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="GW21 Deadline : 15"
-                        android:textColor="@color/black" />
-
                 </LinearLayout>
 
                 <!-- Right Part with 1 TextView and 1 Button -->
@@ -188,22 +181,35 @@
                     <!-- TextView in the Right Part -->
                     <TextView
                         android:layout_marginTop="8dp"
-                        android:id="@+id/deadline_counter"
+                        android:id="@+id/gameWeekDeadline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="GW21 Deadline in"
                         android:textColor="@color/black" />
 
-
-                    <!-- Button in the Right Part -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/right_button"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/deadline_text"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/right_textView"
-                        android:layout_marginTop="8dp"
-                        android:text="Save =>" />
+                        android:layout_gravity="center"
+                        android:textColor="@android:color/holo_blue_dark" />
+
+                    <TextView
+                        android:id="@+id/deadline_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@android:color/holo_blue_light" />
+
+<!--                    &lt;!&ndash; Button in the Right Part &ndash;&gt;-->
+<!--                    <com.google.android.material.button.MaterialButton-->
+<!--                        android:id="@+id/right_button"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_below="@+id/right_textView"-->
+<!--                        android:layout_marginTop="8dp"-->
+<!--                        android:text="Save =>" />-->
                 </LinearLayout>
             </LinearLayout>
 

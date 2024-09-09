@@ -3,7 +3,7 @@ package com.infotech.fplcolosseum.features.homepage.models.staticdata;
 import java.io.Serializable;
 
 public class PlayersData implements Serializable {
-    private long chance_of_playing_next_round;
+    private Long chance_of_playing_next_round;
     private Long chance_of_playing_this_round;
     private long code;
     private long cost_change_event;
@@ -370,7 +370,7 @@ public class PlayersData implements Serializable {
     }
 // Getter Methods
 
-    public long getChance_of_playing_next_round() {
+    public Long getChance_of_playing_next_round() {
         return chance_of_playing_next_round;
     }
 

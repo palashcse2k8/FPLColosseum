@@ -1,5 +1,6 @@
 package com.infotech.fplcolosseum.features.homepage.models.staticdata;
 
+import com.google.gson.annotations.SerializedName;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.Top_element_info;
 
 import java.util.ArrayList;
@@ -20,7 +21,8 @@ public class GameWeekEvent {
     private boolean is_next;
     private boolean cup_leagues_created;
     private boolean h2h_ko_matches_created;
-    ArrayList<Object> chip_plays = new ArrayList<Object>();
+    @SerializedName("chip_plays")
+    ArrayList<ChipsPlayedInfo> chip_plays = new ArrayList<ChipsPlayedInfo>();
     private long most_selected;
     private long most_transferred_in;
     private long top_element;

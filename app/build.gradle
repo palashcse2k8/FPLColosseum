@@ -79,4 +79,7 @@ dependencies {
     //chuck for http request intercept
 //    implementation 'com.readystatesoftware.chuck:library:1.1.0'
 //    implementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
+
+    //for automatic time zone mapping in android
+    implementation 'com.ibm.icu:icu4j:72.1'
 }

@@ -485,7 +485,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
         }
 
         //set availability icon
-        if (player.getChance_of_playing_this_round() != null && player.getChance_of_playing_next_round() < 100) {
+        if (player.getChance_of_playing_next_round() != null && player.getChance_of_playing_next_round() < 100) {
             playerView.setAvailability(player.getChance_of_playing_next_round());
         }
 

@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.icu.util.ULocale;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -28,8 +29,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,6 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import okhttp3.ResponseBody;
@@ -277,4 +284,46 @@ public class CustomUtil {
                 .findFirst();
     }
 
+    // Method to get time zone ID from country code
+    public static String getTimeZoneId(String countryCode) {
+        // Use default Locale time zone ID for the country
+        String timeZoneId = TimeZone.getDefault().getID();
+        // Here you can use a library like TimeZoneMapper or ICU4J for more accurate results
+        return timeZoneId;
+    }
+
+    // Method to convert UTC time to local time
+    public static String convertUtcToLocalTime(String utcTimeString, String countryCode) {
+        // Get the time zone for the provided country code
+        String timeZoneId = getTimeZoneId(countryCode);
+
+        if (timeZoneId != null) {
+            // Parse the UTC time string with the "Z" suffix using ZonedDateTime
+            ZonedDateTime utcZonedTime = ZonedDateTime.parse(utcTimeString, DateTimeFormatter.ISO_DATE_TIME);
+
+            // Convert the UTC time to the local time in the target country's time zone
+            ZonedDateTime localZonedTime = utcZonedTime.withZoneSameInstant(ZoneId.of(timeZoneId));
+
+            // Format and return the converted local time
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM-dd hh:mm a");
+            return localZonedTime.format(formatter);
+        } else {
+            throw new IllegalArgumentException("Time zone not found for country code: " + countryCode);
+        }
+    }
+
+    // Method to convert UTC time to local time
+    public static LocalDateTime convertUtcToLocalDateTime(String utcTimeString, String countryCode) {
+
+        String timeZoneId = getTimeZoneId(countryCode);
+
+        // Parse the UTC time string with the "Z" suffix using ZonedDateTime
+        ZonedDateTime utcZonedTime = ZonedDateTime.parse(utcTimeString, DateTimeFormatter.ISO_DATE_TIME);
+
+        // Convert the UTC time to the local time in the target time zone
+        ZonedDateTime localZonedTime = utcZonedTime.withZoneSameInstant(ZoneId.of(timeZoneId));
+
+        // Extract and return the LocalDateTime from ZonedDateTime
+        return localZonedTime.toLocalDateTime();
+    }
 }
