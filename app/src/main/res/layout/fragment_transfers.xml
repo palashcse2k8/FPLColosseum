@@ -180,7 +180,7 @@
 
                     <!-- TextView in the Right Part -->
                     <TextView
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="2dp"
                         android:id="@+id/gameWeekDeadline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -305,7 +305,7 @@ public class CustomUtil {
             ZonedDateTime localZonedTime = utcZonedTime.withZoneSameInstant(ZoneId.of(timeZoneId));
 
             // Format and return the converted local time
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM-dd hh:mm a");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd, HH:mm");
             return localZonedTime.format(formatter);
         } else {
             throw new IllegalArgumentException("Time zone not found for country code: " + countryCode);
