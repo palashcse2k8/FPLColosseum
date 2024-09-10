@@ -1,22 +1,16 @@
 package com.infotech.fplcolosseum.utilities;
 
-import static android.os.Environment.getExternalStoragePublicDirectory;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.icu.util.ULocale;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
@@ -26,10 +20,6 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -46,9 +36,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
-
-import okhttp3.ResponseBody;
-import retrofit2.Response;
 
 public class CustomUtil {
     public static String getSimpleDate(String trUploadDate) {
@@ -285,17 +272,16 @@ public class CustomUtil {
     }
 
     // Method to get time zone ID from country code
-    public static String getTimeZoneId(String countryCode) {
+    public static String getTimeZoneId() {
         // Use default Locale time zone ID for the country
-        String timeZoneId = TimeZone.getDefault().getID();
         // Here you can use a library like TimeZoneMapper or ICU4J for more accurate results
-        return timeZoneId;
+        return TimeZone.getDefault().getID();
     }
 
     // Method to convert UTC time to local time
-    public static String convertUtcToLocalTime(String utcTimeString, String countryCode) {
+    public static String convertUtcToLocalTime(String utcTimeString) {
         // Get the time zone for the provided country code
-        String timeZoneId = getTimeZoneId(countryCode);
+        String timeZoneId = getTimeZoneId();
 
         if (timeZoneId != null) {
             // Parse the UTC time string with the "Z" suffix using ZonedDateTime
@@ -308,14 +294,14 @@ public class CustomUtil {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd, HH:mm");
             return localZonedTime.format(formatter);
         } else {
-            throw new IllegalArgumentException("Time zone not found for country code: " + countryCode);
+            throw new IllegalArgumentException("Time zone not found for country code");
         }
     }
 
     // Method to convert UTC time to local time
-    public static LocalDateTime convertUtcToLocalDateTime(String utcTimeString, String countryCode) {
+    public static LocalDateTime convertUtcToLocalDateTime(String utcTimeString) {
 
-        String timeZoneId = getTimeZoneId(countryCode);
+        String timeZoneId = getTimeZoneId();
 
         // Parse the UTC time string with the "Z" suffix using ZonedDateTime
         ZonedDateTime utcZonedTime = ZonedDateTime.parse(utcTimeString, DateTimeFormatter.ISO_DATE_TIME);

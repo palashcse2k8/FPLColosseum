@@ -64,7 +64,6 @@ import com.infotech.fplcolosseum.utilities.UIUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -374,6 +373,17 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //set up swipe refresh layout
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+
+                    // This method performs the actual data-refresh operation and calls
+                    handleRefreshClick();
+
+                    // Stop the refreshing animation after the refresh operation is completed
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+        );
+
         // Add players to the football field (customize positions as needed)
         viewModel.getMyTeamMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
 
@@ -411,12 +421,12 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         String gameWeekText = "GW" + Constants.nextGameWeek + " Deadline";
         binding.gameWeekDeadline.setText(gameWeekText);
 
-        String localTime = convertUtcToLocalTime(gameWeekEvent.getDeadline_time(), "BD");
+        String localTime = convertUtcToLocalTime(gameWeekEvent.getDeadline_time());
         binding.deadlineText.setText(localTime);
 
         // Parse the local time string to LocalDateTime
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM-dd HH:mm a");
-        endTime = convertUtcToLocalDateTime(gameWeekEvent.getDeadline_time(), "BD");
+        endTime = convertUtcToLocalDateTime(gameWeekEvent.getDeadline_time());
+
         // Start the countdown
         handler.post(countdownRunnable);
     }
@@ -662,7 +672,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
             }
         }
 
-        updateButtonState(context, binding.buttonAutoPick, ButtonStateManager.ButtonState.NOT_AVAILABLE); //
+//        updateButtonState(context, binding.buttonAutoPick, ButtonStateManager.ButtonState.NOT_AVAILABLE); //
     }
 
     private void updateFieldUI(GridLayout footballFieldLayout) {

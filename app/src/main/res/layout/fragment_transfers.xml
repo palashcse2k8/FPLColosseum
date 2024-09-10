@@ -63,21 +63,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/footballFieldLayout">
+                app:layout_constraintBottom_toTopOf="@+id/swipeRefreshLayout">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonAutoPick"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="Auto Pick"
-                    android:textSize="12sp"
-                    app:cornerRadius="20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/buttonWildCard"
-                    app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+<!--                <com.google.android.material.button.MaterialButton-->
+<!--                    android:id="@+id/buttonAutoPick"-->
+<!--                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:text="Auto Pick"-->
+<!--                    android:textSize="12sp"-->
+<!--                    app:cornerRadius="20dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toStartOf="@id/buttonWildCard"-->
+<!--                    app:layout_constraintHorizontal_chainStyle="spread"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonWildCard"
@@ -89,7 +89,7 @@
                     app:cornerRadius="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/buttonFH"
-                    app:layout_constraintStart_toEndOf="@id/buttonAutoPick"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.button.MaterialButton
@@ -97,7 +97,7 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:text="FH"
+                    android:text="FreeHit"
                     android:textSize="12sp"
                     app:cornerRadius="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -107,18 +107,34 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Second Section: GridView -->
-            <GridLayout
-                android:id="@+id/footballFieldLayout"
-                android:layout_width="0dp"
+<!--            &lt;!&ndash; Second Section: GridView &ndash;&gt;-->
+<!--            <GridLayout-->
+<!--                android:id="@+id/footballFieldLayout"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:background="@drawable/team_background_single_with_bench"-->
+<!--                android:columnCount="5"-->
+<!--                android:rowCount="4"-->
+<!--                app:layout_constraintBottom_toTopOf="@id/bottomLayout"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/buttonLayout" />-->
+            <!-- Wrap the GridLayout with SwipeRefreshLayout -->
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@drawable/team_background_single_with_bench"
-                android:columnCount="5"
-                android:rowCount="4"
-                app:layout_constraintBottom_toTopOf="@id/bottomLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buttonLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/buttonLayout"
+                app:layout_constraintBottom_toTopOf="@+id/bottomLayout">
+
+                <GridLayout
+                    android:id="@+id/footballFieldLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/team_background_single_with_bench"
+                    android:columnCount="5"
+                    android:rowCount="4" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
             <!-- Third Section: Text and Button -->
             <!-- Left Part with 4 TextViews -->
@@ -131,7 +147,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/footballFieldLayout">
+                app:layout_constraintTop_toBottomOf="@id/swipeRefreshLayout">
 
                 <LinearLayout
                     android:id="@+id/left_part_layout"

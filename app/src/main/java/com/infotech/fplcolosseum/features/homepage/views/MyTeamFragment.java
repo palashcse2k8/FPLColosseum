@@ -99,6 +99,18 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        //set up swipe refresh layout
+        binding.swiperefresh.setOnRefreshListener(() -> {
+
+                    // This method performs the actual data-refresh operation and calls
+                    handleRefreshClick();
+
+                    // Stop the refreshing animation after the refresh operation is completed
+                    binding.swiperefresh.setRefreshing(false);
+                }
+        );
+
         // Add players to the football field (customize positions as needed)
         viewModel.getMyTeamMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
 
@@ -620,7 +632,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
             TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
 
             Constants.teamName = responseModel.getName();
-            teamNameTextView.setText(Constants.teamName);
+            String concatenatedName = Constants.teamName + "(GW " + Constants.nextGameWeek + ")";
+            teamNameTextView.setText(concatenatedName);
 
             Constants.managerName = responseModel.getPlayer_first_name() + " " + responseModel.getPlayer_last_name();
             managerNameTextView.setText(Constants.managerName);

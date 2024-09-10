@@ -147,7 +147,7 @@ public class PlayerView extends LinearLayout {
 
     public void setViceCaptain() {
         imageBottomRight.setVisibility(View.VISIBLE);
-        imageBottomRight.setBackgroundResource(R.drawable.alpha_v_circle);
+        imageBottomRight.setBackgroundResource(R.drawable.vice_captain_icon);
     }
 
     public void setSubstitutePlayer(){

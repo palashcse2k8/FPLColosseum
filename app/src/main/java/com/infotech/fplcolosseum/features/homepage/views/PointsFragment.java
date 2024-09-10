@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,10 +25,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.FragmentPointsBinding;
 import com.infotech.fplcolosseum.features.homepage.models.PointsMergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.picks.AutomaticSubs;
 import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
@@ -154,7 +158,11 @@ public class PointsFragment extends Fragment {
 
     private void handleRefreshClick() {
         // Logic for refresh button
-        Toast.makeText(getActivity(), "Refresh clicked", Toast.LENGTH_SHORT).show();
+        resetChipSelection((int) Constants.currentGameWeek);
+        setUpToolbar(Constants.currentGameWeek);
+        binding.footballFieldLayout.removeAllViews();
+        viewModel.getPointsMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
+        resetToolBar();
     }
 
     private void handleShareClick() {
@@ -180,6 +188,7 @@ public class PointsFragment extends Fragment {
 
         requireActivity().invalidateOptionsMenu();
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -187,8 +196,23 @@ public class PointsFragment extends Fragment {
         // Find the GridLayout in your fragment layout
         GridLayout footballFieldLayout = view.findViewById(R.id.footballFieldLayout);
 
-        // Add players to the football field (customize positions as needed)
+        //set up swipe refresh layout
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
 
+                    // This method performs the actual data-refresh operation and calls
+                    handleRefreshClick();
+
+                    // Stop the refreshing animation after the refresh operation is completed
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+        );
+
+        // Add chips for game week selection
+        setupChips();
+        setupNavigationButtons();
+        setUpToolbar(Constants.currentGameWeek);
+
+        // Add players to the football field (customize positions as needed)
         viewModel.getPointsMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
             if (apiResponse == null) return;
             if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
@@ -204,17 +228,93 @@ public class PointsFragment extends Fragment {
                 }
 
                 PointsMergedResponseModel myTeam = apiResponse.getData();
+
                 addPlayers(footballFieldLayout, myTeam);
-                addLeftOverLayView(myTeam);
-                addRightOverLayView(myTeam);
+
+//                addLeftOverLayView(myTeam);
+//                addRightOverLayView(myTeam);
             }
         });
     }
 
-    private void setUpToolBar(@NonNull View view) {
-        Toolbar pointToolBar = view.findViewById(R.id.pointToolbar);
-//        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
-        ((AppCompatActivity) requireActivity()).setSupportActionBar(pointToolBar);
+
+    private void setupChips() {
+        for (int i = 1; i <= Constants.currentGameWeek; i++) {
+            final Chip chip = new Chip(requireContext());
+            chip.setText("GW " + i);
+            chip.setCheckable(true);
+            if (i == Constants.currentGameWeek) {
+                chip.setChecked(true);
+            }
+
+            int finalI = i;
+            chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    setUpToolbar(finalI);
+                    binding.footballFieldLayout.removeAllViews();
+                    viewModel.getPointsMergedData(Constants.LoggedInUser.getPlayer().getEntry(), finalI);
+                }
+            });
+            binding.buttonGroup.addView(chip);
+        }
+    }
+
+    private void setupNavigationButtons() {
+        binding.buttonPrevious.setOnClickListener(v -> navigateChipSelection(-1));
+        binding.buttonNext.setOnClickListener(v -> navigateChipSelection(1));
+    }
+
+    private void navigateChipSelection(int direction) {
+        ChipGroup chipGroup = binding.buttonGroup;
+        int chipCount = chipGroup.getChildCount();
+        int currentIndex = -1;
+
+        for (int i = 0; i < chipCount; i++) {
+            Chip chip = (Chip) chipGroup.getChildAt(i);
+            if (chip.isChecked()) {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        if (currentIndex != -1) {
+            int newIndex = currentIndex + direction;
+            if (newIndex >= 0 && newIndex < chipCount) {
+                ((Chip) chipGroup.getChildAt(newIndex)).setChecked(true);
+            }
+        }
+    }
+
+    // Method to reset chip selection to a specific game week
+    private void resetChipSelection(int gameWeek) {
+        ChipGroup chipGroup = binding.buttonGroup;
+        int chipCount = chipGroup.getChildCount();
+
+        // Find the chip corresponding to the given game week
+        for (int i = 0; i < chipCount; i++) {
+            Chip chip = (Chip) chipGroup.getChildAt(i);
+            String chipText = chip.getText().toString();
+            if (chipText.equals("GW " + gameWeek)) {
+                chip.setChecked(true);
+                break;
+            }
+        }
+    }
+
+
+    private void setUpToolbar( long gameWeekNumber) {
+
+        Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
+        if (toolbar != null) {
+            // Access the TextViews in the Toolbar
+            TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
+            TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
+
+            String concatenatedName = Constants.teamName + "(GW " + gameWeekNumber + ")";
+            teamNameTextView.setText(concatenatedName);
+
+            managerNameTextView.setText(Constants.managerName);
+        }
     }
 
 
@@ -490,7 +590,7 @@ public class PointsFragment extends Fragment {
         String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(player.getElement_type())).getSingular_name_short();
         playerView.setTeamName(teamName + " - (" + playerType + ")");
 
-        playerView.setOpponentTeamName((player.getEvent_points()*player.getMultiplier()) + "");
+        playerView.setOpponentTeamName((player.getEvent_points() * player.getMultiplier()) + "");
 
         //https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
         //https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo
@@ -518,7 +618,7 @@ public class PointsFragment extends Fragment {
         }
 
         // set substitute player icon
-        if(player.getSubstitute_number()>0){
+        if (player.getSubstitute_number() > 0) {
             playerView.setSubstitutePlayer();
         }
 
