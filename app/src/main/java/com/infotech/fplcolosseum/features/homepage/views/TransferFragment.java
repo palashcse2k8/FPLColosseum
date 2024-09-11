@@ -28,11 +28,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
@@ -46,6 +48,7 @@ import com.infotech.fplcolosseum.databinding.FragmentTransfersBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerTransferListener;
 import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameChips;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekTransferUpdateModel;
@@ -157,6 +160,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
                         updateFieldUI(binding.footballFieldLayout);
 
                         enableEditToolBar();
+//                        setUpToolbar(Constants.nextGameWeek);
 
                         //store transferred player list
                         TransferUpdate previousData = transferredPlayerList.get(transferredPlayer.getPosition());
@@ -370,6 +374,12 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        setUpToolbar(Constants.nextGameWeek); // set up toolbar
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -397,6 +407,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
                     MyTeamMergedResponseModel myTeam = apiResponse.getData();
                     initialResponse = myTeam.getGameWeekMyTeamResponseModel();
+
                     updateUI(initialResponse);
                     updateGameWeekDeadline();
 
@@ -944,6 +955,21 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
             resetToolBar();
         } else {
             enableEditToolBar();
+        }
+    }
+
+    private void setUpToolbar( long gameWeekNumber) {
+
+        Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
+        if (toolbar != null) {
+            // Access the TextViews in the Toolbar
+            TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
+            TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
+
+            String concatenatedName = Constants.teamName + " (GW " + gameWeekNumber + ")";
+            teamNameTextView.setText(concatenatedName);
+
+            managerNameTextView.setText(Constants.managerName);
         }
     }
 }

@@ -59,6 +59,8 @@ public class PointsFragment extends Fragment {
     boolean isSaveVisible = false;
     boolean isClearVisible = false;
 
+    int selectedChip;
+
 //    private ToolbarChangeListener toolbarChangeListener;
 
 
@@ -91,6 +93,7 @@ public class PointsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
         viewModel.getPointsMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
+        selectedChip = (int) Constants.currentGameWeek;
 //        viewModel.getTeamCurrentGameWeekAllData(10359552);
         setRetainInstance(true);
         setHasOptionsMenu(true);
@@ -190,6 +193,16 @@ public class PointsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        // Check if a chip is already selected; if so, don't reset the toolbar
+        if (selectedChip == (int) Constants.currentGameWeek) {
+            setUpToolbar(selectedChip);
+        }
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -210,7 +223,6 @@ public class PointsFragment extends Fragment {
         // Add chips for game week selection
         setupChips();
         setupNavigationButtons();
-        setUpToolbar(Constants.currentGameWeek);
 
         // Add players to the football field (customize positions as needed)
         viewModel.getPointsMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
@@ -245,11 +257,13 @@ public class PointsFragment extends Fragment {
             chip.setCheckable(true);
             if (i == Constants.currentGameWeek) {
                 chip.setChecked(true);
+//                selectedChip = i;
             }
 
             int finalI = i;
             chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
+                    selectedChip = finalI;
                     setUpToolbar(finalI);
                     binding.footballFieldLayout.removeAllViews();
                     viewModel.getPointsMergedData(Constants.LoggedInUser.getPlayer().getEntry(), finalI);
@@ -310,7 +324,7 @@ public class PointsFragment extends Fragment {
             TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
             TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
 
-            String concatenatedName = Constants.teamName + "(GW " + gameWeekNumber + ")";
+            String concatenatedName = Constants.teamName + " (GW " + gameWeekNumber + ")";
             teamNameTextView.setText(concatenatedName);
 
             managerNameTextView.setText(Constants.managerName);
