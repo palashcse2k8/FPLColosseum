@@ -67,6 +67,8 @@ public class HomePageSharedViewModel extends AndroidViewModel {
                         Constants.currentGameWeek = currentGameWeek;
                         Constants.previousGameWeek = currentGameWeek - 1;
                         Constants.nextGameWeek = currentGameWeek + 1;
+                        Constants.teamName = gameWeekDataResponseModelApiResponse.getData().getName();
+                        Constants.managerName = gameWeekDataResponseModelApiResponse.getData().getPlayer_first_name() + " " + gameWeekDataResponseModelApiResponse.getData().getPlayer_last_name();
 
                         myTeamMergedResponseModel.setGameWeekDataResponseModel(gameWeekDataResponseModelApiResponse.getData());
 

@@ -334,11 +334,13 @@ public class HomePageFragment extends Fragment {
                 // Add the toolbar to the root view
                 rootView.addView(currentToolbar);
 
-                setupPointFragmentToolbar(currentToolbar);
+//                setupPointFragmentToolbar(currentToolbar);
 
                 // Set the new toolbar as the action bar
                 ((AppCompatActivity) getActivity()).setSupportActionBar(currentToolbar);
             }
         }
     }
+
+
 }

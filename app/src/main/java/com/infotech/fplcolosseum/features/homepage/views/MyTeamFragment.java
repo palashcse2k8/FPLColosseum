@@ -122,7 +122,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
                     viewModel.dataLoading.setValue(false);
 
                     MyTeamMergedResponseModel myTeam = apiResponse.getData();
-                    setUpToolbar(myTeam.getGameWeekDataResponseModel()); // set up toolbar
+//                    setUpToolbar(myTeam.getGameWeekDataResponseModel()); // set up toolbar
+                    setUpToolbar(Constants.nextGameWeek);
                     updateTeamPlayers(myTeam.getGameWeekMyTeamResponseModel().getPicks()); // update team player
                     updateChipsStatus(requireContext(), myTeam.getGameWeekMyTeamResponseModel().getChips()); //update chips
                     updateFieldUI(binding.footballFieldLayout); //finally update the UI
@@ -140,6 +141,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
     @Override
     public void onResume() {
         super.onResume();
+        setUpToolbar(Constants.nextGameWeek);
     }
 
     @Override
@@ -622,7 +624,24 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
     }
 
 
-    private void setUpToolbar(GameWeekDataResponseModel responseModel) {
+//    private void setUpToolbar(GameWeekDataResponseModel responseModel) {
+//
+//        Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
+//        if (toolbar != null) {
+//            // Access the TextViews in the Toolbar
+//            TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
+//            TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
+//
+//            Constants.teamName = responseModel.getName();
+//            String concatenatedName = Constants.teamName + " (GW " + Constants.nextGameWeek + ")";
+//            teamNameTextView.setText(concatenatedName);
+//
+//            Constants.managerName = responseModel.getPlayer_first_name() + " " + responseModel.getPlayer_last_name();
+//            managerNameTextView.setText(Constants.managerName);
+//        }
+//    }
+
+    private void setUpToolbar( long gameWeekNumber) {
 
         Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
         if (toolbar != null) {
@@ -630,11 +649,9 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
             TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
             TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
 
-            Constants.teamName = responseModel.getName();
-            String concatenatedName = Constants.teamName + " (GW " + Constants.nextGameWeek + ")";
+            String concatenatedName = Constants.teamName + " (GW " + gameWeekNumber + ")";
             teamNameTextView.setText(concatenatedName);
 
-            Constants.managerName = responseModel.getPlayer_first_name() + " " + responseModel.getPlayer_last_name();
             managerNameTextView.setText(Constants.managerName);
         }
     }
