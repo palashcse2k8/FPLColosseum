@@ -39,6 +39,10 @@ public class HomePageSharedViewModel extends AndroidViewModel {
     CountDownLatch latch;
     Application application;
 
+    private MutableLiveData<String> toolbarTitle;
+    private MutableLiveData<String> toolbarSubTitle;
+    private MutableLiveData<String> previousFragment;
+
     public HomePageSharedViewModel(@NonNull Application application) {
         super(application);
         this.dataRepository = new UserGameWeekDataRepository(application);
@@ -47,7 +51,9 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         this.fixtureApiResultLiveData = new MediatorLiveData<>();
         myTeamMergedMediatorLiveData = new MediatorLiveData<>();
         pointsMergedMediatorLiveData = new MediatorLiveData<>();
-
+        toolbarTitle = new MutableLiveData<>();
+        toolbarSubTitle = new MutableLiveData<>();
+        previousFragment = new MutableLiveData<>();
     }
 
     public void getMyTeamMergedData(long managerID) {
@@ -145,41 +151,6 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
         });
     }
-
-//    public void getTeamSpecificGameWeekAllData(long managerID, long gameWeek) {
-//
-//        MyTeamMergedResponseModel myTeamMergedResponseModel = new MyTeamMergedResponseModel();
-//        dataLoading.setValue(true);
-//
-//        //call manager information with league data
-//        mergedResponseModelMediatorLiveData.addSource(dataRepository.getTeamInformation(managerID),
-//                gameWeekDataResponseModelApiResponse -> {
-//                    myTeamMergedResponseModel.setGameWeekDataResponseModel(gameWeekDataResponseModelApiResponse.getData());
-//
-//                    // call game week players picked api
-//                    mergedResponseModelMediatorLiveData.addSource(dataRepository.getGameWeekPicks(managerID, gameWeek),
-//                            gameWeekPicksModelApiResponse -> {
-//                                myTeamMergedResponseModel.setGameWeekPicksModel(gameWeekPicksModelApiResponse.getData());
-//
-//                                //call game week live points api
-//                                mergedResponseModelMediatorLiveData.addSource(dataRepository.getPlayerGameWeekLivePoints(gameWeek),
-//                                        gameWeekLivePointsResponseModelApiResponse -> {
-//                                            myTeamMergedResponseModel.setGameWeekLivePointsResponseModel(gameWeekLivePointsResponseModelApiResponse.getData());
-//
-//                                            mergedResponseModelMediatorLiveData.addSource(dataRepository.getFixtureData(gameWeek),
-//                                                    gameWeekMatchDetailsApiResponse -> {
-//                                                        myTeamMergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());
-//                                                        dataLoading.setValue(false); // make progress bar vanish when all api results are combined
-//                                                        mergedResponseModelMediatorLiveData.setValue(ApiResponse.success(myTeamMergedResponseModel));
-//                                                    });
-//                                        });
-//
-//                            });
-//
-//                }
-//        );
-//
-//    }
 
 
     public LiveData<Boolean> getMyTeamAllData(long entry_id) throws InterruptedException {
@@ -294,5 +265,29 @@ public class HomePageSharedViewModel extends AndroidViewModel {
             dataLoading.setValue(false);
             transferApiResultLiveData.setValue(userResponseModelApiResponse);
         });
+    }
+
+    public LiveData<String> getToolbarTitle() {
+        return toolbarTitle;
+    }
+
+    public LiveData<String> getToolbarSubTitle() {
+        return toolbarSubTitle;
+    }
+
+    public void setToolbarTitle(String toolbarTitle) {
+        this.toolbarTitle.setValue(toolbarTitle);
+    }
+
+    public void setToolbarSubTitle(String toolbarSubTitle) {
+        this.toolbarSubTitle.setValue(toolbarSubTitle);
+    }
+
+    public MutableLiveData<String> getPreviousFragment() {
+        return previousFragment;
+    }
+
+    public void setPreviousFragment(String fragment) {
+        this.previousFragment.setValue(fragment);
     }
 }

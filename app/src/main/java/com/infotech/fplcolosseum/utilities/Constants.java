@@ -22,7 +22,7 @@ public class Constants {
 
     public static String LOG_TAG = "FPlColosseum";
     public static String [] leagues = new String [] {
-            "671887", // FPLC
+            "893479", // FPLC
             "118990" // srbd premier league
     };
 

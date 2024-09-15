@@ -910,6 +910,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     @Override
     public void onTransferPlayer(PlayersData player) {
 
+        viewModel.setPreviousFragment("Transfer");
 
         PlayerSelectionFragment playerSelectionFragment = PlayerSelectionFragment.newInstance(player);
         // go to player selection
@@ -968,8 +969,10 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
             String concatenatedName = Constants.teamName + " (GW " + gameWeekNumber + ")";
             teamNameTextView.setText(concatenatedName);
+            viewModel.setToolbarTitle(concatenatedName);
 
             managerNameTextView.setText(Constants.managerName);
+            viewModel.setToolbarSubTitle(Constants.managerName);
         }
     }
 }
