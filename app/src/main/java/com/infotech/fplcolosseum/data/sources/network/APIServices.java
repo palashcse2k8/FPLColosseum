@@ -114,4 +114,7 @@ public interface APIServices {
 
     @GET("https://fantasy.premierleague.com/api/dream-team/{gameWeek}") // "https://fantasy.premierleague.com/api/team/set-piece-notes/"
     Call<ResponseBody> getWeekDreamTeam(@Path("gameWeek") long gameWeek);
+
+    @GET("https://fantasy.premierleague.com/api/element-summary/{player_id}/")  // https://fantasy.premierleague.com/api/element-summary/351/
+    Call<ResponseBody> getPlayerSummary(@Path("player_id") long player_id);
 }

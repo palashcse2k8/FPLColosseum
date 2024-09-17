@@ -1,7 +1,9 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +17,7 @@ import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyTeamPlayerInfoBottomSheetBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
+import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
 
 public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -97,6 +100,16 @@ public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragme
             }
             dismiss();
         });
+
+        binding.fullInfoButton.setOnClickListener( v -> {
+
+            Intent intent = new Intent(requireActivity(), PlayerFullInformationActivity.class);
+            intent.putExtra("playerData", this.playerData); // Replace with actual player name
+            startActivity(intent);
+
+            dismiss();
+        });
+
     }
 
     @Override
