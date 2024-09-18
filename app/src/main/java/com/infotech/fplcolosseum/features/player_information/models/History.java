@@ -3,7 +3,7 @@ package com.infotech.fplcolosseum.features.player_information.models;
 public class History {
     private float element;
     private float fixture;
-    private float opponent_team;
+    private long opponent_team;
     private float total_points;
     private boolean was_home;
     private String kickoff_time;
@@ -49,7 +49,7 @@ public class History {
         return fixture;
     }
 
-    public float getOpponent_team() {
+    public long getOpponent_team() {
         return opponent_team;
     }
 
@@ -195,7 +195,7 @@ public class History {
         this.fixture = fixture;
     }
 
-    public void setOpponent_team(float opponent_team) {
+    public void setOpponent_team(long opponent_team) {
         this.opponent_team = opponent_team;
     }
 

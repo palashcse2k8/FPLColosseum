@@ -8,40 +8,40 @@ import java.util.ArrayList;
 public class ElementSummary {
 
     @SerializedName("fixtures")
-    ArrayList< Object > fixtures = new ArrayList < Object > ();
+    ArrayList< Fixtures > fixtures = new ArrayList < > ();
 
     @SerializedName("history")
-    ArrayList < Object > history = new ArrayList < Object > ();
+    ArrayList < History > history = new ArrayList < > ();
 
     @SerializedName("history_past")
-    ArrayList < Object > history_past = new ArrayList < Object > ();
+    ArrayList < HistoryPast > history_past = new ArrayList < > ();
 
 
     // Getter Methods
 
-    public ArrayList<Object> getFixtures() {
+    public ArrayList<Fixtures> getFixtures() {
         return fixtures;
     }
 
-    public ArrayList<Object> getHistory() {
+    public ArrayList<History> getHistory() {
         return history;
     }
 
-    public ArrayList<Object> getHistory_past() {
+    public ArrayList<HistoryPast> getHistory_past() {
         return history_past;
     }
 
     // Setter Methods
 
-    public void setFixtures(ArrayList<Object> fixtures) {
+    public void setFixtures(ArrayList<Fixtures> fixtures) {
         this.fixtures = fixtures;
     }
 
-    public void setHistory(ArrayList<Object> history) {
+    public void setHistory(ArrayList<History> history) {
         this.history = history;
     }
 
-    public void setHistory_past(ArrayList<Object> history_past) {
+    public void setHistory_past(ArrayList<HistoryPast> history_past) {
         this.history_past = history_past;
     }
 }
