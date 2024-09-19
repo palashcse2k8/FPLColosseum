@@ -3,18 +3,18 @@ package com.infotech.fplcolosseum.features.player_information.models;
 public class Fixtures {
     private float id;
     private float code;
-    private float team_h;
+    private long team_h;
     private String team_h_score = null;
-    private float team_a;
+    private long team_a;
     private String team_a_score = null;
-    private float event;
+    private long event;
     private boolean finished;
     private float minutes;
     private boolean provisional_start_time;
     private String kickoff_time;
     private String event_name;
     private boolean is_home;
-    private float difficulty;
+    private long difficulty;
 
 
     // Getter Methods 
@@ -27,7 +27,7 @@ public class Fixtures {
         return code;
     }
 
-    public float getTeam_h() {
+    public long getTeam_h() {
         return team_h;
     }
 
@@ -35,7 +35,7 @@ public class Fixtures {
         return team_h_score;
     }
 
-    public float getTeam_a() {
+    public long getTeam_a() {
         return team_a;
     }
 
@@ -43,7 +43,7 @@ public class Fixtures {
         return team_a_score;
     }
 
-    public float getEvent() {
+    public long getEvent() {
         return event;
     }
 
@@ -71,7 +71,7 @@ public class Fixtures {
         return is_home;
     }
 
-    public float getDifficulty() {
+    public long getDifficulty() {
         return difficulty;
     }
 
@@ -85,7 +85,7 @@ public class Fixtures {
         this.code = code;
     }
 
-    public void setTeam_h(float team_h) {
+    public void setTeam_h(long team_h) {
         this.team_h = team_h;
     }
 
@@ -93,7 +93,7 @@ public class Fixtures {
         this.team_h_score = team_h_score;
     }
 
-    public void setTeam_a(float team_a) {
+    public void setTeam_a(long team_a) {
         this.team_a = team_a;
     }
 
@@ -101,7 +101,7 @@ public class Fixtures {
         this.team_a_score = team_a_score;
     }
 
-    public void setEvent(float event) {
+    public void setEvent(long event) {
         this.event = event;
     }
 
@@ -129,7 +129,7 @@ public class Fixtures {
         this.is_home = is_home;
     }
 
-    public void setDifficulty(float difficulty) {
+    public void setDifficulty(long difficulty) {
         this.difficulty = difficulty;
     }
 }

@@ -2,6 +2,7 @@ package com.infotech.fplcolosseum.features.homepage.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.infotech.fplcolosseum.databinding.FragmentMyTeamPlayerInfoBottomSheet
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
+import com.infotech.fplcolosseum.utilities.Constants;
+import com.squareup.picasso.Picasso;
 
 public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -77,6 +80,14 @@ public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragme
             binding.btnViceCap.setVisibility(View.GONE);
         }
 
+        String imageUrl = "https://resources.premierleague.com/premierleague/photos/players/110x140/p" + playerData.getCode() + ".png";
+
+        Picasso.get()
+                .load(imageUrl)
+                .error(R.mipmap.no_image)
+                .into(binding.playerImageView);
+
+        Log.d(Constants.LOG_TAG, imageUrl);
         binding.fullInfoButton.setOnClickListener(v -> dismiss());
         binding.closeIcon.setOnClickListener(v -> dismiss());
 

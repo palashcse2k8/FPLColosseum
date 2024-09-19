@@ -212,6 +212,14 @@ public class CustomUtil {
         }
     }
 
+    public static int getDifficultyLeveTextColor(long number) {
+        if (number == 4 || number == 5) {
+            return Color.WHITE;  // Returns white color
+        }
+
+        return Color.BLACK;  // Returns black color
+    }
+
     public static void prepareData(GameWeekStaticDataModel dataModel){
 
         Constants.GameWeekStaticData = dataModel;

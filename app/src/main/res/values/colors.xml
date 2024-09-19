@@ -63,6 +63,5 @@
     <color name="button_text_not_available">#9E9E9E</color>
     <color name="button_background_active">#2196F3</color>
     <color name="button_text_active">#FFFFFF</color>
-
-
+    <color name="deepGreen">#2E7D32</color>
 </resources>

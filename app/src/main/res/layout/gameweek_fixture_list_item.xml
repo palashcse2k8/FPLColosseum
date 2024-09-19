@@ -37,21 +37,22 @@
 
         <!-- Result -->
         <TextView
-            android:id="@+id/tvResult"
+            android:id="@+id/tvDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="Result"
+            android:layout_weight=".6"
+            android:text="Date"
             android:textSize="12sp"
             android:layout_marginEnd="16dp" />
 
         <!-- Points -->
         <TextView
-            android:id="@+id/tvPoints"
+            android:id="@+id/tvFDR"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="Points"
+            android:layout_weight=".4"
+            android:gravity="center_horizontal"
+            android:text="FDR"
             android:textSize="12sp"
             android:textStyle="bold" />
 

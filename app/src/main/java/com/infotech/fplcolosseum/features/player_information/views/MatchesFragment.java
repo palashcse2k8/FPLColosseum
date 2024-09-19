@@ -10,8 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -25,6 +28,7 @@ import com.infotech.fplcolosseum.features.player_information.models.History;
 import com.infotech.fplcolosseum.features.player_information.viewmodels.PlayerInformationViewModel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -36,10 +40,9 @@ public class MatchesFragment extends Fragment {
     private List<History> matchList;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMatchesBinding.inflate(inflater, container, false);
-        View rootView = binding.getRoot();
-        return rootView;
+        return binding.getRoot();
     }
 
     @Override
@@ -57,11 +60,15 @@ public class MatchesFragment extends Fragment {
                 ElementSummary elementSummary = (ElementSummary) apiResponse.getData();
                 setupBarChart(elementSummary.getHistory());
 
-                binding.matchesView.setLayoutManager(new LinearLayoutManager(getContext()));
+                binding.matchesView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true));
                 // Add more items...
 
                 adapter = new MatchesAdapter(elementSummary.getHistory());
                 binding.matchesView.setAdapter(adapter);
+                // Add a divider
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                        DividerItemDecoration.VERTICAL);
+                binding.matchesView.addItemDecoration(dividerItemDecoration);
             } else {
                 // Handle the case where the data is null, e.g., show an error message
                 // or retry logic can be implemented here.
@@ -96,6 +103,11 @@ public class MatchesFragment extends Fragment {
         // Customize the dataset (optional)
         dataSet.setColors(colors);
         dataSet.setValueTextSize(10f);
+        dataSet.setValueTextColor(Color.BLACK);
+
+        // Ensure values are drawn on bars
+        dataSet.setDrawValues(true);
+
 
         // Set ValueFormatter to display integers
         dataSet.setValueFormatter(new ValueFormatter() {
@@ -110,6 +122,12 @@ public class MatchesFragment extends Fragment {
         BarData barData = new BarData(dataSet);
         binding.barChart.setData(barData);
 
+        Description description = new Description();
+        description.setText("Points Per Week");  // Set your custom description text
+        description.setTextSize(12f);  // Set description text size (optional)
+        description.setTextColor(Color.BLACK);  // Set description text color (optional)
+        binding.barChart.setDescription(description);  // Set the description to the chart
+
         // Customize the X-axis to show 38 weeks
         XAxis xAxis = binding.barChart.getXAxis();
         xAxis.setLabelCount(38, true);   // Set 38 weeks on the X axis
@@ -121,6 +139,16 @@ public class MatchesFragment extends Fragment {
         YAxis leftAxis = binding.barChart.getAxisLeft();
         YAxis rightAxis = binding.barChart.getAxisRight();
         rightAxis.setEnabled(false); // Disable the right Y-axis if not needed
+
+        // Set up the legend to display the dataset label ("Points Per Week")
+        Legend legend = binding.barChart.getLegend();
+        legend.setEnabled(true);  // Enable legend
+//        legend.setTextSize(12f);  // Set legend text size
+//        legend.setFormSize(10f);  // Set the form size (icon size)
+//        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);  // Align legend to the center
+//        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);  // Place legend at the top
+//        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);  // Make legend horizontal
+
 
         // Set animations for chart loading
         binding.barChart.animateY(1500);

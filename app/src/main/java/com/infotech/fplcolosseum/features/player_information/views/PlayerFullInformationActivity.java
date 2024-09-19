@@ -22,6 +22,9 @@ import com.infotech.fplcolosseum.features.player_information.adapter.PlayerInfor
 import com.infotech.fplcolosseum.features.player_information.models.ElementSummary;
 import com.infotech.fplcolosseum.features.player_information.viewmodels.PlayerInformationViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.squareup.picasso.Picasso;
+
+import java.util.Objects;
 
 public class PlayerFullInformationActivity extends AppCompatActivity {
 
@@ -45,6 +48,13 @@ public class PlayerFullInformationActivity extends AppCompatActivity {
             viewModel = new ViewModelProvider(this).get(PlayerInformationViewModel.class);
             binding.setPlayerInfoViewModel(viewModel);
             viewModel.getElementSummary(playersData.getId());
+
+            String imageUrl = "https://resources.premierleague.com/premierleague/photos/players/110x140/p" + playersData.getCode() + ".png";
+
+            Picasso.get()
+                    .load(imageUrl)
+                    .error(R.mipmap.no_image)
+                    .into(binding.playerImageView);
         }
 
 
@@ -131,7 +141,10 @@ public class PlayerFullInformationActivity extends AppCompatActivity {
         // Set the title based on the received name (optional)
         if (playersData != null) {
             binding.toolbar.setTitle(playersData.getFirst_name() + " " + playersData.getSecond_name());
-            String subtitle = "€" + playersData.getNow_cost() / 10 + "m";
+            String price = "€" + (float) playersData.getNow_cost() / 10 + "m";
+            String teamName = Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getShort_name();
+            String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(playersData.getElement_type())).getSingular_name_short();
+            String subtitle = price + " | " + playerType + " | " + teamName;
             binding.toolbar.setSubtitle(subtitle);
         }
 
