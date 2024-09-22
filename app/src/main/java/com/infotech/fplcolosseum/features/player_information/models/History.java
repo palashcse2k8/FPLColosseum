@@ -32,11 +32,11 @@ public class History {
     private String expected_assists;
     private String expected_goal_involvements;
     private String expected_goals_conceded;
-    private float value;
+    private Long value;
     private float transfers_balance;
-    private float selected;
-    private float transfers_in;
-    private float transfers_out;
+    private Long selected;
+    private Long transfers_in;
+    private Long transfers_out;
 
 
     // Getter Methods 
@@ -165,7 +165,7 @@ public class History {
         return expected_goals_conceded;
     }
 
-    public float getValue() {
+    public Long getValue() {
         return value;
     }
 
@@ -173,15 +173,15 @@ public class History {
         return transfers_balance;
     }
 
-    public float getSelected() {
+    public Long getSelected() {
         return selected;
     }
 
-    public float getTransfers_in() {
+    public Long getTransfers_in() {
         return transfers_in;
     }
 
-    public float getTransfers_out() {
+    public Long getTransfers_out() {
         return transfers_out;
     }
 
@@ -311,7 +311,7 @@ public class History {
         this.expected_goals_conceded = expected_goals_conceded;
     }
 
-    public void setValue(float value) {
+    public void setValue(Long value) {
         this.value = value;
     }
 
@@ -319,15 +319,15 @@ public class History {
         this.transfers_balance = transfers_balance;
     }
 
-    public void setSelected(float selected) {
+    public void setSelected(Long selected) {
         this.selected = selected;
     }
 
-    public void setTransfers_in(float transfers_in) {
+    public void setTransfers_in(Long transfers_in) {
         this.transfers_in = transfers_in;
     }
 
-    public void setTransfers_out(float transfers_out) {
+    public void setTransfers_out(Long transfers_out) {
         this.transfers_out = transfers_out;
     }
 }

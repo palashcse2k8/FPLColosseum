@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="marginHorizontal" >32dp</dimen>
+    <dimen name="marginHorizontal">32dp</dimen>
+    <dimen name="textSizeSmall">12sp</dimen>>
+    <dimen name="textSizeExtraSmall">12sp</dimen>>
 
 </resources>

@@ -320,4 +320,8 @@ public class CustomUtil {
         // Extract and return the LocalDateTime from ZonedDateTime
         return localZonedTime.toLocalDateTime();
     }
+
+    public static String convertedPrice(long currentPrice){
+        return "€" + (double) currentPrice / 10 + "m";
+    }
 }

@@ -35,6 +35,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchVie
         History matchItem = matchList.get(position);
         String gameWeek = (int) matchItem.getRound() + "";
         holder.tvNumber.setText(gameWeek);
+
         String teamName = Objects.requireNonNull(Constants.teamMap.get(matchItem.getOpponent_team())).getShort_name() + " " + (matchItem.getWas_home() ? "(H)" : "(A)");
         holder.tvOpponent.setText(teamName);
         String score = (int) matchItem.getTeam_h_score() + " - " + (int) matchItem.getTeam_a_score();

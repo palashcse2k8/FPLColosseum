@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    card_view:cardElevation="10dp"
+    card_view:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+            <TextView
+                android:id="@+id/gameWeek"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="GW"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/opponent"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Opponent"
+                android:textAlignment="textStart"
+                android:textSize="@dimen/textSizeSmall"/>
+
+
+            <TextView
+                android:id="@+id/points"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="P"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/minutesPlayed"
+                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:padding="4dp"
+                android:text="MP"
+                android:breakStrategy="simple"
+                android:textSize="@dimen/textSizeSmall"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/goalScored"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:padding="4dp"
+                android:text="GS"
+                android:textAlignment="center"
+                android:breakStrategy="simple"
+                android:textSize="@dimen/textSizeSmall"/>
+            <TextView
+                android:id="@+id/assist"
+                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:padding="4dp"
+                android:text="A"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/starts"
+                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:padding="4dp"
+                android:text="ST"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/expectedGoal"
+                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:padding="4dp"
+                android:text="xG"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/expectedAssist"
+                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:padding="4dp"
+                android:text="xA"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/expectedGoalInvolvement"
+                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:padding="4dp"
+                android:text="xGI"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/cleanSheet"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:padding="4dp"
+                android:text="CS"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/goalConceded"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:padding="4dp"
+                android:text="GC"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/expectedGoalConceded"
+                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:padding="4dp"
+                android:text="xGC"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/ownGoal"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:padding="4dp"
+                android:text="OG"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/penaltySaved"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:padding="4dp"
+                android:text="PS"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/penaltyMissed"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:padding="4dp"
+                android:text="PM"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/yellowCard"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:padding="4dp"
+                android:text="YC"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+
+            <TextView
+                android:id="@+id/redCard"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:padding="4dp"
+                android:text="RC"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/saves"
+                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:padding="4dp"
+                android:text="S"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+
+            <TextView
+                android:id="@+id/bonusPoints"
+                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:padding="4dp"
+                android:text="B"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+
+            <TextView
+                android:id="@+id/bonusPointSystem"
+                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:padding="4dp"
+                android:text="BPS"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/influence"
+                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:padding="4dp"
+                android:text="I"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/creativity"
+                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:padding="4dp"
+                android:text="C"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/threat"
+                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:padding="4dp"
+                android:text="T"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/ictIndex"
+                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:padding="4dp"
+                android:text="T"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+            <TextView
+                android:id="@+id/netTransfer"
+                android:layout_height="wrap_content"
+                android:layout_width="120dp"
+                android:padding="4dp"
+                android:text="NT"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/selectedBy"
+                android:layout_height="wrap_content"
+                android:layout_width="150dp"
+                android:padding="4dp"
+                android:text="NT"
+                android:textAlignment="center"
+                android:textSize="@dimen/textSizeSmall"/>
+
+            <TextView
+                android:id="@+id/currentPrice"
+                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:padding="4dp"
+                android:text="€E"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"/>
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

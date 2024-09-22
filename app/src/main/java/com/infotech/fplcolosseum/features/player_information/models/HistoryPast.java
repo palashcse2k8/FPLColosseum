@@ -19,15 +19,15 @@ public class HistoryPast {
     private float saves;
     private float bonus;
     private float bps;
-    private String influence;
-    private String creativity;
-    private String threat;
-    private String ict_index;
-    private float starts;
-    private String expected_goals;
-    private String expected_assists;
-    private String expected_goal_involvements;
-    private String expected_goals_conceded;
+    private Double influence;
+    private Double creativity;
+    private Double threat;
+    private Double ict_index;
+    private Long starts;
+    private Double expected_goals;
+    private Double expected_assists;
+    private Double expected_goal_involvements;
+    private Double expected_goals_conceded;
 
 
     // Getter Methods 
@@ -104,39 +104,39 @@ public class HistoryPast {
         return bps;
     }
 
-    public String getInfluence() {
+    public Double getInfluence() {
         return influence;
     }
 
-    public String getCreativity() {
+    public Double getCreativity() {
         return creativity;
     }
 
-    public String getThreat() {
+    public Double getThreat() {
         return threat;
     }
 
-    public String getIct_index() {
+    public Double getIct_index() {
         return ict_index;
     }
 
-    public float getStarts() {
+    public Long getStarts() {
         return starts;
     }
 
-    public String getExpected_goals() {
+    public Double getExpected_goals() {
         return expected_goals;
     }
 
-    public String getExpected_assists() {
+    public Double getExpected_assists() {
         return expected_assists;
     }
 
-    public String getExpected_goal_involvements() {
+    public Double getExpected_goal_involvements() {
         return expected_goal_involvements;
     }
 
-    public String getExpected_goals_conceded() {
+    public Double getExpected_goals_conceded() {
         return expected_goals_conceded;
     }
 
@@ -214,39 +214,39 @@ public class HistoryPast {
         this.bps = bps;
     }
 
-    public void setInfluence(String influence) {
+    public void setInfluence(Double influence) {
         this.influence = influence;
     }
 
-    public void setCreativity(String creativity) {
+    public void setCreativity(Double creativity) {
         this.creativity = creativity;
     }
 
-    public void setThreat(String threat) {
+    public void setThreat(Double threat) {
         this.threat = threat;
     }
 
-    public void setIct_index(String ict_index) {
+    public void setIct_index(Double ict_index) {
         this.ict_index = ict_index;
     }
 
-    public void setStarts(float starts) {
+    public void setStarts(Long starts) {
         this.starts = starts;
     }
 
-    public void setExpected_goals(String expected_goals) {
+    public void setExpected_goals(Double expected_goals) {
         this.expected_goals = expected_goals;
     }
 
-    public void setExpected_assists(String expected_assists) {
+    public void setExpected_assists(Double expected_assists) {
         this.expected_assists = expected_assists;
     }
 
-    public void setExpected_goal_involvements(String expected_goal_involvements) {
+    public void setExpected_goal_involvements(Double expected_goal_involvements) {
         this.expected_goal_involvements = expected_goal_involvements;
     }
 
-    public void setExpected_goals_conceded(String expected_goals_conceded) {
+    public void setExpected_goals_conceded(Double expected_goals_conceded) {
         this.expected_goals_conceded = expected_goals_conceded;
     }
 }
