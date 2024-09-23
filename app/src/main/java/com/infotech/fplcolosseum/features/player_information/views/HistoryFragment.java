@@ -96,7 +96,7 @@ public class HistoryFragment extends Fragment {
                     binding.recyclerFixed.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true));
 
                     binding.recyclerFixed.setAdapter(new HistoryAdapterFixed(elementSummary.getHistory_past()));
-// Add a divider
+                    // Add a divider
                     DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
                             DividerItemDecoration.VERTICAL);
                     binding.recyclerFixed.addItemDecoration(dividerItemDecoration);
@@ -106,7 +106,7 @@ public class HistoryFragment extends Fragment {
 
                     adapter = new HistoryAdapter(elementSummary.getHistory_past());
                     binding.recyclerHorizontal.setAdapter(adapter);
-;
+                    ;
                     binding.recyclerHorizontal.addItemDecoration(dividerItemDecoration);
                 } else {
                     binding.previousSeasonLayout.setVisibility(View.GONE);
