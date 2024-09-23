@@ -1,17 +1,21 @@
 package com.infotech.fplcolosseum.features.player_information.views;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentFixturesBinding;
 import com.infotech.fplcolosseum.databinding.FragmentHistoryBinding;
 import com.infotech.fplcolosseum.features.player_information.adapter.FixtureAdapter;
@@ -19,10 +23,12 @@ import com.infotech.fplcolosseum.features.player_information.adapter.HistoryAdap
 import com.infotech.fplcolosseum.features.player_information.adapter.HistoryAdapterFixed;
 import com.infotech.fplcolosseum.features.player_information.adapter.ThisSeasonHistoryAdapter;
 import com.infotech.fplcolosseum.features.player_information.models.ElementSummary;
+import com.infotech.fplcolosseum.features.player_information.models.History;
 import com.infotech.fplcolosseum.features.player_information.viewmodels.PlayerInformationViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class HistoryFragment extends Fragment {
@@ -68,8 +74,13 @@ public class HistoryFragment extends Fragment {
 
                 //Populate this season data
                 if (elementSummary.getHistory().size() > 1) {
-                    binding.thisSeasonRecyclerHorizontal.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true));
-                    binding.thisSeasonRecyclerHorizontal.setAdapter(new ThisSeasonHistoryAdapter(elementSummary.getHistory()));
+                    changeTextViewColors(binding.thisSeasonHeader.thisSeasonItemCardView);
+
+                    // Reverse the list (if not reversed already)
+                    List<History> reversedHistory = new ArrayList<>(elementSummary.getHistory());
+                    Collections.reverse(reversedHistory);
+                    binding.thisSeasonRecyclerHorizontal.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+                    binding.thisSeasonRecyclerHorizontal.setAdapter(new ThisSeasonHistoryAdapter(reversedHistory));
                     // Add a divider
                     DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
                             DividerItemDecoration.VERTICAL);
@@ -80,6 +91,8 @@ public class HistoryFragment extends Fragment {
 
                 // Previous season data
                 if (elementSummary.getHistory_past().size() > 1) {
+
+                    changeTextViewColors(binding.itemSeasonFixedHeader.itemSeasonFixedCardView);
                     binding.recyclerFixed.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true));
 
                     binding.recyclerFixed.setAdapter(new HistoryAdapterFixed(elementSummary.getHistory_past()));
@@ -88,6 +101,7 @@ public class HistoryFragment extends Fragment {
                             DividerItemDecoration.VERTICAL);
                     binding.recyclerFixed.addItemDecoration(dividerItemDecoration);
 
+                    changeTextViewColors(binding.itemSeasonHeader.itemSeasonCardView);
                     binding.recyclerHorizontal.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true));
 
                     adapter = new HistoryAdapter(elementSummary.getHistory_past());
@@ -108,16 +122,27 @@ public class HistoryFragment extends Fragment {
 
     }
 
-    private List<List<String>> generateData() {
-        List<List<String>> data = new ArrayList<>();
+    public void changeTextViewColors(ViewGroup headerView) {
 
-        // Header row
-        data.add(Arrays.asList("Name", "Age", "City", "Occ", "Sal", "Exp"));
+        // Set the background color of the CardView
+        headerView.setBackgroundColor(
+                ContextCompat.getColor(requireContext(), R.color.deepGreen)
+        );
 
-        // Sample data rows
-        data.add(Arrays.asList("John", "30", "New", "Software", "$95", "5"));
-        data.add(Arrays.asList("Jane", "28", "San", "Data", "$105", "3"));
-
-        return data;
+        // Find all TextViews in the layout and change their color to white
+        changeTextViewColorRecursively(headerView);
     }
+
+    private void changeTextViewColorRecursively(View view) {
+        if (view instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                View child = viewGroup.getChildAt(i);
+                changeTextViewColorRecursively(child);
+            }
+        } else if (view instanceof TextView) {
+            ((TextView) view).setTextColor(Color.WHITE);
+        }
+    }
+
 }

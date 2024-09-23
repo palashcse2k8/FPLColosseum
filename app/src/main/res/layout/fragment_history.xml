@@ -25,14 +25,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/deepGreen"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="This Seasons"
-                    android:textColor="@color/white"
                     android:textAppearance="@android:style/TextAppearance.Medium"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -54,13 +52,15 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <include layout="@layout/layout_item_this_season_header" />
+                        <include android:id="@+id/thisSeasonHeader"
+
+                            layout="@layout/layout_this_season_item"/>
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/thisSeasonRecyclerHorizontal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            tools:listitem="@layout/layout_item_this_season_header" />
+                            tools:listitem="@layout/layout_this_season_item" />
                     </LinearLayout>
 
                 </HorizontalScrollView>
@@ -82,14 +82,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/deepGreen"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="Previous Seasons"
-                    android:textColor="@color/white"
                     android:textAppearance="@android:style/TextAppearance.Medium"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -108,7 +106,8 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <include layout="@layout/layout_item_season_fixed"/>
+                    <include android:id="@+id/itemSeasonFixedHeader"
+                        layout="@layout/layout_item_season_fixed"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerFixed"
@@ -128,7 +127,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <include layout="@layout/layout_item_season_header"/>
+                        <include android:id="@+id/itemSeasonHeader"
+                            layout="@layout/layout_item_season_header"/>
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerHorizontal"

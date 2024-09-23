@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@color/button_primary"
+                android:background="@color/deepGreen"
                 android:padding="8dp">
 
                 <!-- Number -->

@@ -33,17 +33,19 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchVie
     @Override
     public void onBindViewHolder(@NonNull MatchViewHolder holder, int position) {
         History matchItem = matchList.get(position);
-        String gameWeek = (int) matchItem.getRound() + "";
+        String gameWeek = matchItem.getRound() + "";
         holder.tvNumber.setText(gameWeek);
 
         String teamName = Objects.requireNonNull(Constants.teamMap.get(matchItem.getOpponent_team())).getShort_name() + " " + (matchItem.getWas_home() ? "(H)" : "(A)");
         holder.tvOpponent.setText(teamName);
-        String score = (int) matchItem.getTeam_h_score() + " - " + (int) matchItem.getTeam_a_score();
+        String score = matchItem.getTeam_h_score() + " - " + matchItem.getTeam_a_score();
         String result;
         if(matchItem.getTeam_h_score() == matchItem.getTeam_a_score())
         {
             result = " (D)";
         } else if (matchItem.getWas_home() && matchItem.getTeam_h_score() > matchItem.getTeam_a_score()) {
+            result = " (W)";
+        } else if (!matchItem.getWas_home() && matchItem.getTeam_h_score() < matchItem.getTeam_a_score()) {
             result = " (W)";
         } else {
             result = " (L)";
@@ -52,7 +54,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchVie
         score = score + result;
 
         holder.tvResult.setText(score);
-        String points = (int) matchItem.getTotal_points() + " Pts";
+        String points = matchItem.getTotal_points() + " Pts";
         holder.tvPoints.setText(points);
     }
 

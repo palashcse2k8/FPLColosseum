@@ -29,7 +29,7 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:background="@color/toolbar"
+                android:background="@color/deepGreen"
                 app:title="Md. Mosiur Rahman"
                 android:layout_height="?attr/actionBarSize"
                 app:titleTextColor="@color/white" />
@@ -63,194 +63,202 @@
                     android:layout_gravity="center_horizontal"
                     />
 
-                <TableLayout
-                    android:id="@+id/tl"
+                <ScrollView
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
                     >
+                    <TableLayout
+                        android:id="@+id/tl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white">
 
-                    <TableRow
-                        android:background="@drawable/table_row_bg"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
-                        >
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:padding="2dp"
-                            android:layout_height="wrap_content"
-                            android:text="Form"
-                            android:lines="1"
-                            />
-                        <View
-                            android:layout_width="1dp"
+                        <TableRow
+                            android:background="@drawable/table_row_bg"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@color/black" />
-                        <TextView
-                            android:id="@+id/player_form"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:padding="2dp"
-                            android:text="@{player.getForm}"
-                            android:gravity="end"
-                            android:paddingLeft="2dp"
-                            />
-                    </TableRow>
+                            android:padding="5dp"
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:padding="2dp"
+                                android:layout_height="wrap_content"
+                                android:text="Form"
+                                android:lines="1"
+                                />
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/black" />
+                            <TextView
+                                android:id="@+id/player_form"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:text="@{player.getForm}"
+                                android:gravity="end"
+                                android:paddingLeft="2dp"
+                                />
+                        </TableRow>
 
-                    <TableRow
-                        android:background="@drawable/table_row_bg"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
-                        >
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:padding="2dp"
-                            android:layout_height="wrap_content"
-                            android:text="xG"
-                            android:lines="1"
-                            />
-                        <View
-                            android:layout_width="1dp"
+                        <TableRow
+                            android:background="@drawable/table_row_bg"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@color/black" />
-                        <TextView
-                            android:id="@+id/player_expected_goals"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:padding="2dp"
-                            android:text="@{player.getExpected_goals}"
-                            android:gravity="end"
-                            android:paddingLeft="2dp"
-                            />
-                    </TableRow>
-                    <TableRow
-                        android:id="@+id/tr_header"
-                        android:background="@drawable/table_row_bg"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
-                        >
-                        <TextView
-                            android:id="@+id/tv_product"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:padding="2dp"
-                            android:layout_height="wrap_content"
-                            android:text="xA"
-                            android:lines="1"
-                            />
-                        <View
-                            android:layout_width="1dp"
+                            android:padding="5dp"
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:padding="2dp"
+                                android:layout_height="wrap_content"
+                                android:text="xG"
+                                android:lines="1"
+                                />
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/black" />
+                            <TextView
+                                android:id="@+id/player_expected_goals"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:text="@{player.getExpected_goals}"
+                                android:gravity="end"
+                                android:paddingLeft="2dp"
+                                />
+                        </TableRow>
+                        <TableRow
+                            android:id="@+id/tr_header"
+                            android:background="@drawable/table_row_bg"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@color/black" />
-                        <TextView
-                            android:id="@+id/tv_price"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:padding="2dp"
-                            android:text="@{player.getExpected_assists}"
-                            android:gravity="end"
-                            android:paddingLeft="2dp"
-                            />
-                    </TableRow>
-                    <TableRow
-                        android:background="@drawable/table_row_bg"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
-                        >
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:padding="2dp"
-                            android:layout_height="wrap_content"
-                            android:text="Pts / Match"
-                            android:lines="1"
-                            />
-                        <View
-                            android:layout_width="1dp"
+                            android:padding="5dp"
+                            >
+                            <TextView
+                                android:id="@+id/tv_product"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:padding="2dp"
+                                android:layout_height="wrap_content"
+                                android:text="xA"
+                                android:lines="1"
+                                />
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/black" />
+                            <TextView
+                                android:id="@+id/tv_price"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:text="@{player.getExpected_assists}"
+                                android:gravity="end"
+                                android:paddingLeft="2dp"
+                                />
+                        </TableRow>
+                        <TableRow
+                            android:background="@drawable/table_row_bg"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@color/black" />
-                        <TextView
-                            android:id="@+id/points_per_match"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:padding="2dp"
-                            android:text="@{player.getPoints_per_game}"
-                            android:gravity="end"
-                            android:paddingLeft="2dp"
-                            />
-                    </TableRow>
-                    <TableRow
+                            android:padding="5dp"
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:padding="2dp"
+                                android:layout_height="wrap_content"
+                                android:text="Pts / Match"
+                                android:lines="1"
+                                />
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/black" />
+                            <TextView
+                                android:id="@+id/points_per_match"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:text="@{player.getPoints_per_game}"
+                                android:gravity="end"
+                                android:paddingLeft="2dp"
+                                />
+                        </TableRow>
+                        <TableRow
 
-                        android:background="@drawable/table_row_bg"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
-                        >
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:padding="2dp"
-                            android:layout_height="wrap_content"
-                            android:text="Selected By"
-                            android:lines="1"
-                            />
-                        <View
-                            android:layout_width="1dp"
+                            android:background="@drawable/table_row_bg"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@color/black" />
-                        <TextView
-                            android:id="@+id/player_selected_by"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:padding="2dp"
-                            android:text='@{player.getSelected_by_percent + "%"}'
-                            android:gravity="end"
-                            android:paddingLeft="2dp"
-                            />
-                    </TableRow>
-                    <TableRow
-                        android:background="@drawable/table_row_bg"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
-                        >
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:padding="2dp"
-                            android:layout_height="wrap_content"
-                            android:text="Total Pts"
-                            android:lines="1"
-                            />
-                        <View
-                            android:layout_width="1dp"
+                            android:padding="5dp"
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:padding="2dp"
+                                android:layout_height="wrap_content"
+                                android:text="Selected By"
+                                android:lines="1"
+                                />
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/black" />
+                            <TextView
+                                android:id="@+id/player_selected_by"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:text='@{player.getSelected_by_percent + "%"}'
+                                android:gravity="end"
+                                android:paddingLeft="2dp"
+                                />
+                        </TableRow>
+                        <TableRow
+                            android:background="@drawable/table_row_bg"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@color/black" />
-                        <TextView
-                            android:id="@+id/player_total_points"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:padding="2dp"
-                            android:text="@{String.valueOf(player.total_points)}"
-                            android:gravity="end"
-                            android:paddingLeft="2dp"
-                            />
-                    </TableRow>
+                            android:padding="5dp"
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:padding="2dp"
+                                android:layout_height="wrap_content"
+                                android:text="Total Pts"
+                                android:lines="1"
+                                />
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/black" />
+                            <TextView
+                                android:id="@+id/player_total_points"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:padding="2dp"
+                                android:text="@{String.valueOf(player.total_points)}"
+                                android:gravity="end"
+                                android:paddingLeft="2dp"
+                                />
+                        </TableRow>
 
-                </TableLayout>
+                    </TableLayout>
+
+                </ScrollView>
+
+
 
             </LinearLayout>
 

@@ -1,5 +1,8 @@
 package com.infotech.fplcolosseum.features.player_information.views;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -8,6 +11,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.tabs.TabLayout;
@@ -146,6 +150,7 @@ public class PlayerFullInformationActivity extends AppCompatActivity {
             String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(playersData.getElement_type())).getSingular_name_short();
             String subtitle = price + " | " + playerType + " | " + teamName;
             binding.toolbar.setSubtitle(subtitle);
+            binding.toolbar.setSubtitleTextColor(ContextCompat.getColor(this, R.color.white));
         }
 
         setSupportActionBar(binding.toolbar);
@@ -155,6 +160,12 @@ public class PlayerFullInformationActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
+        }
+
+        //change the back button color to white
+        Drawable navigationIcon = binding.toolbar.getNavigationIcon();
+        if (navigationIcon != null) {
+            navigationIcon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         }
     }
 

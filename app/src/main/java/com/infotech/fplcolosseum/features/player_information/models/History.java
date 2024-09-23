@@ -1,39 +1,39 @@
 package com.infotech.fplcolosseum.features.player_information.models;
 
 public class History {
-    private float element;
-    private float fixture;
-    private long opponent_team;
-    private float total_points;
+    private Long element;
+    private Long fixture;
+    private Long opponent_team;
+    private Long total_points;
     private boolean was_home;
     private String kickoff_time;
-    private float team_h_score;
-    private float team_a_score;
-    private float round;
-    private float minutes;
-    private float goals_scored;
-    private float assists;
-    private float clean_sheets;
-    private float goals_conceded;
-    private float own_goals;
-    private float penalties_saved;
-    private float penalties_missed;
-    private float yellow_cards;
-    private float red_cards;
-    private float saves;
-    private float bonus;
-    private float bps;
-    private String influence;
-    private String creativity;
-    private String threat;
-    private String ict_index;
-    private float starts;
-    private String expected_goals;
-    private String expected_assists;
-    private String expected_goal_involvements;
-    private String expected_goals_conceded;
+    private Long team_h_score;
+    private Long team_a_score;
+    private Long round;
+    private Long minutes;
+    private Long goals_scored;
+    private Long assists;
+    private Long clean_sheets;
+    private Long goals_conceded;
+    private Long own_goals;
+    private Long penalties_saved;
+    private Long penalties_missed;
+    private Long yellow_cards;
+    private Long red_cards;
+    private Long saves;
+    private Long bonus;
+    private Long bps;
+    private Double influence;
+    private Double creativity;
+    private Double threat;
+    private Double ict_index;
+    private Long starts;
+    private Double expected_goals;
+    private Double expected_assists;
+    private Double expected_goal_involvements;
+    private Double expected_goals_conceded;
     private Long value;
-    private float transfers_balance;
+    private Long transfers_balance;
     private Long selected;
     private Long transfers_in;
     private Long transfers_out;
@@ -41,19 +41,19 @@ public class History {
 
     // Getter Methods 
 
-    public float getElement() {
+    public Long getElement() {
         return element;
     }
 
-    public float getFixture() {
+    public Long getFixture() {
         return fixture;
     }
 
-    public long getOpponent_team() {
+    public Long getOpponent_team() {
         return opponent_team;
     }
 
-    public float getTotal_points() {
+    public Long getTotal_points() {
         return total_points;
     }
 
@@ -65,103 +65,103 @@ public class History {
         return kickoff_time;
     }
 
-    public float getTeam_h_score() {
+    public Long getTeam_h_score() {
         return team_h_score;
     }
 
-    public float getTeam_a_score() {
+    public Long getTeam_a_score() {
         return team_a_score;
     }
 
-    public float getRound() {
+    public Long getRound() {
         return round;
     }
 
-    public float getMinutes() {
+    public Long getMinutes() {
         return minutes;
     }
 
-    public float getGoals_scored() {
+    public Long getGoals_scored() {
         return goals_scored;
     }
 
-    public float getAssists() {
+    public Long getAssists() {
         return assists;
     }
 
-    public float getClean_sheets() {
+    public Long getClean_sheets() {
         return clean_sheets;
     }
 
-    public float getGoals_conceded() {
+    public Long getGoals_conceded() {
         return goals_conceded;
     }
 
-    public float getOwn_goals() {
+    public Long getOwn_goals() {
         return own_goals;
     }
 
-    public float getPenalties_saved() {
+    public Long getPenalties_saved() {
         return penalties_saved;
     }
 
-    public float getPenalties_missed() {
+    public Long getPenalties_missed() {
         return penalties_missed;
     }
 
-    public float getYellow_cards() {
+    public Long getYellow_cards() {
         return yellow_cards;
     }
 
-    public float getRed_cards() {
+    public Long getRed_cards() {
         return red_cards;
     }
 
-    public float getSaves() {
+    public Long getSaves() {
         return saves;
     }
 
-    public float getBonus() {
+    public Long getBonus() {
         return bonus;
     }
 
-    public float getBps() {
+    public Long getBps() {
         return bps;
     }
 
-    public String getInfluence() {
+    public Double getInfluence() {
         return influence;
     }
 
-    public String getCreativity() {
+    public Double getCreativity() {
         return creativity;
     }
 
-    public String getThreat() {
+    public Double getThreat() {
         return threat;
     }
 
-    public String getIct_index() {
+    public Double getIct_index() {
         return ict_index;
     }
 
-    public float getStarts() {
+    public Long getStarts() {
         return starts;
     }
 
-    public String getExpected_goals() {
+    public Double getExpected_goals() {
         return expected_goals;
     }
 
-    public String getExpected_assists() {
+    public Double getExpected_assists() {
         return expected_assists;
     }
 
-    public String getExpected_goal_involvements() {
+    public Double getExpected_goal_involvements() {
         return expected_goal_involvements;
     }
 
-    public String getExpected_goals_conceded() {
+    public Double getExpected_goals_conceded() {
         return expected_goals_conceded;
     }
 
@@ -169,7 +169,7 @@ public class History {
         return value;
     }
 
-    public float getTransfers_balance() {
+    public Long getTransfers_balance() {
         return transfers_balance;
     }
 
@@ -187,11 +187,11 @@ public class History {
 
     // Setter Methods 
 
-    public void setElement(float element) {
+    public void setElement(Long element) {
         this.element = element;
     }
 
-    public void setFixture(float fixture) {
+    public void setFixture(Long fixture) {
         this.fixture = fixture;
     }
 
@@ -199,7 +199,7 @@ public class History {
         this.opponent_team = opponent_team;
     }
 
-    public void setTotal_points(float total_points) {
+    public void setTotal_points(Long total_points) {
         this.total_points = total_points;
     }
 
@@ -211,103 +211,103 @@ public class History {
         this.kickoff_time = kickoff_time;
     }
 
-    public void setTeam_h_score(float team_h_score) {
+    public void setTeam_h_score(Long team_h_score) {
         this.team_h_score = team_h_score;
     }
 
-    public void setTeam_a_score(float team_a_score) {
+    public void setTeam_a_score(Long team_a_score) {
         this.team_a_score = team_a_score;
     }
 
-    public void setRound(float round) {
+    public void setRound(Long round) {
         this.round = round;
     }
 
-    public void setMinutes(float minutes) {
+    public void setMinutes(Long minutes) {
         this.minutes = minutes;
     }
 
-    public void setGoals_scored(float goals_scored) {
+    public void setGoals_scored(Long goals_scored) {
         this.goals_scored = goals_scored;
     }
 
-    public void setAssists(float assists) {
+    public void setAssists(Long assists) {
         this.assists = assists;
     }
 
-    public void setClean_sheets(float clean_sheets) {
+    public void setClean_sheets(Long clean_sheets) {
         this.clean_sheets = clean_sheets;
     }
 
-    public void setGoals_conceded(float goals_conceded) {
+    public void setGoals_conceded(Long goals_conceded) {
         this.goals_conceded = goals_conceded;
     }
 
-    public void setOwn_goals(float own_goals) {
+    public void setOwn_goals(Long own_goals) {
         this.own_goals = own_goals;
     }
 
-    public void setPenalties_saved(float penalties_saved) {
+    public void setPenalties_saved(Long penalties_saved) {
         this.penalties_saved = penalties_saved;
     }
 
-    public void setPenalties_missed(float penalties_missed) {
+    public void setPenalties_missed(Long penalties_missed) {
         this.penalties_missed = penalties_missed;
     }
 
-    public void setYellow_cards(float yellow_cards) {
+    public void setYellow_cards(Long yellow_cards) {
         this.yellow_cards = yellow_cards;
     }
 
-    public void setRed_cards(float red_cards) {
+    public void setRed_cards(Long red_cards) {
         this.red_cards = red_cards;
     }
 
-    public void setSaves(float saves) {
+    public void setSaves(Long saves) {
         this.saves = saves;
     }
 
-    public void setBonus(float bonus) {
+    public void setBonus(Long bonus) {
         this.bonus = bonus;
     }
 
-    public void setBps(float bps) {
+    public void setBps(Long bps) {
         this.bps = bps;
     }
 
-    public void setInfluence(String influence) {
+    public void setInfluence(Double influence) {
         this.influence = influence;
     }
 
-    public void setCreativity(String creativity) {
+    public void setCreativity(Double creativity) {
         this.creativity = creativity;
     }
 
-    public void setThreat(String threat) {
+    public void setThreat(Double threat) {
         this.threat = threat;
     }
 
-    public void setIct_index(String ict_index) {
+    public void setIct_index(Double ict_index) {
         this.ict_index = ict_index;
     }
 
-    public void setStarts(float starts) {
+    public void setStarts(Long starts) {
         this.starts = starts;
     }
 
-    public void setExpected_goals(String expected_goals) {
+    public void setExpected_goals(Double expected_goals) {
         this.expected_goals = expected_goals;
     }
 
-    public void setExpected_assists(String expected_assists) {
+    public void setExpected_assists(Double expected_assists) {
         this.expected_assists = expected_assists;
     }
 
-    public void setExpected_goal_involvements(String expected_goal_involvements) {
+    public void setExpected_goal_involvements(Double expected_goal_involvements) {
         this.expected_goal_involvements = expected_goal_involvements;
     }
 
-    public void setExpected_goals_conceded(String expected_goals_conceded) {
+    public void setExpected_goals_conceded(Double expected_goals_conceded) {
         this.expected_goals_conceded = expected_goals_conceded;
     }
 
@@ -315,7 +315,7 @@ public class History {
         this.value = value;
     }
 
-    public void setTransfers_balance(float transfers_balance) {
+    public void setTransfers_balance(Long transfers_balance) {
         this.transfers_balance = transfers_balance;
     }
 
