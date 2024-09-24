@@ -13,6 +13,7 @@ import androidx.core.content.FileProvider;
 
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.Element_Stats;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type;
@@ -137,17 +138,6 @@ public class CustomUtil {
     }
 
     public static void updateFixtureData(List<MatchDetails> matchDetails) {
-//
-//        Gson gson = new Gson();
-//
-//        // Example JSON string
-////        String jsonString = "[{\"code\":123,\"event\":1,\"finished\":true,\"id\":456,...}, {...}]";
-//
-//        // Correctly specify the type of the list
-//        Type listType = new TypeToken<List<MatchDetails>>() {}.getType();
-//
-//        // Deserialize JSON string into a List<MatchDetails>
-//        List<MatchDetails> matchDetailsList = gson.fromJson((matchDetails, listType);
 
         for (MatchDetails match : matchDetails) {
 
@@ -156,6 +146,7 @@ public class CustomUtil {
             // Creating OpponentData for team_a
             OpponentData teamAData = new OpponentData();
             teamAData.setTeamID(match.getTeam_a());
+            teamAData.setOpponentTeamId(match.getTeam_h());
             teamAData.setDifficulty(match.getTeam_h_difficulty()); // Assuming difficulty is team score for simplicity, adjust as necessary
             teamAData.setKickOffTime(match.getKickoff_time());
             teamAData.setMinutesPlayed(match.getMinutes());
@@ -163,10 +154,12 @@ public class CustomUtil {
             teamAData.setGoalConceded(match.getTeam_h_score());
             teamAData.setGoalScored(match.getTeam_a_score());
             teamAData.setHome(true);
+            teamAData.setStats(match.getStats());
 
             // Creating OpponentData for team_h
             OpponentData teamHData = new OpponentData();
             teamHData.setTeamID(match.getTeam_h());
+            teamHData.setOpponentTeamId(match.getTeam_a());
             teamHData.setDifficulty(match.getTeam_a_difficulty()); // Assuming difficulty is team score for simplicity, adjust as necessary
             teamHData.setKickOffTime(match.getKickoff_time());
             teamHData.setMinutesPlayed(match.getMinutes());
@@ -174,6 +167,7 @@ public class CustomUtil {
             teamHData.setGoalConceded(match.getTeam_a_score());
             teamHData.setGoalScored(match.getTeam_h_score());
             teamHData.setHome(false);
+            teamHData.setStats(match.getStats());
 
             // Update fixtureData for team_a
             Constants.fixtureData.computeIfAbsent(event, k -> new HashMap<>()).put(match.getTeam_a(), teamHData);
@@ -256,6 +250,13 @@ public class CustomUtil {
             elementMap.put(element.getId(), element);
         }
         Constants.playerMap = elementMap;
+
+        //setting element stats map
+        Map<String, String> elementStatMap = new HashMap<>();
+        for (Element_Stats element_stats : dataModel.getElement_stats()) {
+            elementStatMap.put(element_stats.getName(), element_stats.getLabel());
+        }
+        Constants.elementStatMap = elementStatMap;
     }
 
     public static void printTeamPlayers(List<PlayersData> teamPlayers) {

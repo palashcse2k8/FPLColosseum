@@ -1,7 +1,6 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayer;
-import static com.infotech.fplcolosseum.utilities.CustomUtil.printTeamPlayers;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -20,9 +19,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.chip.Chip;
@@ -30,8 +30,10 @@ import com.google.android.material.chip.ChipGroup;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.FragmentPointsBinding;
+import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.PointsMergedResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
+import com.infotech.fplcolosseum.features.homepage.models.livepoints.Element;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.picks.AutomaticSubs;
 import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
@@ -43,11 +45,10 @@ import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class PointsFragment extends Fragment {
+public class PointsFragment extends Fragment implements OnPlayerClickOrDragListener {
 
     FragmentPointsBinding binding;
 
@@ -60,19 +61,7 @@ public class PointsFragment extends Fragment {
     boolean isClearVisible = false;
 
     int selectedChip;
-
-//    private ToolbarChangeListener toolbarChangeListener;
-
-
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//        if (context instanceof ToolbarChangeListener) {
-//            toolbarChangeListener = (ToolbarChangeListener) context;
-//        } else {
-//            throw new ClassCastException(context.toString() + " must implement PointsFragment.ToolbarChangeListener");
-//        }
-//    }
+    long selectedGameWeek;
 
     @Nullable
     @Override
@@ -85,6 +74,64 @@ public class PointsFragment extends Fragment {
 
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
+
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+
+                // Inflate the menu; this adds items to the action bar if it is present.
+                menuInflater.inflate(R.menu.my_team_menu, menu);
+
+                for (int i = 0; i < menu.size(); i++) {
+                    MenuItem item = menu.getItem(i);
+                    item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                }
+
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+
+                // Handle option Menu Here
+                // Handle action bar item clicks here
+                int id = menuItem.getItemId();
+
+                if (id == R.id.action_undo) {
+                    handleUndoClick();
+                    return true;
+                } else if (id == R.id.action_refresh) {
+                    handleRefreshClick();
+                    return true;
+                } else if (id == R.id.action_share) {
+                    handleShareClick();
+                    return true;
+                } else if (id == R.id.action_save) {
+                    handleSaveClick();
+                    return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onPrepareMenu(@NonNull Menu menu) {
+
+                MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+                MenuItem shareItem = menu.findItem(R.id.action_share);
+                MenuItem saveItem = menu.findItem(R.id.action_save);
+                MenuItem clearItem = menu.findItem(R.id.action_undo);
+
+
+                // Set visibility based on your conditions
+                refreshItem.setVisible(isRefreshVisible);
+                shareItem.setVisible(isShareVisible);
+                saveItem.setVisible(isSaveVisible);
+                clearItem.setVisible(isClearVisible);
+
+                MenuProvider.super.onPrepareMenu(menu);
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+
         return rootView;
     }
 
@@ -99,57 +146,6 @@ public class PointsFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.my_team_menu, menu);
-
-        for (int i = 0; i < menu.size(); i++) {
-            MenuItem item = menu.getItem(i);
-            item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        }
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
-        MenuItem shareItem = menu.findItem(R.id.action_share);
-        MenuItem saveItem = menu.findItem(R.id.action_save);
-        MenuItem clearItem = menu.findItem(R.id.action_undo);
-
-
-        // Set visibility based on your conditions
-        refreshItem.setVisible(isRefreshVisible);
-        shareItem.setVisible(isShareVisible);
-        saveItem.setVisible(isSaveVisible);
-        clearItem.setVisible(isClearVisible);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here
-        int id = item.getItemId();
-
-        if (id == R.id.action_undo) {
-            handleUndoClick();
-            return true;
-        } else if (id == R.id.action_refresh) {
-            handleRefreshClick();
-            return true;
-        } else if (id == R.id.action_share) {
-            handleShareClick();
-            return true;
-        } else if (id == R.id.action_save) {
-            handleSaveClick();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     private void handleUndoClick() {
 
@@ -247,6 +243,8 @@ public class PointsFragment extends Fragment {
 //                addRightOverLayView(myTeam);
             }
         });
+
+        selectedGameWeek = Constants.currentGameWeek;
     }
 
 
@@ -267,6 +265,7 @@ public class PointsFragment extends Fragment {
                     setUpToolbar(finalI);
                     binding.footballFieldLayout.removeAllViews();
                     viewModel.getPointsMergedData(Constants.LoggedInUser.getPlayer().getEntry(), finalI);
+                    selectedGameWeek = finalI;
                 }
             });
             binding.buttonGroup.addView(chip);
@@ -445,7 +444,7 @@ public class PointsFragment extends Fragment {
                                 .filter(element -> element.id == playersData.getId())
                                 .findFirst()
                                 .map(element -> element.stats.total_points)
-                                .orElse(0) // Provide a default value if no matching element is found
+                                .orElse(0L) // Provide a default value if no matching element is found
                 );
                 teamPlayers.add(playersData);
             } else {
@@ -456,24 +455,6 @@ public class PointsFragment extends Fragment {
     }
 
     private void addPlayers(GridLayout footballFieldLayout, PointsMergedResponseModel myTeamMergedResponseModel) {
-
-//        List<PlayersData> teamPlayers = new ArrayList<>();
-//
-//
-//        for (Picks myTeamPicks : myTeamMergedResponseModel.getGameWeekPicksModel().getPicks()) {
-//
-//            PlayersData data = deepCopyPlayer(Constants.playerMap.get(myTeamPicks.getElement()));
-//            assert data != null;
-//            data.setEvent_points(
-//                    myTeamMergedResponseModel.getGameWeekLivePointsResponseModel().elements.stream()
-//                            .filter(element -> element.id == data.getId())
-//                            .findFirst()
-//                            .map(element -> element.stats.total_points)
-//                            .orElse(0) // Provide a default value if no matching element is found
-//            );
-//            teamPlayers.add(data);
-//
-//        }
 
         updateTeamPlayers(myTeamMergedResponseModel.getGameWeekPicksModel().getPicks(), myTeamMergedResponseModel.getGameWeekLivePointsResponseModel());
 
@@ -599,6 +580,17 @@ public class PointsFragment extends Fragment {
 
         PlayerView playerView = new PlayerView(requireContext(), player, false, null);
         playerView.setPlayerName(player.getWeb_name());
+
+        //setting the listener for click operation
+        playerView.setPlayerClickOrDragListener(this);
+        playerView.setOnClickListener(v -> {
+            OnPlayerClickOrDragListener playerClickOrDragListener = playerView.getPlayerClickOrDragListener();
+
+            if (playerClickOrDragListener != null) {
+                playerClickOrDragListener.onClickPlayer(playerView);
+            }
+        });
+
         //set team name
         String teamName = Objects.requireNonNull(Constants.teamMap.get(player.getTeam())).getShort_name();
         String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(player.getElement_type())).getSingular_name_short();
@@ -669,5 +661,29 @@ public class PointsFragment extends Fragment {
 
         // Add the PlayerView to the GridLayout
         footballFieldLayout.addView(playerView);
+    }
+
+    @Override
+    public void onPlayerDragged(int fromPosition, int toPosition, PlayerView draggedPlayerView, PlayerView dropPlayerView, boolean isSwapData) {
+
+    }
+
+    @Override
+    public void onClickPlayer(PlayerView view) {
+        showBottomSheetDialogue(view.getPlayerData());
+    }
+
+    private void showBottomSheetDialogue(PlayersData playersData) {
+
+        OpponentData matchDetails = Constants.fixtureData.get(selectedGameWeek).get(playersData.getTeam());
+
+        Element playerPointExplain = viewModel.getPointsMergedResponseLiveData().getValue().getData().getGameWeekLivePointsResponseModel()
+                .elements.stream()
+                .filter(element -> element.id == playersData.getId())
+                .findFirst()
+                .orElse(null); // Provide a default value if no matching element is found
+
+        PointsPlayerInfoBottomSheetFragment bottomSheet = PointsPlayerInfoBottomSheetFragment.newInstance(playersData, matchDetails, playerPointExplain);
+        bottomSheet.show(requireActivity().getSupportFragmentManager(), bottomSheet.getTag());
     }
 }

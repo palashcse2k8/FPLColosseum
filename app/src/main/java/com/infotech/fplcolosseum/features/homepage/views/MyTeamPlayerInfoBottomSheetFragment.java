@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -50,7 +52,7 @@ public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragme
         }
         getDialog().setOnShowListener(dialog -> {
             BottomSheetDialog d = (BottomSheetDialog) dialog;
-            View bottomSheetInternal = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+//            View bottomSheetInternal = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 //            assert bottomSheetInternal != null;
 //            BottomSheetBehavior.from(bottomSheetInternal).setState(BottomSheetBehavior.STATE_EXPANDED);
         });
@@ -87,8 +89,6 @@ public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragme
                 .error(R.mipmap.no_image)
                 .into(binding.playerImageView);
 
-        Log.d(Constants.LOG_TAG, imageUrl);
-        binding.fullInfoButton.setOnClickListener(v -> dismiss());
         binding.closeIcon.setOnClickListener(v -> dismiss());
 
         binding.btnViceCap.setOnClickListener(v -> {
@@ -121,6 +121,15 @@ public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragme
             dismiss();
         });
 
+        for (int i = 0; i < 25; i++) {
+            View itemView = getLayoutInflater().inflate(R.layout.layout_next_team_item, binding.horizontalNextOpponents, false);
+            TextView teamName = itemView.findViewById(R.id.teamName);
+            TextView gameWeekNumber = itemView.findViewById(R.id.gameWeekNumber);
+
+            teamName.setText("MCI");
+            gameWeekNumber.setText("GW6");
+            binding.horizontalNextOpponents.addView(itemView);
+        }
     }
 
     @Override

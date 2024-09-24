@@ -318,32 +318,6 @@ class Game_settings {
     }
 }
 
-class Element_Stats {
-    private String label;
-    private String name;
-
-
-// Getter Methods
-
-    public String getLabel() {
-        return label;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-// Setter Methods
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-}
-
 class Top_element_info {
     private long id;
     private long points;

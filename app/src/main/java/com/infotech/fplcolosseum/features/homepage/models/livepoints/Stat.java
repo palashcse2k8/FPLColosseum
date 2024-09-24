@@ -26,7 +26,7 @@ public class Stat {
     public String expected_assists;
     public String expected_goal_involvements;
     public String expected_goals_conceded;
-    public int total_points;
+    public Long total_points;
     public boolean in_dreamteam;
 
     public String getIdentifier() {
@@ -229,11 +229,11 @@ public class Stat {
         this.expected_goals_conceded = expected_goals_conceded;
     }
 
-    public int getTotal_points() {
+    public Long getTotal_points() {
         return total_points;
     }
 
-    public void setTotal_points(int total_points) {
+    public void setTotal_points(Long total_points) {
         this.total_points = total_points;
     }
 

@@ -27,7 +27,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
@@ -84,6 +86,64 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
         View rootView = binding.getRoot();
         binding.setMyTeamViewModel(viewModel);
         binding.setLifecycleOwner(this);
+
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+
+                // Inflate the menu; this adds items to the action bar if it is present.
+                menuInflater.inflate(R.menu.my_team_menu, menu);
+
+                for (int i = 0; i < menu.size(); i++) {
+                    MenuItem item = menu.getItem(i);
+                    item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                }
+
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+
+                // Handle option Menu Here
+                // Handle action bar item clicks here
+                int id = menuItem.getItemId();
+
+                if (id == R.id.action_undo) {
+                    handleUndoClick();
+                    return true;
+                } else if (id == R.id.action_refresh) {
+                    handleRefreshClick();
+                    return true;
+                } else if (id == R.id.action_share) {
+                    handleShareClick();
+                    return true;
+                } else if (id == R.id.action_save) {
+                    handleSaveClick();
+                    return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onPrepareMenu(@NonNull Menu menu) {
+
+                MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+                MenuItem shareItem = menu.findItem(R.id.action_share);
+                MenuItem saveItem = menu.findItem(R.id.action_save);
+                MenuItem clearItem = menu.findItem(R.id.action_undo);
+
+
+                // Set visibility based on your conditions
+                refreshItem.setVisible(isRefreshVisible);
+                shareItem.setVisible(isShareVisible);
+                saveItem.setVisible(isSaveVisible);
+                clearItem.setVisible(isClearVisible);
+
+                MenuProvider.super.onPrepareMenu(menu);
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+
         return rootView;
     }
 
@@ -142,58 +202,6 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
     public void onResume() {
         super.onResume();
         setUpToolbar(Constants.nextGameWeek);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.my_team_menu, menu);
-
-        for (int i = 0; i < menu.size(); i++) {
-            MenuItem item = menu.getItem(i);
-            item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        }
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
-        MenuItem shareItem = menu.findItem(R.id.action_share);
-        MenuItem saveItem = menu.findItem(R.id.action_save);
-        MenuItem clearItem = menu.findItem(R.id.action_undo);
-
-
-        // Set visibility based on your conditions
-        refreshItem.setVisible(isRefreshVisible);
-        shareItem.setVisible(isShareVisible);
-        saveItem.setVisible(isSaveVisible);
-        clearItem.setVisible(isClearVisible);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here
-        int id = item.getItemId();
-
-        if (id == R.id.action_undo) {
-            handleUndoClick();
-            return true;
-        } else if (id == R.id.action_refresh) {
-            handleRefreshClick();
-            return true;
-        } else if (id == R.id.action_share) {
-            handleShareClick();
-            return true;
-        } else if (id == R.id.action_save) {
-            handleSaveClick();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void handleUndoClick() {

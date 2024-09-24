@@ -464,25 +464,6 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
                 return;
             }
         }
-//        for (MyTeamPicks myTeamPicks : picks) {
-//            PlayersData playersData = deepCopyPlayer(Constants.playerMap.get(myTeamPicks.getElement()));
-//
-//            if (playersData != null) {
-//                playersData.setIs_captain(myTeamPicks.getIs_captain());
-//                playersData.setIs_vice_captain(myTeamPicks.getIs_vice_captain());
-//                playersData.setPosition(myTeamPicks.getPosition());
-//                playersData.setSelling_price(myTeamPicks.getSelling_price());
-//                playersData.setPurchase_price(myTeamPicks.getPurchase_price());
-//                playersData.setMultiplier(myTeamPicks.getMultiplier());
-//                playersData.setSingular_name_short(Objects.requireNonNull(Constants.playerTypeMap.get(playersData.getElement_type())).getSingular_name_short());
-//                playersData.setTeam_name_short(Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getShort_name());
-//                playersData.setTeam_name_full(Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getName());
-//                teamPlayers.add(playersData);
-//            } else {
-//                UIUtils.toast(requireContext(), "Player data is null please reload again", ToastLevel.WARNING);
-//                return;
-//            }
-//        }
 
         this.initialTeamPlayers = deepCopyPlayerList(this.teamPlayers);
 

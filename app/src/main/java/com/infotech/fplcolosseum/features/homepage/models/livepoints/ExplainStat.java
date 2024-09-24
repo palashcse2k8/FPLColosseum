@@ -1,9 +1,11 @@
 package com.infotech.fplcolosseum.features.homepage.models.livepoints;
 
-public class ExplainStat {
+import java.io.Serializable;
+
+public class ExplainStat implements Serializable {
     private String identifier;
-    private float points;
-    private float value;
+    private Long points;
+    private Long value;
 
 
     // Getter Methods
@@ -12,11 +14,11 @@ public class ExplainStat {
         return identifier;
     }
 
-    public float getPoints() {
+    public Long getPoints() {
         return points;
     }
 
-    public float getValue() {
+    public Long getValue() {
         return value;
     }
 
@@ -26,11 +28,11 @@ public class ExplainStat {
         this.identifier = identifier;
     }
 
-    public void setPoints(float points) {
+    public void setPoints(Long points) {
         this.points = points;
     }
 
-    public void setValue(float value) {
+    public void setValue(Long value) {
         this.value = value;
     }
 }

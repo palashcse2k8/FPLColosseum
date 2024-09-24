@@ -1,8 +1,12 @@
 package com.infotech.fplcolosseum.features.homepage.models.fixture;
 
-public class OpponentData {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class OpponentData implements Serializable {
 
     private long teamID;
+    private long opponentTeamId;
     private long difficulty;
     private String kickOffTime;
     private long minutesPlayed;
@@ -10,6 +14,15 @@ public class OpponentData {
     private long goalConceded;
     private long goalScored;
     private boolean isHome;
+    private ArrayList<MatchStats> stats = new ArrayList<>();
+
+    public ArrayList<MatchStats> getStats() {
+        return stats;
+    }
+
+    public void setStats(ArrayList<MatchStats> stats) {
+        this.stats = stats;
+    }
 
     public long getTeamID() {
         return teamID;
@@ -17,6 +30,14 @@ public class OpponentData {
 
     public void setTeamID(long teamID) {
         this.teamID = teamID;
+    }
+
+    public long getOpponentTeamId() {
+        return opponentTeamId;
+    }
+
+    public void setOpponentTeamId(long opponentTeamId) {
+        this.opponentTeamId = opponentTeamId;
     }
 
     public long getDifficulty() {

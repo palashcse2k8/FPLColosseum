@@ -140,6 +140,8 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
                                                 pointsMergedResponseModel.setMatchDetails(gameWeekMatchDetailsApiResponse.getData());
 
+                                                updateFixtureData(gameWeekMatchDetailsApiResponse.getData());
+
                                                 dataLoading.setValue(false); // make progress bar vanish when all api results are combined
                                                 pointsMergedMediatorLiveData.setValue(ApiResponse.success(pointsMergedResponseModel));
                                             });

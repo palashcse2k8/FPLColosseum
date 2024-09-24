@@ -1,5 +1,6 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentTransferPlayerInfoBottomSheetBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerTransferListener;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
+import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
+import com.squareup.picasso.Picasso;
 
 public class TransferPlayerInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -44,7 +47,7 @@ public class TransferPlayerInfoBottomSheetFragment extends BottomSheetDialogFrag
         }
         getDialog().setOnShowListener(dialog -> {
             BottomSheetDialog d = (BottomSheetDialog) dialog;
-            View bottomSheetInternal = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+//            View bottomSheetInternal = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 //            assert bottomSheetInternal != null;
 //            BottomSheetBehavior.from(bottomSheetInternal).setState(BottomSheetBehavior.STATE_EXPANDED);
         });
@@ -61,12 +64,17 @@ public class TransferPlayerInfoBottomSheetFragment extends BottomSheetDialogFrag
             binding.setPlayer(playerData); // Bind player data to the view
         }
 
+        String imageUrl = "https://resources.premierleague.com/premierleague/photos/players/110x140/p" + playerData.getCode() + ".png";
+
+        Picasso.get()
+                .load(imageUrl)
+                .error(R.mipmap.no_image)
+                .into(binding.playerImageView);
+
         if (playerData.getSubstitute_number() == 0) {
             binding.btnCancelTransfer.setVisibility(View.GONE);
         }
 
-
-        binding.fullInfoButton.setOnClickListener(v -> dismiss());
         binding.closeIcon.setOnClickListener(v -> dismiss());
 
         binding.btnTransfer.setOnClickListener(v -> {
@@ -80,6 +88,15 @@ public class TransferPlayerInfoBottomSheetFragment extends BottomSheetDialogFrag
             if (playerTransferListener != null) {
                 playerTransferListener.onCancelTransfer(playerData);
             }
+            dismiss();
+        });
+
+        binding.fullInfoButton.setOnClickListener( v -> {
+
+            Intent intent = new Intent(requireActivity(), PlayerFullInformationActivity.class);
+            intent.putExtra("playerData", this.playerData); // Replace with actual player name
+            startActivity(intent);
+
             dismiss();
         });
     }
