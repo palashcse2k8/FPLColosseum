@@ -11,14 +11,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/deepGreen"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:padding="16dp">
-
-        <ImageView
-            android:id="@+id/player_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/_1543" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -32,17 +28,18 @@
                 android:id="@+id/player_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Player Name"
+                android:text="Player Info"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/player_position"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Position"
-                android:textSize="14sp" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/player_image"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="TODO" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -52,16 +49,6 @@
             android:gravity="center_horizontal">
 
             <TextView
-                android:id="@+id/player_tp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:text="TP"
-                android:textAlignment="textEnd"
-                android:textSize="14sp" />
-
-            <TextView
                 android:id="@+id/player_price"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -69,17 +56,23 @@
                 android:padding="4dp"
                 android:textAlignment="textEnd"
                 android:text="Price"
-                android:textSize="14sp" />
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/player_selected_by"
+                android:id="@+id/player_tp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:padding="4dp"
+                android:text="TP"
+                android:textColor="@color/white"
                 android:textAlignment="textEnd"
-                android:text="TSB"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
     </LinearLayout>

@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,9 +23,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.R;
+import com.infotech.fplcolosseum.databinding.FragmentPlayerSelectionBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerListAdapter;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -33,14 +34,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerSelectionFragment extends Fragment implements MenuProvider {
-
-    private RecyclerView recyclerView;
+    FragmentPlayerSelectionBinding binding;
     private PlayerListAdapter adapter;
     private List<PlayersData> playersList;
     private PlayersData transferredPlayerData;
 
     public static String SELECTED_PLAYER_DATA = "selected_player_data";
     public static String REQUEST_KEY = "requestKey";
+
+
+    // Example data for the dropdown
+    String[] items = new String[]{"All Player", "Goalkeeper", "Defender", "Midfielder", "Forward", "Watchlist", "Arsenal", "Aston Villa", "Bournemouth", "Brentford", "Brighton", "Chelsea", "Crystal Palace", "Everton", "Fulham", "Ipswich", "Leicester City", "Liverpool", "Man City", "Man Utd", "Newcastle", "Nott'm Forest", "Southamton", "Spurs", "West Ham", "Wolves"};
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -49,6 +54,11 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         if (getArguments() != null) {
             transferredPlayerData = (PlayersData) getArguments().getSerializable(TRANSFERRED_PLAYER_DATA);
         }
+        // Adapter for dropdowns
+        ArrayAdapter<String> playerTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, items);
+
+        binding.playerTypeDropdown.setAdapter(playerTypeAdapter);
+        binding.playerCriterion.setAdapter(playerTypeAdapter);
     }
 
     public static PlayerSelectionFragment newInstance(PlayersData playerData) {
@@ -62,15 +72,16 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_player_selection, container, false);
 
+        binding = FragmentPlayerSelectionBinding.inflate(getLayoutInflater(), container, false);
         // Initialize Toolbar
-        Toolbar toolbar = view.findViewById(R.id.toolbar_search);
+        Toolbar toolbar = binding.toolbarSearch;
         if (getActivity() instanceof AppCompatActivity) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
             activity.setSupportActionBar(toolbar);
             activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             activity.getSupportActionBar().setTitle("Search Players");
+
         }
 
         // Clear existing MenuProviders and add this fragment as the MenuProvider
@@ -78,14 +89,13 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
         // If you need to fetch players from an API
-        recyclerView = view.findViewById(R.id.player_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.playerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new PlayerListAdapter(playersList, this::onPlayerSelected, requireActivity());
         fetchPlayersFromApi();
-        recyclerView.setAdapter(adapter);
+        binding.playerRecyclerView.setAdapter(adapter);
 
-        return view;
+        return binding.getRoot();
     }
 
     private void fetchPlayersFromApi() {

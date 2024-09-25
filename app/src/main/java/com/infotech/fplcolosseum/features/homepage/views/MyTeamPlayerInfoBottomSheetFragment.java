@@ -19,10 +19,17 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentMyTeamPlayerInfoBottomSheetBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.SplittableRandom;
 
 public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -112,7 +119,7 @@ public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragme
             dismiss();
         });
 
-        binding.fullInfoButton.setOnClickListener( v -> {
+        binding.fullInfoButton.setOnClickListener(v -> {
 
             Intent intent = new Intent(requireActivity(), PlayerFullInformationActivity.class);
             intent.putExtra("playerData", this.playerData); // Replace with actual player name
@@ -121,13 +128,22 @@ public class MyTeamPlayerInfoBottomSheetFragment extends BottomSheetDialogFragme
             dismiss();
         });
 
-        for (int i = 0; i < 25; i++) {
+        for (long i = Constants.nextGameWeek; i <= 38; i++) {
             View itemView = getLayoutInflater().inflate(R.layout.layout_next_team_item, binding.horizontalNextOpponents, false);
             TextView teamName = itemView.findViewById(R.id.teamName);
             TextView gameWeekNumber = itemView.findViewById(R.id.gameWeekNumber);
 
-            teamName.setText("MCI");
-            gameWeekNumber.setText("GW6");
+            OpponentData matchDetails = Constants.fixtureData.get(i).get(playerData.getTeam());
+            String homeOrAway = matchDetails.isHome() ? "H" : "A";
+            String opponentTeamName = Objects.requireNonNull(Constants.teamMap.get(matchDetails.getTeamID())).getShort_name();
+            String opponentWithHomeAway = opponentTeamName + " (" + homeOrAway + ")";
+
+            teamName.setText(opponentWithHomeAway);
+
+            teamName.setTextColor(CustomUtil.getDifficultyLeveTextColor(matchDetails.getDifficulty()));
+            teamName.setBackgroundColor(CustomUtil.getDifficultyLevelColor(matchDetails.getDifficulty()));
+            String gwNumber = "GW" + i;
+            gameWeekNumber.setText(gwNumber);
             binding.horizontalNextOpponents.addView(itemView);
         }
     }

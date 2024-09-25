@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/backgroundSecondary"
+        android:background="@drawable/rounded_bottom_sheet"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -284,7 +284,6 @@
             android:layout_marginTop="16dp" />
 
 
-
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -294,11 +293,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp" />
+                android:paddingVertical="16dp" />
 
         </HorizontalScrollView>
-
-
 
     </LinearLayout>
 </layout>

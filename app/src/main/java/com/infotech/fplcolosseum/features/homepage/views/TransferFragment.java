@@ -657,6 +657,9 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
                     case "unavailable":
                         state = ButtonStateManager.ButtonState.NOT_AVAILABLE;
                         break;
+                    case "played":
+                        state = ButtonStateManager.ButtonState.PLAYED;
+                        break;
                     default:
                         continue; // Skip unknown statuses
                 }
@@ -688,6 +691,9 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
                         break;
                     case NOT_AVAILABLE:
                         showPopup(buttonName + " is not available!");
+                        break;
+                    case PLAYED:
+                        showPopup(buttonName + " already played!");
                         break;
                 }
             }

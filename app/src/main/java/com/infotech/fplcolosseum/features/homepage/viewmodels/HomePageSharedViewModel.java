@@ -25,8 +25,6 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
     UserGameWeekDataRepository dataRepository;
 
-    public MutableLiveData<Long> managerID;
-
     private final MediatorLiveData<ApiResponse<?>> myTeamApiResultLiveData;
     private final MediatorLiveData<ApiResponse<?>> transferApiResultLiveData;
 
@@ -37,7 +35,6 @@ public class HomePageSharedViewModel extends AndroidViewModel {
     private final MediatorLiveData<ApiResponse<MyTeamMergedResponseModel>> myTeamMergedMediatorLiveData;
     private final MediatorLiveData<ApiResponse<PointsMergedResponseModel>> pointsMergedMediatorLiveData;
     CountDownLatch latch;
-    Application application;
 
     private MutableLiveData<String> toolbarTitle;
     private MutableLiveData<String> toolbarSubTitle;

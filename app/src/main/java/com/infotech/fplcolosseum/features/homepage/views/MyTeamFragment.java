@@ -594,6 +594,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
 
 
     private void showBottomSheetDialogue(PlayersData playersData) {
+
         MyTeamPlayerInfoBottomSheetFragment bottomSheet = MyTeamPlayerInfoBottomSheetFragment.newInstance(playersData);
         bottomSheet.setPlayerInfoUpdateListener(this);
         bottomSheet.show(requireActivity().getSupportFragmentManager(), bottomSheet.getTag());
@@ -861,6 +862,9 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
                     case "unavailable":
                         state = ButtonStateManager.ButtonState.NOT_AVAILABLE;
                         break;
+                    case "played":
+                        state = ButtonStateManager.ButtonState.PLAYED;
+                        break;
                     default:
                         continue; // Skip unknown statuses
                 }
@@ -883,6 +887,9 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
                         break;
                     case NOT_AVAILABLE:
                         showPopup(buttonName + " is not available!");
+                        break;
+                    case PLAYED:
+                        showPopup(buttonName + " already played!");
                         break;
                 }
             }

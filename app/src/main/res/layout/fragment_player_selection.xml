@@ -40,76 +40,78 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:gravity="center_vertical"
+        android:layout_marginTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
-        <ImageView
-            android:id="@+id/player_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/_1543" />
+        <!-- Min TextView -->
+        <TextView
+            android:id="@+id/tvMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textStyle="bold"
+            android:text="Min"
+            android:textColor="@color/black" />
 
-        <LinearLayout
+        <!-- RangeSlider -->
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/rangeSlider"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:valueFrom="0"
+            android:valueTo="100"
+            app:values="@array/initial_slider_values"
+            app:thumbColor="@color/button_primary"
+            app:trackColorActive="@color/button_primary"
+            app:tickColorInactive="@color/black"
+            app:trackHeight="8dp"
+            app:haloColor="@color/button_primary" />
 
-            <TextView
-                android:id="@+id/player_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Player Name"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/player_position"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Position | Team"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
+        <!-- Max TextView -->
+        <TextView
+            android:id="@+id/tvMax"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:id="@+id/player_tp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:text="TP"
-                android:textAlignment="textEnd"
-                android:textSize="14sp" />
-            <TextView
-                android:id="@+id/player_price"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:text="Price"
-                android:textAlignment="textEnd"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/player_selected_by"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:text="TSB"
-                android:textAlignment="textEnd"
-                android:textSize="14sp" />
-        </LinearLayout>
+            android:padding="8dp"
+            android:textStyle="bold"
+            android:text="Max"
+            android:textColor="@color/black" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp">
+
+        <Spinner
+            android:id="@+id/playerTypeDropdown"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/dropdown_rounded_boarder"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24"
+            android:padding="12dp"
+            />
+
+        <Spinner
+            android:id="@+id/playerCriterion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/dropdown_rounded_boarder"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24"
+            android:padding="12dp" />
+
+    </LinearLayout>
+
+
+    <include layout="@layout/layout_player_selection_item_header"/>
 
     <View
         android:layout_width="match_parent"
@@ -120,6 +122,6 @@
         android:id="@+id/player_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/layout_item_player"/>
+        tools:listitem="@layout/layout_player_selection_item"/>
 
 </LinearLayout>

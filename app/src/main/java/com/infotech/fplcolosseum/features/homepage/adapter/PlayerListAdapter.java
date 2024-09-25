@@ -1,9 +1,9 @@
 package com.infotech.fplcolosseum.features.homepage.adapter;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -17,6 +17,8 @@ import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.views.PlayerSelectionBottomSheetFragment;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.CustomUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +31,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
     private List<PlayersData> playersList;
     private List<PlayersData> filteredList;
     private final OnPlayerClickListener onPlayerClickListener;
-    private FragmentActivity activity;
+    private final FragmentActivity activity;
 
     public PlayerListAdapter(List<PlayersData> playersList, OnPlayerClickListener listener, FragmentActivity activity) {
         this.playersList = playersList;
@@ -45,7 +47,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
     @NonNull
     @Override
     public PlayerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_player, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_player_selection_item, parent, false);
         return new PlayerViewHolder(view);
     }
 
@@ -124,11 +126,11 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
 
     class PlayerViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView playerImage;
-        private TextView playerName;
-        private TextView playerTypeAndTeam;
-        private TextView playerTotalPoints;
-        private TextView playerPrice;
+        private final ImageView playerImage;
+        private final TextView playerName;
+        private final TextView playerTypeAndTeam;
+        private final TextView playerTotalPoints;
+        private final TextView playerPrice;
         private TextView playerSelectedBy;
 
         public PlayerViewHolder(@NonNull View itemView) {
@@ -138,7 +140,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
             playerTypeAndTeam = itemView.findViewById(R.id.player_position);
             playerTotalPoints = itemView.findViewById(R.id.player_tp);
             playerPrice = itemView.findViewById(R.id.player_price);
-            playerSelectedBy = itemView.findViewById(R.id.player_selected_by);
 
             itemView.setOnClickListener(v -> {
                 if (onPlayerClickListener != null) {
@@ -150,6 +151,28 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
         }
 
         public void bind(PlayersData player) {
+            String imageUrl = "https://resources.premierleague.com/premierleague/photos/players/110x140/p" + player.getCode() + ".png";
+
+            // Placeholder animation: Fade in the image after it has loaded
+            AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
+            fadeInAnimation.setDuration(1000); // 1 second fade-in duration
+
+            Picasso.get()
+                    .load(imageUrl)
+                    .error(R.mipmap.no_image)
+                    .into(playerImage, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            // Start the fade-in animation when the image is successfully loaded
+                            playerImage.startAnimation(fadeInAnimation);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+//                            Log.e("Image Load Error", "Failed to load image: " + e.getMessage());
+                        }
+                    });
+
             playerName.setText(player.getWeb_name());
             String teamName = Objects.requireNonNull(Constants.teamMap.get(player.getTeam())).getShort_name();
             String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(player.getElement_type())).getSingular_name_short();
@@ -157,10 +180,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
             playerTypeAndTeam.setText(playerTypeAndTeamString);
 
             playerTotalPoints.setText(String.valueOf(player.getTotal_points()));
-            playerPrice.setText(String.valueOf(player.getNow_cost()));
-            playerSelectedBy.setText(String.valueOf(player.getSelected_by_percent()));
-            // Load player image if available
-            // Glide.with(playerImage.getContext()).load(player.getImageUrl()).into(playerImage);
+            playerPrice.setText(CustomUtil.convertedPrice(player.getNow_cost()));
         }
     }
 

@@ -29,6 +29,7 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData
 import com.infotech.fplcolosseum.features.player_information.adapter.HistoryAdapterFixed;
 import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -115,6 +116,25 @@ public class PointsPlayerInfoBottomSheetFragment extends BottomSheetDialogFragme
 
             dismiss();
         });
+
+        for (long i = Constants.nextGameWeek; i <= 38; i++) {
+            View itemView = getLayoutInflater().inflate(R.layout.layout_next_team_item, binding.horizontalNextOpponents, false);
+            TextView teamNameTV = itemView.findViewById(R.id.teamName);
+            TextView gameWeekNumber = itemView.findViewById(R.id.gameWeekNumber);
+
+            OpponentData matchDetails = Constants.fixtureData.get(i).get(playerData.getTeam());
+            String homeOrAway = matchDetails.isHome() ? "H" : "A";
+            String opponentTeamName = Objects.requireNonNull(Constants.teamMap.get(matchDetails.getTeamID())).getShort_name();
+            String opponentWithHomeAway = opponentTeamName + " (" + homeOrAway + ")";
+
+            teamNameTV.setText(opponentWithHomeAway);
+
+            teamNameTV.setTextColor(CustomUtil.getDifficultyLeveTextColor(matchDetails.getDifficulty()));
+            teamNameTV.setBackgroundColor(CustomUtil.getDifficultyLevelColor(matchDetails.getDifficulty()));
+            String gwNumber = "GW" + i;
+            gameWeekNumber.setText(gwNumber);
+            binding.horizontalNextOpponents.addView(itemView);
+        }
     }
 
     @Override
