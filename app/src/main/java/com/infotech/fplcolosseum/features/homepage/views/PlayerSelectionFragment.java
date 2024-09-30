@@ -4,7 +4,6 @@ import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment
 import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.TRANSFER_REQUEST_KEY;
 
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,90 +43,17 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     FragmentPlayerSelectionBinding binding;
     private PlayerListAdapter adapter;
     private List<PlayersData> playersList;
+    private List<PlayersData> filteredPlayerList;
     private PlayersData transferredPlayerData;
 
     public static String SELECTED_PLAYER_DATA = "selected_player_data";
     public static String REQUEST_KEY = "requestKey";
 
-
+    public String playerSearchText = null;
     // Example data for the dropdown
     ArrayList<String> playerTypeItems = new ArrayList<>();
     ArrayList<String> playerTeams = new ArrayList<>();
     String[] playerCriterionItems = new String[]{"Total Points", "Round Points", "Team Selected By", "Minutes Played", "Goal Scored", "Assist", "Clean Sheet", "Goal Conceded", "Own Goals", "Penalty Saved", "Penalty Missed", "Yellow Cards", "Red Cards", "Saves", "Bonus", "Bonus Points System", "Influence", "Creativity", "Threat", "ICT Index", "Games Started", "Form", "Times in Team of the Week", "Value(form)", "Value(season)", "Points Per Match", "Transfers In", "Transfers Out", "Transfers In(round)", "Transfers Out(round)", "Net Transfers In(round)", "Net Transfers Out(round)", "Price Rise", "Price Fall", "Price Rice(round)", "Price Fall(round)", "Expected Goals(xG)", "Expected Assists(xA)", "Expected Goals Involvement(xGI)", "Expected Goal Conceded(xGC)"};
-
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        if (getArguments() != null) {
-            transferredPlayerData = (PlayersData) getArguments().getSerializable(TRANSFERRED_PLAYER_DATA);
-        }
-
-        // Adapter for dropdowns
-        playerTypeItems.add("All Player");
-        ArrayList<String> playerTypes = (ArrayList<String>) Constants.playerTypeMap.values()
-                .stream()
-                .map(Player_Type::getSingular_name)
-                .collect(Collectors.toList());
-        playerTypeItems.addAll(playerTypes);
-
-        ArrayAdapter<String> playerTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerTypeItems);
-        playerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.playerTypeDropdown.setAdapter(playerTypeAdapter);
-        binding.playerTypeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String item = (String) parent.getItemAtPosition(position);
-                adapter.filterPlayersByType(item);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        // Adapter for dropdowns
-        playerTeams.add("All Club");
-        ArrayList<String> teamNames = (ArrayList<String>) Constants.teamMap.values()
-                .stream()
-                .map(TeamData::getName)
-                .collect(Collectors.toList());
-        playerTeams.addAll(teamNames);
-        ArrayAdapter<String> playerTeamsAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerTeams);
-        playerTeamsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.playerTeamDropdown.setAdapter(playerTeamsAdapter);
-        binding.playerTeamDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String item = (String) parent.getItemAtPosition(position);
-                adapter.filterPlayersByTeam(item);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        // Adapter for dropdowns
-        ArrayAdapter<String> playerCriterionAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerCriterionItems);
-        playerCriterionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.playerCriterion.setAdapter(playerCriterionAdapter);
-        binding.playerCriterion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String item = (String) parent.getItemAtPosition(position);
-                adapter.sortAdapterData(item);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
 
     public static PlayerSelectionFragment newInstance(PlayersData playerData) {
         PlayerSelectionFragment fragment = new PlayerSelectionFragment();
@@ -135,6 +61,25 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         args.putSerializable(TRANSFERRED_PLAYER_DATA, playerData);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        fetchPlayersFromApi();
+        // Set the listener on the child fragmentManager.
+        getParentFragmentManager()
+                .setFragmentResultListener(REQUEST_KEY, this, new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+//
+                        bundle.putSerializable(TRANSFERRED_PLAYER_DATA, transferredPlayerData);
+                        // The child fragment needs to still set the result on its parent fragment manager.
+                        getParentFragmentManager().setFragmentResult(TRANSFER_REQUEST_KEY, bundle);
+
+                        requireActivity().getSupportFragmentManager().popBackStack();
+                    }
+                });
     }
 
     @Nullable
@@ -160,39 +105,94 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         binding.playerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new PlayerListAdapter(playersList, this::onPlayerSelected, requireActivity());
-        fetchPlayersFromApi();
         binding.playerRecyclerView.setAdapter(adapter);
+//        adapter.updatePlayersList(playersList);
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (getArguments() != null) {
+            transferredPlayerData = (PlayersData) getArguments().getSerializable(TRANSFERRED_PLAYER_DATA);
+        }
+        setUpDropdowns();
+    }
+
+    private void setUpDropdowns() {
+        // Adapter for dropdowns
+        playerTypeItems.add("All Player");
+        ArrayList<String> playerTypes = (ArrayList<String>) Constants.playerTypeMap.values()
+                .stream()
+                .map(Player_Type::getSingular_name)
+                .collect(Collectors.toList());
+        playerTypeItems.addAll(playerTypes);
+
+        ArrayAdapter<String> playerTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerTypeItems);
+        playerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.playerTypeDropdown.setAdapter(playerTypeAdapter);
+        binding.playerTypeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterSortAndUpdatePlayer(playersList);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        // Adapter for dropdowns
+        playerTeams.add("All Club");
+        ArrayList<String> teamNames = (ArrayList<String>) Constants.teamMap.values()
+                .stream()
+                .map(TeamData::getName)
+                .collect(Collectors.toList());
+        playerTeams.addAll(teamNames);
+        ArrayAdapter<String> playerTeamsAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerTeams);
+        playerTeamsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.playerTeamDropdown.setAdapter(playerTeamsAdapter);
+        binding.playerTeamDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterSortAndUpdatePlayer(playersList);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        // Adapter for dropdowns
+        ArrayAdapter<String> playerCriterionAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerCriterionItems);
+        playerCriterionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.playerCriterion.setAdapter(playerCriterionAdapter);
+        binding.playerCriterion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sortAndUpdatePlayer();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void fetchPlayersFromApi() {
         // Simulating API call
         playersList = new ArrayList<>(Constants.playerMap.values());
 
-        adapter.updatePlayersList(playersList);
+
     }
 
     private void onPlayerSelected(PlayersData player) {
         // Handle player selection, for example, pass it back to the bottom sheet
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Set the listener on the child fragmentManager.
-        getParentFragmentManager()
-                .setFragmentResultListener(REQUEST_KEY, this, new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-//
-                        bundle.putSerializable(TRANSFERRED_PLAYER_DATA, transferredPlayerData);
-                        // The child fragment needs to still set the result on its parent fragment manager.
-                        getParentFragmentManager().setFragmentResult(TRANSFER_REQUEST_KEY, bundle);
-
-                        requireActivity().getSupportFragmentManager().popBackStack();
-                    }
-                });
     }
 
     @Override
@@ -234,12 +234,9 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    // Restore the main list when the query is cleared
-                    adapter.updatePlayersList(new ArrayList<>(Constants.playerMap.values()));
-                } else {
-                    adapter.getFilter().filter(newText);
-                }
+
+                playerSearchText = newText;
+                filterSortAndUpdatePlayer(playersList);
                 return true;
             }
         });
@@ -253,5 +250,134 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     @Override
     public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
         return false;
+    }
+
+    private void filterSortAndUpdatePlayer(List<PlayersData> initialPlayerList) {
+        String selectedTeam = binding.playerTeamDropdown.getSelectedItem().toString(); //get selected player team
+        String selectedPlayerType = binding.playerTypeDropdown.getSelectedItem().toString(); // get selected player type
+        String sortingCriteria = binding.playerCriterion.getSelectedItem().toString(); // get selected sorting criterion
+
+        float minPrice = binding.rangeSlider.getValues().get(0);
+        float maxPrice = binding.rangeSlider.getValues().get(1);
+
+        filteredPlayerList = new ArrayList<>(initialPlayerList);
+
+        //apply plaer team filter
+        if (!selectedTeam.equals("All Club")) {
+            filteredPlayerList = filteredPlayerList.stream().filter(playersData -> playersData.getTeam_name_full().equalsIgnoreCase(selectedTeam)).collect(Collectors.toList());
+        }
+
+        //apply plaer team filter
+        if (!selectedTeam.equals("All Player")) {
+            filteredPlayerList = filteredPlayerList.stream().filter(playersData -> playersData.getElement_type_full().equalsIgnoreCase(selectedPlayerType)).collect(Collectors.toList());
+        }
+
+        //apply player price range
+        filteredPlayerList = filteredPlayerList.stream().filter(playersData -> playersData.getNow_cost() >= minPrice && playersData.getNow_cost() <= maxPrice).collect(Collectors.toList());
+
+        //apply search filter
+        if (playerSearchText != null || (playerSearchText != null && !playerSearchText.isEmpty()))
+            filteredPlayerList = filteredPlayerList.stream().filter(playersData -> playersData.getWeb_name().toLowerCase().contains(playerSearchText.toLowerCase())).collect(Collectors.toList());
+
+        sortFilteredData(sortingCriteria);
+
+        adapter.updatePlayersList(filteredPlayerList);
+    }
+
+    private void sortAndUpdatePlayer() {
+
+        String sortingCriteria = binding.playerCriterion.getSelectedItem().toString(); // get selected sorting criterion
+
+        sortFilteredData(sortingCriteria);
+
+        adapter.updatePlayersList(filteredPlayerList);
+    }
+
+    public void sortFilteredData(String item) {
+        switch (item) {
+            case "Total Points" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTotal_points).reversed());
+            case "Round Points" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getEvent_points).reversed());
+            case "Team Selected By" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getSelected_by_percent).reversed());
+            case "Minutes Played" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getMinutes).reversed());
+            case "Goal Scored" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getGoals_scored).reversed());
+            case "Assist" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getAssists).reversed());
+            case "Clean Sheet" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getClean_sheets).reversed());
+            case "Goal Conceded" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getGoals_conceded));
+            case "Own Goals" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getOwn_goals));
+            case "Penalty Saved" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getPenalties_saved).reversed());
+            case "Penalty Missed" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getPenalties_missed));
+            case "Yellow Cards" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getYellow_cards));
+            case "Red Cards" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getRed_cards));
+            case "Saves" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getSaves).reversed());
+            case "Bonus" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getBonus).reversed());
+            case "Bonus Points System" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getBps).reversed());
+            case "Influence" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getInfluence).reversed());
+            case "Creativity" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCreativity).reversed());
+            case "Threat" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getThreat).reversed());
+            case "ICT Index" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getIct_index).reversed());
+            case "Games Started" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getStarts).reversed());
+            case "Form" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getForm).reversed());
+            case "Times in Team of the Week" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getDreamteam_count).reversed());
+            case "Value(form)" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getValue_form).reversed());
+            case "Value(season)" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getValue_season).reversed());
+            case "Points Per Match" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getPoints_per_game).reversed());
+            case "Transfers In" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_in).reversed());
+            case "Transfers Out" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_out).reversed());
+            case "Transfers In(round)" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_in_event).reversed());
+            case "Transfers Out(round)" ->
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_out_event).reversed());
+            case "Net Transfers In(round)" ->
+                    filteredPlayerList.sort(Comparator.comparingLong((PlayersData player) ->
+                            player.getTransfers_in_event() - player.getTransfers_out_event()).reversed());
+            case "Net Transfers Out(round)" ->
+                    filteredPlayerList.sort(Comparator.comparingLong((PlayersData player) ->
+                            player.getTransfers_out_event() - player.getTransfers_in_event()).reversed());
+            case "Price Rise" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_start).reversed());
+            case "Price Fall" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_start));
+            case "Price Rise(round)" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_event).reversed());
+            case "Price Fall(round)" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_event));
+            case "Expected Goals(xG)" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_goals).reversed());
+            case "Expected Assists(xA)" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_assists).reversed());
+            case "Expected Goals Involvement(xGI)" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_goal_involvements).reversed());
+            case "Expected Goal Conceded(xGC)" ->
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_goals_conceded));
+            default -> Log.d(Constants.LOG_TAG, "No item selected or unhandled item: " + item);
+        }
     }
 }

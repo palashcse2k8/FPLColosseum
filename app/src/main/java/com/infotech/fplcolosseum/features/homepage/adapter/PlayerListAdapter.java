@@ -107,56 +107,9 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
     public void updatePlayersList(List<PlayersData> newPlayersList) {
         this.playersList = newPlayersList;
         this.filteredList = new ArrayList<>(playersList);
-
-        if (selectedPlayerType == null) {
-            filterPlayersByType("All Player");
-        } else {
-            filterPlayersByType(selectedSortingCriterion);
-        }
-        if (selectedSortingCriterion == null) {
-            sortPlayersByPoints();
-        } else {
-            sortAdapterData(selectedSortingCriterion);
-        }
-
-        // Sort players by total points after updating the list
         notifyDataSetChanged();
     }
 
-    public void filterPlayersByType(String selectedType) {
-        selectedPlayerType = selectedType;
-        if (playersList == null || selectedType.equals("All Player")) {
-            // No filtering needed, return the entire list
-            updatePlayersList(new ArrayList<>(Constants.playerMap.values()));
-        } else {
-            List<PlayersData> filteredList = new ArrayList<>();
-            for (PlayersData player : playersList) {
-                if (selectedType.equals(player.getElement_type_full())) {
-                    filteredList.add(player);
-                }
-            }
-
-            updatePlayersList(filteredList);
-        }
-    }
-
-    public void filterPlayersByTeam(String selectedType) {
-
-        selectedTeamType = selectedType;
-        if (playersList == null || selectedType.equals("All Club")) {
-            // No filtering needed, return the entire list
-            updatePlayersList(new ArrayList<>(Constants.playerMap.values()));
-        } else {
-            List<PlayersData> filteredList = new ArrayList<>();
-            for (PlayersData player : playersList) {
-                if (selectedType.equals(player.getTeam_name_full())) {
-                    filteredList.add(player);
-                }
-            }
-
-            updatePlayersList(filteredList);
-        }
-    }
 
     public void sortAdapterData(String item) {
         switch (item) {
