@@ -4,13 +4,16 @@ import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment
 import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.TRANSFER_REQUEST_KEY;
 
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
@@ -27,11 +30,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentPlayerSelectionBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerListAdapter;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     FragmentPlayerSelectionBinding binding;
@@ -44,7 +51,9 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
 
 
     // Example data for the dropdown
-    String[] items = new String[]{"All Player", "Goalkeeper", "Defender", "Midfielder", "Forward", "Watchlist", "Arsenal", "Aston Villa", "Bournemouth", "Brentford", "Brighton", "Chelsea", "Crystal Palace", "Everton", "Fulham", "Ipswich", "Leicester City", "Liverpool", "Man City", "Man Utd", "Newcastle", "Nott'm Forest", "Southamton", "Spurs", "West Ham", "Wolves"};
+    ArrayList<String> playerTypeItems = new ArrayList<>();
+    ArrayList<String> playerTeams = new ArrayList<>();
+    String[] playerCriterionItems = new String[]{"Total Points", "Round Points", "Team Selected By", "Minutes Played", "Goal Scored", "Assist", "Clean Sheet", "Goal Conceded", "Own Goals", "Penalty Saved", "Penalty Missed", "Yellow Cards", "Red Cards", "Saves", "Bonus", "Bonus Points System", "Influence", "Creativity", "Threat", "ICT Index", "Games Started", "Form", "Times in Team of the Week", "Value(form)", "Value(season)", "Points Per Match", "Transfers In", "Transfers Out", "Transfers In(round)", "Transfers Out(round)", "Net Transfers In(round)", "Net Transfers Out(round)", "Price Rise", "Price Fall", "Price Rice(round)", "Price Fall(round)", "Expected Goals(xG)", "Expected Assists(xA)", "Expected Goals Involvement(xGI)", "Expected Goal Conceded(xGC)"};
 
 
     @Override
@@ -54,11 +63,70 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         if (getArguments() != null) {
             transferredPlayerData = (PlayersData) getArguments().getSerializable(TRANSFERRED_PLAYER_DATA);
         }
-        // Adapter for dropdowns
-        ArrayAdapter<String> playerTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, items);
 
+        // Adapter for dropdowns
+        playerTypeItems.add("All Player");
+        ArrayList<String> playerTypes = (ArrayList<String>) Constants.playerTypeMap.values()
+                .stream()
+                .map(Player_Type::getSingular_name)
+                .collect(Collectors.toList());
+        playerTypeItems.addAll(playerTypes);
+
+        ArrayAdapter<String> playerTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerTypeItems);
+        playerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.playerTypeDropdown.setAdapter(playerTypeAdapter);
-        binding.playerCriterion.setAdapter(playerTypeAdapter);
+        binding.playerTypeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = (String) parent.getItemAtPosition(position);
+                adapter.filterPlayersByType(item);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        // Adapter for dropdowns
+        playerTeams.add("All Club");
+        ArrayList<String> teamNames = (ArrayList<String>) Constants.teamMap.values()
+                .stream()
+                .map(TeamData::getName)
+                .collect(Collectors.toList());
+        playerTeams.addAll(teamNames);
+        ArrayAdapter<String> playerTeamsAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerTeams);
+        playerTeamsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.playerTeamDropdown.setAdapter(playerTeamsAdapter);
+        binding.playerTeamDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = (String) parent.getItemAtPosition(position);
+                adapter.filterPlayersByTeam(item);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        // Adapter for dropdowns
+        ArrayAdapter<String> playerCriterionAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerCriterionItems);
+        playerCriterionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.playerCriterion.setAdapter(playerCriterionAdapter);
+        binding.playerCriterion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = (String) parent.getItemAtPosition(position);
+                adapter.sortAdapterData(item);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public static PlayerSelectionFragment newInstance(PlayersData playerData) {
@@ -125,10 +193,6 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
                         requireActivity().getSupportFragmentManager().popBackStack();
                     }
                 });
-    }
-
-    public void sortPlayersByPrice() {
-        adapter.sortPlayers((p1, p2) -> Long.compare(p1.getTotal_points(), p2.getTotal_points()));
     }
 
     @Override

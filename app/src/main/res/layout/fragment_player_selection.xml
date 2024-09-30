@@ -89,6 +89,17 @@
         android:gravity="center"
         android:layout_marginTop="8dp">
 
+
+        <Spinner
+            android:id="@+id/playerTeamDropdown"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/dropdown_rounded_boarder"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24"
+            android:padding="12dp" />
+
+
         <Spinner
             android:id="@+id/playerTypeDropdown"
             android:layout_width="0dp"
@@ -99,6 +110,14 @@
             android:padding="12dp"
             />
 
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp">
+
         <Spinner
             android:id="@+id/playerCriterion"
             android:layout_width="0dp"
@@ -106,10 +125,10 @@
             android:layout_weight="1"
             android:background="@drawable/dropdown_rounded_boarder"
             app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24"
-            android:padding="12dp" />
+            android:padding="12dp"
+            />
 
     </LinearLayout>
-
 
     <include layout="@layout/layout_player_selection_item_header"/>
 

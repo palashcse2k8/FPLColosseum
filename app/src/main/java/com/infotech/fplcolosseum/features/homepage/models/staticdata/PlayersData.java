@@ -12,20 +12,22 @@ public class PlayersData implements Serializable {
     private long cost_change_start_fall;
     private long dreamteam_count;
     private long element_type;
-    private String ep_next;
-    private String ep_this;
+    private String element_type_short;
+    private String element_type_full;
+    private Double ep_next;
+    private Double ep_this;
     private long event_points;
     private String first_name;
-    private String form;
+    private Double form;
     private long id;
     private boolean in_dreamteam;
     private String news;
     private String news_added;
     private long now_cost;
     private String photo;
-    private String points_per_game;
+    private Double points_per_game;
     private String second_name;
-    private String selected_by_percent;
+    private Double selected_by_percent;
     private boolean special;
     private String squad_number = null;
     private String status;
@@ -36,8 +38,8 @@ public class PlayersData implements Serializable {
     private long transfers_in_event;
     private long transfers_out;
     private long transfers_out_event;
-    private String value_form;
-    private String value_season;
+    private Double value_form;
+    private Double value_season;
     private String web_name;
     private long minutes;
     private long goals_scored;
@@ -52,15 +54,15 @@ public class PlayersData implements Serializable {
     private long saves;
     private long bonus;
     private long bps;
-    private String influence;
-    private String creativity;
-    private String threat;
-    private String ict_index;
+    private Double influence;
+    private Double creativity;
+    private Double threat;
+    private Double ict_index;
     private long starts;
-    private String expected_goals;
-    private String expected_assists;
-    private String expected_goal_involvements;
-    private String expected_goals_conceded;
+    private Double expected_goals;
+    private Double expected_assists;
+    private Double expected_goal_involvements;
+    private Double expected_goals_conceded;
     private long influence_rank;
     private long influence_rank_type;
     private long creativity_rank;
@@ -212,9 +214,31 @@ public class PlayersData implements Serializable {
         this.purchase_price = player.purchase_price;
         this.is_captain = player.is_captain;
         this.is_vice_captain = player.is_vice_captain;
+        this.element_type_short = player.element_type_short;
+        this.element_type_full = player.element_type_full;
     }
 
     public PlayersData() {
+    }
+
+    public String getElement_type_full() {
+        return element_type_full;
+    }
+
+    public void setElement_type_full(String element_type_full) {
+        this.element_type_full = element_type_full;
+    }
+
+    public void setChance_of_playing_next_round(Long chance_of_playing_next_round) {
+        this.chance_of_playing_next_round = chance_of_playing_next_round;
+    }
+
+    public String getElement_type_short() {
+        return element_type_short;
+    }
+
+    public void setElement_type_short(String element_type_short) {
+        this.element_type_short = element_type_short;
     }
 
     public long getPosition() {
@@ -406,11 +430,11 @@ public class PlayersData implements Serializable {
         return element_type;
     }
 
-    public String getEp_next() {
+    public Double getEp_next() {
         return ep_next;
     }
 
-    public String getEp_this() {
+    public Double getEp_this() {
         return ep_this;
     }
 
@@ -422,7 +446,7 @@ public class PlayersData implements Serializable {
         return first_name;
     }
 
-    public String getForm() {
+    public Double getForm() {
         return form;
     }
 
@@ -450,7 +474,7 @@ public class PlayersData implements Serializable {
         return photo;
     }
 
-    public String getPoints_per_game() {
+    public Double getPoints_per_game() {
         return points_per_game;
     }
 
@@ -458,7 +482,7 @@ public class PlayersData implements Serializable {
         return second_name;
     }
 
-    public String getSelected_by_percent() {
+    public Double getSelected_by_percent() {
         return selected_by_percent;
     }
 
@@ -502,11 +526,11 @@ public class PlayersData implements Serializable {
         return transfers_out_event;
     }
 
-    public String getValue_form() {
+    public Double getValue_form() {
         return value_form;
     }
 
-    public String getValue_season() {
+    public Double getValue_season() {
         return value_season;
     }
 
@@ -566,19 +590,19 @@ public class PlayersData implements Serializable {
         return bps;
     }
 
-    public String getInfluence() {
+    public Double getInfluence() {
         return influence;
     }
 
-    public String getCreativity() {
+    public Double getCreativity() {
         return creativity;
     }
 
-    public String getThreat() {
+    public Double getThreat() {
         return threat;
     }
 
-    public String getIct_index() {
+    public Double getIct_index() {
         return ict_index;
     }
 
@@ -586,19 +610,19 @@ public class PlayersData implements Serializable {
         return starts;
     }
 
-    public String getExpected_goals() {
+    public Double getExpected_goals() {
         return expected_goals;
     }
 
-    public String getExpected_assists() {
+    public Double getExpected_assists() {
         return expected_assists;
     }
 
-    public String getExpected_goal_involvements() {
+    public Double getExpected_goal_involvements() {
         return expected_goal_involvements;
     }
 
-    public String getExpected_goals_conceded() {
+    public Double getExpected_goals_conceded() {
         return expected_goals_conceded;
     }
 
@@ -760,11 +784,11 @@ public class PlayersData implements Serializable {
         this.element_type = element_type;
     }
 
-    public void setEp_next(String ep_next) {
+    public void setEp_next(Double ep_next) {
         this.ep_next = ep_next;
     }
 
-    public void setEp_this(String ep_this) {
+    public void setEp_this(Double ep_this) {
         this.ep_this = ep_this;
     }
 
@@ -776,7 +800,7 @@ public class PlayersData implements Serializable {
         this.first_name = first_name;
     }
 
-    public void setForm(String form) {
+    public void setForm(Double form) {
         this.form = form;
     }
 
@@ -804,7 +828,7 @@ public class PlayersData implements Serializable {
         this.photo = photo;
     }
 
-    public void setPoints_per_game(String points_per_game) {
+    public void setPoints_per_game(Double points_per_game) {
         this.points_per_game = points_per_game;
     }
 
@@ -812,7 +836,7 @@ public class PlayersData implements Serializable {
         this.second_name = second_name;
     }
 
-    public void setSelected_by_percent(String selected_by_percent) {
+    public void setSelected_by_percent(Double selected_by_percent) {
         this.selected_by_percent = selected_by_percent;
     }
 
@@ -856,11 +880,11 @@ public class PlayersData implements Serializable {
         this.transfers_out_event = transfers_out_event;
     }
 
-    public void setValue_form(String value_form) {
+    public void setValue_form(Double value_form) {
         this.value_form = value_form;
     }
 
-    public void setValue_season(String value_season) {
+    public void setValue_season(Double value_season) {
         this.value_season = value_season;
     }
 
@@ -920,19 +944,19 @@ public class PlayersData implements Serializable {
         this.bps = bps;
     }
 
-    public void setInfluence(String influence) {
+    public void setInfluence(Double influence) {
         this.influence = influence;
     }
 
-    public void setCreativity(String creativity) {
+    public void setCreativity(Double creativity) {
         this.creativity = creativity;
     }
 
-    public void setThreat(String threat) {
+    public void setThreat(Double threat) {
         this.threat = threat;
     }
 
-    public void setIct_index(String ict_index) {
+    public void setIct_index(Double ict_index) {
         this.ict_index = ict_index;
     }
 
@@ -940,19 +964,19 @@ public class PlayersData implements Serializable {
         this.starts = starts;
     }
 
-    public void setExpected_goals(String expected_goals) {
+    public void setExpected_goals(Double expected_goals) {
         this.expected_goals = expected_goals;
     }
 
-    public void setExpected_assists(String expected_assists) {
+    public void setExpected_assists(Double expected_assists) {
         this.expected_assists = expected_assists;
     }
 
-    public void setExpected_goal_involvements(String expected_goal_involvements) {
+    public void setExpected_goal_involvements(Double expected_goal_involvements) {
         this.expected_goal_involvements = expected_goal_involvements;
     }
 
-    public void setExpected_goals_conceded(String expected_goals_conceded) {
+    public void setExpected_goals_conceded(Double expected_goals_conceded) {
         this.expected_goals_conceded = expected_goals_conceded;
     }
 

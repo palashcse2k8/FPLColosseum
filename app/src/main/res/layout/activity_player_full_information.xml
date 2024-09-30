@@ -99,7 +99,7 @@
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:padding="2dp"
-                                android:text="@{player.getForm}"
+                                android:text="@{String.valueOf(player.getForm)}"
                                 android:gravity="end"
                                 android:paddingLeft="2dp"
                                 />
@@ -129,7 +129,7 @@
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:padding="2dp"
-                                android:text="@{player.getExpected_goals}"
+                                android:text="@{String.valueOf(player.getExpected_goals)}"
                                 android:gravity="end"
                                 android:paddingLeft="2dp"
                                 />
@@ -160,7 +160,7 @@
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:padding="2dp"
-                                android:text="@{player.getExpected_assists}"
+                                android:text="@{String.valueOf(player.getExpected_assists)}"
                                 android:gravity="end"
                                 android:paddingLeft="2dp"
                                 />
@@ -189,7 +189,7 @@
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:padding="2dp"
-                                android:text="@{player.getPoints_per_game}"
+                                android:text="@{String.valueOf(player.getPoints_per_game)}"
                                 android:gravity="end"
                                 android:paddingLeft="2dp"
                                 />

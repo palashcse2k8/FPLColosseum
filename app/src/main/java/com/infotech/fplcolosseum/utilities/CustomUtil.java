@@ -243,10 +243,10 @@ public class CustomUtil {
         Map<Long, PlayersData> elementMap = new HashMap<>();
         for (PlayersData element : dataModel.getElements()) {
             //adding extra fields here
-            element.setTeam_name_full(Objects.requireNonNull(Constants.teamMap.get(element.getTeam())).getName());
-            element.setTeam_name_short(Objects.requireNonNull(Constants.teamMap.get(element.getTeam())).getShort_name());
-            element.setSingular_name(Objects.requireNonNull(Constants.playerTypeMap.get(element.getElement_type())).getSingular_name());
-            element.setSingular_name_short(Objects.requireNonNull(Constants.playerTypeMap.get(element.getElement_type())).getSingular_name_short());
+            element.setTeam_name_full(Objects.requireNonNull(Constants.teamMap.get(element.getTeam())).getName()); // team name full
+            element.setTeam_name_short(Objects.requireNonNull(Constants.teamMap.get(element.getTeam())).getShort_name()); // team name short
+            element.setElement_type_full(Objects.requireNonNull(Constants.playerTypeMap.get(element.getElement_type())).getSingular_name()); // player type full
+            element.setElement_type_short(Objects.requireNonNull(Constants.playerTypeMap.get(element.getElement_type())).getSingular_name_short()); // player type short
             elementMap.put(element.getId(), element);
         }
         Constants.playerMap = elementMap;
