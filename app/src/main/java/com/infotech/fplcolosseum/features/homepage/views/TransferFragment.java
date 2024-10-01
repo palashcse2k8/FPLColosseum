@@ -85,6 +85,8 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     private static final String ARG_ITEM_DATA = "entry_id";
     public static String PLAYER_DATA = "selected_player_data";
     public static String TRANSFERRED_PLAYER_DATA = "transferred_player_data";
+    public static String CURRENT_BALANCE = "current_balance";
+    public static String CURRENT_TEAM_PLAYERS = "team_players";
     public static String TRANSFER_REQUEST_KEY = "transfer_request_key";
 
     private long entry_id;
@@ -899,7 +901,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
         viewModel.setPreviousFragment("Transfer");
 
-        PlayerSelectionFragment playerSelectionFragment = PlayerSelectionFragment.newInstance(player);
+        PlayerSelectionFragment playerSelectionFragment = PlayerSelectionFragment.newInstance(player, new ArrayList<>(teamPlayers), currentTransfer.getBank());
         // go to player selection
         FragmentUtils.replace(
                 requireActivity().getSupportFragmentManager(),

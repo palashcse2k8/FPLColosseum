@@ -1,5 +1,7 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
+import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.CURRENT_BALANCE;
+import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.CURRENT_TEAM_PLAYERS;
 import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.TRANSFERRED_PLAYER_DATA;
 import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.TRANSFER_REQUEST_KEY;
 
@@ -26,6 +28,8 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.slider.LabelFormatter;
+import com.google.android.material.slider.RangeSlider;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentPlayerSelectionBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerListAdapter;
@@ -33,11 +37,17 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.CustomUtil;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Currency;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import es.dmoral.toasty.Toasty;
 
 public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     FragmentPlayerSelectionBinding binding;
@@ -45,20 +55,24 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     private List<PlayersData> playersList;
     private List<PlayersData> filteredPlayerList;
     private PlayersData transferredPlayerData;
+    private ArrayList<PlayersData> teamPlayers;
 
     public static String SELECTED_PLAYER_DATA = "selected_player_data";
     public static String REQUEST_KEY = "requestKey";
 
     public String playerSearchText = null;
+    public long availableBalance;
     // Example data for the dropdown
-    ArrayList<String> playerTypeItems = new ArrayList<>();
+    ArrayList<String> playerTypes = new ArrayList<>();
     ArrayList<String> playerTeams = new ArrayList<>();
     String[] playerCriterionItems = new String[]{"Total Points", "Round Points", "Team Selected By", "Minutes Played", "Goal Scored", "Assist", "Clean Sheet", "Goal Conceded", "Own Goals", "Penalty Saved", "Penalty Missed", "Yellow Cards", "Red Cards", "Saves", "Bonus", "Bonus Points System", "Influence", "Creativity", "Threat", "ICT Index", "Games Started", "Form", "Times in Team of the Week", "Value(form)", "Value(season)", "Points Per Match", "Transfers In", "Transfers Out", "Transfers In(round)", "Transfers Out(round)", "Net Transfers In(round)", "Net Transfers Out(round)", "Price Rise", "Price Fall", "Price Rice(round)", "Price Fall(round)", "Expected Goals(xG)", "Expected Assists(xA)", "Expected Goals Involvement(xGI)", "Expected Goal Conceded(xGC)"};
 
-    public static PlayerSelectionFragment newInstance(PlayersData playerData) {
+    public static PlayerSelectionFragment newInstance(PlayersData playerData, ArrayList<PlayersData> teamPlayers, long balance) {
         PlayerSelectionFragment fragment = new PlayerSelectionFragment();
         Bundle args = new Bundle();
         args.putSerializable(TRANSFERRED_PLAYER_DATA, playerData);
+        args.putLong(CURRENT_BALANCE, balance);
+        args.putSerializable(CURRENT_TEAM_PLAYERS, teamPlayers);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,11 +82,19 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         super.onCreate(savedInstanceState);
         fetchPlayersFromApi();
         // Set the listener on the child fragmentManager.
+
         getParentFragmentManager()
                 .setFragmentResultListener(REQUEST_KEY, this, new FragmentResultListener() {
                     @Override
                     public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-//
+
+                        PlayersData selectedPlayer = (PlayersData) bundle.getSerializable(SELECTED_PLAYER_DATA);
+
+                        if(selectedPlayer != null && selectedPlayer.getElement_type() != transferredPlayerData.getElement_type()){ // Check if correct player type is selected
+                            Toasty.warning(requireContext(), "Please Select a " + transferredPlayerData.getElement_type_full()).show();
+                            return;
+                        }
+
                         bundle.putSerializable(TRANSFERRED_PLAYER_DATA, transferredPlayerData);
                         // The child fragment needs to still set the result on its parent fragment manager.
                         getParentFragmentManager().setFragmentResult(TRANSFER_REQUEST_KEY, bundle);
@@ -97,15 +119,28 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
 
         }
 
+        toolbar.setNavigationOnClickListener(v -> {
+            requireActivity().getOnBackPressedDispatcher().onBackPressed(); //apply default button back press action
+        });
+
+
         // Clear existing MenuProviders and add this fragment as the MenuProvider
         requireActivity().removeMenuProvider(this);
         requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
+        if (getArguments() != null) {
+            transferredPlayerData = (PlayersData) getArguments().getSerializable(TRANSFERRED_PLAYER_DATA);
+            teamPlayers = (ArrayList<PlayersData>) getArguments().getSerializable(CURRENT_TEAM_PLAYERS);
+            availableBalance = getArguments().getLong(CURRENT_BALANCE);
+        }
+
         // If you need to fetch players from an API
         binding.playerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new PlayerListAdapter(playersList, this::onPlayerSelected, requireActivity());
+        adapter = new PlayerListAdapter(playersList, this::onPlayerSelected, transferredPlayerData, teamPlayers, requireActivity());
         binding.playerRecyclerView.setAdapter(adapter);
+        String availableBalanceText = "Available Balance : " + CustomUtil.convertedPrice(availableBalance);
+        binding.tvBalance.setText(availableBalanceText);
 //        adapter.updatePlayersList(playersList);
 
         return binding.getRoot();
@@ -115,28 +150,79 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getArguments() != null) {
-            transferredPlayerData = (PlayersData) getArguments().getSerializable(TRANSFERRED_PLAYER_DATA);
-        }
         setUpDropdowns();
+        setUpRangeSlider();
+        updateInitialAdapterData(transferredPlayerData.getElement_type_full());
+        updateRangeSlider();
+    }
+
+    private void setUpRangeSlider() {
+        binding.rangeSlider.addOnChangeListener(new RangeSlider.OnChangeListener() {
+            @Override
+            public void onValueChange(RangeSlider slider, float value, boolean fromUser) {
+                // Get the current values of the RangeSlider
+                float minPrice = binding.rangeSlider.getValues().get(0) * 10;
+                float maxPrice = binding.rangeSlider.getValues().get(1) * 10;
+                filteredPlayerList = playersList.stream().filter(playersData -> playersData.getNow_cost() >= minPrice && playersData.getNow_cost() <= maxPrice).collect(Collectors.toList());
+
+                filterSortAndUpdatePlayer(filteredPlayerList);
+            }
+        });
+
+        // Set a LabelFormatter for formatting slider values
+        binding.rangeSlider.setLabelFormatter(new LabelFormatter() {
+            @NonNull
+            @Override
+            public String getFormattedValue(float value) {
+                // Format the value as currency with 1 decimal place and the Euro symbol
+                return String.format("€%.1f", value);
+            }
+        });
+    }
+    private void updateRangeSlider() {
+        Optional<PlayersData> minPlayer = filteredPlayerList.stream()
+                .min(Comparator.comparing(PlayersData::getNow_cost));
+
+        float minPrice = minPlayer.map(data -> (float) data.getNow_cost() / 10).orElse(0f);
+
+        Optional<PlayersData> maxPlayer = filteredPlayerList.stream()
+                .max(Comparator.comparing(PlayersData::getNow_cost));
+
+        float maxPrice = maxPlayer.map(playersData -> (float) playersData.getNow_cost() / 10).orElse(0f);
+
+        if(minPrice >= maxPrice) return; // validate from and to data before set
+
+        binding.rangeSlider.setValueFrom(minPrice);
+        binding.rangeSlider.setValueTo(maxPrice);
+        binding.rangeSlider.setValues(minPrice, maxPrice);
+        binding.tvMin.setText(CustomUtil.convertedPrice((long) (minPrice*10)));
+        binding.tvMax.setText(CustomUtil.convertedPrice((long) (maxPrice*10)));
+
+    }
+
+    private void updateInitialAdapterData(String playerType) {
+        int position = playerTypes.indexOf(playerType);
+        binding.playerTypeDropdown.setSelection(position);
+        filterSortAndUpdatePlayer(playersList);
     }
 
     private void setUpDropdowns() {
         // Adapter for dropdowns
-        playerTypeItems.add("All Player");
+        playerTypes.add("All Player");
         ArrayList<String> playerTypes = (ArrayList<String>) Constants.playerTypeMap.values()
                 .stream()
                 .map(Player_Type::getSingular_name)
                 .collect(Collectors.toList());
-        playerTypeItems.addAll(playerTypes);
+        this.playerTypes.addAll(playerTypes);
 
-        ArrayAdapter<String> playerTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerTypeItems);
+        ArrayAdapter<String> playerTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, this.playerTypes);
         playerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.playerTypeDropdown.setAdapter(playerTypeAdapter);
         binding.playerTypeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterSortAndUpdatePlayer(playersList);
+//                updateRangeSlider();
             }
 
             @Override
@@ -159,6 +245,7 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterSortAndUpdatePlayer(playersList);
+//                updateRangeSlider();
             }
 
             @Override
@@ -187,8 +274,6 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
     private void fetchPlayersFromApi() {
         // Simulating API call
         playersList = new ArrayList<>(Constants.playerMap.values());
-
-
     }
 
     private void onPlayerSelected(PlayersData player) {
@@ -242,7 +327,7 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         });
         searchView.setOnCloseListener(() -> {
             // Optional: This is triggered when the search view is closed (if you handle this case)
-            adapter.updatePlayersList(new ArrayList<>(Constants.playerMap.values()));
+            filterSortAndUpdatePlayer(playersList);
             return false;
         });
     }
@@ -257,23 +342,20 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         String selectedPlayerType = binding.playerTypeDropdown.getSelectedItem().toString(); // get selected player type
         String sortingCriteria = binding.playerCriterion.getSelectedItem().toString(); // get selected sorting criterion
 
-        float minPrice = binding.rangeSlider.getValues().get(0);
-        float maxPrice = binding.rangeSlider.getValues().get(1);
 
         filteredPlayerList = new ArrayList<>(initialPlayerList);
 
-        //apply plaer team filter
+        //apply player team filter
         if (!selectedTeam.equals("All Club")) {
             filteredPlayerList = filteredPlayerList.stream().filter(playersData -> playersData.getTeam_name_full().equalsIgnoreCase(selectedTeam)).collect(Collectors.toList());
         }
 
-        //apply plaer team filter
-        if (!selectedTeam.equals("All Player")) {
+        //apply player team filter
+        if (!selectedPlayerType.equals("All Player")) {
             filteredPlayerList = filteredPlayerList.stream().filter(playersData -> playersData.getElement_type_full().equalsIgnoreCase(selectedPlayerType)).collect(Collectors.toList());
         }
 
-        //apply player price range
-        filteredPlayerList = filteredPlayerList.stream().filter(playersData -> playersData.getNow_cost() >= minPrice && playersData.getNow_cost() <= maxPrice).collect(Collectors.toList());
+        updateRangeSlider();
 
         //apply search filter
         if (playerSearchText != null || (playerSearchText != null && !playerSearchText.isEmpty()))

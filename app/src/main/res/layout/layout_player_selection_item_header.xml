@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/tools"
     android:layout_margin="2dp"
     card_view:cardElevation="10dp"
     card_view:cardCornerRadius="8dp">
@@ -30,6 +30,9 @@
                 android:layout_height="wrap_content"
                 android:text="Player Info"
                 android:textColor="@color/white"
+                android:lines="1"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -48,30 +51,68 @@
             android:orientation="horizontal"
             android:gravity="center_horizontal">
 
-            <TextView
-                android:id="@+id/player_price"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:textAlignment="textEnd"
-                android:text="Price"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+<!--            <TextView-->
+<!--                android:id="@+id/player_price"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="4dp"-->
+<!--                android:textAlignment="textEnd"-->
+<!--                android:text="Price"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="14sp"-->
+<!--                android:textStyle="bold" />-->
 
-            <TextView
-                android:id="@+id/player_tp"
+<!--            <TextView-->
+<!--                android:id="@+id/player_tp"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginEnd="8dp"-->
+<!--                android:padding="4dp"-->
+<!--                android:text="TP"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textAlignment="textEnd"-->
+<!--                android:textSize="14sp"-->
+<!--                android:textStyle="bold" />-->
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tvPrice"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:padding="4dp"
+                android:text="Price"
+                android:textColor="@color/white"
+                android:textAlignment="textEnd"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/transparent"
+                android:minHeight="0dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                app:iconPadding="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/playerCriterion"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:text="TP"
                 android:textColor="@color/white"
                 android:textAlignment="textEnd"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/transparent"
+                android:minHeight="0dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                app:iconPadding="0dp" />
+
+
 
         </LinearLayout>
 

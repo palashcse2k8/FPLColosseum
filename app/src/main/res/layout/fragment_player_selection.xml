@@ -1,74 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
-
-<!--    <FrameLayout-->
-<!--        android:id="@+id/toolbar_container"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentTop="true" />-->
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_search"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="This is test title"
         android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-<!--        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />-->
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="This is test title" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         app:cardCornerRadius="16dp">
+
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvBalance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/button_primary"
             android:gravity="center_horizontal"
-            android:paddingVertical="4dp"
             android:paddingHorizontal="16dp"
-            android:text="In The Bank : "/>
+            android:paddingVertical="4dp"
+            android:textColor="@color/white"
+            android:text="In The Bank : " />
+
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="8dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:orientation="horizontal">
 
-        <!-- Min TextView -->
         <TextView
             android:id="@+id/tvMin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:textStyle="bold"
             android:text="Min"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-        <!-- RangeSlider -->
         <com.google.android.material.slider.RangeSlider
             android:id="@+id/rangeSlider"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:valueFrom="0"
-            android:valueTo="100"
-            app:values="@array/initial_slider_values"
+            android:valueFrom="0.0"
+            android:valueTo="100.0"
+            app:haloColor="@color/button_primary"
             app:thumbColor="@color/button_primary"
-            app:trackColorActive="@color/button_primary"
             app:tickColorInactive="@color/black"
+            app:trackColorActive="@color/button_primary"
             app:trackHeight="8dp"
-            app:haloColor="@color/button_primary" />
+            app:values="@array/initial_slider_values" />
 
         <!-- Max TextView -->
         <TextView
@@ -76,18 +68,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:textStyle="bold"
             android:text="Max"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="8dp">
+        android:orientation="horizontal">
 
 
         <Spinner
@@ -96,8 +87,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/dropdown_rounded_boarder"
-            app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24"
-            android:padding="12dp" />
+            android:padding="12dp"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24" />
 
 
         <Spinner
@@ -106,17 +97,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/dropdown_rounded_boarder"
-            app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24"
             android:padding="12dp"
-            />
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
         android:gravity="center"
-        android:layout_marginTop="8dp">
+        android:orientation="horizontal">
 
         <Spinner
             android:id="@+id/playerCriterion"
@@ -124,23 +115,24 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/dropdown_rounded_boarder"
-            app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24"
             android:padding="12dp"
-            />
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down_24" />
 
     </LinearLayout>
 
-    <include layout="@layout/layout_player_selection_item_header"/>
+    <include
+        android:id="@+id/recyclerHeader"
+        layout="@layout/layout_player_selection_item_header" />
 
     <View
         android:layout_width="match_parent"
-        android:background="@android:color/darker_gray"
-        android:layout_height="2dp"/>
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/player_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/layout_player_selection_item"/>
+        tools:listitem="@layout/layout_player_selection_item" />
 
 </LinearLayout>
