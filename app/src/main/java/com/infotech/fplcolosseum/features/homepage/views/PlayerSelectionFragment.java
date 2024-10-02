@@ -4,8 +4,11 @@ import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment
 import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.CURRENT_TEAM_PLAYERS;
 import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.TRANSFERRED_PLAYER_DATA;
 import static com.infotech.fplcolosseum.features.homepage.views.TransferFragment.TRANSFER_REQUEST_KEY;
+import static com.infotech.fplcolosseum.utilities.PlayerSortingCriterion.TOTAL_POINTS;
 
+import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,12 +25,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.RangeSlider;
 import com.infotech.fplcolosseum.R;
@@ -38,12 +43,16 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
+import com.infotech.fplcolosseum.utilities.PlayerSortingCriterion;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -62,10 +71,15 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
 
     public String playerSearchText = null;
     public long availableBalance;
-    // Example data for the dropdown
+
     ArrayList<String> playerTypes = new ArrayList<>();
     ArrayList<String> playerTeams = new ArrayList<>();
-    String[] playerCriterionItems = new String[]{"Total Points", "Round Points", "Team Selected By", "Minutes Played", "Goal Scored", "Assist", "Clean Sheet", "Goal Conceded", "Own Goals", "Penalty Saved", "Penalty Missed", "Yellow Cards", "Red Cards", "Saves", "Bonus", "Bonus Points System", "Influence", "Creativity", "Threat", "ICT Index", "Games Started", "Form", "Times in Team of the Week", "Value(form)", "Value(season)", "Points Per Match", "Transfers In", "Transfers Out", "Transfers In(round)", "Transfers Out(round)", "Net Transfers In(round)", "Net Transfers Out(round)", "Price Rise", "Price Fall", "Price Rice(round)", "Price Fall(round)", "Expected Goals(xG)", "Expected Assists(xA)", "Expected Goals Involvement(xGI)", "Expected Goal Conceded(xGC)"};
+    String[] playerCriterionItems ;
+
+    boolean isPriceAscending = false;
+    boolean isCriterionAscending = false;
+
+    String sortingCriteria;
 
     public static PlayerSelectionFragment newInstance(PlayersData playerData, ArrayList<PlayersData> teamPlayers, long balance) {
         PlayerSelectionFragment fragment = new PlayerSelectionFragment();
@@ -90,7 +104,7 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
 
                         PlayersData selectedPlayer = (PlayersData) bundle.getSerializable(SELECTED_PLAYER_DATA);
 
-                        if(selectedPlayer != null && selectedPlayer.getElement_type() != transferredPlayerData.getElement_type()){ // Check if correct player type is selected
+                        if (selectedPlayer != null && selectedPlayer.getElement_type() != transferredPlayerData.getElement_type()) { // Check if correct player type is selected
                             Toasty.warning(requireContext(), "Please Select a " + transferredPlayerData.getElement_type_full()).show();
                             return;
                         }
@@ -112,9 +126,9 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         // Initialize Toolbar
         Toolbar toolbar = binding.toolbarSearch;
         if (getActivity() instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            AppCompatActivity activity = (AppCompatActivity) requireActivity();
             activity.setSupportActionBar(toolbar);
-            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
             activity.getSupportActionBar().setTitle("Search Players");
 
         }
@@ -141,7 +155,6 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         binding.playerRecyclerView.setAdapter(adapter);
         String availableBalanceText = "Available Balance : " + CustomUtil.convertedPrice(availableBalance);
         binding.tvBalance.setText(availableBalanceText);
-//        adapter.updatePlayersList(playersList);
 
         return binding.getRoot();
     }
@@ -154,12 +167,74 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         setUpRangeSlider();
         updateInitialAdapterData(transferredPlayerData.getElement_type_full());
         updateRangeSlider();
+        updateTextViewProperty();
+    }
+
+    private void updateTextViewProperty() {
+        // Initialize the drawable programmatically
+        Drawable dscIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_sort_dsc);
+
+        // Make sure the drawable is not null and set its tint color
+        if (dscIcon != null) {
+            dscIcon.setTint(ContextCompat.getColor(requireContext(), android.R.color.white));  // Set tint color
+            binding.recyclerHeader.tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, dscIcon, null);  // Set the drawable at the end (right)
+            binding.recyclerHeader.playerCriterion.setCompoundDrawablesWithIntrinsicBounds(null, null, dscIcon, null);  // Set the drawable at the end (right)
+        }
+
+        binding.recyclerHeader.tvPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isPriceAscending) {
+                    // Perform ascending sort on your list
+                    filteredPlayerList.sort(Comparator.comparing(PlayersData::getNow_cost));  // Ascending sort
+                    Drawable icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_sort_asc);
+                    binding.recyclerHeader.tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, icon, null);  // Setting drawableEnd
+
+                } else {
+                    // Perform descending sort on your list
+                    filteredPlayerList.sort(Comparator.comparing(PlayersData::getNow_cost).reversed());  // Descending sort
+                    Drawable icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_sort_dsc);
+                    binding.recyclerHeader.tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, icon, null);  // Setting drawableEnd
+                }
+
+                // Update your adapter with the sorted list
+                adapter.updatePlayersList(filteredPlayerList, sortingCriteria);
+
+                // Toggle the flag for the next click
+                isPriceAscending = !isPriceAscending;
+            }
+        });
+
+        binding.recyclerHeader.playerCriterion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if (isCriterionAscending) {
+                    Drawable icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_sort_dsc);
+                    binding.recyclerHeader.playerCriterion.setCompoundDrawablesWithIntrinsicBounds(null, null, icon, null);  // Setting drawableEnd
+
+                } else {
+                    Drawable icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_sort_asc);
+                    binding.recyclerHeader.playerCriterion.setCompoundDrawablesWithIntrinsicBounds(null, null, icon, null);  // Setting drawableEnd
+                }
+                // Toggle the flag for the next click
+                isCriterionAscending = !isCriterionAscending;
+
+                sortFilteredData(sortingCriteria); // sort the data accordingly
+
+                // Update your adapter with the sorted list
+                adapter.updatePlayersList(filteredPlayerList, sortingCriteria);
+
+            }
+        });
     }
 
     private void setUpRangeSlider() {
         binding.rangeSlider.addOnChangeListener(new RangeSlider.OnChangeListener() {
             @Override
-            public void onValueChange(RangeSlider slider, float value, boolean fromUser) {
+            public void onValueChange(@NonNull RangeSlider slider, float value, boolean fromUser) {
                 // Get the current values of the RangeSlider
                 float minPrice = binding.rangeSlider.getValues().get(0) * 10;
                 float maxPrice = binding.rangeSlider.getValues().get(1) * 10;
@@ -171,6 +246,7 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
 
         // Set a LabelFormatter for formatting slider values
         binding.rangeSlider.setLabelFormatter(new LabelFormatter() {
+            @SuppressLint("DefaultLocale")
             @NonNull
             @Override
             public String getFormattedValue(float value) {
@@ -179,6 +255,7 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
             }
         });
     }
+
     private void updateRangeSlider() {
         Optional<PlayersData> minPlayer = filteredPlayerList.stream()
                 .min(Comparator.comparing(PlayersData::getNow_cost));
@@ -190,13 +267,13 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
 
         float maxPrice = maxPlayer.map(playersData -> (float) playersData.getNow_cost() / 10).orElse(0f);
 
-        if(minPrice >= maxPrice) return; // validate from and to data before set
+        if (minPrice >= maxPrice) return; // validate from and to data before set
 
         binding.rangeSlider.setValueFrom(minPrice);
         binding.rangeSlider.setValueTo(maxPrice);
         binding.rangeSlider.setValues(minPrice, maxPrice);
-        binding.tvMin.setText(CustomUtil.convertedPrice((long) (minPrice*10)));
-        binding.tvMax.setText(CustomUtil.convertedPrice((long) (maxPrice*10)));
+        binding.tvMin.setText(CustomUtil.convertedPrice((long) (minPrice * 10)));
+        binding.tvMax.setText(CustomUtil.convertedPrice((long) (maxPrice * 10)));
 
     }
 
@@ -255,6 +332,9 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         });
 
         // Adapter for dropdowns
+        playerCriterionItems = Arrays.stream(PlayerSortingCriterion.values())
+                .map(PlayerSortingCriterion::getDisplayName)
+                .toArray(String[]::new);
         ArrayAdapter<String> playerCriterionAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, playerCriterionItems);
         playerCriterionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.playerCriterion.setAdapter(playerCriterionAdapter);
@@ -286,13 +366,9 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         // Instead of clearing the entire menu, selectively show/hide items
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
-            if (item.getItemId() == R.id.action_search ||
+            item.setVisible(item.getItemId() == R.id.action_search ||
                     item.getItemId() == R.id.action_sort_by_name ||
-                    item.getItemId() == R.id.action_sort_by_age) {
-                item.setVisible(true);
-            } else {
-                item.setVisible(false);
-            }
+                    item.getItemId() == R.id.action_sort_by_age);
         }
         MenuProvider.super.onPrepareMenu(menu);
     }
@@ -311,6 +387,7 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
+        assert searchView != null;
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -358,12 +435,12 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
         updateRangeSlider();
 
         //apply search filter
-        if (playerSearchText != null || (playerSearchText != null && !playerSearchText.isEmpty()))
+        if (playerSearchText != null)
             filteredPlayerList = filteredPlayerList.stream().filter(playersData -> playersData.getWeb_name().toLowerCase().contains(playerSearchText.toLowerCase())).collect(Collectors.toList());
 
         sortFilteredData(sortingCriteria);
 
-        adapter.updatePlayersList(filteredPlayerList);
+        adapter.updatePlayersList(filteredPlayerList, sortingCriteria);
     }
 
     private void sortAndUpdatePlayer() {
@@ -372,94 +449,319 @@ public class PlayerSelectionFragment extends Fragment implements MenuProvider {
 
         sortFilteredData(sortingCriteria);
 
-        adapter.updatePlayersList(filteredPlayerList);
+        adapter.updatePlayersList(filteredPlayerList, sortingCriteria);
     }
 
     public void sortFilteredData(String item) {
-        switch (item) {
-            case "Total Points" ->
+        sortingCriteria = item;
+        // Find the corresponding PlayerSortingCriterion enum
+        PlayerSortingCriterion selectedCriterion = Arrays.stream(PlayerSortingCriterion.values())
+                .filter(criterion -> criterion.getDisplayName().equals(item))
+                .findFirst()
+                .orElse(null);
+
+        if (selectedCriterion == null) {
+            Log.d(Constants.LOG_TAG, "Invalid sorting criterion: " + item);
+            return;
+        }
+
+        switch (selectedCriterion) {
+            case TOTAL_POINTS-> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTotal_points).reversed());
-            case "Round Points" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTotal_points));
+            }
+            case ROUND_POINTS -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getEvent_points).reversed());
-            case "Team Selected By" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getEvent_points));
+            }
+            case TEAM_SELECTED_BY -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getSelected_by_percent).reversed());
-            case "Minutes Played" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getSelected_by_percent));
+            }
+            case MINUTES_PLAYED-> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getMinutes).reversed());
-            case "Goal Scored" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getMinutes));
+            }
+            case GOALS_SCORED -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getGoals_scored).reversed());
-            case "Assist" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getGoals_scored));
+            }
+            case ASSIST -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getAssists).reversed());
-            case "Clean Sheet" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getAssists));
+            }
+            case CLEAN_SHEET-> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getClean_sheets).reversed());
-            case "Goal Conceded" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getClean_sheets));
+            }
+            case GOALS_CONCEDED -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getGoals_conceded).reversed());
+                else
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getGoals_conceded));
-            case "Own Goals" ->
+            }
+            case OWN_GOALS -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getOwn_goals).reversed());
+                else
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getOwn_goals));
-            case "Penalty Saved" ->
+            }
+            case PENALTY_SAVED -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getPenalties_saved).reversed());
-            case "Penalty Missed" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getPenalties_saved));
+            }
+            case PENALTY_MISSED -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getPenalties_missed).reversed());
+                else
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getPenalties_missed));
-            case "Yellow Cards" ->
+            }
+            case YELLOW_CARDS -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getYellow_cards).reversed());
+                else
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getYellow_cards));
-            case "Red Cards" ->
+            }
+            case RED_CARDS -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getRed_cards).reversed());
+                else
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getRed_cards));
-            case "Saves" ->
+            }
+            case SAVES -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getSaves).reversed());
-            case "Bonus" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getSaves));
+            }
+            case BONUS -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getBonus).reversed());
-            case "Bonus Points System" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getBonus));
+            }
+            case BONUS_POINTS_SYSTEM -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getBps).reversed());
-            case "Influence" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getBps));
+            }
+            case INFLUENCE -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getInfluence).reversed());
-            case "Creativity" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getInfluence));
+            }
+            case CREATIVITY -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCreativity).reversed());
-            case "Threat" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCreativity));
+            }
+            case THREAT -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getThreat).reversed());
-            case "ICT Index" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getThreat));
+            }
+            case ICT_INDEX -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getIct_index).reversed());
-            case "Games Started" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getIct_index));
+            }
+            case GAMES_STARTED -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getStarts).reversed());
-            case "Form" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getStarts));
+            }
+            case FORM -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getForm).reversed());
-            case "Times in Team of the Week" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getForm));
+            }
+            case TIMES_IN_TEAM_OF_THE_WEEK -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getDreamteam_count).reversed());
-            case "Value(form)" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getDreamteam_count));
+            }
+            case VALUE_FORM -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getValue_form).reversed());
-            case "Value(season)" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getValue_form));
+            }
+            case VALUE_SEASON -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getValue_season).reversed());
-            case "Points Per Match" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getValue_season));
+            }
+            case POINTS_PER_MATCH -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getPoints_per_game).reversed());
-            case "Transfers In" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getPoints_per_game));
+            }
+            case TRANSFERS_IN -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_in).reversed());
-            case "Transfers Out" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_in));
+            }
+            case TRANSFERS_OUT -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_out).reversed());
-            case "Transfers In(round)" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_out));
+            }
+            case TRANSFERS_IN_ROUND -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_in_event).reversed());
-            case "Transfers Out(round)" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_in_event));
+            }
+            case TRANSFERS_OUT_ROUND -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_out_event).reversed());
-            case "Net Transfers In(round)" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_out_event));
+            }
+            case NET_TRANSFERS_IN_ROUND -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong((PlayersData player) ->
                             player.getTransfers_in_event() - player.getTransfers_out_event()).reversed());
-            case "Net Transfers Out(round)" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong((PlayersData player) ->
+                            player.getTransfers_in_event() - player.getTransfers_out_event()));
+            }
+            case NET_TRANSFERS_OUT_ROUND -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingLong((PlayersData player) ->
                             player.getTransfers_out_event() - player.getTransfers_in_event()).reversed());
-            case "Price Rise" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingLong((PlayersData player) ->
+                            player.getTransfers_out_event() - player.getTransfers_in_event()));
+            }
+            case PRICE -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getNow_cost).reversed());
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getNow_cost));
+            }
+            case PRICE_RISE -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_start).reversed());
-            case "Price Fall" ->
+                else
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_start));
-            case "Price Rise(round)" ->
+            }
+            case PRICE_FALL -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_start).reversed());
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_start));
+            }
+            case PRICE_RISE_ROUND -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_event).reversed());
-            case "Price Fall(round)" ->
+                else
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_event));
-            case "Expected Goals(xG)" ->
+            }
+            case PRICE_FALL_ROUND -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_event).reversed());
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getCost_change_event));
+            }
+            case EXPECTED_GOALS -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_goals).reversed());
-            case "Expected Assists(xA)" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_goals));
+            }
+            case EXPECTED_ASSISTS -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_assists).reversed());
-            case "Expected Goals Involvement(xGI)" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_assists));
+            }
+            case EXPECTED_GOALS_INVOLVEMENT -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_goal_involvements).reversed());
-            case "Expected Goal Conceded(xGC)" ->
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_goal_involvements));
+            }
+            case EXPECTED_GOALS_CONCEDED -> {
+                binding.recyclerHeader.playerCriterion.setText(selectedCriterion.getShortName());
+                if (!isCriterionAscending)
                     filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_goals_conceded));
+                else
+                    filteredPlayerList.sort(Comparator.comparingDouble(PlayersData::getExpected_goals_conceded).reversed());
+            }
             default -> Log.d(Constants.LOG_TAG, "No item selected or unhandled item: " + item);
         }
+
+        // Notify adapter after sorting
+//        adapter.updatePlayersList(filteredPlayerList);
     }
+
 }

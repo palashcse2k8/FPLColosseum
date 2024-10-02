@@ -26,9 +26,9 @@
 
             <TextView
                 android:id="@+id/player_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Player Info"
+                android:text="Player"
                 android:textColor="@color/white"
                 android:lines="1"
                 android:ellipsize="marquee"
@@ -40,9 +40,9 @@
 
         <ImageView
             android:id="@+id/player_image"
-            android:layout_width="50dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:contentDescription="TODO" />
+            android:contentDescription="@string/todo" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -76,36 +76,39 @@
 <!--                android:textSize="14sp"-->
 <!--                android:textStyle="bold" />-->
 
-            <com.google.android.material.button.MaterialButton
+            <TextView
                 android:id="@+id/tvPrice"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="Price"
+                android:layout_marginEnd="16dp"
+                android:text="P"
                 android:textColor="@color/white"
                 android:textAlignment="textEnd"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                app:drawableEnd="@drawable/ic_sort_dsc"
+                android:clickable="true"
                 android:backgroundTint="@android:color/transparent"
                 android:minHeight="0dp"
                 android:paddingTop="0dp"
                 android:paddingBottom="0dp"
                 app:iconPadding="0dp" />
 
-            <com.google.android.material.button.MaterialButton
+            <TextView
                 android:id="@+id/playerCriterion"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:text="TP"
                 android:textColor="@color/white"
                 android:textAlignment="textEnd"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                app:drawableEnd="@drawable/ic_sort_dsc"
+                android:clickable="true"
                 android:backgroundTint="@android:color/transparent"
                 android:minHeight="0dp"
                 android:paddingTop="0dp"
