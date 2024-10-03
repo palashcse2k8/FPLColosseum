@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.slider.LabelFormatter;
@@ -31,6 +32,7 @@ import com.infotech.fplcolosseum.features.player_search.adapter.PlayerListAdapte
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
+import com.infotech.fplcolosseum.features.player_search.viewmodel.PlayerSelectionViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.infotech.fplcolosseum.utilities.PlayerSortingCriterion;
@@ -67,6 +69,10 @@ public class PlayerSelectionActivity extends AppCompatActivity {
 
     String sortingCriteria;
 
+    PlayerSelectionViewModel viewModel;
+    SearchView searchView;
+    MenuItem searchItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +99,7 @@ public class PlayerSelectionActivity extends AppCompatActivity {
 
         String availableBalanceText = "Available Balance : " + CustomUtil.convertedPrice(availableBalance);
         binding.tvBalance.setText(availableBalanceText);
+        viewModel = new ViewModelProvider(this).get(PlayerSelectionViewModel.class);
 
     }
 
@@ -134,11 +141,11 @@ public class PlayerSelectionActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_player_search, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchItem = menu.findItem(R.id.action_search);
         searchItem.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView = (SearchView) searchItem.getActionView();
+//        searchView.setIconified(false);
 
-        assert searchView != null;
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -759,7 +766,20 @@ public class PlayerSelectionActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        filterSortAndUpdatePlayer(playersList);
+        viewModel.getSearchQuery().observe(this, s -> {
+            if (searchView != null && !s.isEmpty()) {
+                searchItem.expandActionView();
+                searchView.setQuery(s, false);  // Restore the query
+                searchView.clearFocus();
+            }
+            filterSortAndUpdatePlayer(playersList);
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        viewModel.setSearchQuery(playerSearchText);
     }
 
     @Override
