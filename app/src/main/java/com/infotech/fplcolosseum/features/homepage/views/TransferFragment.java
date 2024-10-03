@@ -10,8 +10,10 @@ import static com.infotech.fplcolosseum.utilities.CustomUtil.findPlayerById;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.hasMoreThanThreePlayersFromSameTeam;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,6 +33,8 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -58,6 +62,8 @@ import com.infotech.fplcolosseum.features.homepage.models.myteam.Transfers;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
+import com.infotech.fplcolosseum.features.login.models.Player;
+import com.infotech.fplcolosseum.features.player_search.views.PlayerSelectionActivity;
 import com.infotech.fplcolosseum.utilities.ButtonStateManager;
 import com.infotech.fplcolosseum.utilities.Chips;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -88,6 +94,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     public static String CURRENT_BALANCE = "current_balance";
     public static String CURRENT_TEAM_PLAYERS = "team_players";
     public static String TRANSFER_REQUEST_KEY = "transfer_request_key";
+    public static String DATA_KEY = "data";
 
     private long entry_id;
 
@@ -143,44 +150,49 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
                     public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                         PlayersData selectedPlayer = (PlayersData) bundle.getSerializable(PLAYER_DATA);
                         PlayersData transferredPlayer = (PlayersData) bundle.getSerializable(TRANSFERRED_PLAYER_DATA);
-
-                        // trigger ui change with the new selected player
-                        selectedPlayer.setPurchase_price(selectedPlayer.getNow_cost()); // update the price with purchase price
-                        selectedPlayer.setSelling_price(selectedPlayer.getNow_cost()); // update the price with selling price
-                        int transferredPlayerIndex = (int) transferredPlayer.getPosition() - 1;
-                        selectedPlayer.setSubstitute_number(transferredPlayerIndex + 1);
-                        selectedPlayer.setPosition(transferredPlayer.getPosition());
-
-                        teamPlayers.set(transferredPlayerIndex, selectedPlayer);
-
-                        long updatedBankBalance = transferredPlayer.getPurchase_price() + currentTransfer.getBank() - selectedPlayer.getPurchase_price();
-                        currentTransfer.setBank(updatedBankBalance);
-                        long transferCount = currentTransfer.getMade();
-                        currentTransfer.setMade(++transferCount);
-
-                        updateTransferInfo(currentTransfer);
-                        updateFieldUI(binding.footballFieldLayout);
-
-                        enableEditToolBar();
-//                        setUpToolbar(Constants.nextGameWeek);
-
-                        //store transferred player list
-                        TransferUpdate previousData = transferredPlayerList.get(transferredPlayer.getPosition());
-                        if (previousData != null) {
-                            previousData.setElement_in(selectedPlayer.getId());
-                            previousData.setPurchase_price(selectedPlayer.getPurchase_price() + "");
-                        } else {
-                            TransferUpdate transferUpdate = new TransferUpdate();
-                            transferUpdate.setElement_in(selectedPlayer.getId());
-                            transferUpdate.setElement_out(transferredPlayer.getId());
-                            transferUpdate.setSelling_price(transferredPlayer.getSelling_price() + "");
-                            transferUpdate.setPurchase_price(selectedPlayer.getPurchase_price() + "");
-                            transferredPlayerList.put(transferredPlayer.getPosition(), transferUpdate);
+                        if(selectedPlayer != null && transferredPlayer != null) {
+                            updateUIForTransferredPlayer(selectedPlayer, transferredPlayer);
                         }
                     }
                 });
 //        setHasOptionsMenu(true);
         setRetainInstance(true);
+    }
+
+    public void updateUIForTransferredPlayer(PlayersData selectedPlayer, PlayersData transferredPlayer){
+        // trigger ui change with the new selected player
+        selectedPlayer.setPurchase_price(selectedPlayer.getNow_cost()); // update the price with purchase price
+        selectedPlayer.setSelling_price(selectedPlayer.getNow_cost()); // update the price with selling price
+        int transferredPlayerIndex = (int) transferredPlayer.getPosition() - 1;
+        selectedPlayer.setSubstitute_number(transferredPlayerIndex + 1);
+        selectedPlayer.setPosition(transferredPlayer.getPosition());
+
+        teamPlayers.set(transferredPlayerIndex, selectedPlayer);
+
+        long updatedBankBalance = transferredPlayer.getPurchase_price() + currentTransfer.getBank() - selectedPlayer.getPurchase_price();
+        currentTransfer.setBank(updatedBankBalance);
+        long transferCount = currentTransfer.getMade();
+        currentTransfer.setMade(++transferCount);
+
+        updateTransferInfo(currentTransfer);
+        updateFieldUI(binding.footballFieldLayout);
+
+        enableEditToolBar();
+//                        setUpToolbar(Constants.nextGameWeek);
+
+        //store transferred player list
+        TransferUpdate previousData = transferredPlayerList.get(transferredPlayer.getPosition());
+        if (previousData != null) {
+            previousData.setElement_in(selectedPlayer.getId());
+            previousData.setPurchase_price(selectedPlayer.getPurchase_price() + "");
+        } else {
+            TransferUpdate transferUpdate = new TransferUpdate();
+            transferUpdate.setElement_in(selectedPlayer.getId());
+            transferUpdate.setElement_out(transferredPlayer.getId());
+            transferUpdate.setSelling_price(transferredPlayer.getSelling_price() + "");
+            transferUpdate.setPurchase_price(selectedPlayer.getPurchase_price() + "");
+            transferredPlayerList.put(transferredPlayer.getPosition(), transferUpdate);
+        }
     }
 
     @Nullable
@@ -901,7 +913,13 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
         viewModel.setPreviousFragment("Transfer");
 
-        PlayerSelectionFragment playerSelectionFragment = PlayerSelectionFragment.newInstance(player, new ArrayList<>(teamPlayers), currentTransfer.getBank());
+        startPlayerSelectionActivity(player);
+//        startPlayerSelectionFragment(player);
+
+    }
+
+    public void startPlayerSelectionFragment(PlayersData player){
+        PlayerSelectionFragment playerSelectionFragment = PlayerSelectionFragment.newInstance(player, new ArrayList<>(teamPlayers), currentTransfer.getBank() + player.getSelling_price());
         // go to player selection
         FragmentUtils.replace(
                 requireActivity().getSupportFragmentManager(),
@@ -914,6 +932,40 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
                 R.anim.exit_to_left      // popExit
         );
     }
+
+    public void startPlayerSelectionActivity( PlayersData player){
+
+
+        Intent intent = new Intent(requireActivity(), PlayerSelectionActivity.class);
+
+        // Add data to pass
+        intent.putExtra(TRANSFERRED_PLAYER_DATA, player);
+        intent.putExtra(CURRENT_TEAM_PLAYERS, new ArrayList<>(teamPlayers));
+        intent.putExtra(CURRENT_BALANCE, currentTransfer.getBank() + player.getSelling_price());
+
+        // Start the activity
+        transferPlayerLauncher.launch(intent);
+    }
+
+    private final ActivityResultLauncher<Intent> transferPlayerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if(data == null) return;
+                    Bundle receivedData = data.getExtras();
+                    if (receivedData != null) {
+                        PlayersData selectedPlayer = (PlayersData) receivedData.getSerializable(PLAYER_DATA);
+                        PlayersData transferredPlayer = (PlayersData) receivedData.getSerializable(TRANSFERRED_PLAYER_DATA);
+                        if(selectedPlayer != null && transferredPlayer != null) {
+                            updateUIForTransferredPlayer(selectedPlayer, transferredPlayer);
+                        } else {
+                            Toasty.warning(requireContext(), "No player selected").show();
+                        }
+                    }
+                }
+            }
+    );
 
     @Override
     public void onCancelTransfer(PlayersData player) {

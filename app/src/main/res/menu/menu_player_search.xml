@@ -9,12 +9,12 @@
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
-        android:id="@+id/action_sort_by_name"
+        android:id="@+id/action_sort_by_price"
         android:title="Sort by Price"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_sort_by_age"
+        android:id="@+id/action_sort_by_points"
         android:title="Sort by Total Points"
         app:showAsAction="never" />
 </menu>

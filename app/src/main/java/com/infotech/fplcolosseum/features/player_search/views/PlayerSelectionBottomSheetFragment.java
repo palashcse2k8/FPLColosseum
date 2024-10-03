@@ -1,8 +1,9 @@
-package com.infotech.fplcolosseum.features.homepage.views;
+package com.infotech.fplcolosseum.features.player_search.views;
 
-import static com.infotech.fplcolosseum.features.homepage.views.PlayerSelectionFragment.SELECTED_PLAYER_DATA;
-import static com.infotech.fplcolosseum.features.homepage.views.PlayerSelectionFragment.REQUEST_KEY;
+import static com.infotech.fplcolosseum.features.player_search.views.PlayerSelectionActivity.BOTTOM_SHEET_REQUEST_KEY;
+import static com.infotech.fplcolosseum.features.player_search.views.PlayerSelectionActivity.SELECTED_PLAYER_DATA;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -97,12 +98,23 @@ public class PlayerSelectionBottomSheetFragment extends BottomSheetDialogFragmen
 //            if (playerTransferListener != null) {
 //                playerTransferListener.onTransferPlayer(playerData);
 //            }
+            // Prepare result bundle
             Bundle result = new Bundle();
             result.putSerializable(SELECTED_PLAYER_DATA, playerData);
 
-            // The child fragment needs to still set the result on its parent fragment manager.
-            getParentFragmentManager().setFragmentResult(REQUEST_KEY, result);
+            // Set the result on the activity's FragmentManager
+            getParentFragmentManager().setFragmentResult(BOTTOM_SHEET_REQUEST_KEY, result);
             dismiss();
+
+
+//            Intent resultIntent = new Intent();
+//            resultIntent.putExtra(SELECTED_PLAYER_DATA, playerData);  // Send the selected player data
+//
+//            // Set the result to return to the calling activity
+//            requireActivity().setResult(Activity.RESULT_OK, resultIntent);
+
+            // Close the BottomSheet fragment
+//            dismiss();
         });
 
         binding.btnCancelTransfer.setOnClickListener(v -> {

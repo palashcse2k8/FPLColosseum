@@ -1,4 +1,4 @@
-package com.infotech.fplcolosseum.features.homepage.adapter;
+package com.infotech.fplcolosseum.features.player_search.adapter;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,14 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
-import com.infotech.fplcolosseum.features.homepage.views.PlayerSelectionBottomSheetFragment;
+import com.infotech.fplcolosseum.features.player_search.views.PlayerSelectionBottomSheetFragment;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.infotech.fplcolosseum.utilities.PlayerSortingCriterion;
@@ -78,7 +77,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
 
         holder.itemView.setOnClickListener(v -> {
             if (onPlayerClickListener != null && holder.itemView.isEnabled()) {
-                onPlayerClickListener.onPlayerClick(player);
+//                onPlayerClickListener.onPlayerClick(player);
                 // Open the bottom sheet
                 PlayerSelectionBottomSheetFragment bottomSheet = PlayerSelectionBottomSheetFragment.newInstance(player);
                 bottomSheet.show(activity.getSupportFragmentManager(), "PlayerBottomSheet");
@@ -161,20 +160,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
             playerTypeAndTeam = itemView.findViewById(R.id.player_position);
             playerTotalPoints = itemView.findViewById(R.id.player_tp);
             playerPrice = itemView.findViewById(R.id.player_price);
-
-
-//            itemView.setOnClickListener(v -> {
-//
-//                if (onPlayerClickListener != null && !isPlayerInList(currentTeamPlayers, playersList.get(getAdapterPosition()).getId())) {
-//                    onPlayerClickListener.onPlayerClick(playersList.get(getAdapterPosition()));
-//                }
-//            });
-
-//            if (isPlayerInList(currentTeamPlayers, player.getId())) {
-//                itemView.setEnabled(false);  // Disable interaction
-//            } else {
-//                itemView.setEnabled(true);   // Enable interaction
-//            }
 
         }
 
