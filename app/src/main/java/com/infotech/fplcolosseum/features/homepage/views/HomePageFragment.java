@@ -232,9 +232,6 @@ public class HomePageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        if(viewModel.getPreviousFragment().getValue() == null || viewModel.getPreviousFragment().getValue().isEmpty()){
-//
-//        }
 
         setupViewPager(binding.topViewPager, binding.topTabLayout);
 
@@ -308,14 +305,6 @@ public class HomePageFragment extends Fragment {
     private void setupPointFragmentToolbar(Toolbar toolbar) {
         TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
         TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
-
-//        if (Constants.managerName != null) {
-//            managerNameTextView.setText(Constants.managerName);
-//        }
-//
-//        if (Constants.teamName != null) {
-//            teamNameTextView.setText(Constants.teamName);
-//        }
 
         if(viewModel.getToolbarTitle() != null){
             teamNameTextView.setText(viewModel.getToolbarTitle().getValue());

@@ -1,5 +1,6 @@
 package com.infotech.fplcolosseum.features.login.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
 import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
+import com.infotech.fplcolosseum.features.homepage.views.DashboardActivity;
 import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment;
 import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment_;
 import com.infotech.fplcolosseum.features.homepage.views.PlayerSelectionFragment;
@@ -224,5 +226,26 @@ public class LoginFragment extends Fragment {
                 R.anim.exit_to_left      // popExit
         );
     }
+
+    public void gotoDashboardActivity(long managerID) {
+
+//        HomePageFragment_ homePageFragment = (HomePageFragment_) HomePageFragment.newInstance(10359552);
+        FragmentUtils.replace(
+                requireActivity().getSupportFragmentManager(),
+                HomePageFragment_.builder().arg(HomePageFragment.ARG_MANAGER_ID, managerID).build(),
+                R.id.contentFrame,
+                true,
+                R.anim.enter_from_right, // enter
+                R.anim.exit_to_left,      // exit
+                R.anim.enter_from_right,   // popEnter
+                R.anim.exit_to_left      // popExit
+        );
+
+
+        Intent myIntent = new Intent(requireActivity(), DashboardActivity.class);
+//        myIntent.putExtra("key", value); //Optional parameters
+        startActivity(myIntent);
+    }
+
 
 }
