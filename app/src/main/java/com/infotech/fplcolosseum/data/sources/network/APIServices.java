@@ -117,4 +117,13 @@ public interface APIServices {
 
     @GET("https://fantasy.premierleague.com/api/element-summary/{player_id}/")  // https://fantasy.premierleague.com/api/element-summary/351/
     Call<ResponseBody> getPlayerSummary(@Path("player_id") long player_id);
+
+    @GET("https://fantasy.premierleague.com/api/event-status/")      //https://fantasy.premierleague.com/api/event-status/
+    Call<ResponseBody> getCurrentGameWeekStatus();
+
+    @GET("https://fantasy.premierleague.com/api/stats/best-classic-private-leagues/")     //https://fantasy.premierleague.com/api/stats/best-classic-private-leagues/
+    Call<ResponseBody> getBestClassicPrivateLeagues();
+
+    @GET("https://fantasy.premierleague.com/api/stats/most-valuable-teams/")     //https://fantasy.premierleague.com/api/stats/most-valuable-teams/
+    Call<ResponseBody> getMostValuableTeams();
 }

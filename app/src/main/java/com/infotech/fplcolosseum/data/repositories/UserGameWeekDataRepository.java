@@ -21,6 +21,9 @@ import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamU
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekTransferUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.picks.GameWeekPicksModel;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
+import com.infotech.fplcolosseum.features.homepage.models.status.BestTeamDataModel;
+import com.infotech.fplcolosseum.features.homepage.models.status.GameWeekStatus;
+import com.infotech.fplcolosseum.features.homepage.models.status.ValuableTeamDataModel;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.features.player_information.models.ElementSummary;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -270,6 +273,44 @@ public class UserGameWeekDataRepository {
         apiData.addSource(APIHandler.makeApiCall(callAPI, ElementSummary.class), tApiResponse -> {
 //            Log.d("Data ", tApiResponse.getData().toString());
             apiData.postValue(tApiResponse);
+        });
+
+        return apiData;
+    }
+
+    public LiveData<ApiResponse<GameWeekStatus>> getGameWeekStatus() {
+
+        MediatorLiveData<ApiResponse<GameWeekStatus>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getCurrentGameWeekStatus();
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekStatus.class), tApiResponse -> {
+//            Log.d("Data ", tApiResponse.getData().toString());
+            apiData.postValue(tApiResponse);
+        });
+
+        return apiData;
+    }
+
+    public LiveData<ApiResponse<List<BestTeamDataModel>>> getBestClassicPrivateLeaguesData() {
+        MediatorLiveData<ApiResponse<List<BestTeamDataModel>>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getBestClassicPrivateLeagues();
+
+        apiData.addSource(APIHandler.makeApiCallForList(callAPI, BestTeamDataModel.class), listApiResponse -> {
+            apiData.postValue(listApiResponse);
+        });
+
+        return apiData;
+    }
+
+    public LiveData<ApiResponse<List<ValuableTeamDataModel>>> getMostValuableTeamsData() {
+        MediatorLiveData<ApiResponse<List<ValuableTeamDataModel>>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getBestClassicPrivateLeagues();
+
+        apiData.addSource(APIHandler.makeApiCallForList(callAPI, ValuableTeamDataModel.class), listApiResponse -> {
+            apiData.postValue(listApiResponse);
         });
 
         return apiData;
