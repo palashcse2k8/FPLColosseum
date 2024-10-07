@@ -80,7 +80,8 @@ public class LoginFragment extends Fragment {
                             saveUserInfo(data);
                             Constants.LoggedInUser = data;
 
-                            goToHomePage(Constants.LoggedInUser.getPlayer().getEntry());
+//                            goToHomePage(Constants.LoggedInUser.getPlayer().getEntry());
+                            gotoDashboardActivity(Constants.LoggedInUser.getPlayer().getEntry());
 
                         } else if (apiResponse.getData() instanceof String) {
                             UIUtils.toast(requireContext(), apiResponse.getMessage(), ToastLevel.WARNING);
@@ -230,20 +231,20 @@ public class LoginFragment extends Fragment {
     public void gotoDashboardActivity(long managerID) {
 
 //        HomePageFragment_ homePageFragment = (HomePageFragment_) HomePageFragment.newInstance(10359552);
-        FragmentUtils.replace(
-                requireActivity().getSupportFragmentManager(),
-                HomePageFragment_.builder().arg(HomePageFragment.ARG_MANAGER_ID, managerID).build(),
-                R.id.contentFrame,
-                true,
-                R.anim.enter_from_right, // enter
-                R.anim.exit_to_left,      // exit
-                R.anim.enter_from_right,   // popEnter
-                R.anim.exit_to_left      // popExit
-        );
+//        FragmentUtils.replace(
+//                requireActivity().getSupportFragmentManager(),
+//                HomePageFragment_.builder().arg(HomePageFragment.ARG_MANAGER_ID, managerID).build(),
+//                R.id.contentFrame,
+//                true,
+//                R.anim.enter_from_right, // enter
+//                R.anim.exit_to_left,      // exit
+//                R.anim.enter_from_right,   // popEnter
+//                R.anim.exit_to_left      // popExit
+//        );
 
 
         Intent myIntent = new Intent(requireActivity(), DashboardActivity.class);
-//        myIntent.putExtra("key", value); //Optional parameters
+        myIntent.putExtra("managerID", managerID); //Optional parameters
         startActivity(myIntent);
     }
 

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="homePageViewModel"
+            type="com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/appbarLogin"
+                layout="@layout/appbar_layout" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/gameWeekStat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardMaxElevation="12dp"
+                app:cardElevation="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Points / Ranking"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:textStyle="bold"/>
+
+                    <View style="@style/Divider"
+                        android:layout_marginHorizontal="4dp"/>
+                    
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.2"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:padding="4dp"
+                            android:text="Gameweek Points"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".8"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:padding="4dp"
+                            android:text="@{String.valueOf(homePageViewModel.pointsMergedResponseLiveData.data.gameWeekPicksModel.entry_history.points)}"/>
+                    </LinearLayout>
+
+                    <View style="@style/Divider"
+                        android:layout_marginHorizontal="4dp"/>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.2"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:padding="4dp"
+                            android:text="Overall Points"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".8"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:padding="4dp"
+                            android:text="@{String.valueOf(homePageViewModel.pointsMergedResponseLiveData.data.gameWeekPicksModel.entry_history.total_points)}"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <ProgressBar
+                android:id="@+id/progress_circular"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:visibility="@{homePageViewModel.dataLoading ? View.VISIBLE : View.GONE}">
+
+            </ProgressBar>
+
+        </LinearLayout>
+    </ScrollView>
+</layout>
+
