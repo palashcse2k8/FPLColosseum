@@ -7,6 +7,7 @@ public class Entry_history {
     private long rank;
     private long rank_sort;
     private long overall_rank;
+    private long percentile_rank;
     private long bank;
     private long value;
     private long event_transfers;
@@ -60,6 +61,10 @@ public class Entry_history {
         return points_on_bench;
     }
 
+    public long getPercentile_rank() {
+        return percentile_rank;
+    }
+
     // Setter Methods
 
     public void setEvent(long event) {
@@ -104,5 +109,9 @@ public class Entry_history {
 
     public void setPoints_on_bench(long points_on_bench) {
         this.points_on_bench = points_on_bench;
+    }
+
+    public void setPercentile_rank(long percentile_rank) {
+        this.percentile_rank = percentile_rank;
     }
 }

@@ -167,11 +167,11 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
         // get given game week picks player list
 
-        if (myTeamApiResultLiveData.getValue().getData() != null) {
+        if (myTeamApiResultLiveData.getValue() != null && myTeamApiResultLiveData.getValue().getData() != null) {
             statusMergedResponseModel.setGameWeekMyTeamResponseModel(myTeamApiResultLiveData.getValue().getData());
         }
 
-        if (gameWeekPicksApiResultLiveData.getValue().getData() != null) {
+        if (gameWeekPicksApiResultLiveData.getValue() != null && gameWeekPicksApiResultLiveData.getValue().getData() != null) {
             statusMergedResponseModel.setGameWeekPicksModel(gameWeekPicksApiResultLiveData.getValue().getData());
 
             //get game week status
@@ -262,6 +262,10 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
     public LiveData<ApiResponse<GameWeekMyTeamResponseModel>> getMyTeamApiResultLiveData() {
         return myTeamApiResultLiveData;
+    }
+
+    public LiveData<ApiResponse<GameWeekPicksModel>> getGameWeekPicksLiveData() {
+        return gameWeekPicksApiResultLiveData;
     }
 
     public LiveData<ApiResponse<?>> getTransferApiResultLiveData() {
@@ -367,5 +371,13 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
     public void setPreviousFragment(String fragment) {
         this.previousFragment.setValue(fragment);
+    }
+
+    public LiveData<Long> geGameWeekAvgScore(long gameWeekEventIndex) {
+        return new MutableLiveData<>(Constants.GameWeekStaticData.getEvents().get((int) gameWeekEventIndex).getAverage_entry_score());
+    }
+
+    public LiveData<Long> geGameWeekMaxScore(long gameWeekEventIndex) {
+        return new MutableLiveData<>(Constants.GameWeekStaticData.getEvents().get((int) gameWeekEventIndex).getAverage_entry_score());
     }
 }

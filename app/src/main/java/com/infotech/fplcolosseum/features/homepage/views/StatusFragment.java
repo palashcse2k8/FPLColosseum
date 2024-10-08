@@ -26,6 +26,7 @@ import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 import com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 
@@ -41,7 +42,10 @@ public class StatusFragment extends Fragment {
 
         ((AppCompatActivity) requireActivity()).setSupportActionBar(binding.appbarLogin.toolbar);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
+        sharedViewModel.getStatusMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
         binding.setHomePageViewModel(sharedViewModel);
+        binding.setGameWeekEventIndex(Constants.currentGameWeek);
+        binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
 
@@ -53,8 +57,8 @@ public class StatusFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(Constants.LOG_TAG, sharedViewModel.getPointsMergedResponseLiveData().getValue().getData().getGameWeekPicksModel().getEntry_history().getPoints() + "");
-        Log.d(Constants.LOG_TAG, sharedViewModel.getPointsMergedResponseLiveData().getValue().getData().getGameWeekPicksModel().getEntry_history().getTotal_points() + "");
+//        Log.d(Constants.LOG_TAG, sharedViewModel.getPointsMergedResponseLiveData().getValue().getData().getGameWeekPicksModel().getEntry_history().getPoints() + "");
+//        Log.d(Constants.LOG_TAG, sharedViewModel.getPointsMergedResponseLiveData().getValue().getData().getGameWeekPicksModel().getEntry_history().getTotal_points() + "");
     }
 
     public void goToStanding() {

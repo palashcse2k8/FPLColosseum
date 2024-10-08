@@ -325,4 +325,8 @@ public class CustomUtil {
     public static String convertedPrice(long currentPrice){
         return "€" + (double) currentPrice / 10 + "m";
     }
+
+    public static String convertPercent(long value){
+        return value + "%";
+    }
 }
