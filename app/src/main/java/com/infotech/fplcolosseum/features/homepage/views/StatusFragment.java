@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.infotech.fplcolosseum.R;
@@ -112,7 +113,9 @@ public class StatusFragment extends Fragment {
         MostValuableTeamsAdapter valuableTeamsAdapter= new MostValuableTeamsAdapter(valuableTeamDataModels.subList(0,5));
         binding.mostValuableTeamRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.mostValuableTeamRecyclerView.setAdapter(valuableTeamsAdapter);
-
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
+        binding.mostValuableTeamRecyclerView.addItemDecoration(dividerItemDecoration);
         // Show more button click event
         binding.mostValuableTeamsShowMoreButton.setOnClickListener(v -> {
             // Show all items

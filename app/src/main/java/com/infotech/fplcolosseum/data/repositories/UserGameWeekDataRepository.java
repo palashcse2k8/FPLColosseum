@@ -307,7 +307,7 @@ public class UserGameWeekDataRepository {
     public LiveData<ApiResponse<List<ValuableTeamDataModel>>> getMostValuableTeamsData() {
         MediatorLiveData<ApiResponse<List<ValuableTeamDataModel>>> apiData = new MediatorLiveData<>();
 
-        Call<ResponseBody> callAPI = apiServices.getBestClassicPrivateLeagues();
+        Call<ResponseBody> callAPI = apiServices.getMostValuableTeams();
 
         apiData.addSource(APIHandler.makeApiCallForList(callAPI, ValuableTeamDataModel.class), listApiResponse -> {
             apiData.postValue(listApiResponse);
