@@ -2,14 +2,14 @@ package com.infotech.fplcolosseum.features.homepage.models.staticdata;
 
 public class ChipsPlayedInfo {
     private String chip_name;
-    private float num_played;
+    private long num_played;
 
     // Getter Methods
     public String getChip_name() {
         return chip_name;
     }
 
-    public float getNum_played() {
+    public long getNum_played() {
         return num_played;
     }
 
@@ -18,7 +18,7 @@ public class ChipsPlayedInfo {
         this.chip_name = chip_name;
     }
 
-    public void setNum_played(float num_played) {
+    public void setNum_played(long num_played) {
         this.num_played = num_played;
     }
 }

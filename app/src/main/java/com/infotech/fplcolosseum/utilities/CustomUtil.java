@@ -23,6 +23,7 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -328,5 +329,13 @@ public class CustomUtil {
 
     public static String convertPercent(long value){
         return value + "%";
+    }
+
+    public static String convertDateToStringFormat(String inputDate){
+
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("EEE d MMM", Locale.ENGLISH);
+        LocalDate date = LocalDate.parse(inputDate, inputFormatter);
+        return date.format(outputFormatter);
     }
 }

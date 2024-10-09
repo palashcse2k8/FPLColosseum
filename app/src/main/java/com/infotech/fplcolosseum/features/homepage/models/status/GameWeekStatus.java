@@ -21,48 +21,13 @@ public class GameWeekStatus {
     public void setLeagues(String leagues) {
         this.leagues = leagues;
     }
-}
 
-class Status {
-    private boolean bonus_added;
-    private String date;
-    private float event;
-    private String points;
-
-
-    // Getter Methods
-
-    public boolean getBonus_added() {
-        return bonus_added;
+    public ArrayList<Status> getStatus() {
+        return status;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public float getEvent() {
-        return event;
-    }
-
-    public String getPoints() {
-        return points;
-    }
-
-    // Setter Methods
-
-    public void setBonus_added(boolean bonus_added) {
-        this.bonus_added = bonus_added;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setEvent(float event) {
-        this.event = event;
-    }
-
-    public void setPoints(String points) {
-        this.points = points;
+    public void setStatus(ArrayList<Status> status) {
+        this.status = status;
     }
 }
+

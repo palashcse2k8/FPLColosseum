@@ -112,6 +112,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     int activeChipCount = 0;
     GameWeekMyTeamResponseModel initialResponse;
     Transfers currentTransfer;
+    MenuProvider menuProvider;
 
     Map<Long, TransferUpdate> transferredPlayerList = new HashMap<>();
 
@@ -204,10 +205,15 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         viewModel.dataLoading.setValue(true);
         binding.setLifecycleOwner(this);
 
-        requireActivity().addMenuProvider(new MenuProvider() {
+        return rootView;
+    }
+
+    public void addMenuProvider(){
+        menuProvider = new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
 
+                menu.clear();
                 // Inflate the menu; this adds items to the action bar if it is present.
                 menuInflater.inflate(R.menu.my_team_menu, menu);
 
@@ -252,17 +258,17 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
 
 
                 // Set visibility based on your conditions
-                refreshItem.setVisible(isRefreshVisible);
-                shareItem.setVisible(isShareVisible);
-                saveItem.setVisible(isSaveVisible);
-                clearItem.setVisible(isClearVisible);
+                if (refreshItem != null) refreshItem.setVisible(isRefreshVisible);
+                if (shareItem != null) shareItem.setVisible(isShareVisible);
+                if (saveItem != null) saveItem.setVisible(isSaveVisible);
+                if (clearItem != null) clearItem.setVisible(isClearVisible);
 
                 MenuProvider.super.onPrepareMenu(menu);
             }
-        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        };
 
+        requireActivity().addMenuProvider(menuProvider, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
-        return rootView;
     }
 
     private void handleUndoClick() {
@@ -369,6 +375,9 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         super.onDestroyView();
         // Stop the countdown when the fragment is destroyed
         handler.removeCallbacks(countdownRunnable);
+        if (menuProvider != null) {
+            requireActivity().removeMenuProvider(menuProvider);
+        }
     }
 
     private void updateCountdown() {
@@ -390,7 +399,8 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
     @Override
     public void onResume() {
         super.onResume();
-        setUpToolbar(Constants.nextGameWeek); // set up toolbar
+        setUpToolbar(Constants.nextGameWeek);// set up toolbar
+        addMenuProvider();
     }
 
     @Override

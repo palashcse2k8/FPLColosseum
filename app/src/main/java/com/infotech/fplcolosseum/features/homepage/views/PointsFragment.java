@@ -62,6 +62,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     int selectedChip;
     long selectedGameWeek;
+    MenuProvider menuProvider;
 
     @Nullable
     @Override
@@ -75,10 +76,16 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
 
-        requireActivity().addMenuProvider(new MenuProvider() {
+        return rootView;
+    }
+
+    public void addMenuProvider(){
+
+        menuProvider = new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
 
+                menu.clear();
                 // Inflate the menu; this adds items to the action bar if it is present.
                 menuInflater.inflate(R.menu.my_team_menu, menu);
 
@@ -123,16 +130,15 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
 
                 // Set visibility based on your conditions
-                refreshItem.setVisible(isRefreshVisible);
-                shareItem.setVisible(isShareVisible);
-                saveItem.setVisible(isSaveVisible);
-                clearItem.setVisible(isClearVisible);
+                if (refreshItem != null) refreshItem.setVisible(isRefreshVisible);
+                if (shareItem != null) shareItem.setVisible(isShareVisible);
+                if (saveItem != null) saveItem.setVisible(isSaveVisible);
+                if (clearItem != null) clearItem.setVisible(isClearVisible);
 
                 MenuProvider.super.onPrepareMenu(menu);
             }
-        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-
-        return rootView;
+        };
+        requireActivity().addMenuProvider(menuProvider, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
     @Override
@@ -192,6 +198,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
     public void onResume() {
         super.onResume();
 
+        addMenuProvider();
         // Check if a chip is already selected; if so, don't reset the toolbar
         if (selectedChip == (int) Constants.currentGameWeek) {
             setUpToolbar(selectedChip);
@@ -685,5 +692,14 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
         PointsPlayerInfoBottomSheetFragment bottomSheet = PointsPlayerInfoBottomSheetFragment.newInstance(playersData, matchDetails, playerPointExplain);
         bottomSheet.show(requireActivity().getSupportFragmentManager(), bottomSheet.getTag());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (menuProvider != null) {
+            requireActivity().removeMenuProvider(menuProvider);
+        }
     }
 }

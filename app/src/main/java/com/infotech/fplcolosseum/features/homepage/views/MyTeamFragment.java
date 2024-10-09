@@ -79,6 +79,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
     List<PlayersData> initialTeamPlayers = new ArrayList<>();
     String activeChip;
 
+    MenuProvider menuProvider;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,10 +89,15 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
         binding.setMyTeamViewModel(viewModel);
         binding.setLifecycleOwner(this);
 
-        requireActivity().addMenuProvider(new MenuProvider() {
+        return rootView;
+    }
+
+    public void addMenuProvider() {
+        menuProvider = new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
 
+                menu.clear();
                 // Inflate the menu; this adds items to the action bar if it is present.
                 menuInflater.inflate(R.menu.my_team_menu, menu);
 
@@ -133,18 +140,17 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
                 MenuItem saveItem = menu.findItem(R.id.action_save);
                 MenuItem clearItem = menu.findItem(R.id.action_undo);
 
-
                 // Set visibility based on your conditions
-                refreshItem.setVisible(isRefreshVisible);
-                shareItem.setVisible(isShareVisible);
-                saveItem.setVisible(isSaveVisible);
-                clearItem.setVisible(isClearVisible);
+                if (refreshItem != null) refreshItem.setVisible(isRefreshVisible);
+                if (shareItem != null) shareItem.setVisible(isShareVisible);
+                if (saveItem != null) saveItem.setVisible(isSaveVisible);
+                if (clearItem != null) clearItem.setVisible(isClearVisible);
 
                 MenuProvider.super.onPrepareMenu(menu);
             }
-        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        };
 
-        return rootView;
+        requireActivity().addMenuProvider(menuProvider, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
     @Override
@@ -202,6 +208,16 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
     public void onResume() {
         super.onResume();
         setUpToolbar(Constants.nextGameWeek);
+        addMenuProvider();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Remove the menu provider when the fragment's view is destroyed
+        if (menuProvider != null) {
+            requireActivity().removeMenuProvider(menuProvider);
+        }
     }
 
     private void handleUndoClick() {
@@ -650,7 +666,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
 //        }
 //    }
 
-    private void setUpToolbar( long gameWeekNumber) {
+    private void setUpToolbar(long gameWeekNumber) {
 
         Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
         if (toolbar != null) {

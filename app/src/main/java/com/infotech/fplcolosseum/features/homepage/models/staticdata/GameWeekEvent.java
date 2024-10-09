@@ -211,4 +211,12 @@ public class GameWeekEvent {
     public void setMost_vice_captained(long most_vice_captained) {
         this.most_vice_captained = most_vice_captained;
     }
+
+    public ArrayList<ChipsPlayedInfo> getChip_plays() {
+        return chip_plays;
+    }
+
+    public void setChip_plays(ArrayList<ChipsPlayedInfo> chip_plays) {
+        this.chip_plays = chip_plays;
+    }
 }

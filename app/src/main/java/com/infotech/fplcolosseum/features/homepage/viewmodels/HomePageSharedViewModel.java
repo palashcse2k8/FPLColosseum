@@ -201,26 +201,31 @@ public class HomePageSharedViewModel extends AndroidViewModel {
             statusMergedMediatorLiveData.addSource(dataRepository.getGameWeekPicks(managerID, gameWeek), gameWeekPicksModelApiResponse -> {
                 statusMergedResponseModel.setGameWeekPicksModel(gameWeekPicksModelApiResponse.getData());
 
-                //get best classic leagues data
-                statusMergedMediatorLiveData.addSource(dataRepository.getBestClassicPrivateLeaguesData(),
-                        listApiResponse -> {
+                //
+                statusMergedMediatorLiveData.addSource(dataRepository.getGameWeekStatus(), gameWeekStatusApiResponse ->
+                {
+                    statusMergedResponseModel.setGameWeekStatus(gameWeekStatusApiResponse.getData());
+                    //get best classic leagues data
+                    statusMergedMediatorLiveData.addSource(dataRepository.getBestClassicPrivateLeaguesData(),
+                            listApiResponse -> {
 
-                            statusMergedResponseModel.setBestTeamDataModels(listApiResponse.getData());
+                                statusMergedResponseModel.setBestTeamDataModels(listApiResponse.getData());
 
-                            //get most valuable teams data
-                            statusMergedMediatorLiveData.addSource(dataRepository.getMostValuableTeamsData(),
-                                    listApiResponse1 -> {
+                                //get most valuable teams data
+                                statusMergedMediatorLiveData.addSource(dataRepository.getMostValuableTeamsData(),
+                                        listApiResponse1 -> {
 
-                                        statusMergedResponseModel.setValuableTeamDataModels(listApiResponse1.getData());
+                                            statusMergedResponseModel.setValuableTeamDataModels(listApiResponse1.getData());
 
-                                        dataLoading.setValue(false); // make progress bar vanish when all api results are combined
-                                        statusMergedMediatorLiveData.setValue(ApiResponse.success(statusMergedResponseModel));
-                                    });
+                                            dataLoading.setValue(false); // make progress bar vanish when all api results are combined
+                                            statusMergedMediatorLiveData.setValue(ApiResponse.success(statusMergedResponseModel));
+                                        });
 
-//                            });
+                            }
+                    );
+                })
 
-                        }
-                );
+                ;
 
             });
         }

@@ -1,16 +1,16 @@
 package com.infotech.fplcolosseum.features.homepage.models.status;
 
 public class ValuableTeamDataModel {
-    private float entry;
+    private long entry;
     private String name;
     private String player_name;
-    private float value_with_bank;
-    private float total_transfers;
+    private long value_with_bank;
+    private long total_transfers;
 
 
     // Getter Methods
 
-    public float getEntry() {
+    public long getEntry() {
         return entry;
     }
 
@@ -22,17 +22,17 @@ public class ValuableTeamDataModel {
         return player_name;
     }
 
-    public float getValue_with_bank() {
+    public long getValue_with_bank() {
         return value_with_bank;
     }
 
-    public float getTotal_transfers() {
+    public long getTotal_transfers() {
         return total_transfers;
     }
 
     // Setter Methods
 
-    public void setEntry(float entry) {
+    public void setEntry(long entry) {
         this.entry = entry;
     }
 
@@ -44,11 +44,11 @@ public class ValuableTeamDataModel {
         this.player_name = player_name;
     }
 
-    public void setValue_with_bank(float value_with_bank) {
+    public void setValue_with_bank(long value_with_bank) {
         this.value_with_bank = value_with_bank;
     }
 
-    public void setTotal_transfers(float total_transfers) {
+    public void setTotal_transfers(long total_transfers) {
         this.total_transfers = total_transfers;
     }
 }
