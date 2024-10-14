@@ -1,7 +1,5 @@
 package com.infotech.fplcolosseum.features.homepage.models.status;
 
-import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.picks.GameWeekPicksModel;
 
@@ -11,7 +9,7 @@ public class StatusMergedResponseModel {
     private GameWeekMyTeamResponseModel gameWeekMyTeamResponseModel;
     private GameWeekPicksModel gameWeekPicksModel;
     private GameWeekStatus gameWeekStatus;
-    private List<BestTeamDataModel> bestTeamDataModels;
+    private List<BestLeagueDataModel> bestLeagueDataModels;
     private List<ValuableTeamDataModel> valuableTeamDataModels;
 
     public GameWeekMyTeamResponseModel getGameWeekMyTeamResponseModel() {
@@ -38,12 +36,12 @@ public class StatusMergedResponseModel {
         this.gameWeekStatus = gameWeekStatus;
     }
 
-    public List<BestTeamDataModel> getBestTeamDataModels() {
-        return bestTeamDataModels;
+    public List<BestLeagueDataModel> getBestTeamDataModels() {
+        return bestLeagueDataModels;
     }
 
-    public void setBestTeamDataModels(List<BestTeamDataModel> bestTeamDataModels) {
-        this.bestTeamDataModels = bestTeamDataModels;
+    public void setBestTeamDataModels(List<BestLeagueDataModel> bestLeagueDataModels) {
+        this.bestLeagueDataModels = bestLeagueDataModels;
     }
 
     public List<ValuableTeamDataModel> getValuableTeamDataModels() {

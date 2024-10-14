@@ -1,23 +1,23 @@
 package com.infotech.fplcolosseum.features.homepage.models.status;
 
-public class BestTeamDataModel {
-    private float league;
-    private float entries;
-    private String average_score;
+public class BestLeagueDataModel {
+    private long league;
+    private long entries;
+    private double average_score;
     private String name;
 
 
     // Getter Methods
 
-    public float getLeague() {
+    public long getLeague() {
         return league;
     }
 
-    public float getEntries() {
+    public long getEntries() {
         return entries;
     }
 
-    public String getAverage_score() {
+    public Double getAverage_score() {
         return average_score;
     }
 
@@ -27,15 +27,15 @@ public class BestTeamDataModel {
 
     // Setter Methods
 
-    public void setLeague(float league) {
+    public void setLeague(long league) {
         this.league = league;
     }
 
-    public void setEntries(float entries) {
+    public void setEntries(long entries) {
         this.entries = entries;
     }
 
-    public void setAverage_score(String average_score) {
+    public void setAverage_score(Double average_score) {
         this.average_score = average_score;
     }
 

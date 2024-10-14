@@ -23,20 +23,29 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentStatusBinding;
+import com.infotech.fplcolosseum.features.homepage.adapter.BestLeaguesAdapter;
 import com.infotech.fplcolosseum.features.homepage.adapter.MostValuableTeamsAdapter;
+import com.infotech.fplcolosseum.features.homepage.adapter.TopTransferPlayerListAdapter;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.ChipsPlayedInfo;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
+import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
+import com.infotech.fplcolosseum.features.homepage.models.status.BestLeagueDataModel;
 import com.infotech.fplcolosseum.features.homepage.models.status.GameWeekStatus;
 import com.infotech.fplcolosseum.features.homepage.models.status.Status;
 import com.infotech.fplcolosseum.features.homepage.models.status.StatusMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.status.ValuableTeamDataModel;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
+import com.infotech.fplcolosseum.features.player_search.adapter.PlayerListAdapter;
 import com.infotech.fplcolosseum.utilities.Chips;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.PlayerSortingCriterion;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class StatusFragment extends Fragment {
     FragmentStatusBinding binding;
@@ -103,8 +112,42 @@ public class StatusFragment extends Fragment {
     private void updateUI(StatusMergedResponseModel statusMergedResponseModel) {
         addGWStatus(statusMergedResponseModel.getGameWeekStatus());
         updateGameWeekSummary(Constants.currentGameWeek);
+        updateTopTransferInData();
         updateMostValuableTeamRecyclerView(statusMergedResponseModel.getValuableTeamDataModels());
+        updateBestClassicLeagueRecyclerView(statusMergedResponseModel.getBestTeamDataModels());
+    }
 
+    private void updateTopTransferInData() {
+        binding.topTransferInHeader.playerCriterion.setText("TIR");
+        binding.topTransferInPlayerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        List<PlayersData> filteredTransferredInPlayerList = new ArrayList<>(Constants.playerMap.values());
+        filteredTransferredInPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_in_event).reversed());
+        TopTransferPlayerListAdapter topTransferInPlayerListAdapter = new TopTransferPlayerListAdapter(filteredTransferredInPlayerList, PlayerSortingCriterion.TRANSFERS_IN_ROUND.getDisplayName(), requireActivity());
+        binding.topTransferInPlayerRecyclerView.setAdapter(topTransferInPlayerListAdapter);
+
+        binding.topTransferOutHeader.playerCriterion.setText("TOR");
+        binding.topTransferOutPlayerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        List<PlayersData> filteredTransferredOutPlayerList = new ArrayList<>(Constants.playerMap.values());
+        filteredTransferredOutPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_out_event).reversed());
+        TopTransferPlayerListAdapter topTransferOutPlayerListAdapter = new TopTransferPlayerListAdapter(filteredTransferredOutPlayerList, PlayerSortingCriterion.TRANSFERS_OUT_ROUND.getDisplayName(), requireActivity());
+        binding.topTransferOutPlayerRecyclerView.setAdapter(topTransferOutPlayerListAdapter);
+    }
+
+    private void updateBestClassicLeagueRecyclerView(List<BestLeagueDataModel> bestLeagueDataModels) {
+
+        binding.bestLeaguesTableHeader.layoutBestLeagueItem.setBackgroundColor(getResources().getColor(R.color.accent));
+        BestLeaguesAdapter bestLeaguesAdapter = new BestLeaguesAdapter(bestLeagueDataModels.subList(0,5));
+        binding.bestLeaguesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.bestLeaguesRecyclerView.setAdapter(bestLeaguesAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
+        binding.bestLeaguesRecyclerView.addItemDecoration(dividerItemDecoration);
+        // Show more button click event
+        binding.bestLeaguesShowMoreButton.setOnClickListener(v -> {
+            // Show all items
+            bestLeaguesAdapter.updateList(bestLeagueDataModels);
+            binding.bestLeaguesShowMoreButton.setVisibility(View.GONE);  // Hide the button after showing all items
+        });
     }
 
     private void updateMostValuableTeamRecyclerView(List<ValuableTeamDataModel> valuableTeamDataModels) {

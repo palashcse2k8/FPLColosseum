@@ -1,19 +1,16 @@
 package com.infotech.fplcolosseum.data.repositories;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
-import com.google.gson.reflect.TypeToken;
 import com.infotech.fplcolosseum.data.sources.network.APIHandler;
 import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.data.sources.network.RetroClass;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.fixture.GameWeekMatchDetailsResponse;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
@@ -21,14 +18,13 @@ import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamU
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekTransferUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.picks.GameWeekPicksModel;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
-import com.infotech.fplcolosseum.features.homepage.models.status.BestTeamDataModel;
+import com.infotech.fplcolosseum.features.homepage.models.status.BestLeagueDataModel;
 import com.infotech.fplcolosseum.features.homepage.models.status.GameWeekStatus;
 import com.infotech.fplcolosseum.features.homepage.models.status.ValuableTeamDataModel;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.features.player_information.models.ElementSummary;
 import com.infotech.fplcolosseum.utilities.Constants;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -292,12 +288,12 @@ public class UserGameWeekDataRepository {
         return apiData;
     }
 
-    public LiveData<ApiResponse<List<BestTeamDataModel>>> getBestClassicPrivateLeaguesData() {
-        MediatorLiveData<ApiResponse<List<BestTeamDataModel>>> apiData = new MediatorLiveData<>();
+    public LiveData<ApiResponse<List<BestLeagueDataModel>>> getBestClassicPrivateLeaguesData() {
+        MediatorLiveData<ApiResponse<List<BestLeagueDataModel>>> apiData = new MediatorLiveData<>();
 
         Call<ResponseBody> callAPI = apiServices.getBestClassicPrivateLeagues();
 
-        apiData.addSource(APIHandler.makeApiCallForList(callAPI, BestTeamDataModel.class), listApiResponse -> {
+        apiData.addSource(APIHandler.makeApiCallForList(callAPI, BestLeagueDataModel.class), listApiResponse -> {
             apiData.postValue(listApiResponse);
         });
 

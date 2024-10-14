@@ -21,7 +21,7 @@
         android:layout_weight="2"
         android:textAppearance="@style/TextAppearance.Material3.BodySmall"
         android:padding="4dp"
-        android:text="League Name"
+        android:text="Team Name"
         android:textDirection="ltr"
         android:textAlignment="viewStart"/>
 
@@ -33,6 +33,6 @@
         android:textAppearance="@style/TextAppearance.Material3.BodySmall"
         android:padding="4dp"
         android:textAlignment="center"
-        android:text="Average"/>
+        android:text="Value"/>
 
 </LinearLayout>

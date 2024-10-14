@@ -858,7 +858,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="8dp"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="12dp"
@@ -992,12 +992,100 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/mostValuableCV"
+                    android:id="@+id/topTransfersInCV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="12dp"
+                    app:cardMaxElevation="12dp"
+                    app:cardUseCompatPadding="false">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:text="Top Transfer In This Week"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+
+                        <View
+                            style="@style/Divider"
+                            android:layout_marginHorizontal="4dp" />
+
+                        <include
+                            android:id="@+id/topTransferInHeader"
+                            layout="@layout/layout_top_transfer_item_header" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/top_transfer_in_player_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            tools:listitem="@layout/layout_top_transfer_item" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/topTransfersOutCV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="12dp"
+                    app:cardMaxElevation="12dp"
+                    app:cardUseCompatPadding="false">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:text="Top Transfer Out This Week"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+
+                        <View
+                            style="@style/Divider"
+                            android:layout_marginHorizontal="4dp" />
+
+                        <include
+                            android:id="@+id/topTransferOutHeader"
+                            layout="@layout/layout_top_transfer_item_header" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/top_transfer_out_player_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            tools:listitem="@layout/layout_top_transfer_item" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/mostValuableCV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="12dp"
@@ -1032,7 +1120,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/accent"
-                                layout="@layout/layout_best_league_item"/>
+                                layout="@layout/layout_most_valuable_team_item"/>
 
 
                             <androidx.recyclerview.widget.RecyclerView
@@ -1043,6 +1131,77 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/mostValuableTeamsShowMoreButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:background="@drawable/rounded_border_background"
+                                android:backgroundTint="@color/button_primary"
+                                android:minWidth="64dp"
+                                android:minHeight="32dp"
+                                android:padding="2dp"
+                                android:text="Show More"
+                                android:textSize="12sp" />
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/bestLeaguesCV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="12dp"
+                    app:cardMaxElevation="12dp"
+                    app:cardUseCompatPadding="false">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:text="Best Classic Leagues"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+
+                        <View
+                            style="@style/Divider"
+                            android:layout_marginHorizontal="4dp" />
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <include
+                                android:id="@+id/bestLeaguesTableHeader"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/accent"
+                                layout="@layout/layout_best_league_item"/>
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/bestLeaguesRecyclerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:listitem="@layout/layout_best_league_item"/>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/bestLeaguesShowMoreButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
