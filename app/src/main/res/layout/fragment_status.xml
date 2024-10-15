@@ -992,6 +992,52 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/topPlayerStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="12dp"
+                    app:cardMaxElevation="12dp"
+                    app:cardUseCompatPadding="false">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:text="Top Player by GameWeek"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+
+                        <View
+                            style="@style/Divider"
+                            android:layout_marginHorizontal="4dp" />
+
+                        <HorizontalScrollView
+                            android:id="@+id/gameWeekTopPlayersScrollView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:id="@+id/gameWeekTopPlayers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" />
+
+                        </HorizontalScrollView>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
                     android:id="@+id/topTransfersInCV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1074,6 +1120,50 @@
                             android:layout_width="match_parent"
                             android:layout_height="300dp"
                             tools:listitem="@layout/layout_top_transfer_item" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/injuryCV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="12dp"
+                    app:cardMaxElevation="12dp"
+                    app:cardUseCompatPadding="false">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:text="Latest Injuries and Ban"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textStyle="bold" />
+
+                        <View
+                            style="@style/Divider"
+                            android:layout_marginHorizontal="4dp" />
+
+                        <include
+                            android:id="@+id/latestInjuriesHeader"
+                            layout="@layout/layout_latest_injury_item_header" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/latest_injury_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            tools:listitem="@layout/layout_latest_injury_item" />
 
                     </LinearLayout>
 

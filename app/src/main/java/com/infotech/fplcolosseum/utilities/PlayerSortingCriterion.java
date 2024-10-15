@@ -41,7 +41,8 @@ public enum PlayerSortingCriterion {
     EXPECTED_GOALS("Expected Goals(xG)", "xG"),
     EXPECTED_ASSISTS("Expected Assists(xA)", "xA"),
     EXPECTED_GOALS_INVOLVEMENT("Expected Goals Involvement(xGI)", "xGI"),
-    EXPECTED_GOALS_CONCEDED("Expected Goal Conceded(xGC)", "xGC");
+    EXPECTED_GOALS_CONCEDED("Expected Goal Conceded(xGC)", "xGC"),
+    NEWS_ADDED("News Added", "Inj");
 
     private final String displayName;
     private final String shortName;

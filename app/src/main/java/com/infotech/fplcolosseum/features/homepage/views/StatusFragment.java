@@ -1,7 +1,12 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
 import static com.infotech.fplcolosseum.utilities.CustomUtil.convertDateToStringFormat;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.scrollToItem;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.sortPlayersByNewsAdded;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.startPlayerFullProfile;
+import static com.infotech.fplcolosseum.utilities.CustomUtil.updatePlayerImage;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,8 +30,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentStatusBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.BestLeaguesAdapter;
+import com.infotech.fplcolosseum.features.homepage.adapter.LatestInjuredPlayerListAdapter;
 import com.infotech.fplcolosseum.features.homepage.adapter.MostValuableTeamsAdapter;
 import com.infotech.fplcolosseum.features.homepage.adapter.TopTransferPlayerListAdapter;
+import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.ChipsPlayedInfo;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
@@ -35,9 +43,10 @@ import com.infotech.fplcolosseum.features.homepage.models.status.Status;
 import com.infotech.fplcolosseum.features.homepage.models.status.StatusMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.status.ValuableTeamDataModel;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
-import com.infotech.fplcolosseum.features.player_search.adapter.PlayerListAdapter;
+import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
 import com.infotech.fplcolosseum.utilities.Chips;
 import com.infotech.fplcolosseum.utilities.Constants;
+import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.infotech.fplcolosseum.utilities.PlayerSortingCriterion;
 
 import java.util.ArrayList;
@@ -45,7 +54,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class StatusFragment extends Fragment {
     FragmentStatusBinding binding;
@@ -112,9 +120,78 @@ public class StatusFragment extends Fragment {
     private void updateUI(StatusMergedResponseModel statusMergedResponseModel) {
         addGWStatus(statusMergedResponseModel.getGameWeekStatus());
         updateGameWeekSummary(Constants.currentGameWeek);
+        updateTopPlayerList();
         updateTopTransferInData();
+        updateLatestInjury();
         updateMostValuableTeamRecyclerView(statusMergedResponseModel.getValuableTeamDataModels());
         updateBestClassicLeagueRecyclerView(statusMergedResponseModel.getBestTeamDataModels());
+    }
+
+    private void updateTopPlayerList() {
+        for (long i = 1; i <= Constants.currentGameWeek; i++) {
+            View itemView = getLayoutInflater().inflate(R.layout.layout_top_player_view, binding.gameWeekTopPlayers, false);
+            TextView playerName = itemView.findViewById(R.id.playerName);
+            TextView gameWeekNumber = itemView.findViewById(R.id.gameWeekNumber);
+            TextView pointInfo = itemView.findViewById(R.id.pointsInfo);
+            ImageView playerImageView = itemView.findViewById(R.id.playerImageView);
+
+            PlayersData topPlayer = Constants.playerMap.get(Constants.gameWeekMap.get(i).getTop_element());
+
+            String gwNumber = "GW" + i;
+            gameWeekNumber.setText(gwNumber);
+
+            updatePlayerImage(playerImageView, topPlayer);
+            playerName.setText(topPlayer.getWeb_name());
+            String pointsInformation = String.valueOf(Constants.gameWeekMap.get(i).getTop_element_info().getPoints());
+
+            pointInfo.setText(pointsInformation);
+
+            itemView.setOnClickListener(v -> {
+                startPlayerFullProfile(requireActivity(), topPlayer);
+            });
+
+            binding.gameWeekTopPlayers.addView(itemView);
+        }
+
+        // Scroll to the current game week after a short delay
+        binding.gameWeekTopPlayersScrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollToCurrentGameWeek();
+            }
+        });
+
+//        scrollToItem(binding.gameWeekTopPlayersScrollView, binding.gameWeekTopPlayers, (int) Constants.currentGameWeek);
+    }
+
+    private void scrollToCurrentGameWeek() {
+        if (binding.gameWeekTopPlayers.getChildCount() > 0) {
+            View targetView = binding.gameWeekTopPlayers.getChildAt((int)Constants.currentGameWeek - 1);
+            if (targetView != null) {
+                int targetX = targetView.getLeft();
+                int screenWidth = binding.gameWeekTopPlayersScrollView.getWidth();
+                int viewWidth = targetView.getWidth();
+
+                // Center the target view
+                targetX -= (screenWidth - viewWidth) / 2;
+
+                // Ensure we don't scroll past the start
+                targetX = Math.max(0, targetX);
+
+                // Scroll to the target position
+                binding.gameWeekTopPlayersScrollView.smoothScrollTo(targetX, 0);
+            }
+        }
+    }
+
+    private void updateLatestInjury() {
+        binding.latestInjuryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        List<PlayersData> filteredTransferredInPlayerList = new ArrayList<>(Constants.playerMap.values());
+
+        List<PlayersData> sortedPlayers = sortPlayersByNewsAdded(filteredTransferredInPlayerList);
+
+        LatestInjuredPlayerListAdapter latestInjuredPlayerListAdapter = new LatestInjuredPlayerListAdapter(sortedPlayers, PlayerSortingCriterion.NEWS_ADDED.getDisplayName(), requireActivity());
+        binding.latestInjuryRecyclerView.setAdapter(latestInjuredPlayerListAdapter);
     }
 
     private void updateTopTransferInData() {
@@ -237,7 +314,7 @@ public class StatusFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 // Handle menu item selection
                 if (menuItem.getItemId() == R.id.reload) {
-                    // Handle home search action
+                    sharedViewModel.getStatusMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
                     return true;
                 }
                 return false;

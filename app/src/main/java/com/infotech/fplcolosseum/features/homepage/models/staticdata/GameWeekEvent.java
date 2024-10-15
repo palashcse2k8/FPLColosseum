@@ -26,13 +26,21 @@ public class GameWeekEvent {
     private long most_selected;
     private long most_transferred_in;
     private long top_element;
+    @SerializedName("top_element_info")
     Top_element_info Top_element_infoObject;
     private long transfers_made;
     private long most_captained;
     private long most_vice_captained;
 
+    public Top_element_info getTop_element_infoObject() {
+        return Top_element_infoObject;
+    }
 
-    // Getter Methods
+    public void setTop_element_infoObject(Top_element_info top_element_infoObject) {
+        Top_element_infoObject = top_element_infoObject;
+    }
+
+// Getter Methods
 
     public long getId() {
         return id;

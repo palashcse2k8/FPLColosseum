@@ -106,6 +106,10 @@ public class TransferPlayerInfoBottomSheetFragment extends BottomSheetDialogFrag
             dismiss();
         });
 
+        addNextOpponents();
+    }
+
+    public void addNextOpponents(){
         for (long i = Constants.nextGameWeek; i <= 38; i++) {
             View itemView = getLayoutInflater().inflate(R.layout.layout_next_team_item, binding.horizontalNextOpponents, false);
             TextView teamName = itemView.findViewById(R.id.teamName);

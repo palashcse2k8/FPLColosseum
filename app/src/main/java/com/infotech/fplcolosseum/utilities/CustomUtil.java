@@ -1,16 +1,24 @@
 package com.infotech.fplcolosseum.utilities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentActivity;
 
+import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.Element_Stats;
@@ -19,6 +27,8 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekSta
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
+import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.text.ParseException;
@@ -29,6 +39,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -338,4 +349,94 @@ public class CustomUtil {
         LocalDate date = LocalDate.parse(inputDate, inputFormatter);
         return date.format(outputFormatter);
     }
+
+    public static List<PlayersData> sortPlayersByNewsAdded(List<PlayersData> players) {
+        List<PlayersData> sortedPlayers = new ArrayList<>(players);
+
+        sortedPlayers.sort(new Comparator<PlayersData>() {
+            @Override
+            public int compare(PlayersData p1, PlayersData p2) {
+                // Check if news_added is present for both players
+                boolean hasNewsP1 = p1.getNews_added() != null && !p1.getNews_added().isEmpty();
+                boolean hasNewsP2 = p2.getNews_added() != null && !p2.getNews_added().isEmpty();
+
+                // If both have news, compare dates
+                if (hasNewsP1 && hasNewsP2) {
+                    LocalDateTime dateP1 = parseDateTime(p1.getNews_added());
+                    LocalDateTime dateP2 = parseDateTime(p2.getNews_added());
+                    return dateP2.compareTo(dateP1); // Descending order
+                }
+
+                // If only one has news, prioritize that one
+                if (hasNewsP1) return -1;
+                if (hasNewsP2) return 1;
+
+                // If neither has news, maintain original order
+                return 0;
+            }
+        });
+
+        return sortedPlayers;
+    }
+
+    private static LocalDateTime parseDateTime(String dateTimeString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        return LocalDateTime.parse(dateTimeString, formatter);
+    }
+
+    public static String getPlayerImageLink(PlayersData player){
+        return "https://resources.premierleague.com/premierleague/photos/players/110x140/p" + player.getCode() + ".png";
+    }
+
+    public static void updatePlayerImage(ImageView imageView, PlayersData player){
+        // Placeholder animation: Fade in the image after it has loaded
+        AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
+        fadeInAnimation.setDuration(1000); // 1 second fade-in duration
+
+        Picasso.get()
+                .load(getPlayerImageLink(player))
+                .error(R.mipmap.no_image)
+                .into(imageView, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // Start the fade-in animation when the image is successfully loaded
+                        imageView.startAnimation(fadeInAnimation);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+//                            Log.e("Image Load Error", "Failed to load image: " + e.getMessage());
+                    }
+                });
+    }
+
+    public static void scrollToItem(final HorizontalScrollView scrollView, final LinearLayout container, final int itemIndex) {
+        // Ensure the views are laid out
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (container.getChildCount() > itemIndex) {
+                    View targetView = container.getChildAt(itemIndex);
+                    int targetX = targetView.getLeft();
+
+                    // Calculate the center offset
+                    int centerOffset = (scrollView.getWidth() - targetView.getWidth()) / 2;
+                    targetX -= centerOffset;
+
+                    // Ensure we don't scroll past the start
+                    targetX = Math.max(0, targetX);
+
+                    // Scroll to the target position
+                    scrollView.smoothScrollTo(targetX, 0);
+                }
+            }
+        });
+    }
+
+    public static void startPlayerFullProfile(FragmentActivity activity, PlayersData playersData){
+        Intent intent = new Intent(activity, PlayerFullInformationActivity.class);
+        intent.putExtra("playerData", playersData);
+        activity.startActivity(intent);
+    }
+
 }
