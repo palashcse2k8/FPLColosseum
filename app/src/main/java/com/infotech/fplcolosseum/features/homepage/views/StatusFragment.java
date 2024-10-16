@@ -6,7 +6,6 @@ import static com.infotech.fplcolosseum.utilities.CustomUtil.sortPlayersByNewsAd
 import static com.infotech.fplcolosseum.utilities.CustomUtil.startPlayerFullProfile;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.updatePlayerImage;
 
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,7 +33,6 @@ import com.infotech.fplcolosseum.features.homepage.adapter.BestLeaguesAdapter;
 import com.infotech.fplcolosseum.features.homepage.adapter.LatestInjuredPlayerListAdapter;
 import com.infotech.fplcolosseum.features.homepage.adapter.MostValuableTeamsAdapter;
 import com.infotech.fplcolosseum.features.homepage.adapter.TopTransferPlayerListAdapter;
-import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.ChipsPlayedInfo;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekEvent;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
@@ -43,10 +42,8 @@ import com.infotech.fplcolosseum.features.homepage.models.status.Status;
 import com.infotech.fplcolosseum.features.homepage.models.status.StatusMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.status.ValuableTeamDataModel;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
-import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
 import com.infotech.fplcolosseum.utilities.Chips;
 import com.infotech.fplcolosseum.utilities.Constants;
-import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.infotech.fplcolosseum.utilities.PlayerSortingCriterion;
 
 import java.util.ArrayList;
@@ -95,9 +92,7 @@ public class StatusFragment extends Fragment {
                     break;
                 case SUCCESS:
                     sharedViewModel.dataLoading.setValue(false);
-
                     StatusMergedResponseModel responseModel = statusMergedResponseModelApiResponse.getData();
-
                     updateUI(responseModel);
                     break;
                 case ERROR:
@@ -112,7 +107,7 @@ public class StatusFragment extends Fragment {
         binding.progressCircular.setVisibility(View.GONE);
     }
 
-    private void showFailure(String error) {
+    private void showFailure(String ignoredError) {
         sharedViewModel.dataLoading.setValue(false);
         binding.progressCircular.setVisibility(View.GONE);
     }
@@ -135,53 +130,27 @@ public class StatusFragment extends Fragment {
             TextView pointInfo = itemView.findViewById(R.id.pointsInfo);
             ImageView playerImageView = itemView.findViewById(R.id.playerImageView);
 
-            PlayersData topPlayer = Constants.playerMap.get(Constants.gameWeekMap.get(i).getTop_element());
+            PlayersData topPlayer = Constants.playerMap.get(Objects.requireNonNull(Constants.gameWeekMap.get(i)).getTop_element());
 
             String gwNumber = "GW" + i;
             gameWeekNumber.setText(gwNumber);
 
             updatePlayerImage(playerImageView, topPlayer);
+            assert topPlayer != null;
             playerName.setText(topPlayer.getWeb_name());
-            String pointsInformation = String.valueOf(Constants.gameWeekMap.get(i).getTop_element_info().getPoints());
+            String pointsInformation = String.valueOf(Objects.requireNonNull(Constants.gameWeekMap.get(i)).getTop_element_info().getPoints());
 
             pointInfo.setText(pointsInformation);
 
-            itemView.setOnClickListener(v -> {
-                startPlayerFullProfile(requireActivity(), topPlayer);
-            });
+            itemView.setOnClickListener(v -> startPlayerFullProfile(requireActivity(), topPlayer));
 
             binding.gameWeekTopPlayers.addView(itemView);
         }
 
         // Scroll to the current game week after a short delay
-        binding.gameWeekTopPlayersScrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollToCurrentGameWeek();
-            }
-        });
+//        binding.gameWeekTopPlayersScrollView.post(this::scrollToCurrentGameWeek);
 
-//        scrollToItem(binding.gameWeekTopPlayersScrollView, binding.gameWeekTopPlayers, (int) Constants.currentGameWeek);
-    }
-
-    private void scrollToCurrentGameWeek() {
-        if (binding.gameWeekTopPlayers.getChildCount() > 0) {
-            View targetView = binding.gameWeekTopPlayers.getChildAt((int)Constants.currentGameWeek - 1);
-            if (targetView != null) {
-                int targetX = targetView.getLeft();
-                int screenWidth = binding.gameWeekTopPlayersScrollView.getWidth();
-                int viewWidth = targetView.getWidth();
-
-                // Center the target view
-                targetX -= (screenWidth - viewWidth) / 2;
-
-                // Ensure we don't scroll past the start
-                targetX = Math.max(0, targetX);
-
-                // Scroll to the target position
-                binding.gameWeekTopPlayersScrollView.smoothScrollTo(targetX, 0);
-            }
-        }
+        scrollToItem(binding.gameWeekTopPlayersScrollView, binding.gameWeekTopPlayers, (int) Constants.currentGameWeek - 1);
     }
 
     private void updateLatestInjury() {
@@ -195,14 +164,16 @@ public class StatusFragment extends Fragment {
     }
 
     private void updateTopTransferInData() {
-        binding.topTransferInHeader.playerCriterion.setText("TIR");
+        String transferInRound = "TIR";
+        binding.topTransferInHeader.playerCriterion.setText(transferInRound);
         binding.topTransferInPlayerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<PlayersData> filteredTransferredInPlayerList = new ArrayList<>(Constants.playerMap.values());
         filteredTransferredInPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_in_event).reversed());
         TopTransferPlayerListAdapter topTransferInPlayerListAdapter = new TopTransferPlayerListAdapter(filteredTransferredInPlayerList, PlayerSortingCriterion.TRANSFERS_IN_ROUND.getDisplayName(), requireActivity());
         binding.topTransferInPlayerRecyclerView.setAdapter(topTransferInPlayerListAdapter);
 
-        binding.topTransferOutHeader.playerCriterion.setText("TOR");
+        String transferOutRound = "TIR";
+        binding.topTransferOutHeader.playerCriterion.setText(transferOutRound);
         binding.topTransferOutPlayerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<PlayersData> filteredTransferredOutPlayerList = new ArrayList<>(Constants.playerMap.values());
         filteredTransferredOutPlayerList.sort(Comparator.comparingLong(PlayersData::getTransfers_out_event).reversed());
@@ -212,7 +183,7 @@ public class StatusFragment extends Fragment {
 
     private void updateBestClassicLeagueRecyclerView(List<BestLeagueDataModel> bestLeagueDataModels) {
 
-        binding.bestLeaguesTableHeader.layoutBestLeagueItem.setBackgroundColor(getResources().getColor(R.color.accent));
+        binding.bestLeaguesTableHeader.layoutBestLeagueItem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.accent));
         BestLeaguesAdapter bestLeaguesAdapter = new BestLeaguesAdapter(bestLeagueDataModels.subList(0,5));
         binding.bestLeaguesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.bestLeaguesRecyclerView.setAdapter(bestLeaguesAdapter);
@@ -229,7 +200,7 @@ public class StatusFragment extends Fragment {
 
     private void updateMostValuableTeamRecyclerView(List<ValuableTeamDataModel> valuableTeamDataModels) {
 
-        binding.mostValuableTableHeader.layoutBestLeagueItem.setBackgroundColor(getResources().getColor(R.color.accent));
+        binding.mostValuableTableHeader.layoutBestLeagueItem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.accent));
         MostValuableTeamsAdapter valuableTeamsAdapter= new MostValuableTeamsAdapter(valuableTeamDataModels.subList(0,5));
         binding.mostValuableTeamRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.mostValuableTeamRecyclerView.setAdapter(valuableTeamsAdapter);
@@ -306,7 +277,7 @@ public class StatusFragment extends Fragment {
                 menuInflater.inflate(R.menu.menu_status, menu); // Inflate home-specific menu
                 for (int i = 0; i < menu.size(); i++) {
                     MenuItem item = menu.getItem(i);
-                    item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                    item.setIconTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.accent)));
                 }
             }
 
