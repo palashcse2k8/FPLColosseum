@@ -64,5 +64,6 @@
         <item>118990</item>
     </string-array>
     <string name="logout">Logout</string>
+    <string name="copy_team_id_tooltip">Copy ID</string>
 
 </resources>

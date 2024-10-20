@@ -165,6 +165,7 @@
 package com.infotech.fplcolosseum.features.homepage.views;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,14 +176,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.infotech.fplcolosseum.R;
+import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.FragmentHomepageBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.ViewPagerAdapter;
+import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
@@ -220,6 +224,7 @@ public class HomePageFragment extends Fragment {
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
         viewModel.getMyTeamMergedData(managerId);
+
     }
 
     @Nullable
@@ -264,7 +269,7 @@ public class HomePageFragment extends Fragment {
             createToolbarForPosition(i);
         }
 
-        // Set the initial toolbar
+//         Set the initial toolbar
         switchToolbar(0);
     }
 
@@ -313,6 +318,7 @@ public class HomePageFragment extends Fragment {
         if(viewModel.getToolbarSubTitle() != null){
             managerNameTextView.setText(viewModel.getToolbarSubTitle().getValue());
         }
+
     }
 
     @Override
@@ -340,9 +346,18 @@ public class HomePageFragment extends Fragment {
 
                 // Set the new toolbar as the action bar
                 ((AppCompatActivity) getActivity()).setSupportActionBar(currentToolbar);
+
+                // Set up the navigation icon click listener
+                currentToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(Constants.LOG_TAG, "Icon Clicked!");
+                        ((DashboardActivity) requireActivity()).toggleDrawer();
+                    }
+                });
+
+
             }
         }
     }
-
-
 }

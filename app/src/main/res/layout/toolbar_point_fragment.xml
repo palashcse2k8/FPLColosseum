@@ -4,13 +4,9 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/purple_700"
+    app:navigationIcon="@drawable/ic_menu"
+    android:theme="@style/ToolBarTheme"
     android:layout_height="?attr/actionBarSize">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="2"
-        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,63 +35,5 @@
             </TextView>
 
         </LinearLayout>
-
-<!--        <LinearLayout-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_weight=".8"-->
-<!--            android:gravity="end"-->
-<!--            >-->
-
-<!--            <ImageButton-->
-<!--                android:id="@+id/undo_btn"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="4dp"-->
-<!--                app:tint="@color/white"-->
-<!--                android:background="#0000ffff"-->
-<!--                android:layout_gravity="center_vertical"-->
-<!--                android:src="@drawable/cross_icon"/>-->
-
-<!--            <ImageButton-->
-<!--                android:id="@+id/refresh_btn"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:paddingStart="4dp"-->
-<!--                app:tint="@color/white"-->
-<!--                android:background="#0000ffff"-->
-<!--                android:layout_gravity="center_vertical"-->
-<!--                android:src="@drawable/refresh_icon"/>-->
-
-<!--            <ImageButton-->
-<!--                android:id="@+id/share_btn"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:paddingHorizontal="8dp"-->
-<!--                app:tint="@color/white"-->
-<!--                android:background="#0000ffff"-->
-<!--                android:layout_gravity="center_vertical"-->
-<!--                android:src="@drawable/share_icon"/>-->
-
-
-<!--            <ImageButton-->
-<!--                android:id="@+id/save_btn"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="4dp"-->
-<!--                app:tint="@color/white"-->
-<!--                android:layout_gravity="center_vertical"-->
-<!--                android:background="#0000ffff"-->
-<!--                android:src="@drawable/save_button"/>-->
-
-<!--            <View-->
-<!--                android:layout_width="8dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                />-->
-<!--        </LinearLayout>-->
-
-
-
-    </LinearLayout>
 
 </androidx.appcompat.widget.Toolbar>

@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class StatusFragment extends Fragment {
+public class FixtureFragment extends Fragment {
     FragmentStatusBinding binding;
     private HomePageSharedViewModel sharedViewModel;
 
@@ -237,21 +237,21 @@ public class StatusFragment extends Fragment {
 
     private void updateGameWeekSummary(long gameWeek) {
 
-       GameWeekEvent gameWeekEvent = Constants.GameWeekStaticData.getEvents().get((int)gameWeek-1);
-       binding.gameWeekSummaryMostSelectedTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_selected())).getWeb_name());
-       binding.gameWeekSummaryMostCaptainTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_captained())).getWeb_name());
-       binding.gameWeekSummaryMostViceCaptainTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_vice_captained())).getWeb_name());
-       binding.gameWeekSummaryMostTransferredInTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_transferred_in())).getWeb_name());
-       binding.gameWeekSummaryTransferMadeTV.setText(String.valueOf(gameWeekEvent.getTransfers_made()));
+        GameWeekEvent gameWeekEvent = Constants.GameWeekStaticData.getEvents().get((int)gameWeek-1);
+        binding.gameWeekSummaryMostSelectedTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_selected())).getWeb_name());
+        binding.gameWeekSummaryMostCaptainTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_captained())).getWeb_name());
+        binding.gameWeekSummaryMostViceCaptainTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_vice_captained())).getWeb_name());
+        binding.gameWeekSummaryMostTransferredInTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_transferred_in())).getWeb_name());
+        binding.gameWeekSummaryTransferMadeTV.setText(String.valueOf(gameWeekEvent.getTransfers_made()));
 
-       Optional<Long> wildcardPlays = gameWeekEvent.getChip_plays().stream()
+        Optional<Long> wildcardPlays = gameWeekEvent.getChip_plays().stream()
                 .filter(chip -> Chips.WC.getShortName().equalsIgnoreCase(chip.getChip_name()))
                 .map(ChipsPlayedInfo::getNum_played)
                 .findFirst();
 
-       binding.gameWeekSummaryWCTV.setText(String.valueOf(wildcardPlays.isPresent()? wildcardPlays.get() : "0"));
+        binding.gameWeekSummaryWCTV.setText(String.valueOf(wildcardPlays.isPresent()? wildcardPlays.get() : "0"));
 
-       Optional<Long> bbPlays = gameWeekEvent.getChip_plays().stream()
+        Optional<Long> bbPlays = gameWeekEvent.getChip_plays().stream()
                 .filter(chip -> Chips.BB.getShortName().equalsIgnoreCase(chip.getChip_name()))
                 .map(ChipsPlayedInfo::getNum_played)
                 .findFirst();
