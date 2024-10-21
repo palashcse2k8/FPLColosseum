@@ -28,6 +28,7 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -151,9 +152,11 @@ public class CustomUtil {
 
     public static void updateFixtureData(List<MatchDetails> matchDetails) {
 
+        long currentEvent = 0;
         for (MatchDetails match : matchDetails) {
 
             long event = match.getEvent();
+            currentEvent = event;
 
             // Creating OpponentData for team_a
             OpponentData teamAData = new OpponentData();
@@ -187,6 +190,7 @@ public class CustomUtil {
             // Update fixtureData for team_h
             Constants.fixtureData.computeIfAbsent(event, k -> new HashMap<>()).put(match.getTeam_h(), teamAData);
         }
+        Constants.fixtures.put(currentEvent, matchDetails);
     }
 
 
@@ -396,7 +400,7 @@ public class CustomUtil {
         Picasso.get()
                 .load(getPlayerImageLink(player))
                 .error(R.mipmap.no_image)
-                .into(imageView, new com.squareup.picasso.Callback() {
+                .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
                         // Start the fade-in animation when the image is successfully loaded
@@ -439,4 +443,82 @@ public class CustomUtil {
         activity.startActivity(intent);
     }
 
+    public static String convertDateToDayDateMonth(String dateString){
+        // Define the input format
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Set to UTC
+
+        // Define the output format
+        SimpleDateFormat outputFormat = new SimpleDateFormat("EEEE dd MMMM", Locale.ENGLISH);
+
+        try {
+            // Parse the input date string to a Date object
+            Date date = inputFormat.parse(dateString);
+
+            // Format the date to the desired output format
+            return outputFormat.format(date);
+              // Output: Saturday 19 October
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static String convertDateToDeadLine(String dateString) {
+        // Define the input format
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Set to UTC
+
+        // Get the current offset from GMT in milliseconds
+        int offset = TimeZone.getDefault().getRawOffset();
+
+        // Get the absolute value of the offset and determine the sign
+        int absoluteOffset = Math.abs(offset);
+        char sign = offset >= 0 ? '+' : '-';
+
+        // Convert the absolute offset to hours and minutes
+        int hours = absoluteOffset / 3600000;
+        int minutes = (absoluteOffset % 3600000) / 60000;
+
+        // Format the offset string with leading zero for hours
+        String offsetString = String.format("%s%02d:%02d", sign, hours, minutes);
+
+        // Define the output format
+        SimpleDateFormat outputFormat = new SimpleDateFormat("EEE dd MMM HH:mm 'GMT' " + offsetString, Locale.getDefault());
+        outputFormat.setTimeZone(TimeZone.getDefault()); // Set to the system's default time zone
+
+        try {
+            // Parse the input date string to a Date object
+            Date date = inputFormat.parse(dateString);
+
+            // Format the date to the desired output format
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static String getLocalTimeFromUTCDateString(String dateString) {
+        // Define the input format
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Set to UTC
+
+        // Define the output format for the local time
+        SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm", Locale.getDefault()); // Adjust the format as needed
+        outputFormat.setTimeZone(TimeZone.getDefault()); // Set to the system's default time zone
+
+        try {
+            // Parse the input date string to a Date object
+            Date date = inputFormat.parse(dateString);
+            // Format the date to the desired output format
+            return outputFormat.format(date); // Return only the time in HH:mm format
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

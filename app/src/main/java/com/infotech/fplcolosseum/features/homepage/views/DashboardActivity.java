@@ -5,14 +5,11 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,11 +19,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
-import com.blankj.utilcode.util.FragmentUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.features.login.views.TestFragment;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import es.dmoral.toasty.Toasty;
@@ -99,7 +94,7 @@ public class DashboardActivity extends AppCompatActivity {
                 loadFragment(HomePageFragment.newInstance(managerId));
                 return true;
             } else if (item.getItemId() == R.id.navigation_fixture) {
-                loadFragment(new StatusFragment());
+                loadFragment(new FixturesFragment());
                 return true;
             } else if (item.getItemId() == R.id.navigation_status) {
                 loadFragment(new StatusFragment());
@@ -122,20 +117,22 @@ public class DashboardActivity extends AppCompatActivity {
         ImageButton copyButton = headerView.findViewById(R.id.copyButton);
 
         // Update with user information
-        String managerFullName = Constants.LoggedInUser.getPlayer().getFirst_name() +" " + Constants.LoggedInUser.getPlayer().getLast_name();
-        nameTextView.setText(managerFullName);
-        String idText = "ID : " + Constants.LoggedInUser.getPlayer().getEntry();
-        teamIDTextView.setText(idText);
-        emailTextView.setText(Constants.LoggedInUser.getPlayer().getEmail());
-        copyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String teamID = String.valueOf(Constants.LoggedInUser.getPlayer().getEntry());
-                copyToClipboard(teamID);
-            }
-        });
+        if(Constants.LoggedInUser.getPlayer() != null){
+            String managerFullName = Constants.LoggedInUser.getPlayer().getFirst_name() + " " + Constants.LoggedInUser.getPlayer().getLast_name();
+            nameTextView.setText(managerFullName);
+            String idText = "ID : " + Constants.LoggedInUser.getPlayer().getEntry();
+            teamIDTextView.setText(idText);
+            emailTextView.setText(Constants.LoggedInUser.getPlayer().getEmail());
+            copyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String teamID = String.valueOf(Constants.LoggedInUser.getPlayer().getEntry());
+                    copyToClipboard(teamID);
+                }
+            });
 
-        TooltipCompat.setTooltipText(copyButton, getString(R.string.copy_team_id_tooltip));
+            TooltipCompat.setTooltipText(copyButton, getString(R.string.copy_team_id_tooltip));
+        }
     }
 
     private void loadFragment(Fragment fragment) {

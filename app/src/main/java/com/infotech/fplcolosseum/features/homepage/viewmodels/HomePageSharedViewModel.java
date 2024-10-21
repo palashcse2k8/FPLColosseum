@@ -269,6 +269,10 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         return myTeamApiResultLiveData;
     }
 
+    public MediatorLiveData<ApiResponse<?>> getFixtureLiveData() {
+        return fixtureApiResultLiveData;
+    }
+
     public LiveData<ApiResponse<GameWeekPicksModel>> getGameWeekPicksLiveData() {
         return gameWeekPicksApiResultLiveData;
     }
@@ -314,12 +318,13 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 //        });
 //    }
 
-    public void getFixtureData(int gameWeekNumber) {
+    public void getFixtureData(long gameWeekNumber) {
 
         dataLoading.setValue(true);
         // Make API call through the repository
         fixtureApiResultLiveData.addSource(dataRepository.getFixtureData(gameWeekNumber), userResponseModelApiResponse -> {
             dataLoading.setValue(false);
+            updateFixtureData(userResponseModelApiResponse.getData());
             fixtureApiResultLiveData.setValue(userResponseModelApiResponse);
         });
     }

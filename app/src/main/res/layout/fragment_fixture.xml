@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.infotech.fplcolosseum.utilities.Constants" />
+
+        <variable
+            name="homePageViewModel"
+            type="com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel" />
+
+        <variable
+            name="gameWeekEventIndex"
+            type="long" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/fragment_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimaryDark"
+                app:navigationIcon="@drawable/ic_menu"
+                android:theme="@style/ToolBarTheme"
+                app:title="Fixtures"
+                app:titleTextColor="@color/white" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginHorizontal="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonPrevious"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:icon="@drawable/previous"
+                app:iconSize="32dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:cornerRadius="20dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:strokeWidth="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+            <LinearLayout
+                android:id="@+id/gameWeekDeadlineLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/buttonPrevious"
+                app:layout_constraintEnd_toStartOf="@id/buttonNext"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/gameWeekTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gameweek 8"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/gameWeekDeadlineTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Sat 19 Oct 16:00 GMT +06:00"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    />
+            </LinearLayout>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonNext"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:icon="@drawable/next"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:cornerRadius="20dp"
+                android:padding="0dp"
+                app:iconSize="32dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:strokeWidth="0dp"
+                app:layout_constraintStart_toEndOf="@id/gameWeekDeadlineLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/fixtureSwipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/dataLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="@{homePageViewModel.dataLoading ? View.GONE : View.VISIBLE}">
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/gameWeekFixturesRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/layout_match_recycler_view_item"/>
+
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/progress_circular"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerInParent="true"
+                    android:visibility="@{homePageViewModel.dataLoading ? View.VISIBLE : View.GONE}">
+
+                </ProgressBar>
+
+            </RelativeLayout>
+        </ScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+
+</layout>
+
