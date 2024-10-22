@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/statLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/statHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/backgroundPrimary"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/statIdentifierTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:gravity="center"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:textColor="@color/white"
+            android:text="Goals Scored"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/statDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <!-- Home Team Data Column -->
+        <LinearLayout
+            android:id="@+id/homeStatContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="32dp"
+            android:gravity="end"
+            android:orientation="vertical">
+<!--            <TextView-->
+<!--                android:id="@+id/homeTitle"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Home Team"/>-->
+            <!-- Dynamically add home team elements here -->
+        </LinearLayout>
+
+        <!-- Away Team Data Column -->
+        <LinearLayout
+            android:id="@+id/awayStatContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="32dp"
+            android:orientation="vertical">
+<!--            <TextView-->
+<!--                android:id="@+id/awayTitle"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Away Team"/>-->
+            <!-- Dynamically add away team elements here -->
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

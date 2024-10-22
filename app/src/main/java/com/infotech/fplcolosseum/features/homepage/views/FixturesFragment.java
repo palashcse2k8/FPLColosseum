@@ -32,13 +32,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TimeZone;
 
 public class FixturesFragment extends Fragment {
@@ -111,7 +109,7 @@ public class FixturesFragment extends Fragment {
         }
 
         // Initialize an empty list for the adapter
-        dateWiseFixtureListAdapter = new DateWiseFixtureListAdapter(new ArrayList<>(), requireActivity());
+        dateWiseFixtureListAdapter = new DateWiseFixtureListAdapter(new ArrayList<>(), requireActivity(), binding.gameWeekFixturesRecyclerView);
         binding.gameWeekFixturesRecyclerView.setAdapter(dateWiseFixtureListAdapter);
     }
 
@@ -159,7 +157,7 @@ public class FixturesFragment extends Fragment {
         }
 
         // Sort the list by date
-        dateWiseFixturesList.sort(Comparator.comparing(DateWiseFixtures::getDate));
+        dateWiseFixturesList.sort(Comparator.comparing(DateWiseFixtures::date));
 
         return dateWiseFixturesList;
     }

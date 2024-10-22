@@ -1,12 +1,9 @@
 package com.infotech.fplcolosseum.features.homepage.adapter;
 
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,26 +13,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.DateWiseFixtures;
-import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
-import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
-import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
-public class DateWiseFixtureListAdapter extends RecyclerView.Adapter<DateWiseFixtureListAdapter.DateWiseFixtureViewHolder> {
+public class DateWiseFixtureListAdapter extends RecyclerView.Adapter<DateWiseFixtureListAdapter.DateWiseFixtureViewHolder> implements InnerRecyclerViewItemClickListener{
 
     private List<DateWiseFixtures> dateWiseFixturesList;
 
     FragmentActivity activity;
+    private RecyclerView recyclerView;
 
-    public DateWiseFixtureListAdapter(List<DateWiseFixtures> dateWiseFixturesList, FragmentActivity activity) {
+    public DateWiseFixtureListAdapter(List<DateWiseFixtures> dateWiseFixturesList, FragmentActivity activity, RecyclerView outerRecyclerView) {
         this.dateWiseFixturesList = dateWiseFixturesList;
         this.activity = activity;
+        this.recyclerView = outerRecyclerView;
     }
 
     @NonNull
@@ -49,7 +42,8 @@ public class DateWiseFixtureListAdapter extends RecyclerView.Adapter<DateWiseFix
     public void onBindViewHolder(@NonNull DateWiseFixtureViewHolder holder, int position) {
         DateWiseFixtures fixtures = dateWiseFixturesList.get(position);
         holder.bind(fixtures);
-
+        holder.fixtureRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
+        holder.fixtureRecyclerView.setAdapter(new FixtureListAdapter(fixtures.fixtures(), holder.itemView.getContext(), this, position));
     }
 
     @Override
@@ -60,6 +54,13 @@ public class DateWiseFixtureListAdapter extends RecyclerView.Adapter<DateWiseFix
     public void updateDateList(List<DateWiseFixtures> newPlayersList) {
         this.dateWiseFixturesList = newPlayersList;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemExpanded(int outerPosition, int innerPosition) {
+        Log.d(Constants.LOG_TAG, outerPosition + " " + innerPosition);
+        // Scroll to the expanded item to ensure it's fully visible
+        recyclerView.post(() -> recyclerView.smoothScrollToPosition(outerPosition));
     }
 
 
@@ -76,9 +77,8 @@ public class DateWiseFixtureListAdapter extends RecyclerView.Adapter<DateWiseFix
 
         public void bind(DateWiseFixtures fixtures) {
 //            Log.d(Constants.LOG_TAG, fixtures.getFixtures().get(0).getKickoff_time());
-            gameWeekFixtureDate.setText(CustomUtil.convertDateToDayDateMonth(fixtures.getFixtures().get(0).getKickoff_time()));
-            fixtureRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
-            fixtureRecyclerView.setAdapter(new FixtureListAdapter(fixtures.getFixtures(), itemView.getContext()));
+            gameWeekFixtureDate.setText(CustomUtil.convertDateToDayDateMonth(fixtures.fixtures().get(0).getKickoff_time()));
+
         }
     }
 }

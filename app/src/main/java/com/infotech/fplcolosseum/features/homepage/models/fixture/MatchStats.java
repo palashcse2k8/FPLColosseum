@@ -23,4 +23,20 @@ public class MatchStats {
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
+
+    public ArrayList<MatchElement> getA() {
+        return a;
+    }
+
+    public void setA(ArrayList<MatchElement> a) {
+        this.a = a;
+    }
+
+    public ArrayList<MatchElement> getH() {
+        return h;
+    }
+
+    public void setH(ArrayList<MatchElement> h) {
+        this.h = h;
+    }
 }

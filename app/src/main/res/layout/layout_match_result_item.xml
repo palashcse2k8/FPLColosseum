@@ -27,6 +27,9 @@
                 android:layout_weight="1"
                 android:textAlignment="textEnd"
                 android:text="Spurs"
+                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:paddingEnd="8dp"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
@@ -48,13 +51,24 @@
                 android:paddingStart="8dp"
                 android:textAlignment="textStart"
                 android:text="West Ham"
+                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+            <ImageView
+                android:id="@+id/expandCollapseIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="expand collapse icon"
+                android:src="@drawable/ic_arrow_down_24x24" />
 
         </LinearLayout>
 
         <!-- Expandable content -->
         <LinearLayout
-            android:id="@+id/expandableContent"
+            android:id="@+id/matchStatLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -62,11 +76,13 @@
             android:visibility="gone">
 
             <!-- Add more TextViews or other views here for additional match details -->
-            <TextView
-                android:id="@+id/matchDetailsTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+<!--            <TextView-->
+<!--                android:id="@+id/matchDetailsTV"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Stat"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textAppearance="@style/TextAppearance.Material3.BodySmall" />-->
 
         </LinearLayout>
 
