@@ -1,17 +1,16 @@
 package com.infotech.fplcolosseum.features.homepage.models;
 
-import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.GameWeekMatchDetailsResponse;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.picks.GameWeekPicksModel;
-import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
 
 import java.util.List;
 
 public class PointsMergedResponseModel {
-    private GameWeekDataResponseModel gameWeekDataResponseModel;
+    private TeamInformationResponseModel teamInformationResponseModel;
 
     public List<MatchDetails> getMatchDetails() {
         return matchDetails;
@@ -26,12 +25,12 @@ public class PointsMergedResponseModel {
     private GameWeekPicksModel gameWeekPicksModel;
     private GameWeekLivePointsResponseModel gameWeekLivePointsResponseModel;
 
-    public GameWeekDataResponseModel getGameWeekDataResponseModel() {
-        return gameWeekDataResponseModel;
+    public TeamInformationResponseModel getGameWeekDataResponseModel() {
+        return teamInformationResponseModel;
     }
 
-    public void setGameWeekDataResponseModel(GameWeekDataResponseModel gameWeekDataResponseModel) {
-        this.gameWeekDataResponseModel = gameWeekDataResponseModel;
+    public void setGameWeekDataResponseModel(TeamInformationResponseModel teamInformationResponseModel) {
+        this.teamInformationResponseModel = teamInformationResponseModel;
     }
 
     public GameWeekMatchDetailsResponse getGameWeekMatchDetails() {

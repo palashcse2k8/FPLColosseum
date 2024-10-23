@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/leagueName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="FFM League cup"
+                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

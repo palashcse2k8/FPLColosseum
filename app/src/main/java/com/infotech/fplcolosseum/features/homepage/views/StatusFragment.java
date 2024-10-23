@@ -143,6 +143,9 @@ public class StatusFragment extends Fragment {
     }
 
     private void updateTopPlayerList() {
+
+        binding.gameWeekTopPlayers.removeAllViews(); // remove previously added data
+
         for (long i = 1; i <= Constants.currentGameWeek; i++) {
             View itemView = getLayoutInflater().inflate(R.layout.layout_top_player_view, binding.gameWeekTopPlayers, false);
             TextView playerName = itemView.findViewById(R.id.playerName);

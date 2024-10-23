@@ -767,7 +767,7 @@ public class PlayerSelectionActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         viewModel.getSearchQuery().observe(this, s -> {
-            if (searchView != null && !s.isEmpty()) {
+            if (searchView != null && s!= null && !s.isEmpty()) {
                 searchItem.expandActionView();
                 searchView.setQuery(s, false);  // Restore the query
                 searchView.clearFocus();

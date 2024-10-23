@@ -250,9 +250,7 @@ public class HomePageFragment extends Fragment {
         adapter.addFragment(new TransferFragment().newInstance(managerId), "Transfers");
 
         adapter.addFragment(new PointsFragment(), "Points");
-//        adapter.addFragment(new PointsFragment(), "Points");
-//        adapter.addFragment(new PointsFragment(), "Points");
-//        adapter.addFragment(new PointsFragment(), "Leagues");
+        adapter.addFragment(new LeaguesFragment(), "Leagues");
 
         viewPager.setAdapter(adapter);
 //        viewPager.setOffscreenPageLimit(1);
@@ -296,7 +294,7 @@ public class HomePageFragment extends Fragment {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             Toolbar toolbar;
 
-            if (position == 0 || position == 1 || position == 2) {
+            if (position == 0 || position == 1 || position == 2 || position == 3) {
                 toolbar = (Toolbar) inflater.inflate(R.layout.toolbar_point_fragment, null, false);
                 setupPointFragmentToolbar(toolbar);
             } else {

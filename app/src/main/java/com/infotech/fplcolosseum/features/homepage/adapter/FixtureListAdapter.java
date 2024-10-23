@@ -71,7 +71,7 @@ public class FixtureListAdapter extends RecyclerView.Adapter<FixtureListAdapter.
             expandState.put(position, !currentExpandedState);
             notifyItemChanged(position);
             TransitionManager.beginDelayedTransition(holder.matchStatLayout);
-            if(listener != null) {
+            if (listener != null) {
                 listener.onItemExpanded(outerRecyclerPosition, position);
             }
         });
@@ -99,6 +99,7 @@ public class FixtureListAdapter extends RecyclerView.Adapter<FixtureListAdapter.
         private final TextView homeTeamNameTV;
         private final TextView awayTeamNameTV;
         private final TextView scoreTV;
+        private final TextView matchStatusTV;
         private final LinearLayout matchStatLayout;
         private final ImageView expandCollapseIcon;
 
@@ -107,6 +108,7 @@ public class FixtureListAdapter extends RecyclerView.Adapter<FixtureListAdapter.
             homeTeamNameTV = itemView.findViewById(R.id.homeTeamTV);
             awayTeamNameTV = itemView.findViewById(R.id.awayTeamTV);
             scoreTV = itemView.findViewById(R.id.scoreTV);
+            matchStatusTV = itemView.findViewById(R.id.matchStatusTV);
             matchStatLayout = itemView.findViewById(R.id.matchStatLayout);
             expandCollapseIcon = itemView.findViewById(R.id.expandCollapseIcon);
         }
@@ -128,6 +130,17 @@ public class FixtureListAdapter extends RecyclerView.Adapter<FixtureListAdapter.
 
             scoreTV.setText(scoreText);
 
+            String matchStatusText;
+            if (matchDetails.getStarted() && !matchDetails.getFinished()) {
+                matchStatusText = "Live";
+            } else if (matchDetails.getFinished() && matchDetails.getStarted()) {
+                matchStatusText = "FT";
+            } else {
+                matchStatusText = "";
+            }
+
+            matchStatusTV.setText(matchStatusText);
+
             createStatView(matchDetails);
         }
 
@@ -135,64 +148,73 @@ public class FixtureListAdapter extends RecyclerView.Adapter<FixtureListAdapter.
 
             matchStatLayout.removeAllViews(); // remove all the view before inflating new one
 
-            for (MatchStats matchStat : matchDetails.getStats()) {
+            if (matchDetails.getStats() == null || matchDetails.getStats().isEmpty()) { // if no stat is available or match not started yet
 
-                if (matchStat.getA().isEmpty() && matchStat.getH().isEmpty()) {
-                    continue;
-                }
                 View satateView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.layout_macth_stat_view_item, null);
-
-                LinearLayout homeStatContainer = satateView.findViewById(R.id.homeStatContainer);
-                LinearLayout awayStatContainer = satateView.findViewById(R.id.awayStatContainer);
                 TextView stateIdentifierTitleTV = satateView.findViewById(R.id.statIdentifierTitle);
-
-                stateIdentifierTitleTV.setText(Constants.elementStatMap.get(matchStat.getIdentifier()));
-
-                for (MatchElement homeElement : matchStat.getH()) {
-                    TextView elementText = new TextView(itemView.getContext());
-
-                    // Set the layout parameters for the TextView
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                    // Align the TextView to the right within the LinearLayout
-                    params.gravity = Gravity.END; // Align to end/right
-
-                    elementText.setLayoutParams(params);
-
-                    String elementWithCount = Constants.playerMap.get(homeElement.getElement()).getWeb_name() + " (" + homeElement.getValue() + ")";
-
-                    elementText.setText(elementWithCount);
-                    elementText.setTypeface(null, Typeface.BOLD);
-
-                    // Add click listener if needed
-                    elementText.setOnClickListener(v -> {
-                        // Handle click on stat item
-                        CustomUtil.startPlayerFullProfile((FragmentActivity) itemView.getContext(), Constants.playerMap.get(homeElement.getElement()));
-                    });
-
-                    homeStatContainer.addView(elementText);
-                }
-
-                for (MatchElement awayElement : matchStat.getA()) {
-                    TextView elementText = new TextView(itemView.getContext());
-
-                    String elementWithCount = Constants.playerMap.get(awayElement.getElement()).getWeb_name() + " (" + awayElement.getValue() + ")";
-
-                    elementText.setText(elementWithCount);
-
-                    elementText.setTypeface(null, Typeface.BOLD);
-
-                    // Add click listener if needed
-                    elementText.setOnClickListener(v -> {
-                        // Handle click on stat item
-                        CustomUtil.startPlayerFullProfile((FragmentActivity) itemView.getContext(), Constants.playerMap.get(awayElement.getElement()));
-                    });
-
-                    awayStatContainer.addView(elementText);
-                }
+                stateIdentifierTitleTV.setText("Not played yet");
                 matchStatLayout.addView(satateView);
+            } else {
+
+                for (MatchStats matchStat : matchDetails.getStats()) {
+
+                    if (matchStat.getA().isEmpty() && matchStat.getH().isEmpty()) {
+                        continue;
+                    }
+                    View satateView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.layout_macth_stat_view_item, null);
+
+                    LinearLayout homeStatContainer = satateView.findViewById(R.id.homeStatContainer);
+                    LinearLayout awayStatContainer = satateView.findViewById(R.id.awayStatContainer);
+                    TextView stateIdentifierTitleTV = satateView.findViewById(R.id.statIdentifierTitle);
+
+                    stateIdentifierTitleTV.setText(Constants.elementStatMap.get(matchStat.getIdentifier()));
+
+                    for (MatchElement homeElement : matchStat.getH()) {
+                        TextView elementText = new TextView(itemView.getContext());
+
+                        // Set the layout parameters for the TextView
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                        // Align the TextView to the right within the LinearLayout
+                        params.gravity = Gravity.END; // Align to end/right
+
+                        elementText.setLayoutParams(params);
+
+                        String elementWithCount = Constants.playerMap.get(homeElement.getElement()).getWeb_name() + " (" + homeElement.getValue() + ")";
+
+                        elementText.setText(elementWithCount);
+                        elementText.setTypeface(null, Typeface.BOLD);
+
+                        // Add click listener if needed
+                        elementText.setOnClickListener(v -> {
+                            // Handle click on stat item
+                            CustomUtil.startPlayerFullProfile((FragmentActivity) itemView.getContext(), Constants.playerMap.get(homeElement.getElement()));
+                        });
+
+                        homeStatContainer.addView(elementText);
+                    }
+
+                    for (MatchElement awayElement : matchStat.getA()) {
+                        TextView elementText = new TextView(itemView.getContext());
+
+                        String elementWithCount = Constants.playerMap.get(awayElement.getElement()).getWeb_name() + " (" + awayElement.getValue() + ")";
+
+                        elementText.setText(elementWithCount);
+
+                        elementText.setTypeface(null, Typeface.BOLD);
+
+                        // Add click listener if needed
+                        elementText.setOnClickListener(v -> {
+                            // Handle click on stat item
+                            CustomUtil.startPlayerFullProfile((FragmentActivity) itemView.getContext(), Constants.playerMap.get(awayElement.getElement()));
+                        });
+
+                        awayStatContainer.addView(elementText);
+                    }
+                    matchStatLayout.addView(satateView);
+                }
             }
 
         }

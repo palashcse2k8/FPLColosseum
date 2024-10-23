@@ -24,7 +24,7 @@
             android:id="@+id/gameWeekDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="8dp"
             android:text="Saturday 19 October"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge"

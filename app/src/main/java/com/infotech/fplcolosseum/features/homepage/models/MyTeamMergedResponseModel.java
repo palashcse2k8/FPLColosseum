@@ -1,17 +1,15 @@
 package com.infotech.fplcolosseum.features.homepage.models;
 
-import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.GameWeekMatchDetailsResponse;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
-import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.picks.GameWeekPicksModel;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekStaticDataModel;
 
 import java.util.List;
 
 public class MyTeamMergedResponseModel {
-    private GameWeekDataResponseModel gameWeekDataResponseModel;
+    private TeamInformationResponseModel teamInformationResponseModel;
 
     public List<MatchDetails> getMatchDetails() {
         return matchDetails;
@@ -31,16 +29,17 @@ public class MyTeamMergedResponseModel {
         this.matchDetails = matchDetails;
     }
 
+    public TeamInformationResponseModel getTeamInformationResponseModel() {
+        return teamInformationResponseModel;
+    }
+
+    public void setTeamInformationResponseModel(TeamInformationResponseModel teamInformationResponseModel) {
+        this.teamInformationResponseModel = teamInformationResponseModel;
+    }
+
     private GameWeekMatchDetailsResponse gameWeekMatchDetailsResponse;
     List<MatchDetails> matchDetails;
 
-    public GameWeekDataResponseModel getGameWeekDataResponseModel() {
-        return gameWeekDataResponseModel;
-    }
-
-    public void setGameWeekDataResponseModel(GameWeekDataResponseModel gameWeekDataResponseModel) {
-        this.gameWeekDataResponseModel = gameWeekDataResponseModel;
-    }
 
     public GameWeekMatchDetailsResponse getGameWeekMatchDetails() {
         return gameWeekMatchDetailsResponse;

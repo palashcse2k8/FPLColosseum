@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView android:layout_width="match_parent"
+<com.google.android.material.card.MaterialCardView xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_marginVertical="4dp"
@@ -21,6 +22,15 @@
             android:padding="8dp">
 
             <TextView
+                android:id="@+id/matchStatusTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                style="@style/TextAppearance.Material3.LabelMedium"
+                android:textStyle="bold"
+                android:text="Live" />
+
+            <TextView
                 android:id="@+id/homeTeamTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -30,18 +40,29 @@
                 android:maxLines="1"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
+                android:layout_gravity="center_vertical"
                 android:paddingEnd="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:textStyle="bold"
+                tools:ignore="RtlCompat" />
 
-            <TextView
-                android:id="@+id/scoreTV"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_border_background"
                 android:padding="8dp"
-                android:text="4 - 1"
-                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                android:textStyle="bold" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/scoreTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4 - 1"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/awayTeamTV"
@@ -51,10 +72,13 @@
                 android:paddingStart="8dp"
                 android:textAlignment="textStart"
                 android:text="West Ham"
+                android:layout_gravity="center_vertical"
                 android:maxLines="1"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                tools:ignore="RtlCompat" />
 
             <ImageView
                 android:id="@+id/expandCollapseIcon"

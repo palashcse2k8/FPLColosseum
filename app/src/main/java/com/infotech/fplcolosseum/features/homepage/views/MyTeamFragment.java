@@ -4,8 +4,6 @@ import static com.infotech.fplcolosseum.utilities.ButtonStateManager.getButtonSt
 import static com.infotech.fplcolosseum.utilities.ButtonStateManager.updateButtonState;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayer;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayerList;
-import static com.infotech.fplcolosseum.utilities.CustomUtil.prepareData;
-import static com.infotech.fplcolosseum.utilities.CustomUtil.updateFixtureData;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -38,7 +36,6 @@ import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
 import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameChips;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;

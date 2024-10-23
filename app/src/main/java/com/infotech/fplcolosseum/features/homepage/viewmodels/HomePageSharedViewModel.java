@@ -15,6 +15,7 @@ import com.infotech.fplcolosseum.data.repositories.UserGameWeekDataRepository;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.PointsMergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekTransferUpdateModel;
@@ -29,6 +30,7 @@ public class HomePageSharedViewModel extends AndroidViewModel {
     UserGameWeekDataRepository dataRepository;
 
     private final MediatorLiveData<ApiResponse<GameWeekMyTeamResponseModel>> myTeamApiResultLiveData;
+    private final MediatorLiveData<ApiResponse<TeamInformationResponseModel>> teamInformationApiResultLiveData;
     private final MediatorLiveData<ApiResponse<?>> transferApiResultLiveData;
 
     private final MutableLiveData<ApiResponse<GameWeekPicksModel>> gameWeekPicksApiResultLiveData;
@@ -54,6 +56,7 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         gameWeekPicksApiResultLiveData = new MediatorLiveData<>();
         this.fixtureApiResultLiveData = new MediatorLiveData<>();
         myTeamMergedMediatorLiveData = new MediatorLiveData<>();
+        teamInformationApiResultLiveData = new MediatorLiveData<>();
         pointsMergedMediatorLiveData = new MediatorLiveData<>();
         statusMergedMediatorLiveData = new MediatorLiveData<>();
         toolbarTitle = new MutableLiveData<>();
@@ -73,15 +76,16 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
             //call manager information with league data
             myTeamMergedMediatorLiveData.addSource(dataRepository.getTeamInformation(managerID),
-                    gameWeekDataResponseModelApiResponse -> {
-                        long currentGameWeek = gameWeekDataResponseModelApiResponse.getData().getCurrent_event();
+                    teamInformationResponseModelApiResponse -> {
+                        long currentGameWeek = teamInformationResponseModelApiResponse.getData().getCurrent_event();
                         Constants.currentGameWeek = currentGameWeek;
                         Constants.previousGameWeek = currentGameWeek - 1;
                         Constants.nextGameWeek = currentGameWeek + 1;
-                        Constants.teamName = gameWeekDataResponseModelApiResponse.getData().getName();
-                        Constants.managerName = gameWeekDataResponseModelApiResponse.getData().getPlayer_first_name() + " " + gameWeekDataResponseModelApiResponse.getData().getPlayer_last_name();
+                        Constants.teamName = teamInformationResponseModelApiResponse.getData().getName();
+                        Constants.managerName = teamInformationResponseModelApiResponse.getData().getPlayer_first_name() + " " + teamInformationResponseModelApiResponse.getData().getPlayer_last_name();
 
-                        myTeamMergedResponseModel.setGameWeekDataResponseModel(gameWeekDataResponseModelApiResponse.getData());
+                        myTeamMergedResponseModel.setTeamInformationResponseModel(teamInformationResponseModelApiResponse.getData());
+                        teamInformationApiResultLiveData.setValue(teamInformationResponseModelApiResponse); //save game week data
 
                         //call game week live points api
                         myTeamMergedMediatorLiveData.addSource(dataRepository.getMyTeamData(managerID),
@@ -269,6 +273,10 @@ public class HomePageSharedViewModel extends AndroidViewModel {
         return myTeamApiResultLiveData;
     }
 
+    public LiveData<ApiResponse<TeamInformationResponseModel>> getTeamInformationApiResultLiveData() {
+        return teamInformationApiResultLiveData;
+    }
+
     public MediatorLiveData<ApiResponse<?>> getFixtureLiveData() {
         return fixtureApiResultLiveData;
     }
@@ -318,6 +326,7 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 //        });
 //    }
 
+    //get fixture data
     public void getFixtureData(long gameWeekNumber) {
 
         dataLoading.setValue(true);
@@ -326,6 +335,17 @@ public class HomePageSharedViewModel extends AndroidViewModel {
             dataLoading.setValue(false);
             updateFixtureData(userResponseModelApiResponse.getData());
             fixtureApiResultLiveData.setValue(userResponseModelApiResponse);
+        });
+    }
+
+    // get team information like league rank etc
+    public void getTeamInformation(long managerId) {
+
+        dataLoading.setValue(true);
+        // Make API call through the repository
+        teamInformationApiResultLiveData.addSource(dataRepository.getTeamInformation(managerId), gameWeekDataResponseModelApiResponse -> {
+            dataLoading.setValue(false);
+            teamInformationApiResultLiveData.setValue(gameWeekDataResponseModelApiResponse);
         });
     }
 

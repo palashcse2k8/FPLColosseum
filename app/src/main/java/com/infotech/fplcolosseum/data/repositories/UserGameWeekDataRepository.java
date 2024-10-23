@@ -10,7 +10,7 @@ import com.infotech.fplcolosseum.data.sources.network.APIHandler;
 import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.data.sources.network.RetroClass;
-import com.infotech.fplcolosseum.features.homepage.models.entryinformation.GameWeekDataResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamResponseModel;
@@ -157,13 +157,13 @@ public class UserGameWeekDataRepository {
     }
 
 
-    public LiveData<ApiResponse<GameWeekDataResponseModel>> getTeamInformation(long entry_id) {
+    public LiveData<ApiResponse<TeamInformationResponseModel>> getTeamInformation(long entry_id) {
 
-        MediatorLiveData<ApiResponse<GameWeekDataResponseModel>> apiData = new MediatorLiveData<>();
+        MediatorLiveData<ApiResponse<TeamInformationResponseModel>> apiData = new MediatorLiveData<>();
 
         Call<ResponseBody> callAPI = apiServices.gameWeekEntriesInformation(entry_id);
 
-        apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekDataResponseModel.class), tApiResponse -> {
+        apiData.addSource(APIHandler.makeApiCall(callAPI, TeamInformationResponseModel.class), tApiResponse -> {
 //            Log.d("Data ", tApiResponse.getData().toString());
             apiData.postValue(tApiResponse);
         });
