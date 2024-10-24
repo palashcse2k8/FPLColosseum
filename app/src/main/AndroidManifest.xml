@@ -36,6 +36,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".features.league_information.views.LeagueInformationActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

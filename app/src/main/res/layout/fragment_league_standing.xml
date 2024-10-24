@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginVertical="8dp"
+        android:padding="8dp">
+
+        <include layout="@layout/league_standing_list_item_header"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/leagueStandingRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollIndicators="end"
+            tools:listitem="@layout/league_standing_list_item"/>
+
+        <!-- Pagination controls -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="16dp"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+
+            <!-- Previous Button -->
+            <Button
+                android:id="@+id/btnPreviousPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="Prev"
+                android:enabled="false" />
+
+            <!-- Page number text -->
+            <TextView
+                android:id="@+id/tvPageNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_centerHorizontal="true"
+                android:text="Page 1"
+                android:textSize="16sp" />
+
+            <!-- Next Button -->
+            <Button
+                android:id="@+id/btnNextPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="Next" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

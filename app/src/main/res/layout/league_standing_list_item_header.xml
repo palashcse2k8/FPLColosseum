@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/deepGreen"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight=".2"
+            android:layout_height="wrap_content"
+            android:contentDescription="rank indicator" />
+
+        <TextView
+            android:id="@+id/rankTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"
+            android:text="#"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <!-- Opponent -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/leagueName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Team"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                style="@style/TextAppearance.Material3.BodyMedium" />
+
+
+        </LinearLayout>
+
+
+        <!-- Result -->
+        <TextView
+            android:id="@+id/Points"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:text="Points"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center_horizontal"
+            style="@style/TextAppearance.Material3.BodyMedium"  />
+
+        <!-- Points -->
+        <TextView
+            android:id="@+id/totalPoints"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:gravity="center_horizontal"
+            android:text="Total"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            style="@style/TextAppearance.Material3.BodyMedium" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -27,6 +27,7 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekSta
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
+import com.infotech.fplcolosseum.features.league_information.views.LeagueInformationActivity;
 import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -520,5 +521,11 @@ public class CustomUtil {
         }
 
         return null;
+    }
+
+    public static void startLeagueInformationActivity(Context activity, long leagueId){
+        Intent intent = new Intent(activity, LeagueInformationActivity.class);
+        intent.putExtra(LeagueInformationActivity.LEAGUE_ID, leagueId);
+        activity.startActivity(intent);
     }
 }

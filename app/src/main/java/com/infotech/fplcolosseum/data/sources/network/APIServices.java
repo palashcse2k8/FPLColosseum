@@ -126,4 +126,11 @@ public interface APIServices {
 
     @GET("https://fantasy.premierleague.com/api/stats/most-valuable-teams/")     //https://fantasy.premierleague.com/api/stats/most-valuable-teams/
     Call<ResponseBody> getMostValuableTeams();
+
+    @GET("https://fantasy.premierleague.com/api/leagues-classic/{leagueId}/standings/")     //https://fantasy.premierleague.com/api/leagues-classic/333974/standings/?phase=1&page_standings=3&page_new_entries=2
+    Call<ResponseBody> getLeagueInformation(@Path("leagueId") long leagueId,
+                                             @Query("phase") int phase,
+                                             @Query("page_standings") int pageStandings,
+                                             @Query("page_new_entries") int pageNewEntries);
+
 }

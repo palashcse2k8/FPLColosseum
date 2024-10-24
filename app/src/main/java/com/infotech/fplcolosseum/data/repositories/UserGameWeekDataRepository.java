@@ -21,6 +21,7 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.GameWeekSta
 import com.infotech.fplcolosseum.features.homepage.models.status.BestLeagueDataModel;
 import com.infotech.fplcolosseum.features.homepage.models.status.GameWeekStatus;
 import com.infotech.fplcolosseum.features.homepage.models.status.ValuableTeamDataModel;
+import com.infotech.fplcolosseum.features.league_information.models.LeagueInformationDataModel;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.features.player_information.models.ElementSummary;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -306,6 +307,18 @@ public class UserGameWeekDataRepository {
         Call<ResponseBody> callAPI = apiServices.getMostValuableTeams();
 
         apiData.addSource(APIHandler.makeApiCallForList(callAPI, ValuableTeamDataModel.class), listApiResponse -> {
+            apiData.postValue(listApiResponse);
+        });
+
+        return apiData;
+    }
+
+    public LiveData<ApiResponse<LeagueInformationDataModel>> getLeagueInformation(long leagueId, int phase, int pageStandings, int pageNewEntries) {
+        MediatorLiveData<ApiResponse<LeagueInformationDataModel>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getLeagueInformation(leagueId, phase, pageStandings, pageNewEntries);
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, LeagueInformationDataModel.class), listApiResponse -> {
             apiData.postValue(listApiResponse);
         });
 

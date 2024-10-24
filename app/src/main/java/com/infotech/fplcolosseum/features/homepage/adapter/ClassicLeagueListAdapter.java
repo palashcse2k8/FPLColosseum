@@ -50,14 +50,8 @@ public class ClassicLeagueListAdapter extends RecyclerView.Adapter<ClassicLeague
 
         // Handle click to expand/collapse
         holder.itemView.setOnClickListener(v -> {
-
+            CustomUtil.startLeagueInformationActivity(v.getContext(), player.getId());
         });
-
-//        holder.itemView.setOnClickListener(v -> {
-//            Intent intent = new Intent(activity, PlayerFullInformationActivity.class);
-//            intent.putExtra("playerData", player); // Replace with actual player name
-//            activity.startActivity(intent);
-//        });
     }
 
     @Override
