@@ -70,7 +70,7 @@ public class LeagueInformationActivity extends AppCompatActivity {
 
                     LeagueInformationDataModel leagueInformationDataModel = (LeagueInformationDataModel) apiResponse.getData();
 
-                    setUpTabLayout();
+                    setUpTabLayout(leagueInformationDataModel);
 
                     updateUI(leagueInformationDataModel);
 
@@ -88,8 +88,10 @@ public class LeagueInformationActivity extends AppCompatActivity {
 
     }
 
-    public void setUpTabLayout(){
+    public void setUpTabLayout(LeagueInformationDataModel leagueInformationDataModel) {
         // Set up the adapter
+
+
         LeagueInformationPageAdapter adapter = new LeagueInformationPageAdapter(this);
         binding.viewPager.setAdapter(adapter);
 
@@ -109,7 +111,9 @@ public class LeagueInformationActivity extends AppCompatActivity {
                     }
                 }
         ).attach();
+
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -132,7 +136,7 @@ public class LeagueInformationActivity extends AppCompatActivity {
         binding = null;
     }
 
-    public void setUpToolbar(League league){
+    public void setUpToolbar(League league) {
         // Set the title based on the received name (optional)
         if (league != null) {
             binding.leagueStandingToolbar.setTitle(league.getName());

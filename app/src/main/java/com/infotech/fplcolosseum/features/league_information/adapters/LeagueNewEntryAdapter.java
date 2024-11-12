@@ -13,11 +13,12 @@ import com.infotech.fplcolosseum.features.league_information.models.LeagueNewEnt
 import com.infotech.fplcolosseum.features.league_information.models.StandingResultDataModel;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LeagueNewEntryAdapter extends RecyclerView.Adapter<LeagueNewEntryAdapter.LeagueNewEntryViewHolder> {
 
-    private List<LeagueNewEntryResultDataModel> entryList;
+    private List<LeagueNewEntryResultDataModel> entryList = new ArrayList<>();
 
     public LeagueNewEntryAdapter(List<LeagueNewEntryResultDataModel> leagueList) {
         if(leagueList != null && !leagueList.isEmpty())

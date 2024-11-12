@@ -36,6 +36,7 @@ public class LeagueStandingFragment extends Fragment {
 
         LeagueStandingAdapter leagueStandingAdapter = new LeagueStandingAdapter(viewModel.getLeagueStandingApiLiveData().getValue().getData().getStandings().getResults());
         binding.leagueStandingRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.leagueStandingRecyclerView.setHasFixedSize(true);
         binding.leagueStandingRecyclerView.setAdapter(leagueStandingAdapter);
 
         setupPagination();

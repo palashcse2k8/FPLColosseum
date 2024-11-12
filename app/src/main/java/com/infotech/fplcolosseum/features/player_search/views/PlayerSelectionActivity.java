@@ -28,10 +28,10 @@ import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.RangeSlider;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentPlayerSelectionBinding;
-import com.infotech.fplcolosseum.features.player_search.adapter.PlayerListAdapter;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.Player_Type;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
+import com.infotech.fplcolosseum.features.player_search.adapter.PlayerListAdapter;
 import com.infotech.fplcolosseum.features.player_search.viewmodel.PlayerSelectionViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
@@ -133,6 +133,7 @@ public class PlayerSelectionActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         binding.playerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.playerRecyclerView.setHasFixedSize(true);
         adapter = new PlayerListAdapter(playersList, this::onPlayerSelected, transferredPlayerData, teamPlayers, this);
         binding.playerRecyclerView.setAdapter(adapter);
     }
