@@ -32,6 +32,7 @@ import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.FragmentPointsBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.PointsMergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.Element;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
@@ -57,12 +58,23 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
     List<PlayersData> teamPlayers = new ArrayList<>();
     boolean isRefreshVisible = true;  // Hide refresh button
     boolean isShareVisible = true;    // Show share button
-    boolean isSaveVisible = false;
-    boolean isClearVisible = false;
 
     int selectedChip;
     long selectedGameWeek;
     MenuProvider menuProvider;
+
+    private static final String ARG_ITEM_DATA = "entry_id";
+    private long entry_id;
+
+
+    public PointsFragment newInstance(long index) {
+        Bundle args = new Bundle();
+        args.putLong(ARG_ITEM_DATA, index);
+
+        PointsFragment fragment = new PointsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -79,7 +91,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         return rootView;
     }
 
-    public void addMenuProvider(){
+    public void addMenuProvider() {
 
         menuProvider = new MenuProvider() {
             @Override
@@ -87,7 +99,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
                 menu.clear();
                 // Inflate the menu; this adds items to the action bar if it is present.
-                menuInflater.inflate(R.menu.my_team_menu, menu);
+                menuInflater.inflate(R.menu.points_menu, menu);
 
                 for (int i = 0; i < menu.size(); i++) {
                     MenuItem item = menu.getItem(i);
@@ -103,17 +115,11 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                 // Handle action bar item clicks here
                 int id = menuItem.getItemId();
 
-                if (id == R.id.action_undo) {
-                    handleUndoClick();
-                    return true;
-                } else if (id == R.id.action_refresh) {
+                if (id == R.id.action_refresh) {
                     handleRefreshClick();
                     return true;
                 } else if (id == R.id.action_share) {
                     handleShareClick();
-                    return true;
-                } else if (id == R.id.action_save) {
-                    handleSaveClick();
                     return true;
                 }
 
@@ -125,15 +131,10 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
                 MenuItem refreshItem = menu.findItem(R.id.action_refresh);
                 MenuItem shareItem = menu.findItem(R.id.action_share);
-                MenuItem saveItem = menu.findItem(R.id.action_save);
-                MenuItem clearItem = menu.findItem(R.id.action_undo);
-
 
                 // Set visibility based on your conditions
                 if (refreshItem != null) refreshItem.setVisible(isRefreshVisible);
                 if (shareItem != null) shareItem.setVisible(isShareVisible);
-                if (saveItem != null) saveItem.setVisible(isSaveVisible);
-                if (clearItem != null) clearItem.setVisible(isClearVisible);
 
                 MenuProvider.super.onPrepareMenu(menu);
             }
@@ -144,21 +145,20 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            entry_id = args.getLong(ARG_ITEM_DATA);
+        }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-        viewModel.getPointsMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
+//        if (viewModel.getTeamInformationApiResultLiveData().getValue() == null || viewModel.getTeamInformationApiResultLiveData().getValue().getData() == null) {
+//            viewModel.getTeamInformation(entry_id);
+//        }
+//        viewModel.getPointsMergedData(entry_id, Constants.currentGameWeek);
+        viewModel.getPointsMergedData(entry_id, 11);
         selectedChip = (int) Constants.currentGameWeek;
-//        viewModel.getTeamCurrentGameWeekAllData(10359552);
+
         setRetainInstance(true);
         setHasOptionsMenu(true);
-    }
-
-
-    private void handleUndoClick() {
-
-        // Logic for undo button
-        // update the player list view
-
-        resetToolBar();
     }
 
     private void handleRefreshClick() {
@@ -166,7 +166,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         resetChipSelection((int) Constants.currentGameWeek);
         setUpToolbar(Constants.currentGameWeek);
         binding.footballFieldLayout.removeAllViews();
-        viewModel.getPointsMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
+        viewModel.getPointsMergedData(entry_id, Constants.currentGameWeek);
         resetToolBar();
     }
 
@@ -175,23 +175,11 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         Toast.makeText(getActivity(), "Share clicked", Toast.LENGTH_SHORT).show();
     }
 
-    private void handleSaveClick() {
-
-        Toast.makeText(getActivity(), "Save clicked", Toast.LENGTH_SHORT).show();
-    }
-
     private void resetToolBar() {
-        isClearVisible = false;     // Hide undo button
-        isSaveVisible = false;     // Hide save button
+//        isClearVisible = false;     // Hide undo button
+//        isSaveVisible = false;     // Hide save button
 
-        requireActivity().invalidateOptionsMenu();
-    }
-
-    private void enableEditToolBar() {
-        isClearVisible = true;     // Hide undo button
-        isSaveVisible = true;     // Hide save button
-
-        requireActivity().invalidateOptionsMenu();
+//        requireActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -243,6 +231,8 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                 }
 
                 PointsMergedResponseModel myTeam = apiResponse.getData();
+
+                setUpToolbar(selectedGameWeek);
 
                 addPlayers(footballFieldLayout, myTeam);
 
@@ -322,18 +312,19 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
     }
 
 
-    private void setUpToolbar( long gameWeekNumber) {
+    private void setUpToolbar(long gameWeekNumber) {
 
         Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
-        if (toolbar != null) {
+        if (toolbar != null && viewModel.getTeamInformationApiResultLiveData().getValue() != null && viewModel.getTeamInformationApiResultLiveData().getValue().getData() != null) {
             // Access the TextViews in the Toolbar
             TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
             TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
 
-            String concatenatedName = Constants.teamName + " (GW " + gameWeekNumber + ")";
+            String concatenatedName = viewModel.getTeamInformationApiResultLiveData().getValue().getData().getName() + " (GW " + gameWeekNumber + ")";
             teamNameTextView.setText(concatenatedName);
 
-            managerNameTextView.setText(Constants.managerName);
+            String fullName = viewModel.getTeamInformationApiResultLiveData().getValue().getData().getPlayer_first_name() + " " + viewModel.getTeamInformationApiResultLiveData().getValue().getData().getPlayer_last_name();
+            managerNameTextView.setText(fullName);
         }
     }
 

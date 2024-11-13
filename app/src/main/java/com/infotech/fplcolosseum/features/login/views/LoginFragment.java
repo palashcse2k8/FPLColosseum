@@ -26,6 +26,7 @@ import com.infotech.fplcolosseum.features.homepage.views.PlayerSelectionFragment
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
 import com.infotech.fplcolosseum.features.login.viewmodel.LoginViewModel;
+import com.infotech.fplcolosseum.features.manager_dashboard.views.MangerDashboardActivity;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
@@ -82,6 +83,7 @@ public class LoginFragment extends Fragment {
 
 //                            goToHomePage(Constants.LoggedInUser.getPlayer().getEntry());
                             gotoDashboardActivity(Constants.LoggedInUser.getPlayer().getEntry());
+//                            gotoManagerActivity(Constants.LoggedInUser.getPlayer().getEntry());
 
                         } else if (apiResponse.getData() instanceof String) {
                             UIUtils.toast(requireContext(), apiResponse.getMessage(), ToastLevel.WARNING);
@@ -113,17 +115,20 @@ public class LoginFragment extends Fragment {
         //TODO
         binding.buttonGuestUser.setOnClickListener(v -> {
 //            goToHomePage();
+//
+//            FragmentUtils.replace(
+//                    requireActivity().getSupportFragmentManager(),
+//                    new PlayerSelectionFragment(),
+//                    R.id.contentFrame,
+//                    true,
+//                    R.anim.enter_from_right, // enter
+//                    R.anim.exit_to_left,      // exit
+//                    R.anim.enter_from_right,   // popEnter
+//                    R.anim.exit_to_left      // popExit
+//            );
 
-            FragmentUtils.replace(
-                    requireActivity().getSupportFragmentManager(),
-                    new PlayerSelectionFragment(),
-                    R.id.contentFrame,
-                    true,
-                    R.anim.enter_from_right, // enter
-                    R.anim.exit_to_left,      // exit
-                    R.anim.enter_from_right,   // popEnter
-                    R.anim.exit_to_left      // popExit
-            );
+            gotoManagerActivity(2727830L);
+
         });
     }
 
@@ -248,5 +253,10 @@ public class LoginFragment extends Fragment {
         startActivity(myIntent);
     }
 
+    public void gotoManagerActivity(long managerID) {
 
+        Intent myIntent = new Intent(requireActivity(), MangerDashboardActivity.class);
+        myIntent.putExtra(MangerDashboardActivity.ARG_MANAGER_ID, managerID); //Optional parameters
+        startActivity(myIntent);
+    }
 }

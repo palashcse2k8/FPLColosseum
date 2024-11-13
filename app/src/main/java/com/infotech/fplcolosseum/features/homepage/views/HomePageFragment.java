@@ -249,7 +249,7 @@ public class HomePageFragment extends Fragment {
 
         adapter.addFragment(new TransferFragment().newInstance(managerId), "Transfers");
 
-        adapter.addFragment(new PointsFragment(), "Points");
+        adapter.addFragment(new PointsFragment().newInstance(managerId), "Points");
         adapter.addFragment(new LeaguesFragment(), "Leagues");
 
         viewPager.setAdapter(adapter);

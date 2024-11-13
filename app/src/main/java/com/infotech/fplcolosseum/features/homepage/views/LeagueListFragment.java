@@ -19,6 +19,7 @@ import com.infotech.fplcolosseum.databinding.FragmentLeaguesBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.ClassicLeagueListAdapter;
 import com.infotech.fplcolosseum.features.homepage.adapter.MostValuableTeamsAdapter;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.LeagueDataModel;
+import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 
 import java.util.List;
@@ -40,9 +41,6 @@ public class LeagueListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-        classicLeagues = sharedViewModel.getTeamInformationApiResultLiveData().getValue().getData().getLeagues().getClassic().stream().filter(model -> model.getLeague_type().equalsIgnoreCase("x")).collect(Collectors.toList());
-        headToHeadLeagues = sharedViewModel.getTeamInformationApiResultLiveData().getValue().getData().getLeagues().getH2h();
-        generalLeagues = sharedViewModel.getTeamInformationApiResultLiveData().getValue().getData().getLeagues().getClassic().stream().filter(model -> model.getLeague_type().equalsIgnoreCase("s")).collect(Collectors.toList());
 
     }
 
@@ -51,6 +49,31 @@ public class LeagueListFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         binding = FragmentLeagueListBinding.inflate(inflater, container, false);
+
+        sharedViewModel.getTeamInformationApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+            if (apiResponse == null) return;
+            switch (apiResponse.getStatus()) {
+                case LOADING:
+                    showLoading();
+                    break;
+                case SUCCESS:
+                    sharedViewModel.dataLoading.setValue(false);
+                    TeamInformationResponseModel teamInformation = apiResponse.getData();
+                    updateUI(teamInformation);
+                    break;
+                case ERROR:
+                    showFailure(apiResponse.getMessage());
+                    break;
+            }
+        });
+
+        return binding.getRoot();
+    }
+
+    private void updateUI(TeamInformationResponseModel teamInformationResponseModel) {
+        classicLeagues = teamInformationResponseModel.getLeagues().getClassic().stream().filter(model -> model.getLeague_type().equalsIgnoreCase("x")).collect(Collectors.toList());
+        headToHeadLeagues = teamInformationResponseModel.getLeagues().getH2h();
+        generalLeagues = teamInformationResponseModel.getLeagues().getClassic().stream().filter(model -> model.getLeague_type().equalsIgnoreCase("s")).collect(Collectors.toList());
 
         setUpAdapter();
 
@@ -65,10 +88,17 @@ public class LeagueListFragment extends Fragment {
         if (generalLeagues.isEmpty()) {
             binding.generalLeagueCV.setVisibility(View.GONE);
         }
-
-        return binding.getRoot();
     }
 
+    private void showLoading() {
+        sharedViewModel.dataLoading.setValue(false);
+//        binding.progressCircular.setVisibility(View.GONE);
+    }
+
+    private void showFailure(String ignoredError) {
+        sharedViewModel.dataLoading.setValue(false);
+//        binding.progressCircular.setVisibility(View.GONE);
+    }
     private void setUpAdapter() {
 
         ClassicLeagueListAdapter classicLeagueListAdapter = new ClassicLeagueListAdapter(classicLeagues);

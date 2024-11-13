@@ -68,7 +68,7 @@ public class LeaguesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentLeaguesBinding.inflate(inflater, container, false);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-        sharedViewModel.getStatusMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
+//        sharedViewModel.getStatusMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
         binding.setHomePageViewModel(sharedViewModel);
         binding.setLifecycleOwner(this);
         setupToolbar();

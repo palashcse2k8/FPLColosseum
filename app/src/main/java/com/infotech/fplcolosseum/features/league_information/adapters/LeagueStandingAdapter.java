@@ -40,6 +40,10 @@ public class LeagueStandingAdapter extends RecyclerView.Adapter<LeagueStandingAd
     public void onBindViewHolder(@NonNull LeagueStandingViewHolder holder, int position) {
         StandingResultDataModel leagueItem = leagueList.get(position);
         holder.bind(leagueItem);
+
+        holder.itemView.setOnClickListener(v -> {
+            CustomUtil.startManagerDashboardActivity(v.getContext(), leagueItem.getEntry());
+        });
     }
 
     @Override

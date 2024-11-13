@@ -29,7 +29,7 @@ public class PointsMergedResponseModel {
         return teamInformationResponseModel;
     }
 
-    public void setGameWeekDataResponseModel(TeamInformationResponseModel teamInformationResponseModel) {
+    public void setTeamInformationResponseModel(TeamInformationResponseModel teamInformationResponseModel) {
         this.teamInformationResponseModel = teamInformationResponseModel;
     }
 

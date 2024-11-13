@@ -61,7 +61,7 @@ public class FixturesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentFixtureBinding.inflate(inflater, container, false);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-        sharedViewModel.getStatusMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
+//        sharedViewModel.getStatusMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
         binding.setGameWeekEventIndex(Constants.currentGameWeek);
         binding.setHomePageViewModel(sharedViewModel);
         binding.setLifecycleOwner(this);

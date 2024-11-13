@@ -153,8 +153,20 @@ public class HomePageSharedViewModel extends AndroidViewModel {
 
                                     updateFixtureData(gameWeekMatchDetailsApiResponse.getData());
 
-                                    dataLoading.setValue(false); // make progress bar vanish when all api results are combined
-                                    pointsMergedMediatorLiveData.setValue(ApiResponse.success(pointsMergedResponseModel));
+                                    if (getTeamInformationApiResultLiveData().getValue() == null || getTeamInformationApiResultLiveData().getValue().getData() == null) {
+                                        // call game week players picked api
+                                        pointsMergedMediatorLiveData.addSource(dataRepository.getTeamInformation(managerID),
+                                                teamInformationResponseModelApiResponse -> {
+
+                                                    dataLoading.setValue(false); // make progress bar vanish when all api results are combined
+                                                    pointsMergedResponseModel.setTeamInformationResponseModel(teamInformationResponseModelApiResponse.getData());
+                                                    teamInformationApiResultLiveData.setValue(teamInformationResponseModelApiResponse); //save game week data
+                                                    pointsMergedMediatorLiveData.setValue(ApiResponse.success(pointsMergedResponseModel));
+                                                });
+                                    } else {
+                                        dataLoading.setValue(false); // make progress bar vanish when all api results are combined
+                                        pointsMergedMediatorLiveData.setValue(ApiResponse.success(pointsMergedResponseModel));
+                                    }
                                 });
 
                     }

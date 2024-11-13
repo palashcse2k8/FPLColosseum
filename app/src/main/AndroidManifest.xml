@@ -40,6 +40,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".features.manager_dashboard.views.MangerDashboardActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
