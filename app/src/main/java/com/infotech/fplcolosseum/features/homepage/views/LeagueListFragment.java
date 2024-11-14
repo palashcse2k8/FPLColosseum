@@ -22,100 +22,140 @@ import com.infotech.fplcolosseum.features.homepage.models.entryinformation.Leagu
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class LeagueListFragment extends Fragment {
 
-    FragmentLeagueListBinding binding;
+    private FragmentLeagueListBinding binding;
     private HomePageSharedViewModel sharedViewModel;
-    List<LeagueDataModel> classicLeagues;
-    List<LeagueDataModel> headToHeadLeagues;
-    List<LeagueDataModel> generalLeagues;
+    private List<LeagueDataModel> classicLeagues = new ArrayList<>();
+    private List<LeagueDataModel> headToHeadLeagues = new ArrayList<>();
+    private List<LeagueDataModel> generalLeagues = new ArrayList<>();
 
-    public LeagueListFragment() {
-        // Required empty constructor
-    }
+    private ClassicLeagueListAdapter classicLeagueListAdapter;
+    private ClassicLeagueListAdapter h2hListAdapter;
+    private ClassicLeagueListAdapter generalLeagueListAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         binding = FragmentLeagueListBinding.inflate(inflater, container, false);
 
-        sharedViewModel.getTeamInformationApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
-            if (apiResponse == null) return;
-            switch (apiResponse.getStatus()) {
-                case LOADING:
-                    showLoading();
-                    break;
-                case SUCCESS:
-                    sharedViewModel.dataLoading.setValue(false);
-                    TeamInformationResponseModel teamInformation = apiResponse.getData();
-                    updateUI(teamInformation);
-                    break;
-                case ERROR:
-                    showFailure(apiResponse.getMessage());
-                    break;
-            }
-        });
+        // Initialize adapters with empty lists first
+        setUpAdapter();
+
+        // Observe ViewModel data
+        observeViewModelData();
 
         return binding.getRoot();
     }
 
+    private void observeViewModelData() {
+        sharedViewModel.getTeamInformationApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+            if (apiResponse == null) return;
+
+            switch (apiResponse.getStatus()) {
+                case LOADING:
+//                    showLoading();
+                    break;
+                case SUCCESS:
+                    sharedViewModel.dataLoading.setValue(false);
+                    updateUI(apiResponse.getData());
+                    break;
+                case ERROR:
+//                    showFailure(apiResponse.getMessage());
+                    break;
+            }
+        });
+    }
+
     private void updateUI(TeamInformationResponseModel teamInformationResponseModel) {
-        classicLeagues = teamInformationResponseModel.getLeagues().getClassic().stream().filter(model -> model.getLeague_type().equalsIgnoreCase("x")).collect(Collectors.toList());
+        if (teamInformationResponseModel == null ||
+                teamInformationResponseModel.getLeagues() == null) return;
+
+        // Update lists with new data
+        classicLeagues = teamInformationResponseModel.getLeagues().getClassic().stream()
+                .filter(model -> model.getLeague_type().equalsIgnoreCase("x"))
+                .collect(Collectors.toList());
+
         headToHeadLeagues = teamInformationResponseModel.getLeagues().getH2h();
-        generalLeagues = teamInformationResponseModel.getLeagues().getClassic().stream().filter(model -> model.getLeague_type().equalsIgnoreCase("s")).collect(Collectors.toList());
 
-        setUpAdapter();
+        generalLeagues = teamInformationResponseModel.getLeagues().getClassic().stream()
+                .filter(model -> model.getLeague_type().equalsIgnoreCase("s"))
+                .collect(Collectors.toList());
 
-        if (headToHeadLeagues.isEmpty()) {
-            binding.head2headCV.setVisibility(View.GONE);
+        // Update adapters
+        if (classicLeagueListAdapter != null) {
+            classicLeagueListAdapter.updateLeagueList(classicLeagues);
+        }
+        if (h2hListAdapter != null) {
+            h2hListAdapter.updateLeagueList(headToHeadLeagues);
+        }
+        if (generalLeagueListAdapter != null) {
+            generalLeagueListAdapter.updateLeagueList(generalLeagues);
         }
 
-        if (classicLeagues.isEmpty()) {
-            binding.classicLeagueCV.setVisibility(View.GONE);
-        }
-
-        if (generalLeagues.isEmpty()) {
-            binding.generalLeagueCV.setVisibility(View.GONE);
-        }
+        updateViewVisibility();
     }
 
-    private void showLoading() {
-        sharedViewModel.dataLoading.setValue(false);
-//        binding.progressCircular.setVisibility(View.GONE);
+    private void updateViewVisibility() {
+        if (binding == null) return;
+
+        binding.head2headCV.setVisibility(
+                headToHeadLeagues.isEmpty() ? View.GONE : View.VISIBLE
+        );
+
+        binding.classicLeagueCV.setVisibility(
+                classicLeagues.isEmpty() ? View.GONE : View.VISIBLE
+        );
+
+        binding.generalLeagueCV.setVisibility(
+                generalLeagues.isEmpty() ? View.GONE : View.VISIBLE
+        );
     }
 
-    private void showFailure(String ignoredError) {
-        sharedViewModel.dataLoading.setValue(false);
-//        binding.progressCircular.setVisibility(View.GONE);
-    }
     private void setUpAdapter() {
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+        );
 
-        ClassicLeagueListAdapter classicLeagueListAdapter = new ClassicLeagueListAdapter(classicLeagues);
-        binding.classicLeaguesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Classic Leagues
+        classicLeagueListAdapter = new ClassicLeagueListAdapter(classicLeagues);
+        binding.classicLeaguesRecyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext())
+        );
         binding.classicLeaguesRecyclerView.setAdapter(classicLeagueListAdapter);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
-                DividerItemDecoration.VERTICAL);
         binding.classicLeaguesRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        ClassicLeagueListAdapter h2hListAdapter = new ClassicLeagueListAdapter(headToHeadLeagues);
-        binding.head2HeadLeagueRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Head to Head Leagues
+        h2hListAdapter = new ClassicLeagueListAdapter(headToHeadLeagues);
+        binding.head2HeadLeagueRecyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext())
+        );
         binding.head2HeadLeagueRecyclerView.setAdapter(h2hListAdapter);
         binding.head2HeadLeagueRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        ClassicLeagueListAdapter generalLeagueListAdapter = new ClassicLeagueListAdapter(generalLeagues);
-        binding.generalLeaguesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // General Leagues
+        generalLeagueListAdapter = new ClassicLeagueListAdapter(generalLeagues);
+        binding.generalLeaguesRecyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext())
+        );
         binding.generalLeaguesRecyclerView.setAdapter(generalLeagueListAdapter);
         binding.generalLeaguesRecyclerView.addItemDecoration(dividerItemDecoration);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

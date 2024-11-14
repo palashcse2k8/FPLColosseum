@@ -1,5 +1,6 @@
 package com.infotech.fplcolosseum.features.homepage.adapter;
 
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchStats;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +34,11 @@ public class ClassicLeagueListAdapter extends RecyclerView.Adapter<ClassicLeague
     private List<LeagueDataModel> leagueList;
 
     public ClassicLeagueListAdapter(List<LeagueDataModel> leagueList) {
-        this.leagueList = leagueList;
+        if(leagueList != null)
+            this.leagueList = leagueList;
+        else {
+            this.leagueList = new ArrayList<>();
+        }
     }
 
     @NonNull
@@ -59,7 +65,9 @@ public class ClassicLeagueListAdapter extends RecyclerView.Adapter<ClassicLeague
         return leagueList.size();
     }
 
-    public void updatePlayersList(List<LeagueDataModel> newLeagueList) {
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateLeagueList(List<LeagueDataModel> newLeagueList) {
+        this.leagueList.clear();
         this.leagueList = newLeagueList;
         notifyDataSetChanged();
     }

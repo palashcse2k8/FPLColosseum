@@ -1,5 +1,6 @@
 package com.infotech.fplcolosseum.features.homepage.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.infotech.fplcolosseum.databinding.LayoutCupListItemBinding;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.LeagueDataModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CupListAdapter extends RecyclerView.Adapter<CupListAdapter.CupItemViewHolder> {
@@ -16,7 +18,11 @@ public class CupListAdapter extends RecyclerView.Adapter<CupListAdapter.CupItemV
     private List<LeagueDataModel> leagueList;
 
     public CupListAdapter(List<LeagueDataModel> leagueList) {
-        this.leagueList = leagueList;
+        if(leagueList != null){
+            this.leagueList = leagueList;
+        } else {
+            this.leagueList = new ArrayList<>();
+        }
     }
 
     @NonNull
@@ -49,10 +55,13 @@ public class CupListAdapter extends RecyclerView.Adapter<CupListAdapter.CupItemV
         return leagueList.size();
     }
 
-    public void updatePlayersList(List<LeagueDataModel> newLeagueList) {
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateCupList(List<LeagueDataModel> newLeagueList) {
+        this.leagueList.clear();
         this.leagueList = newLeagueList;
         notifyDataSetChanged();
     }
+
 
 
     static class CupItemViewHolder extends RecyclerView.ViewHolder {

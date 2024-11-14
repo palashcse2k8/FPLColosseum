@@ -26,22 +26,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/toolbar_container"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentTop="true" />-->
-
-<!--    &lt;!&ndash; Top TabLayout &ndash;&gt;-->
-<!--    <com.google.android.material.tabs.TabLayout-->
-<!--        android:id="@+id/topTabLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@id/toolbar_container"-->
-<!--        app:tabTextAppearance="@style/CustomTabTextStyle"-->
-<!--        app:tabGravity="fill"-->
-<!--        app:tabMode="fixed" />-->
-
     <!-- ViewPager for Top Tabs -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
@@ -49,5 +33,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/bottomTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewPager"/>
 
 </RelativeLayout>

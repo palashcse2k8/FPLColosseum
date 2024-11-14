@@ -83,7 +83,7 @@ public class MangerDashboardActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
 
         adapter.addFragment(new PointsFragment().newInstance(managerId), "Points");
-        adapter.addFragment(new LeaguesFragment(), "Leagues");
+        adapter.addFragment(new LeaguesFragment().newInstance(managerId), "Leagues");
 
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(1);
@@ -100,7 +100,6 @@ public class MangerDashboardActivity extends AppCompatActivity {
             createToolbarForPosition(i);
         }
 
-//         Set the initial toolbar
         switchToolbar(0);
     }
 
