@@ -2,7 +2,6 @@ package com.infotech.fplcolosseum.features.homepage.views;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,37 +13,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.databinding.FragmentFixtureBinding;
 import com.infotech.fplcolosseum.databinding.FragmentLeaguesBinding;
-import com.infotech.fplcolosseum.features.homepage.adapter.DateWiseFixtureListAdapter;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.fixture.DateWiseFixtures;
-import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
-import com.infotech.fplcolosseum.utilities.CustomUtil;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
 
 public class LeaguesFragment extends Fragment {
     private FragmentLeaguesBinding binding;
@@ -58,13 +38,16 @@ public class LeaguesFragment extends Fragment {
     private boolean isDataLoaded = false;
 
 
-    private static final String ARG_ITEM_DATA = "entry_id";
+    private static final String ARG_ENTRY_ID = "entry_id";
+    private static final String ARG_IS_NEW_MANAGER = "is_new_manager";
     private long entry_id;
+    private boolean isNewManager;
 
 
-    public LeaguesFragment newInstance(long index) {
+    public LeaguesFragment newInstance(long index, boolean isNewManager) {
         Bundle args = new Bundle();
-        args.putLong(ARG_ITEM_DATA, index);
+        args.putLong(ARG_ENTRY_ID, index);
+        args.putBoolean(ARG_IS_NEW_MANAGER, isNewManager);
 
         LeaguesFragment fragment = new LeaguesFragment();
         fragment.setArguments(args);
@@ -77,7 +60,8 @@ public class LeaguesFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            entry_id = args.getLong(ARG_ITEM_DATA);
+            entry_id = args.getLong(ARG_ENTRY_ID);
+            isNewManager = args.getBoolean(ARG_IS_NEW_MANAGER);
         }
         // Initialize fragments early
         leagueListFragment = new LeagueListFragment();
@@ -236,7 +220,12 @@ public class LeaguesFragment extends Fragment {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menu.clear();
-                menuInflater.inflate(R.menu.menu_leagues, menu);
+                if(isNewManager){
+                    menuInflater.inflate(R.menu.new_manager_menu_leagues, menu);
+                } else {
+                    menuInflater.inflate(R.menu.menu_leagues, menu);
+                }
+
                 for (int i = 0; i < menu.size(); i++) {
                     MenuItem item = menu.getItem(i);
                     item.setIconTintList(ColorStateList.valueOf(
@@ -269,7 +258,8 @@ public class LeaguesFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        requireActivity().removeMenuProvider(menuProvider);
+        if(menuProvider != null)
+            requireActivity().removeMenuProvider(menuProvider);
         binding = null;
     }
 }

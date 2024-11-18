@@ -76,6 +76,7 @@ public class CupListAdapter extends RecyclerView.Adapter<CupListAdapter.CupItemV
         public void bind(LeagueDataModel leagueDataModel) {
             String cupName = leagueDataModel.getName() + " Cup";
             mBinding.leagueName.setText(cupName);
+            mBinding.leagueName.setSelected(true);
         }
     }
 }

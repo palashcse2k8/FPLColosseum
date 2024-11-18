@@ -250,7 +250,7 @@ public class HomePageFragment extends Fragment {
         adapter.addFragment(new TransferFragment().newInstance(managerId), "Transfers");
 
         adapter.addFragment(new PointsFragment().newInstance(managerId), "Points");
-        adapter.addFragment(new LeaguesFragment().newInstance(managerId), "Leagues");
+        adapter.addFragment(new LeaguesFragment().newInstance(managerId, false), "Leagues");
 
         viewPager.setAdapter(adapter);
 //        viewPager.setOffscreenPageLimit(1);

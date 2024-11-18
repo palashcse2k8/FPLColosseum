@@ -6,21 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:id="@+id/toolbar_container"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true">
+
+        <FrameLayout
+            android:id="@+id/toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
 
     <!-- Top TabLayout -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/topTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_container"
-        app:tabTextAppearance="@style/CustomTabTextStyle"
+        android:layout_below="@id/appbarLayout"
         app:tabGravity="fill"
-        app:tabMode="fixed" />
+        app:tabMode="fixed"
+        app:tabTextAppearance="@style/CustomTabTextStyle" />
 
     <!-- ViewPager for Top Tabs -->
     <androidx.viewpager2.widget.ViewPager2
@@ -28,23 +37,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/topTabLayout"
-        android:layout_above="@+id/bottomTabLayout" />
+        android:layout_alignParentBottom="true" />
 
-    <!-- Bottom TabLayout -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/bottomTabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:tabGravity="fill"
-        app:tabMode="fixed" />
+    <!--    &lt;!&ndash; Bottom TabLayout &ndash;&gt;-->
+    <!--    <com.google.android.material.tabs.TabLayout-->
+    <!--        android:id="@+id/bottomTabLayout"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_alignParentBottom="true"-->
+    <!--        app:tabGravity="fill"-->
+    <!--        app:tabMode="fixed" />-->
 
-    <!-- ViewPager for Bottom Tabs -->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/bottomViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/topViewPager"
-        android:layout_above="@id/bottomTabLayout" />
+    <!--    &lt;!&ndash; ViewPager for Bottom Tabs &ndash;&gt;-->
+    <!--    <androidx.viewpager2.widget.ViewPager2-->
+    <!--        android:id="@+id/bottomViewPager"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@id/topViewPager"-->
+    <!--        android:layout_above="@id/bottomTabLayout" />-->
 
 </RelativeLayout>

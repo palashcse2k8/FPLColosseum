@@ -3,16 +3,20 @@ package com.infotech.fplcolosseum.features.homepage.views;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.view.GravityCompat;
@@ -21,6 +25,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.infotech.fplcolosseum.MainActivity;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.utilities.Constants;
 
@@ -58,8 +63,38 @@ public class DashboardActivity extends AppCompatActivity {
             loadFragment(HomePageFragment.newInstance(managerId));
         }
         setUpBottomNavigation();
+
+        // Initialize the OnBackPressedDispatcher
+        addBackPressDispatcher();
     }
 
+    public void addBackPressDispatcher() {
+        // Initialize the OnBackPressedDispatcher
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back press logic here
+                if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    // Show the exit confirmation dialog
+                    AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this); // Use activity context
+                    builder.setTitle("Exit Confirmation")
+                            .setMessage("Are you sure you want to exit?")
+                            .setPositiveButton("Yes", (dialog, which) -> {
+                                finishAffinity(); // Exit the app
+                            })
+                            .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                            .setCancelable(true);
+
+                    runOnUiThread(() -> {
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    });
+                }
+            }
+        });
+    }
 
     public void setUpDrawerNavigation() {
 
@@ -73,12 +108,27 @@ public class DashboardActivity extends AppCompatActivity {
                         if (id == R.id.dreamTeam) {
                             Toasty.info(getApplicationContext(), "Dream Team clicked", Toasty.LENGTH_SHORT).show();
                         } else if (id == R.id.logout) {
-                            Toasty.info(getApplicationContext(), "Log out clicked", Toasty.LENGTH_SHORT).show();
+                            logOut(); // call logout
                         }
                         drawerLayout.closeDrawer(GravityCompat.START);
                         return true;
                     }
                 });
+    }
+
+    public void logOut() {
+        Constants.LoggedInUser = null;
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
+        // Apply transition animation
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+        finish(); // Optional: If you want to explicitly finish the current activity
     }
 
     public void setUpBottomNavigation() {
@@ -117,7 +167,7 @@ public class DashboardActivity extends AppCompatActivity {
         ImageButton copyButton = headerView.findViewById(R.id.copyButton);
 
         // Update with user information
-        if(Constants.LoggedInUser.getPlayer() != null){
+        if (Constants.LoggedInUser.getPlayer() != null) {
             String managerFullName = Constants.LoggedInUser.getPlayer().getFirst_name() + " " + Constants.LoggedInUser.getPlayer().getLast_name();
             nameTextView.setText(managerFullName);
             String idText = "ID : " + Constants.LoggedInUser.getPlayer().getEntry();
@@ -140,17 +190,6 @@ public class DashboardActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.tab_container, fragment)
                 .commit();
-        //        HomePageFragment_ homePageFragment = (HomePageFragment_) HomePageFragment.newInstance(10359552);
-//        FragmentUtils.replace(
-//                getSupportFragmentManager(),
-//                HomePageFragment_.builder().arg(HomePageFragment.ARG_MANAGER_ID, managerId).build(),
-//                R.id.tab_container,
-//                true,
-//                R.anim.enter_from_right, // enter
-//                R.anim.exit_to_left,      // exit
-//                R.anim.enter_from_right,   // popEnter
-//                R.anim.exit_to_left      // popExit
-//        );
     }
 
     // Method to copy the team ID to clipboard
@@ -161,15 +200,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Show a toast message indicating the text is copied
 //        Toasty.info(this, "Team ID copied to clipboard", Toasty.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 
     // Method to toggle drawer, can be called from fragments

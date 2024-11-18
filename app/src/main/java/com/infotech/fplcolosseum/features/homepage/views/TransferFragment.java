@@ -376,6 +376,7 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
         if (menuProvider != null) {
             requireActivity().removeMenuProvider(menuProvider);
         }
+        binding = null;
     }
 
     private void updateCountdown() {
@@ -1015,6 +1016,8 @@ public class TransferFragment extends Fragment implements OnPlayerClickOrDragLis
             // Access the TextViews in the Toolbar
             TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
             TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
+            teamNameTextView.setSelected(true);
+            managerNameTextView.setSelected(true);
 
             String concatenatedName = Constants.teamName + " (GW " + gameWeekNumber + ")";
             teamNameTextView.setText(concatenatedName);

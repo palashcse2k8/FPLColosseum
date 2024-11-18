@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,9 @@ import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class PointsFragment extends Fragment implements OnPlayerClickOrDragListener {
@@ -55,7 +58,9 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     HomePageSharedViewModel viewModel;
 
-    List<PlayersData> teamPlayers = new ArrayList<>();
+    @Nullable
+    private List<PlayersData> teamPlayers; // Initialize only when needed
+
     boolean isRefreshVisible = true;  // Hide refresh button
     boolean isShareVisible = true;    // Show share button
 
@@ -65,6 +70,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     private static final String ARG_ITEM_DATA = "entry_id";
     private long entry_id;
+    private Map<Long, Integer> playerPositionMap = new HashMap<>();
 
 
     public PointsFragment newInstance(long index) {
@@ -150,10 +156,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
             entry_id = args.getLong(ARG_ITEM_DATA);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-//        if (viewModel.getTeamInformationApiResultLiveData().getValue() == null || viewModel.getTeamInformationApiResultLiveData().getValue().getData() == null) {
-//            viewModel.getTeamInformation(entry_id);
-//        }
-//        viewModel.getPointsMergedData(entry_id, Constants.currentGameWeek);
+
         viewModel.getPointsMergedData(entry_id, 11);
         selectedChip = (int) Constants.currentGameWeek;
 
@@ -231,10 +234,13 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                 }
 
                 PointsMergedResponseModel myTeam = apiResponse.getData();
+//
+//
+//                setUpToolbar(selectedGameWeek);
+//
+//                addPlayers(footballFieldLayout, myTeam);
 
-                setUpToolbar(selectedGameWeek);
-
-                addPlayers(footballFieldLayout, myTeam);
+                updateUI(myTeam);
 
 //                addLeftOverLayView(myTeam);
 //                addRightOverLayView(myTeam);
@@ -244,15 +250,30 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         selectedGameWeek = Constants.currentGameWeek;
     }
 
+    // Batch UI updates
+    private void updateUI(PointsMergedResponseModel data) {
+        binding.footballFieldLayout.post(() -> {
+            binding.footballFieldLayout.removeAllViews();
+            addPlayers(binding.footballFieldLayout, data);
+            setUpToolbar(selectedGameWeek);
+        });
+    }
+
 
     private void setupChips() {
+
         for (int i = 1; i <= Constants.currentGameWeek; i++) {
             final Chip chip = new Chip(requireContext());
             chip.setText("GW " + i);
             chip.setCheckable(true);
             if (i == Constants.currentGameWeek) {
                 chip.setChecked(true);
-//                selectedChip = i;
+
+                // Scroll to the selected chip after layout is complete
+                binding.buttonScrollView.post(() -> {
+                    int chipLeft = chip.getLeft();
+                    binding.buttonScrollView.smoothScrollTo(chipLeft, 0);
+                });
             }
 
             int finalI = i;
@@ -261,8 +282,22 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                     selectedChip = finalI;
                     setUpToolbar(finalI);
                     binding.footballFieldLayout.removeAllViews();
-                    viewModel.getPointsMergedData(Constants.LoggedInUser.getPlayer().getEntry(), finalI);
+                    viewModel.getPointsMergedData(entry_id, finalI);
                     selectedGameWeek = finalI;
+
+                    // Scroll to the selected chip
+                    binding.buttonScrollView.post(() -> {
+                        int chipLeft = chip.getLeft();
+                        int chipRight = chip.getRight();
+                        int scrollViewWidth = binding.buttonScrollView.getWidth();
+                        int scrollX = binding.buttonScrollView.getScrollX();
+
+                        if (chipLeft < scrollX) {
+                            binding.buttonScrollView.smoothScrollTo(chipLeft, 0);
+                        } else if (chipRight > scrollX + scrollViewWidth) {
+                            binding.buttonScrollView.smoothScrollTo(chipRight - scrollViewWidth, 0);
+                        }
+                    });
                 }
             });
             binding.buttonGroup.addView(chip);
@@ -295,6 +330,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         }
     }
 
+
     // Method to reset chip selection to a specific game week
     private void resetChipSelection(int gameWeek) {
         ChipGroup chipGroup = binding.buttonGroup;
@@ -319,6 +355,8 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
             // Access the TextViews in the Toolbar
             TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
             TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
+            teamNameTextView.setSelected(true);
+            managerNameTextView.setSelected(true);
 
             String concatenatedName = viewModel.getTeamInformationApiResultLiveData().getValue().getData().getName() + " (GW " + gameWeekNumber + ")";
             teamNameTextView.setText(concatenatedName);
@@ -424,6 +462,9 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     private void updateTeamPlayers(ArrayList<Picks> picks, GameWeekLivePointsResponseModel gameWeekLivePointsResponseModel) {
 
+        Objects.requireNonNull(picks, "Picks cannot be null");
+        Objects.requireNonNull(gameWeekLivePointsResponseModel, "LivePoints cannot be null");
+
         this.teamPlayers = new ArrayList<>();
         for (Picks myTeamPicks : picks) {
             PlayersData playersData = deepCopyPlayer(Constants.playerMap.get(myTeamPicks.getElement()));
@@ -454,124 +495,143 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     private void addPlayers(GridLayout footballFieldLayout, PointsMergedResponseModel myTeamMergedResponseModel) {
 
-        updateTeamPlayers(myTeamMergedResponseModel.getGameWeekPicksModel().getPicks(), myTeamMergedResponseModel.getGameWeekLivePointsResponseModel());
-
-        substitutePlayer(myTeamMergedResponseModel.getGameWeekPicksModel().getAutomatic_subs());
-
-        List<PlayersData> defenders = new ArrayList<>();
-        List<PlayersData> midfielders = new ArrayList<>();
-        List<PlayersData> forwards = new ArrayList<>();
-
-        for (int i = 1; i < teamPlayers.size() - 4; i++) {
-
-            PlayersData entry = teamPlayers.get(i);
-
-            long playerType = entry.getElement_type();
-
-            if ((Objects.requireNonNull(Constants.playerTypeMap.get(playerType)).getSingular_name_short().equalsIgnoreCase("DEF"))) {
-                defenders.add(entry);
-            } else if (Objects.requireNonNull(Constants.playerTypeMap.get(playerType)).getSingular_name_short().equalsIgnoreCase("MID")) {
-                midfielders.add(entry);
-            } else if (Objects.requireNonNull(Constants.playerTypeMap.get(playerType)).getSingular_name_short().equalsIgnoreCase("FWD")) {
-                forwards.add(entry);
-            } else {
-                Log.d(Constants.LOG_TAG, "type not defined");
+        try {
+            if (myTeamMergedResponseModel == null || footballFieldLayout == null) {
+                Log.e(Constants.LOG_TAG, "Null parameters in addPlayers");
+                return;
             }
+            // ... rest of the method
+
+            updateTeamPlayers(myTeamMergedResponseModel.getGameWeekPicksModel().getPicks(), myTeamMergedResponseModel.getGameWeekLivePointsResponseModel());
+
+            initializePlayerPositionMap(); // initialize the teamPlayer map for later look up
+
+            substitutePlayer(myTeamMergedResponseModel.getGameWeekPicksModel().getAutomatic_subs());
+
+            List<PlayersData> defenders = new ArrayList<>();
+            List<PlayersData> midfielders = new ArrayList<>();
+            List<PlayersData> forwards = new ArrayList<>();
+
+            for (int i = 1; i < teamPlayers.size() - 4; i++) {
+
+                PlayersData entry = teamPlayers.get(i);
+
+                long playerType = entry.getElement_type();
+
+                if ((Objects.requireNonNull(Constants.playerTypeMap.get(playerType)).getSingular_name_short().equalsIgnoreCase("DEF"))) {
+                    defenders.add(entry);
+                } else if (Objects.requireNonNull(Constants.playerTypeMap.get(playerType)).getSingular_name_short().equalsIgnoreCase("MID")) {
+                    midfielders.add(entry);
+                } else if (Objects.requireNonNull(Constants.playerTypeMap.get(playerType)).getSingular_name_short().equalsIgnoreCase("FWD")) {
+                    forwards.add(entry);
+                } else {
+                    Log.d(Constants.LOG_TAG, "type not defined");
+                }
+            }
+
+            //Adding players to the ui
+
+            addPlayerNew(teamPlayers.get(0), 0, 2, footballFieldLayout); // playing goalkeeper
+
+            // formation for mid defenders
+            if (defenders.size() == 3) { // Adding players for a 3-x-x formation (adjust positions based on your layout)
+                addPlayerNew(defenders.get(0), 1, 1, footballFieldLayout);
+                addPlayerNew(defenders.get(1), 1, 2, footballFieldLayout);
+                addPlayerNew(defenders.get(2), 1, 3, footballFieldLayout);
+
+            } else if (defenders.size() == 4) { // Adding players for a 4-x-x formation (adjust positions based on your layout)
+                addPlayerNew(defenders.get(0), 1, 0, footballFieldLayout);
+                addPlayerNew(defenders.get(1), 1, 1, footballFieldLayout);
+                addPlayerNew(defenders.get(2), 1, 3, footballFieldLayout);
+                addPlayerNew(defenders.get(3), 1, 4, footballFieldLayout);
+
+            } else if (defenders.size() == 5) { // Adding players for a 5-x-x formation (adjust positions based on your layout)
+                addPlayerNew(defenders.get(0), 1, 0, footballFieldLayout);
+                addPlayerNew(defenders.get(1), 1, 1, footballFieldLayout);
+                addPlayerNew(defenders.get(2), 1, 2, footballFieldLayout);
+                addPlayerNew(defenders.get(3), 1, 3, footballFieldLayout);
+                addPlayerNew(defenders.get(4), 1, 4, footballFieldLayout);
+            } else {
+                Log.d(Constants.LOG_TAG, "Unknown Formation");
+            }
+
+            // formation for mid fielders
+            if (midfielders.size() == 2) {
+                addPlayerNew(midfielders.get(0), 2, 1, footballFieldLayout);
+                addPlayerNew(midfielders.get(1), 2, 3, footballFieldLayout);
+
+            } else if (midfielders.size() == 3) {
+                addPlayerNew(midfielders.get(0), 2, 1, footballFieldLayout);
+                addPlayerNew(midfielders.get(1), 2, 2, footballFieldLayout);
+                addPlayerNew(midfielders.get(2), 2, 3, footballFieldLayout);
+
+            } else if (midfielders.size() == 4) {
+                addPlayerNew(midfielders.get(0), 2, 0, footballFieldLayout);
+                addPlayerNew(midfielders.get(1), 2, 1, footballFieldLayout);
+                addPlayerNew(midfielders.get(2), 2, 3, footballFieldLayout);
+                addPlayerNew(midfielders.get(3), 2, 4, footballFieldLayout);
+
+            } else if (midfielders.size() == 5) {
+                addPlayerNew(midfielders.get(0), 2, 0, footballFieldLayout);
+                addPlayerNew(midfielders.get(1), 2, 1, footballFieldLayout);
+                addPlayerNew(midfielders.get(2), 2, 2, footballFieldLayout);
+                addPlayerNew(midfielders.get(3), 2, 3, footballFieldLayout);
+                addPlayerNew(midfielders.get(4), 2, 4, footballFieldLayout);
+            } else {
+                Log.d(Constants.LOG_TAG, "Unknown Formation");
+            }
+
+
+            // formation for forwards
+            if (forwards.size() == 1) {
+                addPlayerNew(forwards.get(0), 3, 3, footballFieldLayout);
+
+            } else if (forwards.size() == 2) {
+                addPlayerNew(forwards.get(0), 3, 1, footballFieldLayout);
+                addPlayerNew(forwards.get(1), 3, 3, footballFieldLayout);
+
+            } else if (forwards.size() == 3) {
+                addPlayerNew(forwards.get(0), 3, 1, footballFieldLayout);
+                addPlayerNew(forwards.get(1), 3, 2, footballFieldLayout);
+                addPlayerNew(forwards.get(2), 3, 3, footballFieldLayout);
+            } else {
+                Log.d(Constants.LOG_TAG, "Unknown Formation");
+            }
+
+            addPlayerNew(teamPlayers.get(11), 4, 0, footballFieldLayout); // bench goal keeper
+            addPlayerNew(teamPlayers.get(12), 4, 2, footballFieldLayout); // first bench
+            addPlayerNew(teamPlayers.get(13), 4, 3, footballFieldLayout); // second bench
+            addPlayerNew(teamPlayers.get(14), 4, 4, footballFieldLayout); // third bench
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG, "Error adding players", e);
+            UIUtils.toast(requireContext(), "Error setting up team", ToastLevel.ERROR);
         }
-
-        //Adding players to the ui
-
-        addPlayerNew(teamPlayers.get(0), 0, 2, footballFieldLayout); // playing goalkeeper
-
-        // formation for mid defenders
-        if (defenders.size() == 3) { // Adding players for a 3-x-x formation (adjust positions based on your layout)
-            addPlayerNew(defenders.get(0), 1, 1, footballFieldLayout);
-            addPlayerNew(defenders.get(1), 1, 2, footballFieldLayout);
-            addPlayerNew(defenders.get(2), 1, 3, footballFieldLayout);
-
-        } else if (defenders.size() == 4) { // Adding players for a 4-x-x formation (adjust positions based on your layout)
-            addPlayerNew(defenders.get(0), 1, 0, footballFieldLayout);
-            addPlayerNew(defenders.get(1), 1, 1, footballFieldLayout);
-            addPlayerNew(defenders.get(2), 1, 3, footballFieldLayout);
-            addPlayerNew(defenders.get(3), 1, 4, footballFieldLayout);
-
-        } else if (defenders.size() == 5) { // Adding players for a 5-x-x formation (adjust positions based on your layout)
-            addPlayerNew(defenders.get(0), 1, 0, footballFieldLayout);
-            addPlayerNew(defenders.get(1), 1, 1, footballFieldLayout);
-            addPlayerNew(defenders.get(2), 1, 2, footballFieldLayout);
-            addPlayerNew(defenders.get(3), 1, 3, footballFieldLayout);
-            addPlayerNew(defenders.get(4), 1, 4, footballFieldLayout);
-        } else {
-            Log.d(Constants.LOG_TAG, "Unknown Formation");
-        }
-
-        // formation for mid fielders
-        if (midfielders.size() == 2) {
-            addPlayerNew(midfielders.get(0), 2, 1, footballFieldLayout);
-            addPlayerNew(midfielders.get(1), 2, 3, footballFieldLayout);
-
-        } else if (midfielders.size() == 3) {
-            addPlayerNew(midfielders.get(0), 2, 1, footballFieldLayout);
-            addPlayerNew(midfielders.get(1), 2, 2, footballFieldLayout);
-            addPlayerNew(midfielders.get(2), 2, 3, footballFieldLayout);
-
-        } else if (midfielders.size() == 4) {
-            addPlayerNew(midfielders.get(0), 2, 0, footballFieldLayout);
-            addPlayerNew(midfielders.get(1), 2, 1, footballFieldLayout);
-            addPlayerNew(midfielders.get(2), 2, 3, footballFieldLayout);
-            addPlayerNew(midfielders.get(3), 2, 4, footballFieldLayout);
-
-        } else if (midfielders.size() == 5) {
-            addPlayerNew(midfielders.get(0), 2, 0, footballFieldLayout);
-            addPlayerNew(midfielders.get(1), 2, 1, footballFieldLayout);
-            addPlayerNew(midfielders.get(2), 2, 2, footballFieldLayout);
-            addPlayerNew(midfielders.get(3), 2, 3, footballFieldLayout);
-            addPlayerNew(midfielders.get(4), 2, 4, footballFieldLayout);
-        } else {
-            Log.d(Constants.LOG_TAG, "Unknown Formation");
-        }
-
-
-        // formation for forwards
-        if (forwards.size() == 1) {
-            addPlayerNew(forwards.get(0), 3, 3, footballFieldLayout);
-
-        } else if (forwards.size() == 2) {
-            addPlayerNew(forwards.get(0), 3, 1, footballFieldLayout);
-            addPlayerNew(forwards.get(1), 3, 3, footballFieldLayout);
-
-        } else if (forwards.size() == 3) {
-            addPlayerNew(forwards.get(0), 3, 1, footballFieldLayout);
-            addPlayerNew(forwards.get(1), 3, 2, footballFieldLayout);
-            addPlayerNew(forwards.get(2), 3, 3, footballFieldLayout);
-        } else {
-            Log.d(Constants.LOG_TAG, "Unknown Formation");
-        }
-
-        addPlayerNew(teamPlayers.get(11), 4, 0, footballFieldLayout); // bench goal keeper
-        addPlayerNew(teamPlayers.get(12), 4, 2, footballFieldLayout); // first bench
-        addPlayerNew(teamPlayers.get(13), 4, 3, footballFieldLayout); // second bench
-        addPlayerNew(teamPlayers.get(14), 4, 4, footballFieldLayout); // third bench
     }
 
     private void substitutePlayer(ArrayList<AutomaticSubs> automaticSubs) {
 //        printTeamPlayers(this.teamPlayers);
         for (AutomaticSubs sub : automaticSubs) {
-            int fromPosition = getPlayerPosition(sub.getElement_in());
-            int toPosition = getPlayerPosition(sub.getElement_out());
+            int fromPosition = Objects.requireNonNull(playerPositionMap.get(sub.getElement_in()));
+            int toPosition = Objects.requireNonNull(playerPositionMap.get(sub.getElement_out()));
             this.teamPlayers.get(fromPosition).setSubstitute_number(1);
             this.teamPlayers.get(toPosition).setSubstitute_number(1);
         }
 //        printTeamPlayers(this.teamPlayers);
     }
 
-    private int getPlayerPosition(long playerId) {
-        for (int i = 0; i < teamPlayers.size(); i++) {
-            if (teamPlayers.get(i).getId() == playerId) {
-                return i;
-            }
+//    private int getPlayerPosition(long playerId) {
+//        for (int i = 0; i < teamPlayers.size(); i++) {
+//            if (teamPlayers.get(i).getId() == playerId) {
+//                return i;
+//            }
+//        }
+//        return -1; // Return -1 if the player is not found
+//    }
+
+    private void initializePlayerPositionMap() {
+        for (int i = 0; i < Objects.requireNonNull(teamPlayers).size(); i++) {
+            playerPositionMap.put(teamPlayers.get(i).getId(), i);
         }
-        return -1; // Return -1 if the player is not found
     }
 
     public void addPlayerNew(PlayersData player, int row, int column, GridLayout footballFieldLayout) {
@@ -692,5 +752,14 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         if (menuProvider != null) {
             requireActivity().removeMenuProvider(menuProvider);
         }
+
+        binding = null;
+        cleanupResources();
     }
+
+    private void cleanupResources() {
+        teamPlayers = null;
+        playerPositionMap.clear();
+    }
+
 }

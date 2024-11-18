@@ -249,8 +249,10 @@ public class LoginFragment extends Fragment {
 
 
         Intent myIntent = new Intent(requireActivity(), DashboardActivity.class);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         myIntent.putExtra("managerID", managerID); //Optional parameters
         startActivity(myIntent);
+        requireActivity().finish();
     }
 
     public void gotoManagerActivity(long managerID) {

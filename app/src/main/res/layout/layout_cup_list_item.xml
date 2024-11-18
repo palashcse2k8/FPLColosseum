@@ -20,6 +20,13 @@
                 android:maxLines="1"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
+                android:textDirection="ltr"
+                android:textAlignment="viewStart"
+                android:layoutDirection="ltr"
+                android:singleLine="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:scrollHorizontally="true"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
 
 

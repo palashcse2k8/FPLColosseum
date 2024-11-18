@@ -89,6 +89,7 @@ public class ClassicLeagueListAdapter extends RecyclerView.Adapter<ClassicLeague
             } else {
                 mBinding.leagueRank.setText(String.valueOf(leagueDataModel.getEntry_rank()));
             }
+            mBinding.leagueName.setSelected(true);
 
             mBinding.leagueName.setText(leagueDataModel.getName());
 

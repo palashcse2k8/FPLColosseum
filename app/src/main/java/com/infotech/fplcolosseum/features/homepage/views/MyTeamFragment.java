@@ -215,6 +215,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
         if (menuProvider != null) {
             requireActivity().removeMenuProvider(menuProvider);
         }
+
+        binding = null;
     }
 
     private void handleUndoClick() {
@@ -670,6 +672,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
             // Access the TextViews in the Toolbar
             TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
             TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
+            teamNameTextView.setSelected(true);
+            managerNameTextView.setSelected(true);
 
             String concatenatedName = Constants.teamName + " (GW " + gameWeekNumber + ")";
             teamNameTextView.setText(concatenatedName);

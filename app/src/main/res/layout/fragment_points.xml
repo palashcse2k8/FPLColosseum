@@ -59,6 +59,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:scrollbars="none"
+                    android:layout_marginHorizontal="10dp"
                     app:layout_constraintStart_toEndOf="@id/buttonPrevious"
                     app:layout_constraintEnd_toStartOf="@id/buttonNext"
                     app:layout_constraintTop_toTopOf="parent"
@@ -70,7 +71,7 @@
                         android:layout_height="wrap_content"
                         app:singleSelection="true"
                         app:selectionRequired="true"
-                        android:layout_gravity="center_horizontal"
+
                         app:chipSpacingHorizontal="4dp">
 
 
