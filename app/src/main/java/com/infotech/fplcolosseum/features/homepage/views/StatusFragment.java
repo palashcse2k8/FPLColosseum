@@ -59,12 +59,23 @@ public class StatusFragment extends Fragment {
 
     private MenuProvider menuProvider;
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentStatusBinding.inflate(inflater, container, false);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-        sharedViewModel.getStatusMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
+
+        if (sharedViewModel.getStatusMergedResponseLiveData().getValue() == null || sharedViewModel.getStatusMergedResponseLiveData().getValue().getData() == null) {
+            sharedViewModel.getStatusMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
+        }
+
         binding.setGameWeekEventIndex(Constants.currentGameWeek);
         binding.setHomePageViewModel(sharedViewModel);
         binding.setLifecycleOwner(this);
@@ -207,7 +218,7 @@ public class StatusFragment extends Fragment {
     private void updateBestClassicLeagueRecyclerView(List<BestLeagueDataModel> bestLeagueDataModels) {
 
         binding.bestLeaguesTableHeader.layoutBestLeagueItem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.accent));
-        BestLeaguesAdapter bestLeaguesAdapter = new BestLeaguesAdapter(bestLeagueDataModels.subList(0,5));
+        BestLeaguesAdapter bestLeaguesAdapter = new BestLeaguesAdapter(bestLeagueDataModels.subList(0, 5));
         binding.bestLeaguesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.bestLeaguesRecyclerView.setAdapter(bestLeaguesAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
@@ -224,7 +235,7 @@ public class StatusFragment extends Fragment {
     private void updateMostValuableTeamRecyclerView(List<ValuableTeamDataModel> valuableTeamDataModels) {
 
         binding.mostValuableTableHeader.layoutBestLeagueItem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.accent));
-        MostValuableTeamsAdapter valuableTeamsAdapter= new MostValuableTeamsAdapter(valuableTeamDataModels.subList(0,5));
+        MostValuableTeamsAdapter valuableTeamsAdapter = new MostValuableTeamsAdapter(valuableTeamDataModels.subList(0, 5));
         binding.mostValuableTeamRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.mostValuableTeamRecyclerView.setAdapter(valuableTeamsAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
@@ -240,37 +251,37 @@ public class StatusFragment extends Fragment {
 
     private void updateGameWeekSummary(long gameWeek) {
 
-       GameWeekEvent gameWeekEvent = Constants.GameWeekStaticData.getEvents().get((int)gameWeek-1);
-       binding.gameWeekSummaryMostSelectedTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_selected())).getWeb_name());
-       binding.gameWeekSummaryMostCaptainTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_captained())).getWeb_name());
-       binding.gameWeekSummaryMostViceCaptainTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_vice_captained())).getWeb_name());
-       binding.gameWeekSummaryMostTransferredInTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_transferred_in())).getWeb_name());
-       binding.gameWeekSummaryTransferMadeTV.setText(String.valueOf(gameWeekEvent.getTransfers_made()));
+        GameWeekEvent gameWeekEvent = Constants.GameWeekStaticData.getEvents().get((int) gameWeek - 1);
+        binding.gameWeekSummaryMostSelectedTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_selected())).getWeb_name());
+        binding.gameWeekSummaryMostCaptainTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_captained())).getWeb_name());
+        binding.gameWeekSummaryMostViceCaptainTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_vice_captained())).getWeb_name());
+        binding.gameWeekSummaryMostTransferredInTV.setText(Objects.requireNonNull(Constants.playerMap.get(gameWeekEvent.getMost_transferred_in())).getWeb_name());
+        binding.gameWeekSummaryTransferMadeTV.setText(String.valueOf(gameWeekEvent.getTransfers_made()));
 
-       Optional<Long> wildcardPlays = gameWeekEvent.getChip_plays().stream()
+        Optional<Long> wildcardPlays = gameWeekEvent.getChip_plays().stream()
                 .filter(chip -> Chips.WC.getShortName().equalsIgnoreCase(chip.getChip_name()))
                 .map(ChipsPlayedInfo::getNum_played)
                 .findFirst();
 
-       binding.gameWeekSummaryWCTV.setText(String.valueOf(wildcardPlays.isPresent()? wildcardPlays.get() : "0"));
+        binding.gameWeekSummaryWCTV.setText(String.valueOf(wildcardPlays.isPresent() ? wildcardPlays.get() : "0"));
 
-       Optional<Long> bbPlays = gameWeekEvent.getChip_plays().stream()
+        Optional<Long> bbPlays = gameWeekEvent.getChip_plays().stream()
                 .filter(chip -> Chips.BB.getShortName().equalsIgnoreCase(chip.getChip_name()))
                 .map(ChipsPlayedInfo::getNum_played)
                 .findFirst();
-        binding.gameWeekSummaryBBTV.setText(String.valueOf(bbPlays.isPresent()? bbPlays.get() : "0"));
+        binding.gameWeekSummaryBBTV.setText(String.valueOf(bbPlays.isPresent() ? bbPlays.get() : "0"));
 
         Optional<Long> fhPlays = gameWeekEvent.getChip_plays().stream()
                 .filter(chip -> Chips.FH.getShortName().equalsIgnoreCase(chip.getChip_name()))
                 .map(ChipsPlayedInfo::getNum_played)
                 .findFirst();
-        binding.gameWeekSummaryFHTV.setText(String.valueOf(fhPlays.isPresent()? fhPlays.get() : "0"));
+        binding.gameWeekSummaryFHTV.setText(String.valueOf(fhPlays.isPresent() ? fhPlays.get() : "0"));
 
         Optional<Long> tcPlays = gameWeekEvent.getChip_plays().stream()
                 .filter(chip -> Chips.TC.getShortName().equalsIgnoreCase(chip.getChip_name()))
                 .map(ChipsPlayedInfo::getNum_played)
                 .findFirst();
-        binding.gameWeekSummaryTCTV.setText(String.valueOf(tcPlays.isPresent()? tcPlays.get() : "0"));
+        binding.gameWeekSummaryTCTV.setText(String.valueOf(tcPlays.isPresent() ? tcPlays.get() : "0"));
 
         binding.gameWeekAveragePointTV.setText(String.valueOf(gameWeekEvent.getAverage_entry_score()));
         binding.gameWeekMaximumPointTV.setText(String.valueOf(gameWeekEvent.getHighest_score()));
@@ -283,8 +294,8 @@ public class StatusFragment extends Fragment {
         for (Status status : gameWeekStatus.getStatus()) {
             View itemView = LayoutInflater.from(getContext()).inflate(R.layout.layout_league_table_status, binding.layoutMatchDayStatus, false);
             ((TextView) itemView.findViewById(R.id.statusDayTV)).setText(convertDateToStringFormat(status.getDate()));
-            ((TextView) itemView.findViewById(R.id.statusMatchTV)).setText(status.getPoints().equalsIgnoreCase("r")? "Confirmed" : "Not Confirmed");
-            ((TextView) itemView.findViewById(R.id.statusBonusTV)).setText((status.getBonus_added()? "Added": "Not Added"));
+            ((TextView) itemView.findViewById(R.id.statusMatchTV)).setText(status.getPoints().equalsIgnoreCase("r") ? "Confirmed" : "Not Confirmed");
+            ((TextView) itemView.findViewById(R.id.statusBonusTV)).setText((status.getBonus_added() ? "Added" : "Not Added"));
 
             binding.layoutMatchDayStatus.addView(itemView);
         }
@@ -317,7 +328,7 @@ public class StatusFragment extends Fragment {
         requireActivity().addMenuProvider(menuProvider, getViewLifecycleOwner());
     }
 
-    public void handleRefreshClick(){
+    public void handleRefreshClick() {
         sharedViewModel.getStatusMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
     }
 

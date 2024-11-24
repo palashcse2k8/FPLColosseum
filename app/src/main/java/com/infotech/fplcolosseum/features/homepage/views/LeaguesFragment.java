@@ -66,6 +66,7 @@ public class LeaguesFragment extends Fragment {
         // Initialize fragments early
         leagueListFragment = new LeagueListFragment();
         cupListFragment = new CupListFragment();
+        setRetainInstance(true);
     }
 
     @Nullable

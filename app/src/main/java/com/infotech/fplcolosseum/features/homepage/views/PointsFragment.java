@@ -157,7 +157,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
 
-        viewModel.getPointsMergedData(entry_id, 11);
+        viewModel.getPointsMergedData(entry_id, Constants.currentGameWeek);
         selectedChip = (int) Constants.currentGameWeek;
 
         setRetainInstance(true);
@@ -493,26 +493,26 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         }
     }
 
-    private void addPlayers(GridLayout footballFieldLayout, PointsMergedResponseModel myTeamMergedResponseModel) {
+    private void addPlayers(GridLayout footballFieldLayout, PointsMergedResponseModel pointsMergedResponseModel) {
 
         try {
-            if (myTeamMergedResponseModel == null || footballFieldLayout == null) {
+            if (pointsMergedResponseModel == null || footballFieldLayout == null) {
                 Log.e(Constants.LOG_TAG, "Null parameters in addPlayers");
                 return;
             }
             // ... rest of the method
 
-            updateTeamPlayers(myTeamMergedResponseModel.getGameWeekPicksModel().getPicks(), myTeamMergedResponseModel.getGameWeekLivePointsResponseModel());
+            updateTeamPlayers(pointsMergedResponseModel.getGameWeekPicksModel().getPicks(), pointsMergedResponseModel.getGameWeekLivePointsResponseModel());
 
             initializePlayerPositionMap(); // initialize the teamPlayer map for later look up
 
-            substitutePlayer(myTeamMergedResponseModel.getGameWeekPicksModel().getAutomatic_subs());
+            substitutePlayer(pointsMergedResponseModel.getGameWeekPicksModel().getAutomatic_subs());
 
             List<PlayersData> defenders = new ArrayList<>();
             List<PlayersData> midfielders = new ArrayList<>();
             List<PlayersData> forwards = new ArrayList<>();
 
-            for (int i = 1; i < teamPlayers.size() - 4; i++) {
+            for (int i = 1; i < Objects.requireNonNull(teamPlayers).size() - 4; i++) {
 
                 PlayersData entry = teamPlayers.get(i);
 
@@ -613,6 +613,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         for (AutomaticSubs sub : automaticSubs) {
             int fromPosition = Objects.requireNonNull(playerPositionMap.get(sub.getElement_in()));
             int toPosition = Objects.requireNonNull(playerPositionMap.get(sub.getElement_out()));
+            assert this.teamPlayers != null;
             this.teamPlayers.get(fromPosition).setSubstitute_number(1);
             this.teamPlayers.get(toPosition).setSubstitute_number(1);
         }

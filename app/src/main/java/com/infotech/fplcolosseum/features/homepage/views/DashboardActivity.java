@@ -40,6 +40,8 @@ public class DashboardActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     NavigationView navigationView;
 
+    private Fragment homeFragment, statusFragment, fixtureFragment;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +68,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Initialize the OnBackPressedDispatcher
         addBackPressDispatcher();
+
+        // Initialize home fragment only if it's a new instance
+        if (savedInstanceState == null) {
+            homeFragment = HomePageFragment.newInstance(managerId);
+            loadFragment(homeFragment);
+        }
     }
 
     public void addBackPressDispatcher() {
@@ -140,18 +148,35 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Handle BottomNavigationView item clicks
         bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+
             if (item.getItemId() == R.id.navigation_home) {
-                loadFragment(HomePageFragment.newInstance(managerId));
-                return true;
+                // Reuse existing home fragment instance
+                if (homeFragment == null) {
+                    homeFragment = HomePageFragment.newInstance(managerId);
+                }
+                selectedFragment = homeFragment;
             } else if (item.getItemId() == R.id.navigation_fixture) {
-                loadFragment(new FixturesFragment());
-                return true;
+
+                // Reuse existing home fragment instance
+                if (fixtureFragment == null) {
+                    fixtureFragment = new FixturesFragment();
+                }
+
+                selectedFragment = fixtureFragment;
             } else if (item.getItemId() == R.id.navigation_status) {
-                loadFragment(new StatusFragment());
-                return true;
+                // Reuse existing home fragment instance
+                if (statusFragment == null) {
+                    statusFragment = new StatusFragment();
+                }
+
+                selectedFragment = statusFragment;
             } else {
                 return false;
             }
+
+            loadFragment(selectedFragment);
+            return true;
         });
     }
 

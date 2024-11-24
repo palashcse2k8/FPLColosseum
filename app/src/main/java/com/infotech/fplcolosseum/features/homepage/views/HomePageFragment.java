@@ -204,6 +204,8 @@ public class HomePageFragment extends Fragment {
     HomePageSharedViewModel viewModel;
     private Toolbar currentToolbar;
 
+    private int lastSelectedTab = 0;
+
     List<Toolbar> toolbarList = new ArrayList<>();
 
     private long managerId;
@@ -223,14 +225,30 @@ public class HomePageFragment extends Fragment {
             managerId = getArguments().getLong(ARG_MANAGER_ID);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-        viewModel.getMyTeamMergedData(managerId);
+        if(viewModel.getMyTeamMergedResponseLiveData().getValue() == null || viewModel.getMyTeamMergedResponseLiveData().getValue().getData() == null){
+            viewModel.getMyTeamMergedData(managerId);
+        }
 
+        setRetainInstance(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save the current tab position
+        outState.putInt("selected_tab", lastSelectedTab);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentHomepageBinding.inflate(inflater, container, false);
+        // Restore last selected tab if saved instance exists
+        if (savedInstanceState != null) {
+            lastSelectedTab = savedInstanceState.getInt("selected_tab", 0);
+        }
+
+        setupViewPager(binding.topViewPager, binding.topTabLayout);
         return binding.getRoot();
     }
 
@@ -238,8 +256,8 @@ public class HomePageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setupViewPager(binding.topViewPager, binding.topTabLayout);
-
+        // Set the initial toolbar
+        switchToolbar(lastSelectedTab);
     }
 
     private void setupViewPager(ViewPager2 viewPager, TabLayout tabLayout) {
@@ -266,9 +284,6 @@ public class HomePageFragment extends Fragment {
         for (int i = 0; i < adapter.getItemCount(); i++) {
             createToolbarForPosition(i);
         }
-
-//         Set the initial toolbar
-        switchToolbar(0);
     }
 
     private void handleTabSelection() {
