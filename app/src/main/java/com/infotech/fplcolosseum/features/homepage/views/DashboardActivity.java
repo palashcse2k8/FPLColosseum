@@ -60,10 +60,7 @@ public class DashboardActivity extends AppCompatActivity {
         // Set up the navigation drawer
         navigationView = findViewById(R.id.nav_view);
         setUpDrawerNavigation();
-        // Set default fragment (TabLayout with ViewPager2) on initial load
-        if (savedInstanceState == null) {
-            loadFragment(HomePageFragment.newInstance(managerId));
-        }
+
         setUpBottomNavigation();
 
         // Initialize the OnBackPressedDispatcher
@@ -73,6 +70,10 @@ public class DashboardActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             homeFragment = HomePageFragment.newInstance(managerId);
             loadFragment(homeFragment);
+        } else {
+            // Retrieve existing fragment instances
+            homeFragment = getSupportFragmentManager()
+                    .findFragmentByTag("HOME_FRAGMENT");
         }
     }
 
@@ -211,9 +212,20 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void loadFragment(Fragment fragment) {
+
+        // Add tag to identify fragments
+        String tag = null;
+        if (fragment instanceof HomePageFragment) {
+            tag = "HOME_FRAGMENT";
+        } else if (fragment instanceof FixturesFragment) {
+            tag = "FIXTURES_FRAGMENT";
+        } else if (fragment instanceof StatusFragment) {
+            tag = "STATUS_FRAGMENT";
+        }
+
         // Replace the content in tab_container with the selected fragment
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.tab_container, fragment)
+                .replace(R.id.tab_container, fragment, tag)
                 .commit();
     }
 

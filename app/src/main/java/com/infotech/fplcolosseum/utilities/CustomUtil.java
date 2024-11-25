@@ -168,6 +168,7 @@ public class CustomUtil {
             teamAData.setKickOffTime(match.getKickoff_time());
             teamAData.setMinutesPlayed(match.getMinutes());
             teamAData.setFinished(match.isFinished());
+            teamAData.setStarted(match.getStarted());
             teamAData.setGoalConceded(match.getTeam_h_score());
             teamAData.setGoalScored(match.getTeam_a_score());
             teamAData.setHome(true);
@@ -181,6 +182,7 @@ public class CustomUtil {
             teamHData.setKickOffTime(match.getKickoff_time());
             teamHData.setMinutesPlayed(match.getMinutes());
             teamHData.setFinished(match.isFinished());
+            teamHData.setStarted(match.getStarted());
             teamHData.setGoalConceded(match.getTeam_a_score());
             teamHData.setGoalScored(match.getTeam_h_score());
             teamHData.setHome(false);

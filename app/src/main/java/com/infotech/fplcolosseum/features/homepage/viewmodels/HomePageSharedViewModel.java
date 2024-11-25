@@ -44,9 +44,9 @@ public class HomePageSharedViewModel extends AndroidViewModel {
     private final MediatorLiveData<ApiResponse<StatusMergedResponseModel>> statusMergedMediatorLiveData;
     CountDownLatch latch;
 
-    private MutableLiveData<String> toolbarTitle;
-    private MutableLiveData<String> toolbarSubTitle;
-    private MutableLiveData<String> previousFragment;
+    private final MutableLiveData<String> toolbarTitle;
+    private final MutableLiveData<String> toolbarSubTitle;
+    private final MutableLiveData<String> previousFragment;
 
     public HomePageSharedViewModel(@NonNull Application application) {
         super(application);

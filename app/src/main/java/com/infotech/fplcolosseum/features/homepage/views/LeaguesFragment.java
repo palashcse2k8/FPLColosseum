@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +27,7 @@ import com.infotech.fplcolosseum.utilities.Constants;
 
 public class LeaguesFragment extends Fragment {
     private FragmentLeaguesBinding binding;
-    private HomePageSharedViewModel sharedViewModel;
+    private HomePageSharedViewModel viewModel;
     private MenuProvider menuProvider;
     private Fragment activeFragment;
     private Button btnTab1, btnTab2;
@@ -76,8 +75,8 @@ public class LeaguesFragment extends Fragment {
         binding = FragmentLeaguesBinding.inflate(inflater, container, false);
 
         // Initialize ViewModel
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-        binding.setHomePageViewModel(sharedViewModel);
+        viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
+        binding.setHomePageViewModel(viewModel);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         initializeViews();
@@ -111,7 +110,7 @@ public class LeaguesFragment extends Fragment {
     }
 
     private void setupObservers() {
-        sharedViewModel.getTeamInformationApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+        viewModel.getTeamInformationApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
             if (apiResponse == null) return;
 
             switch (apiResponse.getStatus()) {
@@ -121,7 +120,7 @@ public class LeaguesFragment extends Fragment {
 
                 case SUCCESS:
                     binding.progressCircular.setVisibility(View.GONE);
-                    sharedViewModel.dataLoading.setValue(false);
+                    viewModel.dataLoading.setValue(false);
                     if (apiResponse.getData() != null) {
                         updateUI(apiResponse.getData());
                         isDataLoaded = true;
@@ -130,7 +129,7 @@ public class LeaguesFragment extends Fragment {
 
                 case ERROR:
                     binding.progressCircular.setVisibility(View.GONE);
-                    sharedViewModel.dataLoading.setValue(false);
+                    viewModel.dataLoading.setValue(false);
                     // Handle error case
                     break;
             }
@@ -192,17 +191,17 @@ public class LeaguesFragment extends Fragment {
 
     private void setUpToolbar(long gameWeekNumber) {
         Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
-        if (toolbar != null && sharedViewModel.getTeamInformationApiResultLiveData().getValue() != null) {
-            TeamInformationResponseModel data = sharedViewModel.getTeamInformationApiResultLiveData().getValue().getData();
+
+        if (toolbar != null && viewModel.getTeamInformationApiResultLiveData().getValue() != null) {
+
+            TeamInformationResponseModel data = viewModel.getTeamInformationApiResultLiveData().getValue().getData();
             if (data != null) {
-                TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
-                TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
 
                 String concatenatedName = data.getName() + " (GW " + gameWeekNumber + ")";
-                teamNameTextView.setText(concatenatedName);
+                viewModel.setToolbarTitle(concatenatedName);
 
                 String fullName = data.getPlayer_first_name() + " " + data.getPlayer_last_name();
-                managerNameTextView.setText(fullName);
+                viewModel.setToolbarSubTitle(fullName);
             }
         }
     }
@@ -247,7 +246,7 @@ public class LeaguesFragment extends Fragment {
     }
 
     private void handleRefreshClick() {
-        sharedViewModel.getTeamInformation(entry_id);
+        viewModel.getTeamInformation(entry_id);
     }
 
     @Override

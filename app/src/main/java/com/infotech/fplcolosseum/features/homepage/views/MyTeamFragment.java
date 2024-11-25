@@ -25,9 +25,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
@@ -36,6 +38,7 @@ import com.infotech.fplcolosseum.databinding.FragmentMyteamBinding;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
 import com.infotech.fplcolosseum.features.homepage.adapter.PlayerInfoUpdateListener;
 import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameChips;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
@@ -100,7 +103,8 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
 
                 for (int i = 0; i < menu.size(); i++) {
                     MenuItem item = menu.getItem(i);
-                    item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                    item.setIconTintList(ColorStateList.valueOf(
+                            ContextCompat.getColor(requireContext(), R.color.white)));
                 }
 
             }
@@ -154,7 +158,6 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-        setHasOptionsMenu(true);
         setRetainInstance(true);
     }
 
@@ -185,8 +188,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
                     viewModel.dataLoading.setValue(false);
 
                     MyTeamMergedResponseModel myTeam = apiResponse.getData();
-//                    setUpToolbar(myTeam.getGameWeekDataResponseModel()); // set up toolbar
-                    setUpToolbar(Constants.nextGameWeek);
+                    setUpToolbar(Constants.nextGameWeek); // set up toolbar
                     updateTeamPlayers(myTeam.getGameWeekMyTeamResponseModel().getPicks()); // update team player
                     updateChipsStatus(requireContext(), myTeam.getGameWeekMyTeamResponseModel().getChips()); //update chips
                     updateFieldUI(binding.footballFieldLayout); //finally update the UI
@@ -197,14 +199,12 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
                     break;
             }
         });
-
-//        viewModel.getMyTeamData(Constants.LoggedInUser.getPlayer().getEntry());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setUpToolbar(Constants.nextGameWeek);
+//        setUpToolbar(Constants.nextGameWeek);
         addMenuProvider();
     }
 
@@ -222,7 +222,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
     private void handleUndoClick() {
 
         // Logic for undo button
-        updateChipsStatus(requireContext(), viewModel.getMyTeamMergedResponseLiveData().getValue().getData().getGameWeekMyTeamResponseModel().getChips());
+        updateChipsStatus(requireContext(), Objects.requireNonNull(viewModel.getMyTeamMergedResponseLiveData().getValue()).getData().getGameWeekMyTeamResponseModel().getChips());
         this.teamPlayers = deepCopyPlayerList(this.initialTeamPlayers);
         updateFieldUI(binding.footballFieldLayout); //update the player list view
 
@@ -258,9 +258,6 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
             picks.add(pick);
         }
         updateModel.setPicks(picks);
-
-        //add chips data
-        //TODO
 
         viewModel.updateMyTeam(Constants.LoggedInUser.getPlayer().getEntry(), updateModel);
         viewModel.getMyTeamApiResultLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
@@ -335,6 +332,7 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
         viewModel.dataLoading.setValue(false);
         binding.progressCircular.setVisibility(View.GONE);
         binding.footballFieldLayout.setVisibility(View.GONE);
+        UIUtils.toast(requireContext(), error, ToastLevel.WARNING);
     }
 
     private void updateFieldUI(GridLayout footballFieldLayout) {
@@ -526,9 +524,9 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
         }
 
         //set difficulty color
-        playerView.setDifficulty1BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek).get(player.getTeam()).getDifficulty()));
-        playerView.setDifficulty2BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek + 1).get(player.getTeam()).getDifficulty()));
-        playerView.setDifficulty3BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek + 2).get(player.getTeam()).getDifficulty()));
+        playerView.setDifficulty1BackgroundColor(CustomUtil.getDifficultyLevelColor(Objects.requireNonNull(Objects.requireNonNull(Constants.fixtureData.get(Constants.nextGameWeek)).get(player.getTeam())).getDifficulty()));
+        playerView.setDifficulty2BackgroundColor(CustomUtil.getDifficultyLevelColor(Objects.requireNonNull(Objects.requireNonNull(Constants.fixtureData.get(Constants.nextGameWeek + 1)).get(player.getTeam())).getDifficulty()));
+        playerView.setDifficulty3BackgroundColor(CustomUtil.getDifficultyLevelColor(Objects.requireNonNull(Objects.requireNonNull(Constants.fixtureData.get(Constants.nextGameWeek + 2)).get(player.getTeam())).getDifficulty()));
 
 
         // Set the position of the player in the GridLayout
@@ -647,38 +645,21 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
 
     }
 
-
-//    private void setUpToolbar(GameWeekDataResponseModel responseModel) {
-//
-//        Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
-//        if (toolbar != null) {
-//            // Access the TextViews in the Toolbar
-//            TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
-//            TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
-//
-//            Constants.teamName = responseModel.getName();
-//            String concatenatedName = Constants.teamName + " (GW " + Constants.nextGameWeek + ")";
-//            teamNameTextView.setText(concatenatedName);
-//
-//            Constants.managerName = responseModel.getPlayer_first_name() + " " + responseModel.getPlayer_last_name();
-//            managerNameTextView.setText(Constants.managerName);
-//        }
-//    }
-
     private void setUpToolbar(long gameWeekNumber) {
 
         Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
-        if (toolbar != null) {
-            // Access the TextViews in the Toolbar
-            TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
-            TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
-            teamNameTextView.setSelected(true);
-            managerNameTextView.setSelected(true);
 
-            String concatenatedName = Constants.teamName + " (GW " + gameWeekNumber + ")";
-            teamNameTextView.setText(concatenatedName);
+        if (toolbar != null && viewModel.getTeamInformationApiResultLiveData().getValue() != null) {
 
-            managerNameTextView.setText(Constants.managerName);
+            TeamInformationResponseModel data = viewModel.getTeamInformationApiResultLiveData().getValue().getData();
+            if (data != null) {
+
+                String concatenatedName = data.getName() + " (GW " + gameWeekNumber + ")";
+                viewModel.setToolbarTitle(concatenatedName);
+
+                String fullName = data.getPlayer_first_name() + " " + data.getPlayer_last_name();
+                viewModel.setToolbarSubTitle(fullName);
+            }
         }
     }
 
@@ -916,65 +897,37 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
     private void showPopup(String message) {
         new AlertDialog.Builder(requireContext())
                 .setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
     private void showConfirmationDialog(final MaterialButton button, final String buttonName, String message, final ButtonStateManager.ButtonState newState) {
         new AlertDialog.Builder(requireContext())
                 .setMessage(message)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        updateButtonState(requireContext(), button, newState);
-//                        showPopup(buttonName + " state updated to " + newState);
-                        enableEditToolBar();
-                        if (newState == ButtonStateManager.ButtonState.ACTIVE) {
-                            if (buttonName.equalsIgnoreCase(Chips.BB.getDisplayName())) {
-                                activeChip = Chips.BB.getShortName();
-                            } else if (buttonName.equalsIgnoreCase(Chips.TC.getDisplayName())) {
-                                activeChip = Chips.TC.getShortName();
-                            } else {
-                                activeChip = Chips.FH.getShortName();
-                            }
-                        } else if (newState == ButtonStateManager.ButtonState.AVAILABLE) {
-                            activeChip = null;
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    updateButtonState(requireContext(), button, newState);
+                    enableEditToolBar();
+                    if (newState == ButtonStateManager.ButtonState.ACTIVE) {
+                        if (buttonName.equalsIgnoreCase(Chips.BB.getDisplayName())) {
+                            activeChip = Chips.BB.getShortName();
+                        } else if (buttonName.equalsIgnoreCase(Chips.TC.getDisplayName())) {
+                            activeChip = Chips.TC.getShortName();
                         } else {
-                            if (buttonName.equalsIgnoreCase(Chips.BB.getDisplayName())) {
-                                activeChip = Chips.BB.getShortName();
-                            } else if (buttonName.equalsIgnoreCase(Chips.TC.getDisplayName())) {
-                                activeChip = Chips.TC.getShortName();
-                            } else {
-                                activeChip = Chips.FH.getShortName();
-                            }
+                            activeChip = Chips.FH.getShortName();
+                        }
+                    } else if (newState == ButtonStateManager.ButtonState.AVAILABLE) {
+                        activeChip = null;
+                    } else {
+                        if (buttonName.equalsIgnoreCase(Chips.BB.getDisplayName())) {
+                            activeChip = Chips.BB.getShortName();
+                        } else if (buttonName.equalsIgnoreCase(Chips.TC.getDisplayName())) {
+                            activeChip = Chips.TC.getShortName();
+                        } else {
+                            activeChip = Chips.FH.getShortName();
                         }
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .show();
     }
-
-    //    private boolean isPlayerSwitchable(PlayersData data) {
-//        // Implement your logic to determine if a player is switchable
-//        return data.getPosition() < 12 && !data.isIs_captain() && !data.isIs_vice_captain();
-//    }
-//
-//    private void swapPlayers(PlayersData player1, PlayersData player2) {
-//        // Swap the players in the list
-//        int index1 = playersList.indexOf(player1);
-//        int index2 = playersList.indexOf(player2);
-//
-//        playersList.set(index1, player2);
-//        playersList.set(index2, player1);
-//    }
 }

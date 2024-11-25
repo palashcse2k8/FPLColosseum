@@ -14,6 +14,7 @@ public class OpponentData implements Serializable {
     private long goalConceded;
     private long goalScored;
     private boolean isHome;
+    private boolean isStarted;
     private ArrayList<MatchStats> stats = new ArrayList<>();
 
     public ArrayList<MatchStats> getStats() {
@@ -94,5 +95,13 @@ public class OpponentData implements Serializable {
 
     public void setHome(boolean home) {
         isHome = home;
+    }
+
+    public boolean isStarted() {
+        return isStarted;
+    }
+
+    public void setStarted(boolean started) {
+        isStarted = started;
     }
 }

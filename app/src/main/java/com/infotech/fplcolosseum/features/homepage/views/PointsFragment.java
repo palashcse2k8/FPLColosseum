@@ -14,13 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -70,7 +70,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     private static final String ARG_ITEM_DATA = "entry_id";
     private long entry_id;
-    private Map<Long, Integer> playerPositionMap = new HashMap<>();
+    private final Map<Long, Integer> playerPositionMap = new HashMap<>();
 
 
     public PointsFragment newInstance(long index) {
@@ -84,7 +84,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPointsBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
 //        Toolbar pointToolBar = requireActivity().findViewById(R.id.pointToolbar);
@@ -109,7 +109,8 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
                 for (int i = 0; i < menu.size(); i++) {
                     MenuItem item = menu.getItem(i);
-                    item.setIconTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                    item.setIconTintList(ColorStateList.valueOf(
+                            ContextCompat.getColor(requireContext(), R.color.white)));
                 }
 
             }
@@ -161,7 +162,6 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         selectedChip = (int) Constants.currentGameWeek;
 
         setRetainInstance(true);
-        setHasOptionsMenu(true);
     }
 
     private void handleRefreshClick() {
@@ -191,17 +191,15 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
         addMenuProvider();
         // Check if a chip is already selected; if so, don't reset the toolbar
-        if (selectedChip == (int) Constants.currentGameWeek) {
-            setUpToolbar(selectedChip);
-        }
+//        if (selectedChip == (int) Constants.currentGameWeek) {
+//            setUpToolbar(selectedChip);
+//        }
+        setUpToolbar(selectedChip);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // Find the GridLayout in your fragment layout
-        GridLayout footballFieldLayout = view.findViewById(R.id.footballFieldLayout);
 
         //set up swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -264,7 +262,8 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
         for (int i = 1; i <= Constants.currentGameWeek; i++) {
             final Chip chip = new Chip(requireContext());
-            chip.setText("GW " + i);
+            String text = "GW " + i;
+            chip.setText(text);
             chip.setCheckable(true);
             if (i == Constants.currentGameWeek) {
                 chip.setChecked(true);
@@ -351,21 +350,21 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
     private void setUpToolbar(long gameWeekNumber) {
 
         Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
-        if (toolbar != null && viewModel.getTeamInformationApiResultLiveData().getValue() != null && viewModel.getTeamInformationApiResultLiveData().getValue().getData() != null) {
-            // Access the TextViews in the Toolbar
-            TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
-            TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
-            teamNameTextView.setSelected(true);
-            managerNameTextView.setSelected(true);
 
-            String concatenatedName = viewModel.getTeamInformationApiResultLiveData().getValue().getData().getName() + " (GW " + gameWeekNumber + ")";
-            teamNameTextView.setText(concatenatedName);
+        if (toolbar != null && viewModel.getTeamInformationApiResultLiveData().getValue() != null) {
 
-            String fullName = viewModel.getTeamInformationApiResultLiveData().getValue().getData().getPlayer_first_name() + " " + viewModel.getTeamInformationApiResultLiveData().getValue().getData().getPlayer_last_name();
-            managerNameTextView.setText(fullName);
+            TeamInformationResponseModel data = viewModel.getTeamInformationApiResultLiveData().getValue().getData();
+
+            if (data != null) {
+
+                String concatenatedName = data.getName() + " (GW " + gameWeekNumber + ")";
+                viewModel.setToolbarTitle(concatenatedName);
+
+                String fullName = data.getPlayer_first_name() + " " + data.getPlayer_last_name();
+                viewModel.setToolbarSubTitle(fullName);
+            }
         }
     }
-
 
     private void addRightOverLayView(PointsMergedResponseModel myTeam) {
         OverlayView overlayView = new OverlayView(requireContext(), false);
@@ -485,6 +484,15 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                                 .map(element -> element.stats.total_points)
                                 .orElse(0L) // Provide a default value if no matching element is found
                 );
+
+                playersData.setStarts(
+                        gameWeekLivePointsResponseModel.elements.stream()
+                                .filter(element -> element.id == playersData.getId())
+                                .findFirst()
+                                .map(element -> element.stats.starts)
+                                .orElse(0) // Provide a default value if no matching element is found
+                );
+
                 teamPlayers.add(playersData);
             } else {
                 UIUtils.toast(requireContext(), "Player data is null please reload again", ToastLevel.WARNING);
@@ -500,8 +508,8 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                 Log.e(Constants.LOG_TAG, "Null parameters in addPlayers");
                 return;
             }
-            // ... rest of the method
 
+            // ... rest of the method
             updateTeamPlayers(pointsMergedResponseModel.getGameWeekPicksModel().getPicks(), pointsMergedResponseModel.getGameWeekLivePointsResponseModel());
 
             initializePlayerPositionMap(); // initialize the teamPlayer map for later look up
@@ -620,14 +628,6 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 //        printTeamPlayers(this.teamPlayers);
     }
 
-//    private int getPlayerPosition(long playerId) {
-//        for (int i = 0; i < teamPlayers.size(); i++) {
-//            if (teamPlayers.get(i).getId() == playerId) {
-//                return i;
-//            }
-//        }
-//        return -1; // Return -1 if the player is not found
-//    }
 
     private void initializePlayerPositionMap() {
         for (int i = 0; i < Objects.requireNonNull(teamPlayers).size(); i++) {
@@ -655,7 +655,17 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(player.getElement_type())).getSingular_name_short();
         playerView.setTeamName(teamName + " - (" + playerType + ")");
 
-        playerView.setOpponentTeamName((player.getEvent_points() * player.getMultiplier()) + "");
+        HashMap<Long, OpponentData> fixtures = (HashMap<Long, OpponentData>) Constants.fixtureData.get(Constants.nextGameWeek);
+        assert fixtures != null;
+        OpponentData opponentData = fixtures.get(player.getTeam());
+        assert opponentData != null;
+
+        if (player.getStarts() != 0) {
+            playerView.setOpponentTeamName((player.getEvent_points() * player.getMultiplier()) + "");
+        } else {
+            playerView.setOpponentTeamName("-");
+        }
+
 
         //https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
         //https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo
@@ -698,9 +708,9 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         }
 
         //set difficulty color
-        playerView.setDifficulty1BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek).get(player.getTeam()).getDifficulty()));
-        playerView.setDifficulty2BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek + 1).get(player.getTeam()).getDifficulty()));
-        playerView.setDifficulty3BackgroundColor(CustomUtil.getDifficultyLevelColor(Constants.fixtureData.get(Constants.nextGameWeek + 2).get(player.getTeam()).getDifficulty()));
+        playerView.setDifficulty1BackgroundColor(CustomUtil.getDifficultyLevelColor(Objects.requireNonNull(Objects.requireNonNull(Constants.fixtureData.get(Constants.nextGameWeek)).get(player.getTeam())).getDifficulty()));
+        playerView.setDifficulty2BackgroundColor(CustomUtil.getDifficultyLevelColor(Objects.requireNonNull(Objects.requireNonNull(Constants.fixtureData.get(Constants.nextGameWeek + 1)).get(player.getTeam())).getDifficulty()));
+        playerView.setDifficulty3BackgroundColor(CustomUtil.getDifficultyLevelColor(Objects.requireNonNull(Objects.requireNonNull(Constants.fixtureData.get(Constants.nextGameWeek + 2)).get(player.getTeam())).getDifficulty()));
 
         // Set the position of the player in the GridLayout
         playerView.setRow(row);
@@ -734,9 +744,9 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     private void showBottomSheetDialogue(PlayersData playersData) {
 
-        OpponentData matchDetails = Constants.fixtureData.get(selectedGameWeek).get(playersData.getTeam());
+        OpponentData matchDetails = Objects.requireNonNull(Constants.fixtureData.get(selectedGameWeek)).get(playersData.getTeam());
 
-        Element playerPointExplain = viewModel.getPointsMergedResponseLiveData().getValue().getData().getGameWeekLivePointsResponseModel()
+        Element playerPointExplain = Objects.requireNonNull(viewModel.getPointsMergedResponseLiveData().getValue()).getData().getGameWeekLivePointsResponseModel()
                 .elements.stream()
                 .filter(element -> element.id == playersData.getId())
                 .findFirst()
