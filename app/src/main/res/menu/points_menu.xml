@@ -16,4 +16,25 @@
         android:title="Share"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_team_of_the_week"
+        android:icon="@drawable/share_icon"
+        android:iconTint="@color/white"
+        android:title="Team of the GameWeek"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_gameWeek_history"
+        android:icon="@drawable/share_icon"
+        android:iconTint="@color/white"
+        android:title="GameWeek History"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_transfer_history"
+        android:icon="@drawable/share_icon"
+        android:iconTint="@color/white"
+        android:title="Transfer History"
+        app:showAsAction="never" />
+
 </menu>

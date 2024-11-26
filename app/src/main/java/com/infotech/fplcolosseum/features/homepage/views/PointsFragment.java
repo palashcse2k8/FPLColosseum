@@ -128,6 +128,15 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                 } else if (id == R.id.action_share) {
                     handleShareClick();
                     return true;
+                } else if (id == R.id.action_team_of_the_week) {
+                    handleShareClick();
+                    return true;
+                } else if (id == R.id.action_gameWeek_history) {
+                    handleShareClick();
+                    return true;
+                } else if (id == R.id.action_transfer_history) {
+                    gotoTransferHistory();
+                    return true;
                 }
 
                 return false;
@@ -178,10 +187,14 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         Toast.makeText(getActivity(), "Share clicked", Toast.LENGTH_SHORT).show();
     }
 
+    private void gotoTransferHistory() {
+        // Logic for share button
+        Toast.makeText(getActivity(), "Transfer history clicked", Toast.LENGTH_SHORT).show();
+    }
+
     private void resetToolBar() {
 //        isClearVisible = false;     // Hide undo button
 //        isSaveVisible = false;     // Hide save button
-
 //        requireActivity().invalidateOptionsMenu();
     }
 
