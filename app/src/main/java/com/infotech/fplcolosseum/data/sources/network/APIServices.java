@@ -133,4 +133,7 @@ public interface APIServices {
                                              @Query("page_standings") int pageStandings,
                                              @Query("page_new_entries") int pageNewEntries);
 
+    @GET("https://fantasy.premierleague.com/api/entry/{manager_id}/transfers/")      //https://fantasy.premierleague.com/api/entry/2727830/transfers/
+    Call<ResponseBody> getTransferHistory(@Path("manager_id") long manager_id);
+
 }

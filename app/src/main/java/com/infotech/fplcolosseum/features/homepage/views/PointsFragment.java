@@ -189,7 +189,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     private void gotoTransferHistory() {
         // Logic for share button
-        Toast.makeText(getActivity(), "Transfer history clicked", Toast.LENGTH_SHORT).show();
+        CustomUtil.startTransferHistoryActivity(requireActivity(), entry_id);
     }
 
     private void resetToolBar() {

@@ -1,7 +1,6 @@
 package com.infotech.fplcolosseum.utilities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,6 +29,7 @@ import com.infotech.fplcolosseum.features.homepage.models.staticdata.TeamData;
 import com.infotech.fplcolosseum.features.league_information.views.LeagueInformationActivity;
 import com.infotech.fplcolosseum.features.manager_dashboard.views.MangerDashboardActivity;
 import com.infotech.fplcolosseum.features.player_information.views.PlayerFullInformationActivity;
+import com.infotech.fplcolosseum.features.transfer_history.views.TransferHistoryActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -505,13 +505,55 @@ public class CustomUtil {
         return null;
     }
 
-    public static String getLocalTimeFromUTCDateString(String dateString) {
+    public static String getLocalTimeFromUTCString(String dateString) {
         // Define the input format
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
         inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Set to UTC
 
         // Define the output format for the local time
-        SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm", Locale.getDefault()); // Adjust the format as needed
+        SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault()); // Adjust the format as needed
+        outputFormat.setTimeZone(TimeZone.getDefault()); // Set to the system's default time zone
+
+        try {
+            // Parse the input date string to a Date object
+            Date date = inputFormat.parse(dateString);
+            // Format the date to the desired output format
+            return outputFormat.format(date); // Return only the time in HH:mm format
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static String getLocalTimeFromUTCMicroSecondString(String dateString) {
+        // Define the input format
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.ENGLISH);
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Set to UTC
+
+        // Define the output format for the local time
+        SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault()); // Adjust the format as needed
+        outputFormat.setTimeZone(TimeZone.getDefault()); // Set to the system's default time zone
+
+        try {
+            // Parse the input date string to a Date object
+            Date date = inputFormat.parse(dateString);
+            // Format the date to the desired output format
+            return outputFormat.format(date); // Return only the time in HH:mm format
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static String getLocalDateFromUTCMicroSecondsString(String dateString) {
+        // Define the input format
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.ENGLISH);
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Set to UTC
+
+        // Define the output format for the local time
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM", Locale.getDefault()); // Adjust the format as needed
         outputFormat.setTimeZone(TimeZone.getDefault()); // Set to the system's default time zone
 
         try {
@@ -535,6 +577,12 @@ public class CustomUtil {
     public static void startManagerDashboardActivity(Context activity, long managerId){
         Intent intent = new Intent(activity, MangerDashboardActivity.class);
         intent.putExtra(MangerDashboardActivity.ARG_MANAGER_ID, managerId);
+        activity.startActivity(intent);
+    }
+
+    public static void startTransferHistoryActivity(Context activity, long managerId){
+        Intent intent = new Intent(activity, TransferHistoryActivity.class);
+        intent.putExtra(TransferHistoryActivity.ARG_MANAGER_ID, managerId);
         activity.startActivity(intent);
     }
 }

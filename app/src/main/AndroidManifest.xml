@@ -44,6 +44,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".features.transfer_history.views.TransferHistoryActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

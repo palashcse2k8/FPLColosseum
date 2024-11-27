@@ -24,6 +24,7 @@ import com.infotech.fplcolosseum.features.homepage.models.status.ValuableTeamDat
 import com.infotech.fplcolosseum.features.league_information.models.LeagueInformationDataModel;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.features.player_information.models.ElementSummary;
+import com.infotech.fplcolosseum.features.transfer_history.models.TransferHistoryModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
 import java.util.HashMap;
@@ -319,6 +320,18 @@ public class UserGameWeekDataRepository {
         Call<ResponseBody> callAPI = apiServices.getLeagueInformation(leagueId, phase, pageStandings, pageNewEntries);
 
         apiData.addSource(APIHandler.makeApiCall(callAPI, LeagueInformationDataModel.class), listApiResponse -> {
+            apiData.postValue(listApiResponse);
+        });
+
+        return apiData;
+    }
+
+    public LiveData<ApiResponse<List<TransferHistoryModel>>> getTransferHistory(long managerID) {
+        MediatorLiveData<ApiResponse<List<TransferHistoryModel>>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getTransferHistory(managerID);
+
+        apiData.addSource(APIHandler.makeApiCallForList(callAPI, TransferHistoryModel.class), listApiResponse -> {
             apiData.postValue(listApiResponse);
         });
 

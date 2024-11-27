@@ -125,7 +125,7 @@ public class FixtureListAdapter extends RecyclerView.Adapter<FixtureListAdapter.
             if (matchDetails.getFinished()) {
                 scoreText = matchDetails.getTeam_h_score() + " - " + matchDetails.getTeam_a_score();
             } else {
-                scoreText = CustomUtil.getLocalTimeFromUTCDateString(matchDetails.getKickoff_time());
+                scoreText = CustomUtil.getLocalTimeFromUTCString(matchDetails.getKickoff_time());
             }
 
             scoreTV.setText(scoreText);
