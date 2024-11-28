@@ -10,6 +10,7 @@ import com.infotech.fplcolosseum.data.sources.network.APIHandler;
 import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.data.sources.network.RetroClass;
+import com.infotech.fplcolosseum.features.gameweek_history.models.GameWeekHistoryResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
@@ -332,6 +333,30 @@ public class UserGameWeekDataRepository {
         Call<ResponseBody> callAPI = apiServices.getTransferHistory(managerID);
 
         apiData.addSource(APIHandler.makeApiCallForList(callAPI, TransferHistoryModel.class), listApiResponse -> {
+            apiData.postValue(listApiResponse);
+        });
+
+        return apiData;
+    }
+
+    public LiveData<ApiResponse<List<TransferHistoryModel>>> getLatestTransferHistory(long managerID) {
+        MediatorLiveData<ApiResponse<List<TransferHistoryModel>>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getLatestTransferHistory(managerID);
+
+        apiData.addSource(APIHandler.makeApiCallForList(callAPI, TransferHistoryModel.class), listApiResponse -> {
+            apiData.postValue(listApiResponse);
+        });
+
+        return apiData;
+    }
+
+    public LiveData<ApiResponse<GameWeekHistoryResponseModel>> getGameWeekHistory(long managerID) {
+        MediatorLiveData<ApiResponse<GameWeekHistoryResponseModel>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getGameWeekHistory(managerID);
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekHistoryResponseModel.class), listApiResponse -> {
             apiData.postValue(listApiResponse);
         });
 

@@ -76,6 +76,28 @@ public class MangerDashboardActivity extends AppCompatActivity {
 
         setupViewPager(binding.viewPager, binding.tabLayout);
 
+        observeToolbarChanges();
+
+    }
+
+    private void observeToolbarChanges() {
+        // Observe toolbar title changes
+        viewModel.getToolbarTitle().observe(this, title -> {
+            if (currentToolbar != null) {
+                TextView titleView = currentToolbar.findViewById(R.id.teamName);
+                titleView.setText(title);
+                titleView.setSelected(true);
+            }
+        });
+
+        // Observe toolbar subtitle changes
+        viewModel.getToolbarSubTitle().observe(this, subtitle -> {
+            if (currentToolbar != null) {
+                TextView subtitleView = currentToolbar.findViewById(R.id.managerName);
+                subtitleView.setText(subtitle);
+                subtitleView.setSelected(true);
+            }
+        });
     }
 
 

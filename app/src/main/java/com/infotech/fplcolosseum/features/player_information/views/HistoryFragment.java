@@ -53,13 +53,6 @@ public class HistoryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(PlayerInformationViewModel.class);
-//        viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-//        viewModel.getPointsMergedData(Constants.LoggedInUser.getPlayer().getEntry(), Constants.currentGameWeek);
-//        selectedChip = (int) Constants.currentGameWeek;
-//        viewModel.getTeamCurrentGameWeekAllData(10359552);
-//        setRetainInstance(true);
-//        setHasOptionsMenu(true);
-
     }
 
     @Override

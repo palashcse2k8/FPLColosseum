@@ -136,4 +136,11 @@ public interface APIServices {
     @GET("https://fantasy.premierleague.com/api/entry/{manager_id}/transfers/")      //https://fantasy.premierleague.com/api/entry/2727830/transfers/
     Call<ResponseBody> getTransferHistory(@Path("manager_id") long manager_id);
 
+    @GET("https://fantasy.premierleague.com/api/entry/{manager_id}/transfers-latest/")          // https://fantasy.premierleague.com/api/entry/2727830/transfers-latest/
+    Call<ResponseBody> getLatestTransferHistory(@Path("manager_id") long manager_id);
+
+    @GET("https://fantasy.premierleague.com/api/entry/{manager_id}/history/")          //     https://fantasy.premierleague.com/api/entry/2727830/history/
+    Call<ResponseBody> getGameWeekHistory(@Path("manager_id") long manager_id);
+
+
 }

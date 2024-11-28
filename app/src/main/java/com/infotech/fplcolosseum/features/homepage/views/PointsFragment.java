@@ -132,7 +132,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                     handleShareClick();
                     return true;
                 } else if (id == R.id.action_gameWeek_history) {
-                    handleShareClick();
+                    gotoGameWeekHistory();
                     return true;
                 } else if (id == R.id.action_transfer_history) {
                     gotoTransferHistory();
@@ -190,6 +190,11 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
     private void gotoTransferHistory() {
         // Logic for share button
         CustomUtil.startTransferHistoryActivity(requireActivity(), entry_id);
+    }
+
+    private void gotoGameWeekHistory() {
+        // Logic for share button
+        CustomUtil.startGameWeekHistoryActivity(requireActivity(), entry_id);
     }
 
     private void resetToolBar() {
