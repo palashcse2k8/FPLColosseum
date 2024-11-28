@@ -2,8 +2,8 @@ package com.infotech.fplcolosseum.features.gameweek_history.models;
 
 public class PreviousSeasonHistoryModel {
     private String season_name;
-    private float total_points;
-    private float rank;
+    private long total_points;
+    private long rank;
 
 
     // Getter Methods
@@ -12,11 +12,11 @@ public class PreviousSeasonHistoryModel {
         return season_name;
     }
 
-    public float getTotal_points() {
+    public long getTotal_points() {
         return total_points;
     }
 
-    public float getRank() {
+    public long getRank() {
         return rank;
     }
 
@@ -26,11 +26,11 @@ public class PreviousSeasonHistoryModel {
         this.season_name = season_name;
     }
 
-    public void setTotal_points(float total_points) {
+    public void setTotal_points(long total_points) {
         this.total_points = total_points;
     }
 
-    public void setRank(float rank) {
+    public void setRank(long rank) {
         this.rank = rank;
     }
 }

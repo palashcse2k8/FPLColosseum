@@ -24,7 +24,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.TitleSmall"/>
 
             <TextView
                 android:id="@+id/overAllRank"
@@ -35,7 +35,7 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.TitleSmall"/>
 
             <TextView
                 android:id="@+id/rankChange"
@@ -46,7 +46,7 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.TitleSmall"/>
 
             <TextView
                 android:id="@+id/overAllPoints"
@@ -57,7 +57,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.TitleSmall"/>
 
             <TextView
                 android:id="@+id/gameWeekRank"
@@ -68,7 +68,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.TitleSmall"/>
 
             <TextView
                 android:id="@+id/gameWeekPoints"
@@ -79,7 +79,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.TitleSmall"/>
 
             <TextView
                 android:id="@+id/pointsOnBench"
@@ -90,7 +90,7 @@
                 android:breakStrategy="simple"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
+                style="@style/TextAppearance.Material3.TitleSmall"
                 android:textAlignment="center"/>
 
             <TextView
@@ -103,7 +103,7 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:breakStrategy="simple"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.TitleSmall"/>
 
             <TextView
                 android:id="@+id/transferCost"
@@ -114,7 +114,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.TitleSmall"/>
 
             <TextView
                 android:id="@+id/squadValue"
@@ -125,7 +125,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"/>
+                style="@style/TextAppearance.Material3.TitleSmall"/>
 
     </LinearLayout>
 

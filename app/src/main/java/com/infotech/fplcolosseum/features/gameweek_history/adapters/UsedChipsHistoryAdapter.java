@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.infotech.fplcolosseum.databinding.ActivityGameweekHistoryUsedChipsItemBinding;
 import com.infotech.fplcolosseum.databinding.ActivityGameweekHistoryUsedChipsItemHeaderBinding;
 import com.infotech.fplcolosseum.databinding.NoDataLayoutBinding;
@@ -84,6 +85,21 @@ public class UsedChipsHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        if (holder instanceof HeaderViewHolder) {
+            // Bind header
+            ((HeaderViewHolder) holder).unbind();
+        } else if (holder instanceof NoDataViewHolder) {
+            // Bind no data view
+            ((NoDataViewHolder) holder).unbind();
+        } else if (holder instanceof ItemViewHolder) {
+            // Bind regular item
+            ((ItemViewHolder) holder).unbind();
+        }
+    }
+
     // ViewHolder classes
     private static class HeaderViewHolder extends RecyclerView.ViewHolder {
         ActivityGameweekHistoryUsedChipsItemHeaderBinding mBinding;
@@ -95,6 +111,9 @@ public class UsedChipsHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         public void bind() {
             // Bind item data
+        }
+        public void unbind() {
+            mBinding = null;
         }
     }
 
@@ -109,6 +128,9 @@ public class UsedChipsHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
         public void bind(String sectionTitle) {
             mBinding.sectionText.setText(sectionTitle);
         }
+        public void unbind() {
+            mBinding = null;
+        }
     }
 
     // Regular item ViewHolder
@@ -121,11 +143,15 @@ public class UsedChipsHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         public void bind(UsedChipsModel item) {
-            mBinding.chipUsedDate.setText(CustomUtil.convertDateToDeadLine(item.getTime()));
-            mBinding.chipName.setText(String.valueOf(item.getName()));
+            mBinding.chipUsedDate.setText(CustomUtil.getDayDateMonthTimeFromUTCStringWithMicroseconds(item.getTime()));
+            String capitalizedName = item.getName().substring(0, 1).toUpperCase() + item.getName().substring(1);
+            mBinding.chipName.setText(capitalizedName);
             String chipStatus = "GW" + item.getEvent();
             mBinding.chipStatus.setText(chipStatus);
+        }
 
+        public void unbind() {
+            mBinding = null;
         }
     }
 }

@@ -18,10 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.databinding.ActivityGameweekHistoryBinding;
+import com.infotech.fplcolosseum.features.gameweek_history.adapters.PreviousSeasonHistoryAdapter;
 import com.infotech.fplcolosseum.features.gameweek_history.adapters.ThisSeasonGameWeekHistoryAdapter;
 import com.infotech.fplcolosseum.features.gameweek_history.adapters.UsedChipsHistoryAdapter;
 import com.infotech.fplcolosseum.features.gameweek_history.models.CurrentSeasonHistoryModel;
 import com.infotech.fplcolosseum.features.gameweek_history.models.GameWeekHistoryResponseModel;
+import com.infotech.fplcolosseum.features.gameweek_history.models.PreviousSeasonHistoryModel;
 import com.infotech.fplcolosseum.features.gameweek_history.models.UsedChipsModel;
 import com.infotech.fplcolosseum.features.gameweek_history.viewmodels.GameWeekHistoryViewModel;
 
@@ -37,6 +39,8 @@ public class GameWeekHistoryActivity extends AppCompatActivity {
     private GameWeekHistoryViewModel viewModel;
     ThisSeasonGameWeekHistoryAdapter thisSeasonGameWeekHistoryAdapter;
     UsedChipsHistoryAdapter usedChipsHistoryAdapter;
+
+    PreviousSeasonHistoryAdapter previousSeasonHistoryAdapter;
 
     public static final String ARG_MANAGER_ID = "managerID";
 
@@ -78,7 +82,6 @@ public class GameWeekHistoryActivity extends AppCompatActivity {
             }
         });
 
-
         // Find RecyclerView
         binding.chipUsedRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
@@ -96,6 +99,23 @@ public class GameWeekHistoryActivity extends AppCompatActivity {
             }
         });
 
+        // Find RecyclerView
+        binding.previousSeasonRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        // Create and set adapter
+        previousSeasonHistoryAdapter = new PreviousSeasonHistoryAdapter(new ArrayList<>());
+        binding.previousSeasonRecyclerView.setAdapter(previousSeasonHistoryAdapter);
+
+        // Optional: Add item decorations
+        binding.previousSeasonRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
+                                       @NonNull RecyclerView parent,
+                                       @NonNull RecyclerView.State state) {
+                outRect.bottom = 2; // Add bottom margin between items
+            }
+        });
+
 
         binding.swipeRefresh.setOnRefreshListener(() -> {
             // This method performs the actual data-refresh operation and calls
@@ -104,6 +124,8 @@ public class GameWeekHistoryActivity extends AppCompatActivity {
             // Stop the refreshing animation after the refresh operation is completed
             binding.swipeRefresh.setRefreshing(false);
         });
+
+        binding.swipeRefresh.setEnabled(false);
     }
 
     @Override
@@ -142,15 +164,22 @@ public class GameWeekHistoryActivity extends AppCompatActivity {
 
                     GameWeekHistoryResponseModel responseData = apiResponse.getData();
                     setUpToolbar();
+
                     List<CurrentSeasonHistoryModel> currentSeasonHistoryModelList = new ArrayList<>(responseData.getCurrent());
                     Collections.reverse(currentSeasonHistoryModelList);
                     thisSeasonGameWeekHistoryAdapter.updateAdapterData(currentSeasonHistoryModelList);
+//                    thisSeasonGameWeekHistoryAdapter.updateAdapterData(new ArrayList<>());
 
                     List<UsedChipsModel> usedChipsModels = new ArrayList<>(responseData.getChips());
                     Collections.reverse(usedChipsModels);
-//                    usedChipsHistoryAdapter.updateAdapterData(usedChipsModels);
-                    usedChipsHistoryAdapter.updateAdapterData(new ArrayList<>());
-//                    adapter.updateAdapterData(new ArrayList<>());
+                    usedChipsHistoryAdapter.updateAdapterData(usedChipsModels);
+//                    usedChipsHistoryAdapter.updateAdapterData(new ArrayList<>());
+
+                    List<PreviousSeasonHistoryModel> previousSeasonHistoryModelList = new ArrayList<>(responseData.getPast());
+                    Collections.reverse(previousSeasonHistoryModelList);
+                    previousSeasonHistoryAdapter.updateAdapterData(previousSeasonHistoryModelList);
+//                    thisSeasonGameWeekHistoryAdapter.updateAdapterData(new ArrayList<>());
+
                     break;
                 case ERROR:
 //                    showFailure(apiResponse.getMessage());

@@ -6,24 +6,23 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.infotech.fplcolosseum.R;
-import com.infotech.fplcolosseum.databinding.ActivityGameweekHistoryThisSeasonItemBinding;
-import com.infotech.fplcolosseum.databinding.ActivityGameweekHistoryThisSeasonItemHeaderBinding;
+import com.infotech.fplcolosseum.databinding.ActivityGameweekHistoryPreviousSeasonItemBinding;
+import com.infotech.fplcolosseum.databinding.ActivityGameweekHistoryPreviousSeasonItemHeaderBinding;
 import com.infotech.fplcolosseum.databinding.NoDataLayoutBinding;
-import com.infotech.fplcolosseum.features.gameweek_history.models.CurrentSeasonHistoryModel;
+import com.infotech.fplcolosseum.features.gameweek_history.models.PreviousSeasonHistoryModel;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 
 import java.util.List;
 
-public class ThisSeasonGameWeekHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PreviousSeasonHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_ITEM = 1;
     private static final int VIEW_TYPE_NO_DATA = 2;
 
-    private List<CurrentSeasonHistoryModel> dataList;
+    private List<PreviousSeasonHistoryModel> dataList;
     private String sectionTitle;
 
-    public ThisSeasonGameWeekHistoryAdapter(List<CurrentSeasonHistoryModel> dataList) {
+    public PreviousSeasonHistoryAdapter(List<PreviousSeasonHistoryModel> dataList) {
         this.dataList = dataList;
     }
 
@@ -47,7 +46,7 @@ public class ThisSeasonGameWeekHistoryAdapter extends RecyclerView.Adapter<Recyc
         return VIEW_TYPE_ITEM;
     }
 
-    public void updateAdapterData(List<CurrentSeasonHistoryModel> newData) {
+    public void updateAdapterData(List<PreviousSeasonHistoryModel> newData) {
 
         if (newData == null) return;
 
@@ -63,11 +62,11 @@ public class ThisSeasonGameWeekHistoryAdapter extends RecyclerView.Adapter<Recyc
 
         return switch (viewType) {
             case VIEW_TYPE_HEADER ->
-                    new HeaderViewHolder(ActivityGameweekHistoryThisSeasonItemHeaderBinding.inflate(inflater, parent, false));
+                    new HeaderViewHolder(ActivityGameweekHistoryPreviousSeasonItemHeaderBinding.inflate(inflater, parent, false));
             case VIEW_TYPE_NO_DATA ->
                     new NoDataViewHolder(NoDataLayoutBinding.inflate(inflater, parent, false));
             default ->
-                    new ItemViewHolder(ActivityGameweekHistoryThisSeasonItemBinding.inflate(inflater, parent, false));
+                new ItemViewHolder(ActivityGameweekHistoryPreviousSeasonItemBinding.inflate(inflater, parent, false));
         };
     }
 
@@ -78,14 +77,10 @@ public class ThisSeasonGameWeekHistoryAdapter extends RecyclerView.Adapter<Recyc
             ((HeaderViewHolder) holder).bind();
         } else if (holder instanceof NoDataViewHolder) {
             // Bind no data view
-            ((NoDataViewHolder) holder).bind("This Season Not Started Yet!");
+            ((NoDataViewHolder) holder).bind("No Previous History!");
         } else if (holder instanceof ItemViewHolder) {
             // Bind regular item
-
-            CurrentSeasonHistoryModel currentItem = dataList.get(position - 1);
-            CurrentSeasonHistoryModel nextItem = (position < dataList.size()) ? dataList.get(position) : null;
-
-            ((ItemViewHolder) holder).bind(currentItem, nextItem);
+            ((ItemViewHolder) holder).bind(dataList.get(position - 1));
         }
     }
 
@@ -107,9 +102,9 @@ public class ThisSeasonGameWeekHistoryAdapter extends RecyclerView.Adapter<Recyc
 
     // ViewHolder classes
     private static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        ActivityGameweekHistoryThisSeasonItemHeaderBinding mBinding;
+        ActivityGameweekHistoryPreviousSeasonItemHeaderBinding mBinding;
 
-        public HeaderViewHolder(@NonNull ActivityGameweekHistoryThisSeasonItemHeaderBinding binding) {
+        public HeaderViewHolder(@NonNull ActivityGameweekHistoryPreviousSeasonItemHeaderBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
         }
@@ -126,7 +121,6 @@ public class ThisSeasonGameWeekHistoryAdapter extends RecyclerView.Adapter<Recyc
     private static class NoDataViewHolder extends RecyclerView.ViewHolder {
 
         NoDataLayoutBinding mBinding;
-
         public NoDataViewHolder(@NonNull NoDataLayoutBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
@@ -143,41 +137,17 @@ public class ThisSeasonGameWeekHistoryAdapter extends RecyclerView.Adapter<Recyc
 
     // Regular item ViewHolder
     private static class ItemViewHolder extends RecyclerView.ViewHolder {
-        ActivityGameweekHistoryThisSeasonItemBinding mBinding;
+        ActivityGameweekHistoryPreviousSeasonItemBinding mBinding;
 
-        public ItemViewHolder(@NonNull ActivityGameweekHistoryThisSeasonItemBinding binding) {
+        public ItemViewHolder(@NonNull ActivityGameweekHistoryPreviousSeasonItemBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
         }
 
-        public void bind(CurrentSeasonHistoryModel currentItem, CurrentSeasonHistoryModel nextItem) {
-            mBinding.gameWeek.setText(CustomUtil.formatNumber(currentItem.getEvent()));
-            mBinding.overAllRank.setText(CustomUtil.formatNumber(currentItem.getOverall_rank()));
-            mBinding.overAllPoints.setText(CustomUtil.formatNumber(currentItem.getTotal_points()));
-            mBinding.gameWeekRank.setText(CustomUtil.formatNumber(currentItem.getRank()));
-            mBinding.gameWeekPoints.setText(CustomUtil.formatNumber(currentItem.getPoints()));
-            mBinding.pointsOnBench.setText(CustomUtil.formatNumber(currentItem.getPoints_on_bench()));
-            mBinding.transferMade.setText(CustomUtil.formatNumber(currentItem.getEvent_transfers()));
-            mBinding.transferCost.setText(CustomUtil.formatNumber(currentItem.getEvent_transfers_cost()));
-            mBinding.squadValue.setText(CustomUtil.convertedPrice(currentItem.getValue()));
-
-            updateRankIcon(currentItem, nextItem);
-        }
-
-        public void updateRankIcon(CurrentSeasonHistoryModel currentItem, CurrentSeasonHistoryModel nextItem){
-            // Rank change comparison
-            if (nextItem != null) {
-                if (currentItem.getOverall_rank() < nextItem.getOverall_rank()) {
-                    mBinding.rankChange.setImageResource(R.drawable.ic_up_arrow_green);
-                } else if (currentItem.getOverall_rank() > nextItem.getOverall_rank()) {
-                    mBinding.rankChange.setImageResource(R.drawable.ic_down_arrow_red);
-                } else {
-                    mBinding.rankChange.setImageResource(R.drawable.ic_unchange_rank);
-                }
-            } else {
-                // For the last item, show no change
-                mBinding.rankChange.setImageResource(R.drawable.ic_unchange_rank);
-            }
+        public void bind(PreviousSeasonHistoryModel item) {
+            mBinding.seasonName.setText(item.getSeason_name());
+            mBinding.seasonPoints.setText(CustomUtil.formatNumber(item.getTotal_points()));
+            mBinding.seasonRank.setText(CustomUtil.formatNumber(item.getRank()));
         }
 
         public void unbind() {

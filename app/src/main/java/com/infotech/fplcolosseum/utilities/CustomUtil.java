@@ -506,6 +506,27 @@ public class CustomUtil {
         return null;
     }
 
+    public static String getDayDateMonthTimeFromUTCStringWithMicroseconds(String dateString) {
+        // Define the input format
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.ENGLISH);
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Set to UTC
+
+        // Define the output format for the local time
+        SimpleDateFormat outputFormat = new SimpleDateFormat("EEE dd MMM HH:mm", Locale.getDefault()); // Adjust the format as needed
+        outputFormat.setTimeZone(TimeZone.getDefault()); // Set to the system's default time zone
+
+        try {
+            // Parse the input date string to a Date object
+            Date date = inputFormat.parse(dateString);
+            // Format the date to the desired output format
+            return outputFormat.format(date); // Return only the time in HH:mm format
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static String getLocalTimeFromUTCString(String dateString) {
         // Define the input format
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
@@ -591,5 +612,9 @@ public class CustomUtil {
         Intent intent = new Intent(activity, GameWeekHistoryActivity.class);
         intent.putExtra(GameWeekHistoryActivity.ARG_MANAGER_ID, managerId);
         activity.startActivity(intent);
+    }
+
+    public static String formatNumber(long value) {
+        return String.format(Locale.getDefault(),"%,d", value);
     }
 }

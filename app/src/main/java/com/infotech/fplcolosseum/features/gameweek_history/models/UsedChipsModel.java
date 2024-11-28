@@ -3,7 +3,7 @@ package com.infotech.fplcolosseum.features.gameweek_history.models;
 public class UsedChipsModel {
     private String name;
     private String time;
-    private float event;
+    private long event;
 
 
     // Getter Methods
@@ -16,7 +16,7 @@ public class UsedChipsModel {
         return time;
     }
 
-    public float getEvent() {
+    public long getEvent() {
         return event;
     }
 
@@ -30,7 +30,7 @@ public class UsedChipsModel {
         this.time = time;
     }
 
-    public void setEvent(float event) {
+    public void setEvent(long event) {
         this.event = event;
     }
 }

@@ -21,7 +21,7 @@
                 android:padding="4dp"
                 android:text="GW"
                 android:textAlignment="center"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.BodyMedium"/>
 
             <TextView
                 android:id="@+id/overAllRank"
@@ -30,16 +30,16 @@
                 android:padding="4dp"
                 android:text="OR"
                 android:textAlignment="textStart"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.BodyMedium"/>
 
-            <TextView
+            <ImageView
                 android:id="@+id/rankChange"
                 android:layout_width="30dp"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:padding="4dp"
-                android:text="#"
-                android:textAlignment="textStart"
-                android:textSize="@dimen/textSizeSmall"/>
+                android:layout_gravity="center"
+                android:src="@drawable/ic_up_arrow_green"
+                style="@style/TextAppearance.Material3.BodyMedium"/>
 
             <TextView
                 android:id="@+id/overAllPoints"
@@ -48,7 +48,7 @@
                 android:padding="4dp"
                 android:text="OP"
                 android:textAlignment="center"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.BodyMedium"/>
 
             <TextView
                 android:id="@+id/gameWeekRank"
@@ -57,7 +57,7 @@
                 android:padding="4dp"
                 android:text="GR"
                 android:textAlignment="center"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.BodyMedium"/>
 
             <TextView
                 android:id="@+id/gameWeekPoints"
@@ -66,7 +66,7 @@
                 android:padding="4dp"
                 android:text="GP"
                 android:textAlignment="center"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.BodyMedium"/>
 
             <TextView
                 android:id="@+id/pointsOnBench"
@@ -75,7 +75,7 @@
                 android:padding="4dp"
                 android:text="PB"
                 android:breakStrategy="simple"
-                android:textSize="@dimen/textSizeSmall"
+                style="@style/TextAppearance.Material3.BodyMedium"
                 android:textAlignment="center"/>
 
             <TextView
@@ -86,7 +86,7 @@
                 android:text="TM"
                 android:textAlignment="center"
                 android:breakStrategy="simple"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.BodyMedium"/>
 
             <TextView
                 android:id="@+id/transferCost"
@@ -95,7 +95,7 @@
                 android:padding="4dp"
                 android:text="TC"
                 android:textAlignment="center"
-                android:textSize="@dimen/textSizeSmall"/>
+                style="@style/TextAppearance.Material3.BodyMedium"/>
 
             <TextView
                 android:id="@+id/squadValue"
@@ -104,7 +104,7 @@
                 android:padding="4dp"
                 android:text="€E"
                 android:textAlignment="center"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"/>
+                style="@style/TextAppearance.Material3.BodyMedium"/>
 
     </LinearLayout>
 
