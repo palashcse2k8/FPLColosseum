@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -62,7 +63,7 @@ public class HomePageFragment extends Fragment {
             managerId = getArguments().getLong(ARG_MANAGER_ID);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
-        if(viewModel.getMyTeamMergedResponseLiveData().getValue() == null || viewModel.getMyTeamMergedResponseLiveData().getValue().getData() == null){
+        if (viewModel.getMyTeamMergedResponseLiveData().getValue() == null || viewModel.getMyTeamMergedResponseLiveData().getValue().getData() == null) {
             viewModel.getMyTeamMergedData(managerId);
         }
 
@@ -87,6 +88,7 @@ public class HomePageFragment extends Fragment {
 
         setupViewPager(binding.topViewPager, binding.topTabLayout);
         observeToolbarChanges();
+
         return binding.getRoot();
     }
 
@@ -189,12 +191,12 @@ public class HomePageFragment extends Fragment {
         TextView teamNameTextView = toolbar.findViewById(R.id.teamName);
         TextView managerNameTextView = toolbar.findViewById(R.id.managerName);
 
-        if(viewModel.getToolbarTitle() != null){
+        if (viewModel.getToolbarTitle() != null) {
             teamNameTextView.setText(viewModel.getToolbarTitle().getValue());
 
         }
 
-        if(viewModel.getToolbarSubTitle() != null){
+        if (viewModel.getToolbarSubTitle() != null) {
             managerNameTextView.setText(viewModel.getToolbarSubTitle().getValue());
             managerNameTextView.setSelected(true);
         }
@@ -244,7 +246,18 @@ public class HomePageFragment extends Fragment {
             }
         }
 
-        if(currentToolbar != null)
+        if (currentToolbar != null)
             setupPointFragmentToolbar(currentToolbar);
+    }
+
+    public boolean isAtFirstTab() {
+        return binding.topViewPager.getCurrentItem() == 0;
+    }
+
+    public void handleFragmentBackPress() {
+        if (!isAtFirstTab()) {
+            // Move to the previous tab
+            binding.topViewPager.setCurrentItem(0, true);
+        }
     }
 }

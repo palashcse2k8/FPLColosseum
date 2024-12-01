@@ -10,6 +10,7 @@ import com.infotech.fplcolosseum.data.sources.network.APIHandler;
 import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.data.sources.network.RetroClass;
+import com.infotech.fplcolosseum.features.dream_team.models.DreamTeamResponseModel;
 import com.infotech.fplcolosseum.features.gameweek_history.models.GameWeekHistoryResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
@@ -357,6 +358,30 @@ public class UserGameWeekDataRepository {
         Call<ResponseBody> callAPI = apiServices.getGameWeekHistory(managerID);
 
         apiData.addSource(APIHandler.makeApiCall(callAPI, GameWeekHistoryResponseModel.class), listApiResponse -> {
+            apiData.postValue(listApiResponse);
+        });
+
+        return apiData;
+    }
+
+    public LiveData<ApiResponse<DreamTeamResponseModel>> getDreamTeam(long gameWeek) {
+        MediatorLiveData<ApiResponse<DreamTeamResponseModel>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getDreamTeam(gameWeek);
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, DreamTeamResponseModel.class), listApiResponse -> {
+            apiData.postValue(listApiResponse);
+        });
+
+        return apiData;
+    }
+
+    public LiveData<ApiResponse<DreamTeamResponseModel>> getSeasonDreamTeam() {
+        MediatorLiveData<ApiResponse<DreamTeamResponseModel>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getSeasonDreamTeam();
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, DreamTeamResponseModel.class), listApiResponse -> {
             apiData.postValue(listApiResponse);
         });
 

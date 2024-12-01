@@ -142,5 +142,9 @@ public interface APIServices {
     @GET("https://fantasy.premierleague.com/api/entry/{manager_id}/history/")          //     https://fantasy.premierleague.com/api/entry/2727830/history/
     Call<ResponseBody> getGameWeekHistory(@Path("manager_id") long manager_id);
 
+    @GET("//https://fantasy.premierleague.com/api/dream-team/{event}/")          //https://fantasy.premierleague.com/api/dream-team/13/
+    Call<ResponseBody> getDreamTeam(@Path("event") long event);
 
+    @GET("https://fantasy.premierleague.com/api/dream-team/")          //https://fantasy.premierleague.com/api/dream-team/
+    Call<ResponseBody> getSeasonDreamTeam();
 }

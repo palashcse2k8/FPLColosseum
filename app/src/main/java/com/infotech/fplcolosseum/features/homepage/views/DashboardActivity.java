@@ -22,9 +22,12 @@ import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.infotech.fplcolosseum.MainActivity;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -77,32 +80,41 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    public void addBackPressDispatcher() {
-        // Initialize the OnBackPressedDispatcher
+    private void addBackPressDispatcher() {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // Handle the back press logic here
-                if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.tab_container);
+
+                if (currentFragment instanceof HomePageFragment) {
+                    HomePageFragment homePageFragment = (HomePageFragment) currentFragment;
+                    // Check if HomePageFragment is in the 0th tab
+                    if (homePageFragment.isAtFirstTab()) {
+                        // Show confirmation dialog instead of delegating back press
+                        showExitConfirmationDialog();
+                    } else {
+                        // Delegate back press handling to the fragment
+                        homePageFragment.handleFragmentBackPress();
+                    }
+                } else if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                 } else {
-                    // Show the exit confirmation dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this); // Use activity context
-                    builder.setTitle("Exit Confirmation")
-                            .setMessage("Are you sure you want to exit?")
-                            .setPositiveButton("Yes", (dialog, which) -> {
-                                finishAffinity(); // Exit the app
-                            })
-                            .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
-                            .setCancelable(true);
-
-                    runOnUiThread(() -> {
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
-                    });
+                    showExitConfirmationDialog();
                 }
             }
         });
+    }
+
+    public void showExitConfirmationDialog(){
+
+        new MaterialAlertDialogBuilder(this).setTitle("Exit Confirmation")
+                .setMessage("Are you sure you want to exit?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    finishAffinity(); // Exit the app
+                })
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                .setCancelable(true)
+                .show();
     }
 
     public void setUpDrawerNavigation() {
@@ -226,6 +238,7 @@ public class DashboardActivity extends AppCompatActivity {
         // Replace the content in tab_container with the selected fragment
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.tab_container, fragment, tag)
+                .addToBackStack(null)
                 .commit();
     }
 
