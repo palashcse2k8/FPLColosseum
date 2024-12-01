@@ -1,8 +1,13 @@
-package com.infotech.fplcolosseum.features.homepage.views;
+package com.infotech.fplcolosseum.features.dream_team.views;
 
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayer;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -14,23 +19,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
+import com.infotech.fplcolosseum.databinding.ActivityDreamTeamBinding;
 import com.infotech.fplcolosseum.databinding.FragmentPointsBinding;
+import com.infotech.fplcolosseum.features.dream_team.models.DreamTeamPlayerModel;
+import com.infotech.fplcolosseum.features.dream_team.models.DreamTeamResponseModel;
+import com.infotech.fplcolosseum.features.dream_team.viewmodels.DreamTeamViewModel;
+import com.infotech.fplcolosseum.features.gameweek_history.adapters.PreviousSeasonHistoryAdapter;
+import com.infotech.fplcolosseum.features.gameweek_history.adapters.ThisSeasonGameWeekHistoryAdapter;
+import com.infotech.fplcolosseum.features.gameweek_history.adapters.UsedChipsHistoryAdapter;
+import com.infotech.fplcolosseum.features.gameweek_history.viewmodels.GameWeekHistoryViewModel;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
 import com.infotech.fplcolosseum.features.homepage.models.PointsMergedResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
@@ -40,7 +56,9 @@ import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLiv
 import com.infotech.fplcolosseum.features.homepage.models.picks.AutomaticSubs;
 import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
-import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
+import com.infotech.fplcolosseum.features.homepage.views.OverlayView;
+import com.infotech.fplcolosseum.features.homepage.views.PlayerView;
+import com.infotech.fplcolosseum.features.homepage.views.PointsPlayerInfoBottomSheetFragment;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
@@ -52,194 +70,68 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class PointsFragment extends Fragment implements OnPlayerClickOrDragListener {
+public class DreaTeamActivity extends AppCompatActivity implements OnPlayerClickOrDragListener {
 
-    FragmentPointsBinding binding;
+    ActivityDreamTeamBinding binding;
 
-    HomePageSharedViewModel viewModel;
+    DreamTeamViewModel viewModel;
 
     @Nullable
     private List<PlayersData> teamPlayers; // Initialize only when needed
 
-    boolean isRefreshVisible = true;  // Hide refresh button
-    boolean isShareVisible = true;    // Show share button
-
     int selectedChip;
     long selectedGameWeek;
-    MenuProvider menuProvider;
-
-    private static final String ARG_ITEM_DATA = "entry_id";
-    private long entry_id;
+    public static final String ARG_GAME_WEEK = "game_week";
+    private long game_week;
     private final Map<Long, Integer> playerPositionMap = new HashMap<>();
-
-
-    public PointsFragment newInstance(long index) {
-        Bundle args = new Bundle();
-        args.putLong(ARG_ITEM_DATA, index);
-
-        PointsFragment fragment = new PointsFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentPointsBinding.inflate(inflater, container, false);
-        View rootView = binding.getRoot();
-//        Toolbar pointToolBar = requireActivity().findViewById(R.id.pointToolbar);
-////        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
-//        ((AppCompatActivity) requireActivity()).setSupportActionBar(pointToolBar);
-
-        binding.setViewModel(viewModel);
-        binding.setLifecycleOwner(this);
-
-        return rootView;
-    }
-
-    public void addMenuProvider() {
-
-        menuProvider = new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-
-                menu.clear();
-                // Inflate the menu; this adds items to the action bar if it is present.
-                menuInflater.inflate(R.menu.points_menu, menu);
-
-                for (int i = 0; i < menu.size(); i++) {
-                    MenuItem item = menu.getItem(i);
-                    item.setIconTintList(ColorStateList.valueOf(
-                            ContextCompat.getColor(requireContext(), R.color.white)));
-                }
-
-            }
-
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-
-                // Handle option Menu Here
-                // Handle action bar item clicks here
-                int id = menuItem.getItemId();
-
-                if (id == R.id.action_refresh) {
-                    handleRefreshClick();
-                    return true;
-                } else if (id == R.id.action_share) {
-                    handleShareClick();
-                    return true;
-                } else if (id == R.id.action_team_of_the_week) {
-                    gotoDreamTeam();
-                    return true;
-                } else if (id == R.id.action_gameWeek_history) {
-                    gotoGameWeekHistory();
-                    return true;
-                } else if (id == R.id.action_transfer_history) {
-                    gotoTransferHistory();
-                    return true;
-                }
-
-                return false;
-            }
-
-            @Override
-            public void onPrepareMenu(@NonNull Menu menu) {
-
-                MenuItem refreshItem = menu.findItem(R.id.action_refresh);
-                MenuItem shareItem = menu.findItem(R.id.action_share);
-
-                // Set visibility based on your conditions
-                if (refreshItem != null) refreshItem.setVisible(isRefreshVisible);
-                if (shareItem != null) shareItem.setVisible(isShareVisible);
-
-                MenuProvider.super.onPrepareMenu(menu);
-            }
-        };
-        requireActivity().addMenuProvider(menuProvider, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null) {
-            entry_id = args.getLong(ARG_ITEM_DATA);
+
+        binding = ActivityDreamTeamBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        viewModel = new ViewModelProvider(this).get(DreamTeamViewModel.class);
+        binding.setViewModel(viewModel);
+        binding.setLifecycleOwner(this);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(ARG_GAME_WEEK)) {
+            game_week = intent.getLongExtra(ARG_GAME_WEEK, 0L);
+            viewModel.getDreamTeam(game_week);
         }
-        viewModel = new ViewModelProvider(requireActivity()).get(HomePageSharedViewModel.class);
+        setUpViews();
+        setUpToolbar();
 
-        viewModel.getPointsMergedData(entry_id, Constants.currentGameWeek);
-        selectedChip = (int) Constants.currentGameWeek;
-
-        setRetainInstance(true);
     }
 
-    private void handleRefreshClick() {
-        // Logic for refresh button
-        resetChipSelection((int) Constants.currentGameWeek);
-        setUpToolbar(Constants.currentGameWeek);
-        binding.footballFieldLayout.removeAllViews();
-        viewModel.getPointsMergedData(entry_id, Constants.currentGameWeek);
-        resetToolBar();
+    public void setUpToolbar() {
+        // Set the title based on the received name (optional)
+        setSupportActionBar(binding.dreamTeamToolbar);
+
+        // Enable the Up button (back key)
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
+        //change the back button color to white
+        Drawable navigationIcon = binding.dreamTeamToolbar.getNavigationIcon();
+        if (navigationIcon != null) {
+            navigationIcon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        }
     }
 
-    private void handleShareClick() {
-        // Logic for share button
-        Toast.makeText(getActivity(), "Share clicked", Toast.LENGTH_SHORT).show();
-    }
-
-    private void gotoDreamTeam() {
-        // Logic for dream team action
-        CustomUtil.startDreamTeamActivity(requireActivity(), selectedGameWeek);
-    }
-    private void gotoTransferHistory() {
-        // Logic for transfer history action
-        CustomUtil.startTransferHistoryActivity(requireActivity(), entry_id);
-    }
-
-    private void gotoGameWeekHistory() {
-        // Logic for share button
-        CustomUtil.startGameWeekHistoryActivity(requireActivity(), entry_id);
-    }
-
-    private void resetToolBar() {
-//        isClearVisible = false;     // Hide undo button
-//        isSaveVisible = false;     // Hide save button
-//        requireActivity().invalidateOptionsMenu();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        addMenuProvider();
-        // Check if a chip is already selected; if so, don't reset the toolbar
-//        if (selectedChip == (int) Constants.currentGameWeek) {
-//            setUpToolbar(selectedChip);
-//        }
-        setUpToolbar(selectedChip);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        //set up swipe refresh layout
-        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-
-                    // This method performs the actual data-refresh operation and calls
-                    handleRefreshClick();
-
-                    // Stop the refreshing animation after the refresh operation is completed
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                }
-        );
-
+    public void setUpViews(){
         // Add chips for game week selection
         setupChips();
         setupNavigationButtons();
 
         // Add players to the football field (customize positions as needed)
-        viewModel.getPointsMergedResponseLiveData().observe(getViewLifecycleOwner(), apiResponse -> {
+        viewModel.getDreamTeamLiveData().observe(this, apiResponse -> {
+
             if (apiResponse == null) return;
             if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
                 viewModel.dataLoading.setValue(false);
@@ -253,25 +145,51 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                     binding.footballFieldLayout.setVisibility(View.VISIBLE);
                 }
 
-                PointsMergedResponseModel myTeam = apiResponse.getData();
-//
-//
-//                setUpToolbar(selectedGameWeek);
-//
-//                addPlayers(footballFieldLayout, myTeam);
+                DreamTeamResponseModel dreamTeam = apiResponse.getData();
 
-                updateUI(myTeam);
+                updateUI(dreamTeam);
 
-//                addLeftOverLayView(myTeam);
-//                addRightOverLayView(myTeam);
             }
         });
 
         selectedGameWeek = Constants.currentGameWeek;
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            // This method performs the actual data-refresh operation and calls
+            handleRefresh();
+            // Stop the refreshing animation after the refresh operation is completed
+            binding.swipeRefreshLayout.setRefreshing(false);
+        });
+
+        binding.swipeRefreshLayout.setEnabled(false);
+    }
+    private void handleRefresh() {
+        // Logic for refresh button
+        resetChipSelection((int) Constants.currentGameWeek);
+        setUpToolbar(Constants.currentGameWeek);
+        binding.footballFieldLayout.removeAllViews();
+        viewModel.getDreamTeam(game_week);
+        resetToolBar();
+    }
+
+    private void resetToolBar() {
+//        isClearVisible = false;     // Hide undo button
+//        isSaveVisible = false;     // Hide save button
+//        requireActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Check if a chip is already selected; if so, don't reset the toolbar
+//        if (selectedChip == (int) Constants.currentGameWeek) {
+//            setUpToolbar(selectedChip);
+//        }
+        setUpToolbar(selectedChip);
     }
 
     // Batch UI updates
-    private void updateUI(PointsMergedResponseModel data) {
+    private void updateUI(DreamTeamResponseModel data) {
         binding.footballFieldLayout.post(() -> {
             binding.footballFieldLayout.removeAllViews();
             addPlayers(binding.footballFieldLayout, data);
@@ -283,7 +201,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
     private void setupChips() {
 
         for (int i = 1; i <= Constants.currentGameWeek; i++) {
-            final Chip chip = new Chip(requireContext());
+            final Chip chip = new Chip(this);
             String text = "GW " + i;
             chip.setText(text);
             chip.setCheckable(true);
@@ -303,7 +221,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                     selectedChip = finalI;
                     setUpToolbar(finalI);
                     binding.footballFieldLayout.removeAllViews();
-                    viewModel.getPointsMergedData(entry_id, finalI);
+                    viewModel.getDreamTeam(finalI);
                     selectedGameWeek = finalI;
 
                     // Scroll to the selected chip
@@ -371,178 +289,57 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     private void setUpToolbar(long gameWeekNumber) {
 
-        Toolbar toolbar = requireActivity().findViewById(R.id.pointToolbar);
-
-        if (toolbar != null && viewModel.getTeamInformationApiResultLiveData().getValue() != null) {
-
-            TeamInformationResponseModel data = viewModel.getTeamInformationApiResultLiveData().getValue().getData();
-
-            if (data != null) {
-
-                String concatenatedName = data.getName() + " (GW " + gameWeekNumber + ")";
-                viewModel.setToolbarTitle(concatenatedName);
-
-                String fullName = data.getPlayer_first_name() + " " + data.getPlayer_last_name();
-                viewModel.setToolbarSubTitle(fullName);
-            }
+        if (binding.dreamTeamToolbar != null) {
+            binding.dreamTeamToolbar.setTitle("Team of the week");
+            binding.dreamTeamToolbar.setSubtitle("Gameweek " + selectedGameWeek);
         }
     }
 
-    private void addRightOverLayView(PointsMergedResponseModel myTeam) {
-        OverlayView overlayView = new OverlayView(requireContext(), false);
+    private void updateTeamPlayers(DreamTeamResponseModel dreamTeamResponseModel) {
 
-        // Add overlay view initially to measure its size
-        binding.frameLayout.addView(overlayView);
-
-        // Measure the view
-        overlayView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-
-        overlayView.setLabel1TextView("Transfers");
-        overlayView.setInfo1TextView(myTeam.getGameWeekPicksModel().getEntry_history().getEvent_transfers() + "(-" + myTeam.getGameWeekPicksModel().getEntry_history().getEvent_transfers_cost() + ")");
-
-        overlayView.setLabel2TextView("Squad Val");
-        overlayView.setInfo2TextView((double) myTeam.getGameWeekPicksModel().getEntry_history().getValue() / 10 + "m");
-
-        overlayView.setLabel3TextView("In Bank");
-        overlayView.setInfo3TextView((double) myTeam.getGameWeekPicksModel().getEntry_history().getBank() / 10 + "m");
-
-        // Get device width
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int deviceWidth = displayMetrics.widthPixels;
-
-        // Calculate grid width (device width / 5)
-        int gridWidth = deviceWidth / 5;
-
-        // Calculate left margin to center the view in the middle of the 1st and 2nd grid
-        int overlayViewWidth = overlayView.getMeasuredWidth();
-        int leftMargin = (gridWidth * 4) - gridWidth / 4 - (overlayViewWidth / 2);
-
-        int topMargin = 20;
-
-        FrameLayout.LayoutParams overlayParams = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-//        overlayParams.gravity = Gravity.CENTER;
-        overlayParams.leftMargin = leftMargin;
-        overlayParams.topMargin = topMargin;
-        overlayView.setLayoutParams(overlayParams);
-//        binding.frameLayout.addView(overlayView, overlayParams);
-    }
-
-    private void addLeftOverLayView(PointsMergedResponseModel myTeam) {
-
-        OverlayView overlayView = new OverlayView(requireContext(), false);
-
-        // Add overlay view initially to measure its size
-        binding.frameLayout.addView(overlayView);
-
-        // Measure the view
-        overlayView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-
-
-        int gameWeekNumber = (int) myTeam.getGameWeekPicksModel().getEntry_history().getEvent();
-        int gameWeekEventIndex = gameWeekNumber - 1;
-
-        overlayView.setLabel1TextView("Final Points");
-        overlayView.setInfo1TextView(myTeam.getGameWeekPicksModel().getEntry_history().getPoints() + "");
-
-        overlayView.setLabel2TextView("Avg Points");
-        overlayView.setInfo2TextView(String.valueOf(Constants.GameWeekStaticData.getEvents().get(gameWeekEventIndex).getAverage_entry_score()));
-
-        overlayView.setLabel3TextView("Max Points");
-        overlayView.setInfo3TextView(String.valueOf(Constants.GameWeekStaticData.getEvents().get(gameWeekEventIndex).getHighest_score()));
-
-        // Get device width
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int deviceWidth = displayMetrics.widthPixels;
-        int deviceHeight = displayMetrics.heightPixels;
-
-        // Calculate grid width (device width / 5)
-        int gridWidth = deviceWidth / 5;
-
-        // Calculate left margin to center the view in the middle of the 1st and 2nd grid
-        int overlayViewWidth = overlayView.getMeasuredWidth();
-        int leftMargin = gridWidth - gridWidth / 4 - (overlayViewWidth / 2);
-
-        int topMargin = 20;
-
-        FrameLayout.LayoutParams overlayParams = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-//        overlayParams.gravity = Gravity.CENTER;
-        overlayParams.leftMargin = leftMargin;
-        overlayParams.topMargin = topMargin;
-        overlayView.setLayoutParams(overlayParams);
-//        binding.frameLayout.addView(overlayView, overlayParams);
-    }
-
-    private int dpToPx(int dp) {
-        return (int) (dp * getResources().getDisplayMetrics().density);
-    }
-
-
-    private void updateTeamPlayers(ArrayList<Picks> picks, GameWeekLivePointsResponseModel gameWeekLivePointsResponseModel) {
-
-        Objects.requireNonNull(picks, "Picks cannot be null");
-        Objects.requireNonNull(gameWeekLivePointsResponseModel, "LivePoints cannot be null");
+        Objects.requireNonNull(dreamTeamResponseModel.getTeam(), "Team cannot be null");
 
         this.teamPlayers = new ArrayList<>();
-        for (Picks myTeamPicks : picks) {
+        for (DreamTeamPlayerModel myTeamPicks : dreamTeamResponseModel.getTeam()) {
             PlayersData playersData = deepCopyPlayer(Constants.playerMap.get(myTeamPicks.getElement()));
 
             if (playersData != null) {
-                playersData.setIs_captain(myTeamPicks.getIs_captain());
-                playersData.setIs_vice_captain(myTeamPicks.getIs_vice_captain());
-                playersData.setMultiplier(myTeamPicks.getMultiplier());
+
                 playersData.setPosition(myTeamPicks.getPosition());
                 playersData.setSingular_name_short(Objects.requireNonNull(Constants.playerTypeMap.get(playersData.getElement_type())).getSingular_name_short());
                 playersData.setTeam_name_short(Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getShort_name());
                 playersData.setTeam_name_full(Objects.requireNonNull(Constants.teamMap.get(playersData.getTeam())).getName());
 
                 playersData.setEvent_points(
-                        gameWeekLivePointsResponseModel.elements.stream()
-                                .filter(element -> element.id == playersData.getId())
-                                .findFirst()
-                                .map(element -> element.stats.total_points)
-                                .orElse(0L) // Provide a default value if no matching element is found
-                );
-
-                playersData.setStarts(
-                        gameWeekLivePointsResponseModel.elements.stream()
-                                .filter(element -> element.id == playersData.getId())
-                                .findFirst()
-                                .map(element -> element.stats.starts)
-                                .orElse(0) // Provide a default value if no matching element is found
+                        myTeamPicks.getPoints()// Provide a default value if no matching element is found
                 );
 
                 teamPlayers.add(playersData);
             } else {
-                UIUtils.toast(requireContext(), "Player data is null please reload again", ToastLevel.WARNING);
+                UIUtils.toast(this, "Player data is null please reload again", ToastLevel.WARNING);
                 return;
             }
         }
     }
 
-    private void addPlayers(GridLayout footballFieldLayout, PointsMergedResponseModel pointsMergedResponseModel) {
+    private void addPlayers(GridLayout footballFieldLayout, DreamTeamResponseModel dreamTeamResponseModel) {
 
         try {
-            if (pointsMergedResponseModel == null || footballFieldLayout == null) {
+            if (dreamTeamResponseModel == null || footballFieldLayout == null) {
                 Log.e(Constants.LOG_TAG, "Null parameters in addPlayers");
                 return;
             }
 
             // ... rest of the method
-            updateTeamPlayers(pointsMergedResponseModel.getGameWeekPicksModel().getPicks(), pointsMergedResponseModel.getGameWeekLivePointsResponseModel());
+            updateTeamPlayers(dreamTeamResponseModel);
 
             initializePlayerPositionMap(); // initialize the teamPlayer map for later look up
-
-            substitutePlayer(pointsMergedResponseModel.getGameWeekPicksModel().getAutomatic_subs());
 
             List<PlayersData> defenders = new ArrayList<>();
             List<PlayersData> midfielders = new ArrayList<>();
             List<PlayersData> forwards = new ArrayList<>();
 
-            for (int i = 1; i < Objects.requireNonNull(teamPlayers).size() - 4; i++) {
+            for (int i = 1; i < Objects.requireNonNull(teamPlayers).size(); i++) {
 
                 PlayersData entry = teamPlayers.get(i);
 
@@ -627,29 +424,11 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
             } else {
                 Log.d(Constants.LOG_TAG, "Unknown Formation");
             }
-
-            addPlayerNew(teamPlayers.get(11), 4, 0, footballFieldLayout); // bench goal keeper
-            addPlayerNew(teamPlayers.get(12), 4, 2, footballFieldLayout); // first bench
-            addPlayerNew(teamPlayers.get(13), 4, 3, footballFieldLayout); // second bench
-            addPlayerNew(teamPlayers.get(14), 4, 4, footballFieldLayout); // third bench
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG, "Error adding players", e);
-            UIUtils.toast(requireContext(), "Error setting up team", ToastLevel.ERROR);
+            UIUtils.toast(this, "Error setting up team", ToastLevel.ERROR);
         }
     }
-
-    private void substitutePlayer(ArrayList<AutomaticSubs> automaticSubs) {
-//        printTeamPlayers(this.teamPlayers);
-        for (AutomaticSubs sub : automaticSubs) {
-            int fromPosition = Objects.requireNonNull(playerPositionMap.get(sub.getElement_in()));
-            int toPosition = Objects.requireNonNull(playerPositionMap.get(sub.getElement_out()));
-            assert this.teamPlayers != null;
-            this.teamPlayers.get(fromPosition).setSubstitute_number(1);
-            this.teamPlayers.get(toPosition).setSubstitute_number(1);
-        }
-//        printTeamPlayers(this.teamPlayers);
-    }
-
 
     private void initializePlayerPositionMap() {
         for (int i = 0; i < Objects.requireNonNull(teamPlayers).size(); i++) {
@@ -659,7 +438,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     public void addPlayerNew(PlayersData player, int row, int column, GridLayout footballFieldLayout) {
 
-        PlayerView playerView = new PlayerView(requireContext(), player, false, null);
+        PlayerView playerView = new PlayerView(this, player, false, null);
         playerView.setPlayerName(player.getWeb_name());
 
         //setting the listener for click operation
@@ -677,17 +456,7 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         String playerType = Objects.requireNonNull(Constants.playerTypeMap.get(player.getElement_type())).getSingular_name_short();
         playerView.setTeamName(teamName + " - (" + playerType + ")");
 
-        HashMap<Long, OpponentData> fixtures = (HashMap<Long, OpponentData>) Constants.fixtureData.get(Constants.nextGameWeek);
-        assert fixtures != null;
-        OpponentData opponentData = fixtures.get(player.getTeam());
-        assert opponentData != null;
-
-        if (player.getStarts() != 0) {
-            playerView.setOpponentTeamName((player.getEvent_points() * player.getMultiplier()) + "");
-        } else {
-            playerView.setOpponentTeamName("-");
-        }
-
+        playerView.setOpponentTeamName(player.getEvent_points()+"");
 
         //https://resources.premierleague.com/premierleague/badges/rb/t14.svg team logo
         //https://resources.premierleague.com/premierleague/photos/players/250x250/p441164.png player photo
@@ -703,21 +472,6 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14-66.webp for player shirt
         // https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_14_1-66.webp for goal keeper shirt
         playerView.setPlayerImage(imgURL);
-
-        //set captaincy
-        if (player.isIs_captain()) {
-            playerView.setCaptain();
-        }
-
-        //set vice captain icon
-        if (player.isIs_vice_captain()) {
-            playerView.setViceCaptain();
-        }
-
-        // set substitute player icon
-        if (player.getSubstitute_number() > 0) {
-            playerView.setSubstitutePlayer();
-        }
 
         //set dream player icon
         if (player.isIn_dreamteam()) {
@@ -766,25 +520,21 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     private void showBottomSheetDialogue(PlayersData playersData) {
 
-        OpponentData matchDetails = Objects.requireNonNull(Constants.fixtureData.get(selectedGameWeek)).get(playersData.getTeam());
-
-        Element playerPointExplain = Objects.requireNonNull(viewModel.getPointsMergedResponseLiveData().getValue()).getData().getGameWeekLivePointsResponseModel()
-                .elements.stream()
-                .filter(element -> element.id == playersData.getId())
-                .findFirst()
-                .orElse(null); // Provide a default value if no matching element is found
-
-        PointsPlayerInfoBottomSheetFragment bottomSheet = PointsPlayerInfoBottomSheetFragment.newInstance(playersData, matchDetails, playerPointExplain);
-        bottomSheet.show(requireActivity().getSupportFragmentManager(), bottomSheet.getTag());
+//        OpponentData matchDetails = Objects.requireNonNull(Constants.fixtureData.get(selectedGameWeek)).get(playersData.getTeam());
+//
+//        Element playerPointExplain = Objects.requireNonNull(viewModel.getPointsMergedResponseLiveData().getValue()).getData().getGameWeekLivePointsResponseModel()
+//                .elements.stream()
+//                .filter(element -> element.id == playersData.getId())
+//                .findFirst()
+//                .orElse(null); // Provide a default value if no matching element is found
+//
+//        PointsPlayerInfoBottomSheetFragment bottomSheet = PointsPlayerInfoBottomSheetFragment.newInstance(playersData, matchDetails, playerPointExplain);
+//        bottomSheet.show(this.getSupportFragmentManager(), bottomSheet.getTag());
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        if (menuProvider != null) {
-            requireActivity().removeMenuProvider(menuProvider);
-        }
+    public void onDestroy() {
+        super.onDestroy();
 
         binding = null;
         cleanupResources();

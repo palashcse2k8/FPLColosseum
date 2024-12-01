@@ -109,11 +109,6 @@ public interface APIServices {
     //create classic league
     @GET("https://fantasy.premierleague.com/api/entry/league-classic/") // "https://fantasy.premierleague.com/api/team/set-piece-notes/"
     Call<ResponseBody> createClassicLeague();
-    @GET("https://fantasy.premierleague.com/api/dream-team/") // "https://fantasy.premierleague.com/api/team/set-piece-notes/"
-    Call<ResponseBody> getDreamTeam();
-
-    @GET("https://fantasy.premierleague.com/api/dream-team/{gameWeek}") // "https://fantasy.premierleague.com/api/team/set-piece-notes/"
-    Call<ResponseBody> getWeekDreamTeam(@Path("gameWeek") long gameWeek);
 
     @GET("https://fantasy.premierleague.com/api/element-summary/{player_id}/")  // https://fantasy.premierleague.com/api/element-summary/351/
     Call<ResponseBody> getPlayerSummary(@Path("player_id") long player_id);
@@ -139,10 +134,10 @@ public interface APIServices {
     @GET("https://fantasy.premierleague.com/api/entry/{manager_id}/transfers-latest/")          // https://fantasy.premierleague.com/api/entry/2727830/transfers-latest/
     Call<ResponseBody> getLatestTransferHistory(@Path("manager_id") long manager_id);
 
-    @GET("https://fantasy.premierleague.com/api/entry/{manager_id}/history/")          //     https://fantasy.premierleague.com/api/entry/2727830/history/
+    @GET("https://fantasy.premierleague.com/api/entry/{manager_id}/history/")          //https://fantasy.premierleague.com/api/entry/2727830/history/
     Call<ResponseBody> getGameWeekHistory(@Path("manager_id") long manager_id);
 
-    @GET("//https://fantasy.premierleague.com/api/dream-team/{event}/")          //https://fantasy.premierleague.com/api/dream-team/13/
+    @GET("https://fantasy.premierleague.com/api/dream-team/{event}/")          //https://fantasy.premierleague.com/api/dream-team/13/
     Call<ResponseBody> getDreamTeam(@Path("event") long event);
 
     @GET("https://fantasy.premierleague.com/api/dream-team/")          //https://fantasy.premierleague.com/api/dream-team/

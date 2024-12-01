@@ -52,6 +52,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".features.dream_team.views.DreaTeamActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

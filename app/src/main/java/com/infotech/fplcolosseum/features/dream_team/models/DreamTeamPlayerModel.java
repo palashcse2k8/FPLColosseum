@@ -1,36 +1,36 @@
 package com.infotech.fplcolosseum.features.dream_team.models;
 
 public class DreamTeamPlayerModel {
-    private float element;
-    private float points;
-    private float position;
+    private long element;
+    private long points;
+    private long position;
 
 
     // Getter Methods
 
-    public float getElement() {
+    public long getElement() {
         return element;
     }
 
-    public float getPoints() {
+    public long getPoints() {
         return points;
     }
 
-    public float getPosition() {
+    public long getPosition() {
         return position;
     }
 
     // Setter Methods
 
-    public void setElement(float element) {
+    public void setElement(long element) {
         this.element = element;
     }
 
-    public void setPoints(float points) {
+    public void setPoints(long points) {
         this.points = points;
     }
 
-    public void setPosition(float position) {
+    public void setPosition(long position) {
         this.position = position;
     }
 }

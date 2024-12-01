@@ -18,6 +18,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentActivity;
 
 import com.infotech.fplcolosseum.R;
+import com.infotech.fplcolosseum.features.dream_team.views.DreaTeamActivity;
 import com.infotech.fplcolosseum.features.gameweek_history.views.GameWeekHistoryActivity;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
@@ -611,6 +612,12 @@ public class CustomUtil {
     public static void startGameWeekHistoryActivity(Context activity, long managerId){
         Intent intent = new Intent(activity, GameWeekHistoryActivity.class);
         intent.putExtra(GameWeekHistoryActivity.ARG_MANAGER_ID, managerId);
+        activity.startActivity(intent);
+    }
+
+    public static void startDreamTeamActivity(Context activity, long gameWeek){
+        Intent intent = new Intent(activity, DreaTeamActivity.class);
+        intent.putExtra(DreaTeamActivity.ARG_GAME_WEEK, gameWeek);
         activity.startActivity(intent);
     }
 
