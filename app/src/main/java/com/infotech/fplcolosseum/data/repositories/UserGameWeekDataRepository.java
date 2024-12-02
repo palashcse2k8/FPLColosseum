@@ -10,6 +10,7 @@ import com.infotech.fplcolosseum.data.sources.network.APIHandler;
 import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.data.sources.network.RetroClass;
+import com.infotech.fplcolosseum.features.cup_status.model.CupStatusResponseModel;
 import com.infotech.fplcolosseum.features.dream_team.models.DreamTeamResponseModel;
 import com.infotech.fplcolosseum.features.gameweek_history.models.GameWeekHistoryResponseModel;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
@@ -382,6 +383,18 @@ public class UserGameWeekDataRepository {
         Call<ResponseBody> callAPI = apiServices.getSeasonDreamTeam();
 
         apiData.addSource(APIHandler.makeApiCall(callAPI, DreamTeamResponseModel.class), listApiResponse -> {
+            apiData.postValue(listApiResponse);
+        });
+
+        return apiData;
+    }
+
+    public LiveData<ApiResponse<CupStatusResponseModel>> getCupStatus(long league_id) {
+        MediatorLiveData<ApiResponse<CupStatusResponseModel>> apiData = new MediatorLiveData<>();
+
+        Call<ResponseBody> callAPI = apiServices.getCupStatus(league_id);
+
+        apiData.addSource(APIHandler.makeApiCall(callAPI, CupStatusResponseModel.class), listApiResponse -> {
             apiData.postValue(listApiResponse);
         });
 

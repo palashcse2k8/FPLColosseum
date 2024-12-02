@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.fplcolosseum.databinding.LayoutCupListItemBinding;
 import com.infotech.fplcolosseum.features.homepage.models.entryinformation.LeagueDataModel;
+import com.infotech.fplcolosseum.utilities.CustomUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,19 +36,14 @@ public class CupListAdapter extends RecyclerView.Adapter<CupListAdapter.CupItemV
 
     @Override
     public void onBindViewHolder(@NonNull CupItemViewHolder holder, int position) {
-        LeagueDataModel player = leagueList.get(position);
-        holder.bind(player);
+        LeagueDataModel leagueDataModel = leagueList.get(position);
+        holder.bind(leagueDataModel);
 
         // Handle click to expand/collapse
         holder.itemView.setOnClickListener(v -> {
-
+            CustomUtil.startCupStatusActivity(v.getContext(), leagueDataModel.getId());
         });
 
-//        holder.itemView.setOnClickListener(v -> {
-//            Intent intent = new Intent(activity, PlayerFullInformationActivity.class);
-//            intent.putExtra("playerData", player); // Replace with actual player name
-//            activity.startActivity(intent);
-//        });
     }
 
     @Override

@@ -43,6 +43,7 @@ import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameChips;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.GameWeekMyTeamUpdateModel;
 import com.infotech.fplcolosseum.features.homepage.models.myteam.MyTeamPicks;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.PlayerPosition;
 import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
@@ -50,6 +51,7 @@ import com.infotech.fplcolosseum.utilities.ButtonStateManager;
 import com.infotech.fplcolosseum.utilities.Chips;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
+import com.infotech.fplcolosseum.utilities.PlayerPositioningStrategy;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 
@@ -345,119 +347,129 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
     private void addPlayers(GridLayout footballFieldLayout) {
 
         this.playerViewList = new ArrayList<>();
-        List<PlayersData> defenders = new ArrayList<>();
-        List<PlayersData> midfielders = new ArrayList<>();
-        List<PlayersData> forwards = new ArrayList<>();
 
-        for (int i = 1; i < teamPlayers.size() - 4; i++) {
-
-            PlayersData entry = teamPlayers.get(i);
-
-            if (entry.getSingular_name_short().equalsIgnoreCase("DEF")) {
-                defenders.add(entry);
-            } else if (entry.getSingular_name_short().equalsIgnoreCase("MID")) {
-                midfielders.add(entry);
-            } else if (entry.getSingular_name_short().equalsIgnoreCase("FWD")) {
-                forwards.add(entry);
-            } else {
-                Log.d(Constants.LOG_TAG, "type not defined");
-            }
-        }
-
-
-        List<PlayersData> concatenatedPlayerList = new ArrayList<>(defenders);
-        concatenatedPlayerList.addAll(midfielders);
-        concatenatedPlayerList.addAll(forwards);
-
-        concatenatedPlayerList.add(0, teamPlayers.get(0));
-
-        for (int i = 11; i < teamPlayers.size(); i++) {
-            concatenatedPlayerList.add(teamPlayers.get(i));
-        }
-
-        teamPlayers = concatenatedPlayerList;
+        // Extract main players (first 11 players) for positioning
+        List<PlayersData> mainPlayers = new ArrayList<>(teamPlayers);
+        List<PlayerPosition> playerPositions = PlayerPositioningStrategy.getPositionsForFormation(mainPlayers);
 
         for (int i = 0; i < teamPlayers.size(); i++) {
             teamPlayers.get(i).setPosition(i + 1);
         }
 
         Log.d("FPLC", "After Sorting");
+        // Loop through player positions and add them to the football field layout
+        for (PlayerPosition position : playerPositions) {
+            addPlayerNew(position.getPlayer(), position.getRow(), position.getColumn(), footballFieldLayout);
+        }
+
+//        List<PlayersData> defenders = new ArrayList<>();
+//        List<PlayersData> midfielders = new ArrayList<>();
+//        List<PlayersData> forwards = new ArrayList<>();
+//
+//        for (int i = 1; i < teamPlayers.size() - 4; i++) {
+//
+//            PlayersData entry = teamPlayers.get(i);
+//
+//            if (entry.getSingular_name_short().equalsIgnoreCase("DEF")) {
+//                defenders.add(entry);
+//            } else if (entry.getSingular_name_short().equalsIgnoreCase("MID")) {
+//                midfielders.add(entry);
+//            } else if (entry.getSingular_name_short().equalsIgnoreCase("FWD")) {
+//                forwards.add(entry);
+//            } else {
+//                Log.d(Constants.LOG_TAG, "type not defined");
+//            }
+//        }
+//
+//
+//        List<PlayersData> concatenatedPlayerList = new ArrayList<>(defenders);
+//        concatenatedPlayerList.addAll(midfielders);
+//        concatenatedPlayerList.addAll(forwards);
+//
+//        concatenatedPlayerList.add(0, teamPlayers.get(0));
+//
+//        for (int i = 11; i < teamPlayers.size(); i++) {
+//            concatenatedPlayerList.add(teamPlayers.get(i));
+//        }
+//
+//        teamPlayers = concatenatedPlayerList;
+
 
 //        printTeamPlayers(this.teamPlayers);
 
         //Adding players to the ui
 
-        addPlayerNew(teamPlayers.get(0), 0, 2, footballFieldLayout); // playing goalkeeper
-
-        // formation for mid defenders
-        if (defenders.size() == 3) { // Adding players for a 3-x-x formation (adjust positions based on your layout)
-            addPlayerNew(defenders.get(0), 1, 1, footballFieldLayout);
-            addPlayerNew(defenders.get(1), 1, 2, footballFieldLayout);
-            addPlayerNew(defenders.get(2), 1, 3, footballFieldLayout);
-
-        } else if (defenders.size() == 4) { // Adding players for a 4-x-x formation (adjust positions based on your layout)
-            addPlayerNew(defenders.get(0), 1, 0, footballFieldLayout);
-            addPlayerNew(defenders.get(1), 1, 1, footballFieldLayout);
-            addPlayerNew(defenders.get(2), 1, 3, footballFieldLayout);
-            addPlayerNew(defenders.get(3), 1, 4, footballFieldLayout);
-
-        } else if (defenders.size() == 5) { // Adding players for a 5-x-x formation (adjust positions based on your layout)
-            addPlayerNew(defenders.get(0), 1, 0, footballFieldLayout);
-            addPlayerNew(defenders.get(1), 1, 1, footballFieldLayout);
-            addPlayerNew(defenders.get(2), 1, 2, footballFieldLayout);
-            addPlayerNew(defenders.get(3), 1, 3, footballFieldLayout);
-            addPlayerNew(defenders.get(4), 1, 4, footballFieldLayout);
-        } else {
-            Log.d(Constants.LOG_TAG, "Unknown Formation");
-        }
-
-        // formation for mid fielders
-        if (midfielders.size() == 2) {
-            addPlayerNew(midfielders.get(0), 2, 1, footballFieldLayout);
-            addPlayerNew(midfielders.get(1), 2, 3, footballFieldLayout);
-
-        } else if (midfielders.size() == 3) {
-            addPlayerNew(midfielders.get(0), 2, 1, footballFieldLayout);
-            addPlayerNew(midfielders.get(1), 2, 2, footballFieldLayout);
-            addPlayerNew(midfielders.get(2), 2, 3, footballFieldLayout);
-
-        } else if (midfielders.size() == 4) {
-            addPlayerNew(midfielders.get(0), 2, 0, footballFieldLayout);
-            addPlayerNew(midfielders.get(1), 2, 1, footballFieldLayout);
-            addPlayerNew(midfielders.get(2), 2, 3, footballFieldLayout);
-            addPlayerNew(midfielders.get(3), 2, 4, footballFieldLayout);
-
-        } else if (midfielders.size() == 5) {
-            addPlayerNew(midfielders.get(0), 2, 0, footballFieldLayout);
-            addPlayerNew(midfielders.get(1), 2, 1, footballFieldLayout);
-            addPlayerNew(midfielders.get(2), 2, 2, footballFieldLayout);
-            addPlayerNew(midfielders.get(3), 2, 3, footballFieldLayout);
-            addPlayerNew(midfielders.get(4), 2, 4, footballFieldLayout);
-        } else {
-            Log.d(Constants.LOG_TAG, "Unknown Formation");
-        }
-
-
-        // formation for forwards
-        if (forwards.size() == 1) {
-            addPlayerNew(forwards.get(0), 3, 2, footballFieldLayout);
-
-        } else if (forwards.size() == 2) {
-            addPlayerNew(forwards.get(0), 3, 1, footballFieldLayout);
-            addPlayerNew(forwards.get(1), 3, 3, footballFieldLayout);
-
-        } else if (forwards.size() == 3) {
-            addPlayerNew(forwards.get(0), 3, 1, footballFieldLayout);
-            addPlayerNew(forwards.get(1), 3, 2, footballFieldLayout);
-            addPlayerNew(forwards.get(2), 3, 3, footballFieldLayout);
-        } else {
-            Log.d(Constants.LOG_TAG, "Unknown Formation");
-        }
-
-        addPlayerNew(teamPlayers.get(11), 4, 0, footballFieldLayout); // bench goal keeper
-        addPlayerNew(teamPlayers.get(12), 4, 2, footballFieldLayout); // first bench
-        addPlayerNew(teamPlayers.get(13), 4, 3, footballFieldLayout); // second bench
-        addPlayerNew(teamPlayers.get(14), 4, 4, footballFieldLayout); // third bench
+//        addPlayerNew(teamPlayers.get(0), 0, 2, footballFieldLayout); // playing goalkeeper
+//
+//        // formation for mid defenders
+//        if (defenders.size() == 3) { // Adding players for a 3-x-x formation (adjust positions based on your layout)
+//            addPlayerNew(defenders.get(0), 1, 1, footballFieldLayout);
+//            addPlayerNew(defenders.get(1), 1, 2, footballFieldLayout);
+//            addPlayerNew(defenders.get(2), 1, 3, footballFieldLayout);
+//
+//        } else if (defenders.size() == 4) { // Adding players for a 4-x-x formation (adjust positions based on your layout)
+//            addPlayerNew(defenders.get(0), 1, 0, footballFieldLayout);
+//            addPlayerNew(defenders.get(1), 1, 1, footballFieldLayout);
+//            addPlayerNew(defenders.get(2), 1, 3, footballFieldLayout);
+//            addPlayerNew(defenders.get(3), 1, 4, footballFieldLayout);
+//
+//        } else if (defenders.size() == 5) { // Adding players for a 5-x-x formation (adjust positions based on your layout)
+//            addPlayerNew(defenders.get(0), 1, 0, footballFieldLayout);
+//            addPlayerNew(defenders.get(1), 1, 1, footballFieldLayout);
+//            addPlayerNew(defenders.get(2), 1, 2, footballFieldLayout);
+//            addPlayerNew(defenders.get(3), 1, 3, footballFieldLayout);
+//            addPlayerNew(defenders.get(4), 1, 4, footballFieldLayout);
+//        } else {
+//            Log.d(Constants.LOG_TAG, "Unknown Formation");
+//        }
+//
+//        // formation for mid fielders
+//        if (midfielders.size() == 2) {
+//            addPlayerNew(midfielders.get(0), 2, 1, footballFieldLayout);
+//            addPlayerNew(midfielders.get(1), 2, 3, footballFieldLayout);
+//
+//        } else if (midfielders.size() == 3) {
+//            addPlayerNew(midfielders.get(0), 2, 1, footballFieldLayout);
+//            addPlayerNew(midfielders.get(1), 2, 2, footballFieldLayout);
+//            addPlayerNew(midfielders.get(2), 2, 3, footballFieldLayout);
+//
+//        } else if (midfielders.size() == 4) {
+//            addPlayerNew(midfielders.get(0), 2, 0, footballFieldLayout);
+//            addPlayerNew(midfielders.get(1), 2, 1, footballFieldLayout);
+//            addPlayerNew(midfielders.get(2), 2, 3, footballFieldLayout);
+//            addPlayerNew(midfielders.get(3), 2, 4, footballFieldLayout);
+//
+//        } else if (midfielders.size() == 5) {
+//            addPlayerNew(midfielders.get(0), 2, 0, footballFieldLayout);
+//            addPlayerNew(midfielders.get(1), 2, 1, footballFieldLayout);
+//            addPlayerNew(midfielders.get(2), 2, 2, footballFieldLayout);
+//            addPlayerNew(midfielders.get(3), 2, 3, footballFieldLayout);
+//            addPlayerNew(midfielders.get(4), 2, 4, footballFieldLayout);
+//        } else {
+//            Log.d(Constants.LOG_TAG, "Unknown Formation");
+//        }
+//
+//
+//        // formation for forwards
+//        if (forwards.size() == 1) {
+//            addPlayerNew(forwards.get(0), 3, 2, footballFieldLayout);
+//
+//        } else if (forwards.size() == 2) {
+//            addPlayerNew(forwards.get(0), 3, 1, footballFieldLayout);
+//            addPlayerNew(forwards.get(1), 3, 3, footballFieldLayout);
+//
+//        } else if (forwards.size() == 3) {
+//            addPlayerNew(forwards.get(0), 3, 1, footballFieldLayout);
+//            addPlayerNew(forwards.get(1), 3, 2, footballFieldLayout);
+//            addPlayerNew(forwards.get(2), 3, 3, footballFieldLayout);
+//        } else {
+//            Log.d(Constants.LOG_TAG, "Unknown Formation");
+//        }
+//
+//        addPlayerNew(teamPlayers.get(11), 4, 0, footballFieldLayout); // bench goal keeper
+//        addPlayerNew(teamPlayers.get(12), 4, 2, footballFieldLayout); // first bench
+//        addPlayerNew(teamPlayers.get(13), 4, 3, footballFieldLayout); // second bench
+//        addPlayerNew(teamPlayers.get(14), 4, 4, footballFieldLayout); // third bench
 
     }
 

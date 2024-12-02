@@ -142,4 +142,8 @@ public interface APIServices {
 
     @GET("https://fantasy.premierleague.com/api/dream-team/")          //https://fantasy.premierleague.com/api/dream-team/
     Call<ResponseBody> getSeasonDreamTeam();
+
+    @GET("https://fantasy.premierleague.com/api/league/{league_id}/cup-status/")          //https://fantasy.premierleague.com/api/league/1/cup-status/
+    Call<ResponseBody> getCupStatus(@Path("league_id") long league_id);
 }
+

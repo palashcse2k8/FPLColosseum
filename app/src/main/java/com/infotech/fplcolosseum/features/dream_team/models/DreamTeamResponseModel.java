@@ -1,8 +1,11 @@
 package com.infotech.fplcolosseum.features.dream_team.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class DreamTeamResponseModel {
+    @SerializedName("top_player")
     TopPlayer topPlayer;
     ArrayList< DreamTeamPlayerModel > team = new ArrayList < > ();
 

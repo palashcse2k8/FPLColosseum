@@ -3,62 +3,32 @@ package com.infotech.fplcolosseum.features.dream_team.views;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayer;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.GridLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.data.sources.network.ApiResponse;
 import com.infotech.fplcolosseum.databinding.ActivityDreamTeamBinding;
-import com.infotech.fplcolosseum.databinding.FragmentPointsBinding;
 import com.infotech.fplcolosseum.features.dream_team.models.DreamTeamPlayerModel;
 import com.infotech.fplcolosseum.features.dream_team.models.DreamTeamResponseModel;
 import com.infotech.fplcolosseum.features.dream_team.viewmodels.DreamTeamViewModel;
-import com.infotech.fplcolosseum.features.gameweek_history.adapters.PreviousSeasonHistoryAdapter;
-import com.infotech.fplcolosseum.features.gameweek_history.adapters.ThisSeasonGameWeekHistoryAdapter;
-import com.infotech.fplcolosseum.features.gameweek_history.adapters.UsedChipsHistoryAdapter;
-import com.infotech.fplcolosseum.features.gameweek_history.viewmodels.GameWeekHistoryViewModel;
 import com.infotech.fplcolosseum.features.homepage.adapter.OnPlayerClickOrDragListener;
-import com.infotech.fplcolosseum.features.homepage.models.PointsMergedResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamInformationResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
-import com.infotech.fplcolosseum.features.homepage.models.livepoints.Element;
-import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
-import com.infotech.fplcolosseum.features.homepage.models.picks.AutomaticSubs;
-import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
-import com.infotech.fplcolosseum.features.homepage.views.OverlayView;
 import com.infotech.fplcolosseum.features.homepage.views.PlayerView;
-import com.infotech.fplcolosseum.features.homepage.views.PointsPlayerInfoBottomSheetFragment;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
@@ -84,6 +54,8 @@ public class DreaTeamActivity extends AppCompatActivity implements OnPlayerClick
     public static final String ARG_GAME_WEEK = "game_week";
     private long game_week;
     private final Map<Long, Integer> playerPositionMap = new HashMap<>();
+
+    private boolean isTeamOfTheSeason = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,8 +101,36 @@ public class DreaTeamActivity extends AppCompatActivity implements OnPlayerClick
         setupChips();
         setupNavigationButtons();
 
+        binding.teamSelectionButton.setOnClickListener(v -> {
+            viewModel.getSeasonDreamTeam();
+            isTeamOfTheSeason = !isTeamOfTheSeason;
+        });
+
         // Add players to the football field (customize positions as needed)
         viewModel.getDreamTeamLiveData().observe(this, apiResponse -> {
+
+            if (apiResponse == null) return;
+            if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
+                viewModel.dataLoading.setValue(false);
+
+                if (Constants.currentGameWeek == 0) {
+                    binding.noPointLayout.setVisibility(View.VISIBLE);
+                    binding.footballFieldLayout.setVisibility(View.GONE);
+                    return;
+                } else {
+                    binding.noPointLayout.setVisibility(View.GONE);
+                    binding.footballFieldLayout.setVisibility(View.VISIBLE);
+                }
+
+                DreamTeamResponseModel dreamTeam = apiResponse.getData();
+
+                updateUI(dreamTeam);
+
+            }
+        });
+
+        // Add players to the football field (customize positions as needed)
+        viewModel.getSeasonDreamTeamLiveData().observe(this, apiResponse -> {
 
             if (apiResponse == null) return;
             if (apiResponse.getStatus() == ApiResponse.Status.SUCCESS) {
@@ -188,15 +188,52 @@ public class DreaTeamActivity extends AppCompatActivity implements OnPlayerClick
         setUpToolbar(selectedChip);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
     // Batch UI updates
     private void updateUI(DreamTeamResponseModel data) {
+
+        updateTopPlayer(data);
+        setUpToolbar(selectedGameWeek);
+
         binding.footballFieldLayout.post(() -> {
             binding.footballFieldLayout.removeAllViews();
             addPlayers(binding.footballFieldLayout, data);
-            setUpToolbar(selectedGameWeek);
+
         });
     }
 
+    public void updateTopPlayer(DreamTeamResponseModel data){
+        PlayersData topPlayer = deepCopyPlayer(Constants.playerMap.get(data.getTopPlayer().getId()));
+        CustomUtil.updatePlayerImage(binding.topPlayerImg, topPlayer);
+
+        binding.topPlayerName.setText(topPlayer.getWeb_name());
+        binding.topPlayerTeamName.setText(topPlayer.getTeam_name_full());
+        String topPlayerPointsText = data.getTopPlayer().getPoints() + " Points";
+        binding.topPlayerPoints.setText(topPlayerPointsText);
+
+        long teamTotalPoints = data.getTeam().stream()
+                .mapToInt(player -> (int) player.getPoints())
+                .sum();;
+        binding.totalPoints.setText(String.valueOf(teamTotalPoints));
+
+        binding.teamOfTheSeasonText.setPaintFlags(binding.teamOfTheSeasonText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        binding.totalPointsText.setPaintFlags(binding.totalPointsText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    }
 
     private void setupChips() {
 
@@ -219,6 +256,7 @@ public class DreaTeamActivity extends AppCompatActivity implements OnPlayerClick
             chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
                     selectedChip = finalI;
+                    isTeamOfTheSeason = false;
                     setUpToolbar(finalI);
                     binding.footballFieldLayout.removeAllViews();
                     viewModel.getDreamTeam(finalI);
@@ -289,9 +327,12 @@ public class DreaTeamActivity extends AppCompatActivity implements OnPlayerClick
 
     private void setUpToolbar(long gameWeekNumber) {
 
-        if (binding.dreamTeamToolbar != null) {
-            binding.dreamTeamToolbar.setTitle("Team of the week");
-            binding.dreamTeamToolbar.setSubtitle("Gameweek " + selectedGameWeek);
+        if(isTeamOfTheSeason) {
+            binding.dreamTeamToolbar.setTitle("Team of the Season");
+            binding.teamSelectionButton.setText("Team of the Week " + selectedGameWeek);
+        } else {
+            binding.dreamTeamToolbar.setTitle("Team of the Week " + gameWeekNumber);
+            binding.teamSelectionButton.setText("Team of the Season");
         }
     }
 

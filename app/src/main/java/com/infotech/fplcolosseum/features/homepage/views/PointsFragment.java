@@ -37,12 +37,14 @@ import com.infotech.fplcolosseum.features.homepage.models.entryinformation.TeamI
 import com.infotech.fplcolosseum.features.homepage.models.fixture.OpponentData;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.Element;
 import com.infotech.fplcolosseum.features.homepage.models.livepoints.GameWeekLivePointsResponseModel;
+import com.infotech.fplcolosseum.features.homepage.models.myteam.PlayerPosition;
 import com.infotech.fplcolosseum.features.homepage.models.picks.AutomaticSubs;
 import com.infotech.fplcolosseum.features.homepage.models.picks.Picks;
 import com.infotech.fplcolosseum.features.homepage.models.staticdata.PlayersData;
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
+import com.infotech.fplcolosseum.utilities.PlayerPositioningStrategy;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 
@@ -136,6 +138,10 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                     return true;
                 } else if (id == R.id.action_transfer_history) {
                     gotoTransferHistory();
+                    return true;
+                } else if(id == R.id.action_manager_of_the_week) {
+                    long topMangerOfTheWeek = Objects.requireNonNull(Constants.gameWeekMap.get(selectedGameWeek)).getHighest_scoring_entry();
+                    CustomUtil.startManagerDashboardActivity(requireContext(), topMangerOfTheWeek);
                     return true;
                 }
 
@@ -272,10 +278,12 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
 
     // Batch UI updates
     private void updateUI(PointsMergedResponseModel data) {
+        // ... rest of the method
+        updateTeamPlayers(data.getGameWeekPicksModel().getPicks(), data.getGameWeekLivePointsResponseModel());
+        setUpToolbar(selectedGameWeek);
         binding.footballFieldLayout.post(() -> {
             binding.footballFieldLayout.removeAllViews();
             addPlayers(binding.footballFieldLayout, data);
-            setUpToolbar(selectedGameWeek);
         });
     }
 
@@ -531,12 +539,17 @@ public class PointsFragment extends Fragment implements OnPlayerClickOrDragListe
                 return;
             }
 
-            // ... rest of the method
-            updateTeamPlayers(pointsMergedResponseModel.getGameWeekPicksModel().getPicks(), pointsMergedResponseModel.getGameWeekLivePointsResponseModel());
-
             initializePlayerPositionMap(); // initialize the teamPlayer map for later look up
 
             substitutePlayer(pointsMergedResponseModel.getGameWeekPicksModel().getAutomatic_subs());
+//            // Extract main players (first 11 players) for positioning
+//            List<PlayersData> mainPlayers = new ArrayList<>(teamPlayers);
+//            List<PlayerPosition> playerPositions = PlayerPositioningStrategy.getPositionsForFormation(mainPlayers);
+//
+//            // Loop through player positions and add them to the football field layout
+//            for (PlayerPosition position : playerPositions) {
+//                addPlayerNew(position.getPlayer(), position.getRow(), position.getColumn(), footballFieldLayout);
+//            }
 
             List<PlayersData> defenders = new ArrayList<>();
             List<PlayersData> midfielders = new ArrayList<>();

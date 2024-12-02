@@ -18,6 +18,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentActivity;
 
 import com.infotech.fplcolosseum.R;
+import com.infotech.fplcolosseum.features.cup_status.views.CupStatusActivity;
 import com.infotech.fplcolosseum.features.dream_team.views.DreaTeamActivity;
 import com.infotech.fplcolosseum.features.gameweek_history.views.GameWeekHistoryActivity;
 import com.infotech.fplcolosseum.features.homepage.models.fixture.MatchDetails;
@@ -620,6 +621,13 @@ public class CustomUtil {
         intent.putExtra(DreaTeamActivity.ARG_GAME_WEEK, gameWeek);
         activity.startActivity(intent);
     }
+
+    public static void startCupStatusActivity(Context activity, long gameWeek){
+        Intent intent = new Intent(activity, CupStatusActivity.class);
+        intent.putExtra(CupStatusActivity.ARG_LEAGUE_ID, gameWeek);
+        activity.startActivity(intent);
+    }
+
 
     public static String formatNumber(long value) {
         return String.format(Locale.getDefault(),"%,d", value);

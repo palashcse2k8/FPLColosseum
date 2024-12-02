@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.infotech.fplcolosseum.features.cup_status.viewmodels.CupStatusViewModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/cupStatusToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimaryDark"
+                android:theme="@style/ToolBarTheme"
+                app:title="FPL Coliseum"
+                app:titleTextColor="@color/white" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/dataLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{viewModel.dataLoading ? View.GONE : View.VISIBLE}">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:background="@drawable/rounded_border_background"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/cupStatusTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="8dp"
+                                android:text="The CUP is schedule to start at GW21"
+                                android:textAppearance="@android:style/TextAppearance.Small"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/cupQualificationDescription"
+                                android:layout_width="match_parent"
+                                android:padding="8dp"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.Material3.BodySmall"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:background="@drawable/rounded_border_background"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+
+                            <TextView
+                                android:id="@+id/cupCriterionTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="8dp"
+                                android:text="How the CUP works"
+                                android:textAppearance="@android:style/TextAppearance.Small"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/cupRules"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:breakStrategy="simple"
+                                android:ellipsize="none"
+                                android:padding="8dp"
+                                android:scrollHorizontally="false"
+                                android:singleLine="false"
+                                style="@style/TextAppearance.Material3.BodySmall"
+                                android:text="Each team will be randomly drawn against another unless they have received a bye. The winner (the team with the highest Gameweek score minus any transfer points), will progress to the next round and another random draw, the losers are out! This process continues until the final round when the two remaining teams contest the cup final. If a cup match is drawn, then the following tie-breaks will be applied until a winner is found:\n\n\t1. Most goals scored in the Gameweek\n\n\t2. Fewest goals conceded in the Gameweek\n\n\t3. Virtual coin toss" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </ScrollView>
+
+                <ProgressBar
+                    android:id="@+id/progress_circular"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerInParent="true"
+                    android:visibility="@{viewModel.dataLoading ? View.VISIBLE : View.GONE}">
+
+                </ProgressBar>
+            </RelativeLayout>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+</layout>

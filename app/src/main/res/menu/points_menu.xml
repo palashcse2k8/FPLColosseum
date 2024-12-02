@@ -24,6 +24,13 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_manager_of_the_week"
+        android:icon="@drawable/share_icon"
+        android:iconTint="@color/white"
+        android:title="Manager of the GameWeek"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_gameWeek_history"
         android:icon="@drawable/share_icon"
         android:iconTint="@color/white"

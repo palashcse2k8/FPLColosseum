@@ -1,27 +1,27 @@
 package com.infotech.fplcolosseum.features.dream_team.models;
 
 public class TopPlayer {
-    private float id;
-    private float points;
+    private long id;
+    private long points;
 
 
     // Getter Methods 
 
-    public float getId() {
+    public long getId() {
         return id;
     }
 
-    public float getPoints() {
+    public long getPoints() {
         return points;
     }
 
     // Setter Methods 
 
-    public void setId(float id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public void setPoints(float points) {
+    public void setPoints(long points) {
         this.points = points;
     }
 }
