@@ -4,11 +4,13 @@ import static com.infotech.fplcolosseum.utilities.ButtonStateManager.getButtonSt
 import static com.infotech.fplcolosseum.utilities.ButtonStateManager.updateButtonState;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayer;
 import static com.infotech.fplcolosseum.utilities.CustomUtil.deepCopyPlayerList;
+import static com.infotech.fplcolosseum.utilities.ImageUtil.getBitmapFromView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,10 +53,13 @@ import com.infotech.fplcolosseum.utilities.ButtonStateManager;
 import com.infotech.fplcolosseum.utilities.Chips;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.infotech.fplcolosseum.utilities.CustomUtil;
+import com.infotech.fplcolosseum.utilities.ImageUtil;
 import com.infotech.fplcolosseum.utilities.PlayerPositioningStrategy;
 import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -240,7 +245,19 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
 
     private void handleShareClick() {
         // Logic for share button
-        Toast.makeText(getActivity(), "Share clicked", Toast.LENGTH_SHORT).show();
+        try {
+            // Step 1: Capture the layout as Bitmap
+            Bitmap bitmap = getBitmapFromView(requireActivity().getWindow().getDecorView());
+
+            // Step 2: Save Bitmap to File
+            File imageFile = ImageUtil.saveBitmapToFile(requireActivity(),bitmap);
+
+            // Step 3: Share the Image
+            ImageUtil.shareImage(requireActivity(), imageFile);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleSaveClick() {
