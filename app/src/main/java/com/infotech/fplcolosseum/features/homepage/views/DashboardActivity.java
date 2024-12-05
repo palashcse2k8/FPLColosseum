@@ -3,10 +3,8 @@ package com.infotech.fplcolosseum.features.homepage.views;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,18 +14,15 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
 import com.infotech.fplcolosseum.MainActivity;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.utilities.Constants;
@@ -86,8 +81,7 @@ public class DashboardActivity extends AppCompatActivity {
             public void handleOnBackPressed() {
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.tab_container);
 
-                if (currentFragment instanceof HomePageFragment) {
-                    HomePageFragment homePageFragment = (HomePageFragment) currentFragment;
+                if (currentFragment instanceof HomePageFragment homePageFragment) {
                     // Check if HomePageFragment is in the 0th tab
                     if (homePageFragment.isAtFirstTab()) {
                         // Show confirmation dialog instead of delegating back press

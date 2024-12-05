@@ -6,8 +6,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.core.content.FileProvider;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.infotech.fplcolosseum.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -55,4 +60,38 @@ public class ImageUtil {
         activity.startActivity(Intent.createChooser(shareIntent, "Share Image Using"));
     }
 
+    public static void shareImageWithBottomSheetPreview(Activity activity, File imageFile) {
+        Uri imageUri = FileProvider.getUriForFile(
+                activity,
+                activity.getApplicationContext().getPackageName() + ".provider",
+                imageFile
+        );
+
+        // Create bottom sheet dialog
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity);
+        View bottomSheetView = activity.getLayoutInflater().inflate(R.layout.bottom_sheet_image_preview, null);
+
+        ImageView previewImageView = bottomSheetView.findViewById(R.id.previewImageView);
+        Button shareButton = bottomSheetView.findViewById(R.id.shareButton);
+
+        previewImageView.setImageURI(imageUri);
+
+        shareButton.setOnClickListener(v -> {
+            bottomSheetDialog.dismiss();
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("image/*");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            Intent chooserIntent = Intent.createChooser(shareIntent, "Share Image");
+            chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Preview");
+            chooserIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, imageUri);
+            activity.startActivity(chooserIntent);
+        });
+
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+    }
 }

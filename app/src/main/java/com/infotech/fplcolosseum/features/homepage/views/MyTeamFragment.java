@@ -253,10 +253,11 @@ public class MyTeamFragment extends Fragment implements OnPlayerClickOrDragListe
             File imageFile = ImageUtil.saveBitmapToFile(requireActivity(),bitmap);
 
             // Step 3: Share the Image
-            ImageUtil.shareImage(requireActivity(), imageFile);
+//            ImageUtil.shareImage(requireActivity(), imageFile);
+            ImageUtil.shareImageWithBottomSheetPreview(requireActivity(), imageFile);
 
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 

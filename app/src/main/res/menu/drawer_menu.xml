@@ -14,6 +14,11 @@ android:checkableBehavior="single">
             android:title="Dream Team" />
 
         <item
+            android:id="@+id/highest_point_team"
+            android:icon="@android:drawable/ic_lock_power_off"
+            android:title="Top Team" />
+
+        <item
             android:id="@+id/logout"
             android:icon="@android:drawable/ic_lock_power_off"
             android:title="Logout" />
