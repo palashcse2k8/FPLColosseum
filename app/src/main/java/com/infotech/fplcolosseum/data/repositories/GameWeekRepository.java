@@ -221,7 +221,7 @@ public class GameWeekRepository {
         queryParams.put("currentweek", currentGameweek);
         Call<ResponseBody> callAPI = apiServices.getManagerData(queryParams);
 
-//        Logger.d("Getting Player List");
+        Logger.d("Getting Player List");
         LiveData<LeagueGameWeekDataModel> leagueGameWeekDataModel = callAPI(callAPI, LeagueGameWeekDataModel.class);
 
         return Transformations.switchMap(leagueGameWeekDataModel, complexData -> {
@@ -246,7 +246,7 @@ public class GameWeekRepository {
 
             currentManagerPlayerList.put(playerResponseModel.getId(), playerResponseModel.getPlayerWebName());
 
-            if (!checkPlayerMatch(gameWeekPlayerList, playerResponseModel)) {
+            if (!checkPlayerMatch(gameWeekPlayerList, playerResponseModel)) { //check player data api call is running already
 
                 PlayerDataModel playerDataModel = new PlayerDataModel();
                 playerDataModel.setPlayerName(playerResponseModel.getPlayerWebName());
@@ -262,7 +262,7 @@ public class GameWeekRepository {
                 playerDataModel.setTeamName(playerResponseModel.getTeamName());
 
                 gameWeekPlayerList.add(playerDataModel);
-//            Logger.d("Getting Player Data for player " + playerDataModel.getPlayerName());
+                Logger.d("Getting Player Data for player " + playerDataModel.getPlayerName());
 
                 totalPlayerAPICount++;
 
@@ -288,12 +288,12 @@ public class GameWeekRepository {
 
 //                        playerSemaphore.release();
                         if (totalPlayerAPICount == 0) {
-//                            Log.d(Constants.LOG_TAG, "Unique PlayerCount " + "gameWeekPlayerList.size() : " + gameWeekPlayerList.size() + " totalPlayerAPICount : " + totalPlayerAPICount + "gameWeekPlayerListWithData.size() " + gameWeekPlayerListWithData.size());
+                            Log.d(Constants.LOG_TAG, "Unique PlayerCount " + "gameWeekPlayerList.size() : " + gameWeekPlayerList.size() + " totalPlayerAPICount : " + totalPlayerAPICount + "gameWeekPlayerListWithData.size() " + gameWeekPlayerListWithData.size());
                             MediatorLiveData<List<PlayerDataModel>> currentManagerPlayerListLiveData;
                             for (long managerID : managerWithPlayerList.keySet()) {
                                 currentManagerPlayerListLiveData = managerLiveDataMap.get(managerID);
                                 List<PlayerDataModel> currentManagerPlayerListWithData = preparePlayersList(Objects.requireNonNull(managerWithPlayerList.get(managerID)));
-                                if (currentManagerPlayerListWithData != null && currentManagerPlayerListWithData.size() == 15) {
+                                if (currentManagerPlayerListWithData != null) {
 
                                     assert currentManagerPlayerListLiveData != null;
                                     currentManagerPlayerListLiveData.postValue(currentManagerPlayerListWithData);
@@ -353,7 +353,7 @@ public class GameWeekRepository {
     public List<PlayerDataModel> preparePlayersList(List<Long> currentManagerPlayerList) {
 
         if (currentManagerPlayerList.size() != 15) {
-            return null;
+            Logger.d("currentManagerPlayerList count is mismatched!");
         }
 
         List<PlayerDataModel> currentPlayerListWithData = new ArrayList<>();
@@ -367,7 +367,7 @@ public class GameWeekRepository {
             }
         }
         if (currentPlayerListWithData.size() != 15) {
-            Logger.d("Player count is mismatched!");
+            Logger.d("currentPlayerListWithData count is mismatched!");
         }
 
         return currentPlayerListWithData;
