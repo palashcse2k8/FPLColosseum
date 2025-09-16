@@ -23,8 +23,8 @@ public class Constants {
 
     public static String LOG_TAG = "FPlColosseum";
     public static String [] leagues = new String [] {
-            "893479", // FPLC
-            "118990" // srbd premier league
+            "1051671", // FPLC
+            "2246243" // srbd premier league
     };
 
     public static final String LOGIN_URL = "https://users.premierleague.com/accounts/login/";
