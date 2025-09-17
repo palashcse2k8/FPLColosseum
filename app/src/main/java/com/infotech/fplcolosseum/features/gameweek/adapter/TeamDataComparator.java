@@ -14,18 +14,18 @@ public class TeamDataComparator implements Comparator<ManagerModel> {
             return pointsComparison; // If not tied, return the result
         }
 
-        // If tied on total points, compare by caption points difference (descending order)
-        int captionPointComparison = Double.compare(team2.getCaptainGameWeekPoints(), team1.getCaptainGameWeekPoints());
+        // If tied on total points, compare by captain points difference (descending order)
+        int captainPointComparison = Double.compare(team2.getCaptainGameWeekPoints(), team1.getCaptainGameWeekPoints());
 
-        if (captionPointComparison != 0) {
-            return captionPointComparison; // If not tied, return the result
+        if (captainPointComparison != 0) {
+            return captainPointComparison; // If not tied, return the result
         }
 
         // If tied on total points, compare by caption points difference (descending order)
-        int viceCaptionPointComparison = Double.compare(team2.getViceCaptainGameWeekPoints(), team1.getViceCaptainGameWeekPoints());
+        int viceCaptainPointComparison = Double.compare(team2.getViceCaptainGameWeekPoints(), team1.getViceCaptainGameWeekPoints());
 
-        if (viceCaptionPointComparison != 0) {
-            return viceCaptionPointComparison; // If not tied, return the result
+        if (viceCaptainPointComparison != 0) {
+            return viceCaptainPointComparison; // If not tied, return the result
         }
 
         // If tied on total points, compare by caption points difference (descending order)
@@ -33,6 +33,13 @@ public class TeamDataComparator implements Comparator<ManagerModel> {
 
         if (benchPointComparison != 0) {
             return benchPointComparison; // If not tied, return the result
+        }
+
+        // If tied on total points, compare by caption points difference (descending order)
+        int bonusPointComparison = Double.compare(team2.getGameWeekBonusPointsXI(), team1.getGameWeekBonusPointsXI());
+
+        if (bonusPointComparison != 0) {
+            return bonusPointComparison; // If not tied, return the result
         }
 
         // If tied on total points, compare by caption points difference (descending order)
@@ -47,13 +54,6 @@ public class TeamDataComparator implements Comparator<ManagerModel> {
 
         if (goalConcededComparison != 0) {
             return goalConcededComparison; // If not tied, return the result
-        }
-
-        // If tied on total points, compare by caption points difference (descending order)
-        int bonusPointComparison = Double.compare(team2.getGameWeekBonusPointsXI(), team1.getGameWeekBonusPointsXI());
-
-        if (bonusPointComparison != 0) {
-            return bonusPointComparison; // If not tied, return the result
         }
 
         // Compare BPS points at last

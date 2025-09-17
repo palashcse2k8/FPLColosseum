@@ -1,22 +1,16 @@
 package com.infotech.fplcolosseum.features.gameweek.adapter;
-
 import static com.infotech.fplcolosseum.utilities.ManagerImageLink.managerImagerLinkIDs;
-
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.RowLayoutNewBinding;
 import com.infotech.fplcolosseum.features.gameweek.models.custom.ManagerModel;
 import com.infotech.fplcolosseum.utilities.Constants;
-import com.infotech.fplcolosseum.utilities.ManagerImageLink;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder> {
@@ -64,9 +58,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
 //        String imageURL = "https://awnless-arrangement.000webhostapp.com/images/"+ (int)team.getId()+ ".jpg";
         String imageURL = "https://drive.google.com/uc?export=view&id="+ managerImagerLinkIDs.get(team.getId());
 
-
         Log.d(Constants.LOG_TAG, imageURL);
-
 
         Picasso.get()
                 .load(imageURL)
