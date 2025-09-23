@@ -18,10 +18,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.blankj.utilcode.util.FragmentUtils;
 import com.infotech.fplcolosseum.R;
 import com.infotech.fplcolosseum.databinding.FragmentLoginBinding;
-import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
+//import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment_;
+import com.infotech.fplcolosseum.features.gameweek.views.GameWeekDashboardFragment;
 import com.infotech.fplcolosseum.features.homepage.views.DashboardActivity;
 import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment;
-import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment_;
+//import com.infotech.fplcolosseum.features.homepage.views.HomePageFragment_;
 import com.infotech.fplcolosseum.features.homepage.views.PlayerSelectionFragment;
 import com.infotech.fplcolosseum.features.login.models.SessionManager;
 import com.infotech.fplcolosseum.features.login.models.UserResponseModel;
@@ -32,9 +33,9 @@ import com.infotech.fplcolosseum.utilities.ToastLevel;
 import com.infotech.fplcolosseum.utilities.UIUtils;
 
 
-import org.androidannotations.annotations.EFragment;
+//import org.androidannotations.annotations.EFragment;
 
-@EFragment(resName = "fragment_login")
+//@EFragment(resName = "fragment_login")
 public class LoginFragment extends Fragment {
     FragmentLoginBinding binding;
     private LoginViewModel loginViewModel;
@@ -208,7 +209,8 @@ public class LoginFragment extends Fragment {
     public void goToStanding() {
         FragmentUtils.replace(
                 requireActivity().getSupportFragmentManager(),
-                GameWeekDashboardFragment_.builder().build(),
+//                GameWeekDashboardFragment_.builder().build(),
+                new GameWeekDashboardFragment(),
                 R.id.contentFrame,
                 true,
                 R.anim.enter_from_right, // enter
@@ -221,16 +223,16 @@ public class LoginFragment extends Fragment {
     public void goToHomePage(long managerID) {
 
 //        HomePageFragment_ homePageFragment = (HomePageFragment_) HomePageFragment.newInstance(10359552);
-        FragmentUtils.replace(
-                requireActivity().getSupportFragmentManager(),
-                HomePageFragment_.builder().arg(HomePageFragment.ARG_MANAGER_ID, managerID).build(),
-                R.id.contentFrame,
-                true,
-                R.anim.enter_from_right, // enter
-                R.anim.exit_to_left,      // exit
-                R.anim.enter_from_right,   // popEnter
-                R.anim.exit_to_left      // popExit
-        );
+//        FragmentUtils.replace(
+//                requireActivity().getSupportFragmentManager(),
+//                HomePageFragment_.builder().arg(HomePageFragment.ARG_MANAGER_ID, managerID).build(),
+//                R.id.contentFrame,
+//                true,
+//                R.anim.enter_from_right, // enter
+//                R.anim.exit_to_left,      // exit
+//                R.anim.enter_from_right,   // popEnter
+//                R.anim.exit_to_left      // popExit
+//        );
     }
 
     public void gotoDashboardActivity(long managerID) {

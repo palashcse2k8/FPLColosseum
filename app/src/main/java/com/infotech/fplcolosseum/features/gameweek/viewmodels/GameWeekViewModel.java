@@ -7,23 +7,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
-
-import com.infotech.fplcolosseum.features.gameweek.models.custom.CustomGameWeekDataModel;
-import com.infotech.fplcolosseum.features.gameweek.models.custom.ManagerModel;
 import com.infotech.fplcolosseum.data.repositories.GameWeekRepository;
+import com.infotech.fplcolosseum.features.gameweek.models.custom.CustomGameWeekDataModel;
 
 import java.io.IOException;
-import java.util.List;
-
-import okhttp3.ResponseBody;
 
 public class GameWeekViewModel extends AndroidViewModel {
-    private GameWeekRepository _gameWeekRepository;
+    private final GameWeekRepository _gameWeekRepository;
     public MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(Boolean.FALSE);
-    private LiveData<ResponseBody> _data;
 
-    private MediatorLiveData<List<ManagerModel>> _managerList;
-    private MediatorLiveData<CustomGameWeekDataModel> _customGameWeekDataModelLiveData;
+    private final MediatorLiveData<CustomGameWeekDataModel> _customGameWeekDataModelLiveData;
     public LiveData<CustomGameWeekDataModel> leagueGameWeekDataModel() {
         return _customGameWeekDataModelLiveData;
     }
@@ -31,9 +24,7 @@ public class GameWeekViewModel extends AndroidViewModel {
     public GameWeekViewModel(Application application) {
         super(application);
         _gameWeekRepository = new GameWeekRepository(application);
-        _data = new MutableLiveData<>();
         _customGameWeekDataModelLiveData = new MediatorLiveData<>();
-        _managerList = new MediatorLiveData<>();
 
     }
 
@@ -49,9 +40,13 @@ public class GameWeekViewModel extends AndroidViewModel {
         _gameWeekRepository.deleteAllGameWeekData();
     }
 
-    public void gameWeekDataFromAPI (String leagueID, String currentGameweek) throws IOException {
-        _customGameWeekDataModelLiveData.addSource(_gameWeekRepository.getGameWeekData(leagueID, currentGameweek), customGameWeekDataModel -> {
-            _customGameWeekDataModelLiveData.setValue(customGameWeekDataModel);
+    public void gameWeekDataFromAPI(String leagueID, String currentGameweek)  throws IOException {
+        LiveData<CustomGameWeekDataModel> source = _gameWeekRepository.getGameWeekData(leagueID, currentGameweek);
+
+        _customGameWeekDataModelLiveData.addSource(source, data -> {
+            _customGameWeekDataModelLiveData.setValue(data);
+            _customGameWeekDataModelLiveData.removeSource(source); // ✅ prevent duplicates
         });
+
     }
 }

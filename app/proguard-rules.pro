@@ -1,24 +1,24 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Keep AndroidAnnotations generated classes (classes with underscore)
+-keep class **_ { *; }
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Keep annotations themselves (required for reflection)
+-keep @org.androidannotations.annotations.* class * { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Keep generated view binder classes
+-keep class **$$ViewBinder { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Keep generated intent builder classes (if using @EActivity, @EFragment etc.)
+-keep class **_.IntentBuilder { *; }
+
+# Keep inner classes of generated fragments/activities
+-keep class **_** { *; }
+
+# Keep enums (optional, if used in models with annotations)
+-keepclassmembers enum * { *; }
+
+# Optional: Keep all classes in your package (if generated classes still cause issues)
+-keep class com.infotech.fplcolosseum.** { *; }
+
 -assumenosideeffects class android.util.Log {
     public static *** d(...);
     public static *** v(...);
@@ -27,3 +27,13 @@
     public static *** e(...);
     public static *** wtf(...);
 }
+
+-dontwarn org.bouncycastle.jsse.BCSSLParameters
+-dontwarn org.bouncycastle.jsse.BCSSLSocket
+-dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
+-dontwarn org.conscrypt.Conscrypt$Version
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
+-dontwarn org.openjsse.javax.net.ssl.SSLParameters
+-dontwarn org.openjsse.javax.net.ssl.SSLSocket
+-dontwarn org.openjsse.net.ssl.OpenJSSE

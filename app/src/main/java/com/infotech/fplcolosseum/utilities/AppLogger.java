@@ -1,29 +1,25 @@
 package com.infotech.fplcolosseum.utilities;
-
-import android.util.Log;
-
-import com.blankj.utilcode.BuildConfig;
+import com.orhanobut.logger.Logger;
+import com.infotech.fplcolosseum.BuildConfig;  // ✅ Correct BuildConfig
 
 public class AppLogger {
-    private static final boolean LOG_ENABLED = BuildConfig.DEBUG; // Or set to false for release
+    private static final boolean LOG_ENABLED = BuildConfig.DEBUG;
 
-    public static void d(String tag, String msg) {
+    public static void d(String msg) {
         if (LOG_ENABLED) {
-            Log.d(tag, msg);
+            Logger.d(msg);
         }
     }
 
-    public static void e(String tag, String msg) {
+    public static void e(String msg) {
         if (LOG_ENABLED) {
-            Log.e(tag, msg);
+            Logger.e(msg);
         }
     }
 
-    public static void i(String tag, String msg) {
+    public static void i(String msg) {
         if (LOG_ENABLED) {
-            Log.i(tag, msg);
+            Logger.i(msg);
         }
     }
-
-    // Add other Log methods (v, w, wtf) as needed
 }

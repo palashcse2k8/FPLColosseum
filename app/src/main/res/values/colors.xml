@@ -67,4 +67,10 @@
     <color name="deepGreen">#2E7D32</color>
 
     <color name="divider_color">#E0E0E0</color>
+
+    <!-- Qualified teams colors (Gold/Champion Theme) -->
+    <color name="qualified_background">#1A237E</color>     <!-- Deep blue background -->
+    <color name="qualified_stroke">#FFD700</color>         <!-- Gold border -->
+    <color name="qualified_accent">#FFC107</color>         <!-- Gold accent -->
+
 </resources>

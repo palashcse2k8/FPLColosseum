@@ -28,12 +28,12 @@ import com.infotech.fplcolosseum.features.homepage.models.MyTeamMergedResponseMo
 import com.infotech.fplcolosseum.features.homepage.viewmodels.HomePageSharedViewModel;
 import com.infotech.fplcolosseum.utilities.Constants;
 
-import org.androidannotations.annotations.EFragment;
+//import org.androidannotations.annotations.EFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@EFragment(resName = "fragment_homepage")
+//@EFragment(resName = "fragment_homepage")
 public class HomePageFragment extends Fragment {
 
     public static final String ARG_MANAGER_ID = "manager_id";

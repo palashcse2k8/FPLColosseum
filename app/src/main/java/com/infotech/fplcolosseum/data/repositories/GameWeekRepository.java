@@ -24,6 +24,7 @@ import com.infotech.fplcolosseum.features.gameweek.models.web.PlayerStatsRespons
 import com.infotech.fplcolosseum.features.gameweek.models.web.TeamDataResponseModel;
 import com.infotech.fplcolosseum.data.sources.network.APIServices;
 import com.infotech.fplcolosseum.data.sources.network.RetroClass;
+import com.infotech.fplcolosseum.utilities.AppLogger;
 import com.infotech.fplcolosseum.utilities.Constants;
 import com.orhanobut.logger.Logger;
 
@@ -43,7 +44,6 @@ public class GameWeekRepository {
     GameWeekDBDao gameWeekDBDao;
     APIServices apiServices;
     AppExecutors appExecutors;
-//    private MediatorLiveData<List<ManagerModel>> _managerList;
 
     private List<PlayerDataModel> gameWeekPlayerList;
     private List<PlayerDataModel> gameWeekPlayerListWithData;
@@ -57,8 +57,6 @@ public class GameWeekRepository {
 
     public GameWeekRepository(Application application) {
         apiServices = RetroClass.getAPIService(application); // set API
-//        _managerList = new MediatorLiveData<>();
-
         gameWeekDBDao = AppDatabase.getInstance(application).dbDao();
         appExecutors = AppExecutors.getInstance();
         initAllGameWeekTempData();
@@ -137,12 +135,9 @@ public class GameWeekRepository {
             managerModelsLiveData.addSource(playerListLiveData, result -> {
                 if (result != null) {
 
-//                    if (managerModel.getManagerName().contains("Sami")) {
-//                        Log.d(Constants.LOG_TAG, "Manager Info -> " + managerModel.getManagerName() + ", gameweek : " + managerModel.getGameWeek());
-//                    }
                     managerModel.setPlayersAll(result);
 
-//                    Log.d(Constants.LOG_TAG, "Manager Info -> " + managerModel.getManagerName() + ", gameweek : " + managerModel.getGameWeek());
+                    AppLogger.d("Manager Info -> " + managerModel.getManagerName() + ", game week : " + managerModel.getGameWeek());
 
                     long bonusPoints = 0;
                     long benchPoints = 0;
@@ -301,7 +296,7 @@ public class GameWeekRepository {
 //                                    playerListMediatorLiveData.postValue(currentManagerPlayerListWithData);
 
                                 } else {
-                                    Log.d(Constants.LOG_TAG, "Data fetching issue");
+                                    AppLogger.d("Data fetching issue");
                                 }
                             }
                         }
@@ -309,8 +304,8 @@ public class GameWeekRepository {
                 });
             }
         }
-//        Log.d(Constants.LOG_TAG, "Adding player list for " + leagueGameWeekDataModel.getCompareEntryId());
-//        printPlayerList(new ArrayList<>(currentManagerPlayerList.values()));
+        AppLogger.d("Adding player list for " + leagueGameWeekDataModel.getCompareEntryId());
+
         managerWithPlayerList.put(leagueGameWeekDataModel.getCompareEntryId(), new ArrayList<>(currentManagerPlayerList.keySet()));
         return playerListMediatorLiveData;
     }
@@ -353,7 +348,7 @@ public class GameWeekRepository {
     public List<PlayerDataModel> preparePlayersList(List<Long> currentManagerPlayerList) {
 
         if (currentManagerPlayerList.size() != 15) {
-            Logger.d("currentManagerPlayerList count is mismatched!");
+            AppLogger.d("currentManagerPlayerList count is mismatched!");
         }
 
         List<PlayerDataModel> currentPlayerListWithData = new ArrayList<>();
@@ -367,7 +362,7 @@ public class GameWeekRepository {
             }
         }
         if (currentPlayerListWithData.size() != 15) {
-            Logger.d("currentPlayerListWithData count is mismatched!");
+            AppLogger.d("currentPlayerListWithData count is mismatched!");
         }
 
         return currentPlayerListWithData;
@@ -379,7 +374,7 @@ public class GameWeekRepository {
 
         for (PlayerDataModel model : playerList) {
             if (model.getPlayerID() == playerDataModel.getId()) {
-//                    Logger.d("Player Found " + playerDataModel.getPlayerWebName());
+//                    AppLogger.d("Player Found " + playerDataModel.getPlayerWebName());
                 return true;
             }
         }
@@ -391,7 +386,7 @@ public class GameWeekRepository {
 
         for (PlayerDataModel model : playerList) {
             if (model.getPlayerName().equalsIgnoreCase(playerDataModel.getPlayerWebName())) {
-                Logger.d("Player Found " + playerDataModel.getPlayerWebName());
+                AppLogger.d("Player Found " + playerDataModel.getPlayerWebName());
                 return true;
             }
         }
@@ -436,7 +431,7 @@ public class GameWeekRepository {
             leagueID, String currentGameweek) {
         // Source 2
 
-        Logger.d("Getting 2nd List");
+        AppLogger.d("Getting 2nd List");
         LiveData<List<ManagerModel>> source2 = getManagerList(leagueID, currentGameweek, "2");
         _managerList.addSource(source2, managerModels -> {
             if (managerModels != null) {
@@ -450,8 +445,7 @@ public class GameWeekRepository {
         });
     }
 
-    public LiveData<CustomGameWeekDataModel> getGameWeekData(String leagueID, String
-            currentGameweek) {
+    public LiveData<CustomGameWeekDataModel> getGameWeekData(String leagueID, String currentGameweek) {
 
         // Create LiveData for the custom model
         LiveData<CustomGameWeekDataEntity> customGameWeekDataEntityLiveData = gameWeekDBDao.loadGameWeekDataById(leagueID, currentGameweek);
@@ -464,12 +458,13 @@ public class GameWeekRepository {
             if (customGameWeekDataEntity != null) {
                 // Convert the entity to the custom model
                 CustomGameWeekDataModel customGameWeekDataModel = new CustomGameWeekDataModel(customGameWeekDataEntity);
-                Logger.d("Getting Data From ROOM DB");
+                AppLogger.d("Getting Data From ROOM DB");
                 gameWeekDataModelMediatorLiveData.postValue(customGameWeekDataModel);
+                gameWeekDataModelMediatorLiveData.removeSource(customGameWeekDataEntityLiveData);
             } else {
                 // Data not available in the database, fetch it from the API
                 try {
-                    Logger.d("Getting Data From API");
+                    AppLogger.d("Getting Data From API");
                     getGameWeekDataFromAPI(leagueID, currentGameweek, gameWeekDataModelMediatorLiveData);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -480,13 +475,46 @@ public class GameWeekRepository {
         return gameWeekDataModelMediatorLiveData;
     }
 
+//    public LiveData<CustomGameWeekDataModel> getGameWeekData(String leagueID, String currentGameweek) {
+//        MediatorLiveData<CustomGameWeekDataModel> mediator = new MediatorLiveData<>();
+//
+//        // Always create a fresh DB source for this call
+//        LiveData<CustomGameWeekDataEntity> dbSource =
+//                gameWeekDBDao.loadGameWeekDataById(leagueID, currentGameweek);
+//
+//        mediator.addSource(dbSource, entity -> {
+//            if (entity != null) {
+//                // Found in DB → convert and post
+//                CustomGameWeekDataModel model = new CustomGameWeekDataModel(entity);
+//                AppLogger.d("Getting Data From ROOM DB");
+//                mediator.postValue(model);
+//
+//                // Now safe to remove DB source to avoid infinite updates
+////                mediator.removeSource(dbSource);
+//            } else {
+//                // Not in DB → fetch from API
+//                AppLogger.d("Getting Data From API");
+//                try {
+//                    getGameWeekDataFromAPI(leagueID, currentGameweek, mediator);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    // Optionally: wrap error in a Result/Error model
+//                }
+//            }
+////            // ⚡ Important: detach DB source after first response
+////            mediator.removeSource(dbSource);
+//        });
+//
+//        return mediator;
+//    }
+
+
     public void getGameWeekDataFromAPI(String leagueID, String
             currentGameweek, MediatorLiveData<CustomGameWeekDataModel> gameWeekDataModelMediatorLiveData) throws
             IOException {
 
 
         initAllGameWeekTempData();
-//        MediatorLiveData<CustomGameWeekDataModel> gameWeekDataModelMediatorLiveData = new MediatorLiveData<>();
         CustomGameWeekDataModel customGameWeekDataModel = new CustomGameWeekDataModel();
 
         // Create a Map to hold the query parameters
@@ -523,7 +551,7 @@ public class GameWeekRepository {
 
     public void insertGameWeekDataToDB(CustomGameWeekDataEntity gameWeekDataEntity) {
 
-//        Logger.d("Inserting data to room db");
+//        AppLogger.d("Inserting data to room db");
         appExecutors.diskIO().submit(() -> gameWeekDBDao.insertGameWeekData(gameWeekDataEntity));
     }
 
@@ -537,6 +565,7 @@ public class GameWeekRepository {
 
         //delete all row data from table
         appExecutors.diskIO().submit(() -> gameWeekDBDao.deleteAllGameData());
+        AppLogger.d("All Local Data Deleted");
     }
 
 }
