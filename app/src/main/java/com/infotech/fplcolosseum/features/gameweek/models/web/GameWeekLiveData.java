@@ -46,8 +46,8 @@ public class GameWeekLiveData {
     private long PlayersDonePlaying;
     private long PlayersIsPlaying;
     private long PlayersLeft;
-    private long EffectivePlayersLeft;
-    private long EffectivePlayersLeftWithMultiplier;
+    private double EffectivePlayersLeft;
+    private double EffectivePlayersLeftWithMultiplier;
     private long SeasonBasePointsUntilGameWeek;
     private long SeasonBasePointsUntilGameWeekOverall;
     private long PhaseBasePointsUntilGameWeek;
@@ -179,11 +179,11 @@ public class GameWeekLiveData {
         return PlayersLeft;
     }
 
-    public long getEffectivePlayersLeft() {
+    public double getEffectivePlayersLeft() {
         return EffectivePlayersLeft;
     }
 
-    public long getEffectivePlayersLeftWithMultiplier() {
+    public double getEffectivePlayersLeftWithMultiplier() {
         return EffectivePlayersLeftWithMultiplier;
     }
 
